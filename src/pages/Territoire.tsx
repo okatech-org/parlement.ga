@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import GabonMap from "@/components/map/GabonMap";
 
 const Territoire = () => {
   const navigate = useNavigate();
@@ -106,24 +107,9 @@ const Territoire = () => {
                 </Button>
               </div>
 
-              {/* Placeholder for Map - Would integrate Mapbox here */}
-              <div className="relative aspect-[4/3] bg-gradient-to-br from-primary/5 via-background to-secondary/5 rounded-lg border-2 border-dashed border-border flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 opacity-10">
-                  <svg viewBox="0 0 400 300" className="w-full h-full">
-                    <path
-                      d="M 50,150 Q 100,50 200,100 T 350,150 Q 300,250 200,200 T 50,150 Z"
-                      fill="currentColor"
-                      className="text-primary"
-                    />
-                  </svg>
-                </div>
-                <div className="text-center z-10">
-                  <MapIcon className="h-16 w-16 text-primary mx-auto mb-4 animate-pulse-subtle" />
-                  <p className="text-lg font-semibold mb-2">Carte Interactive du Gabon</p>
-                  <p className="text-sm text-muted-foreground max-w-md">
-                    Intégration Mapbox à venir - Cliquez sur les provinces pour voir les doléances
-                  </p>
-                </div>
+              {/* Interactive Mapbox Map */}
+              <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+                <GabonMap />
               </div>
             </Card>
 
