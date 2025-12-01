@@ -61,12 +61,16 @@ const Index = () => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" onClick={() => navigate("/citizen")}>
                 Mode Citoyen
               </Button>
-              <Button variant="outline" size="sm" onClick={() => navigate("/vote")}>
+              <Button variant="outline" size="sm" onClick={() => navigate("/deputy")}>
                 <Shield className="mr-2 h-4 w-4" />
                 Espace Député
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => navigate("/admin")}>
+                <Shield className="mr-2 h-4 w-4" />
+                Administration
               </Button>
             </div>
           </div>
@@ -113,6 +117,73 @@ const Index = () => {
                 <div className="text-sm text-muted-foreground">{stat.label}</div>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* User Spaces Section */}
+      <section className="py-20 bg-gradient-subtle">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-serif font-bold mb-4">Espaces Utilisateurs</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Accédez à votre espace personnalisé selon votre rôle
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <Card
+              className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-primary/20 animate-fade-in"
+              onClick={() => navigate("/deputy")}
+            >
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 mx-auto">
+                <Shield className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="text-xl font-serif font-semibold mb-3 text-center">Espace Député</h3>
+              <p className="text-sm text-muted-foreground text-center mb-4">
+                E-Hémicycle, bureau virtuel, CRM circonscription, messagerie sécurisée, et plus
+              </p>
+              <Button className="w-full shadow-elegant">
+                Accéder
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Card>
+
+            <Card
+              className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-secondary/20 animate-fade-in"
+              style={{ animationDelay: "0.1s" }}
+              onClick={() => navigate("/admin")}
+            >
+              <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mb-4 mx-auto">
+                <Users className="h-8 w-8 text-secondary" />
+              </div>
+              <h3 className="text-xl font-serif font-semibold mb-3 text-center">Espace Administrateur</h3>
+              <p className="text-sm text-muted-foreground text-center mb-4">
+                Gestion des sessions, modération, statistiques, administration système
+              </p>
+              <Button variant="secondary" className="w-full shadow-elegant">
+                Accéder
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Card>
+
+            <Card
+              className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-accent/20 animate-fade-in"
+              style={{ animationDelay: "0.2s" }}
+              onClick={() => navigate("/citizen")}
+            >
+              <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mb-4 mx-auto">
+                <FileText className="h-8 w-8 text-accent" />
+              </div>
+              <h3 className="text-xl font-serif font-semibold mb-3 text-center">Espace Citoyen</h3>
+              <p className="text-sm text-muted-foreground text-center mb-4">
+                Suivi législatif, interpellation député, direct TV, transparence totale
+              </p>
+              <Button variant="outline" className="w-full shadow-elegant">
+                Accéder
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Card>
           </div>
         </div>
       </section>
