@@ -14,7 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      doleances: {
+        Row: {
+          categorie: string
+          citoyen_id: string | null
+          created_at: string
+          date_creation: string
+          date_resolution: string | null
+          depute_id: string | null
+          description: string
+          id: string
+          latitude: number
+          longitude: number
+          priorite: string
+          region: string
+          statut: string
+          titre: string
+          updated_at: string
+          ville: string | null
+        }
+        Insert: {
+          categorie: string
+          citoyen_id?: string | null
+          created_at?: string
+          date_creation?: string
+          date_resolution?: string | null
+          depute_id?: string | null
+          description: string
+          id?: string
+          latitude: number
+          longitude: number
+          priorite?: string
+          region: string
+          statut?: string
+          titre: string
+          updated_at?: string
+          ville?: string | null
+        }
+        Update: {
+          categorie?: string
+          citoyen_id?: string | null
+          created_at?: string
+          date_creation?: string
+          date_resolution?: string | null
+          depute_id?: string | null
+          description?: string
+          id?: string
+          latitude?: number
+          longitude?: number
+          priorite?: string
+          region?: string
+          statut?: string
+          titre?: string
+          updated_at?: string
+          ville?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -15,6 +15,7 @@ import { AdminSpaceLayout } from "@/components/layout/AdminSpaceLayout";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import GabonMap from "@/components/map/GabonMap";
+import RegionalStats from "@/components/map/RegionalStats";
 
 const DeputySpace = () => {
   const [activeSection, setActiveSection] = useState("hemicycle");
@@ -104,36 +105,32 @@ const DeputySpace = () => {
             <div>
               <h1 className="text-3xl font-serif font-bold mb-2">CRM Circonscription</h1>
               <p className="text-muted-foreground">
-                Carte interactive et gestion des doléances
+                Carte interactive et gestion des doléances citoyennes
               </p>
             </div>
             <div className="grid gap-6 lg:grid-cols-3">
               <Card className="lg:col-span-2 p-6 bg-card shadow-card-custom">
-                <h3 className="font-semibold mb-4">Carte du Gabon</h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold">Carte des Doléances</h3>
+                  <div className="flex gap-2 text-xs">
+                    <div className="flex items-center gap-1">
+                      <div className="h-3 w-3 rounded-full bg-blue-500" />
+                      <span>Infrastructure</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="h-3 w-3 rounded-full bg-red-500" />
+                      <span>Santé</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <div className="h-3 w-3 rounded-full bg-purple-500" />
+                      <span>Éducation</span>
+                    </div>
+                  </div>
+                </div>
                 <GabonMap />
               </Card>
               <div className="space-y-4">
-                <Card className="p-6 bg-card shadow-card-custom">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold">Doléances récentes</h3>
-                    <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
-                      12 nouvelles
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Suivi des demandes de votre circonscription
-                  </p>
-                  <div className="space-y-2">
-                    <div className="p-3 border border-border rounded-lg bg-muted/30">
-                      <p className="text-sm font-medium">Réfection route N1</p>
-                      <p className="text-xs text-muted-foreground">Il y a 2 jours</p>
-                    </div>
-                    <div className="p-3 border border-border rounded-lg bg-muted/30">
-                      <p className="text-sm font-medium">Centre de santé</p>
-                      <p className="text-xs text-muted-foreground">Il y a 4 jours</p>
-                    </div>
-                  </div>
-                </Card>
+                <RegionalStats />
               </div>
             </div>
           </div>
