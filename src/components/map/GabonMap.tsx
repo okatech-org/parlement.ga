@@ -4,11 +4,66 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
 
+type Doleance = {
+  id: string;
+  titre: string;
+  description: string;
+  categorie: string;
+  statut: string;
+  priorite: string;
+  latitude: number;
+  longitude: number;
+  region: string;
+  ville: string | null;
+  date_creation: string;
+};
+
+const getCategoryColor = (categorie: string): string => {
+  const colors: Record<string, string> = {
+    infrastructure: '#3b82f6',
+    sante: '#ef4444',
+    education: '#8b5cf6',
+    securite: '#f59e0b',
+    environnement: '#10b981',
+    economie: '#06b6d4',
+  };
+  return colors[categorie] || '#6b7280';
+};
+
+const getPriorityIcon = (priorite: string): string => {
+  const icons: Record<string, string> = {
+    basse: '●',
+    moyenne: '●●',
+    haute: '●●●',
+    urgente: '🔴',
+  };
+  return icons[priorite] || '●';
+};
+
 const GabonMap = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [doleances, setDoleances] = useState<Doleance[]>([]);
+
+  useEffect(() => {
+    const loadDoleances = async () => {
+      const { data, error } = await supabase
+        .from('doleances')
+        .select('*')
+        .order('date_creation', { ascending: false });
+
+      if (error) {
+        console.error('Erreur chargement doléances:', error);
+        return;
+      }
+
+      setDoleances(data || []);
+    };
+
+    loadDoleances();
+  }, []);
 
   useEffect(() => {
     const initializeMap = async () => {
@@ -27,9 +82,9 @@ const GabonMap = () => {
         map.current = new mapboxgl.Map({
           container: mapContainer.current,
           style: 'mapbox://styles/mapbox/streets-v12',
-          center: [11.6094, -0.8037], // Libreville, Gabon
+          center: [11.6094, -0.8037], // Centre du Gabon
           zoom: 6,
-          pitch: 45,
+          pitch: 30,
         });
 
         // Ajouter les contrôles de navigation
@@ -39,16 +94,6 @@ const GabonMap = () => {
           }),
           'top-right'
         );
-
-        // Ajouter un marqueur pour Libreville
-        new mapboxgl.Marker({ color: '#1a1f2c' })
-          .setLngLat([9.4544, 0.4162])
-          .setPopup(
-            new mapboxgl.Popup().setHTML(
-              '<div class="p-2"><h3 class="font-semibold">Libreville</h3><p class="text-sm">Capitale du Gabon</p></div>'
-            )
-          )
-          .addTo(map.current);
 
         map.current.on('load', () => {
           setLoading(false);
@@ -82,6 +127,59 @@ const GabonMap = () => {
               'line-opacity': 0.6
             }
           });
+
+          // Ajouter les marqueurs pour chaque doléance
+          doleances.forEach((doleance) => {
+            const el = document.createElement('div');
+            el.className = 'marker';
+            el.style.backgroundColor = getCategoryColor(doleance.categorie);
+            el.style.width = '32px';
+            el.style.height = '32px';
+            el.style.borderRadius = '50%';
+            el.style.border = '3px solid white';
+            el.style.cursor = 'pointer';
+            el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+            el.style.display = 'flex';
+            el.style.alignItems = 'center';
+            el.style.justifyContent = 'center';
+            el.style.fontSize = '16px';
+            el.style.fontWeight = 'bold';
+            el.textContent = getPriorityIcon(doleance.priorite);
+
+            const popupContent = `
+              <div style="padding: 12px; min-width: 250px;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                  <h3 style="font-weight: 600; font-size: 16px; margin: 0;">${doleance.titre}</h3>
+                  <span style="background: ${getCategoryColor(doleance.categorie)}; color: white; padding: 2px 8px; border-radius: 4px; font-size: 11px; margin-left: 8px;">${doleance.categorie}</span>
+                </div>
+                <p style="color: #64748b; font-size: 14px; margin: 8px 0;">${doleance.description}</p>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                  <span style="background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                    <strong>Statut:</strong> ${doleance.statut.replace('_', ' ')}
+                  </span>
+                  <span style="background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                    <strong>Priorité:</strong> ${doleance.priorite}
+                  </span>
+                </div>
+                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e2e8f0;">
+                  <p style="font-size: 12px; color: #64748b; margin: 0;">
+                    📍 ${doleance.ville || doleance.region}
+                  </p>
+                  <p style="font-size: 11px; color: #94a3b8; margin: 4px 0 0 0;">
+                    ${new Date(doleance.date_creation).toLocaleDateString('fr-FR')}
+                  </p>
+                </div>
+              </div>
+            `;
+
+            new mapboxgl.Marker(el)
+              .setLngLat([doleance.longitude, doleance.latitude])
+              .setPopup(
+                new mapboxgl.Popup({ offset: 25, closeButton: false })
+                  .setHTML(popupContent)
+              )
+              .addTo(map.current!);
+          });
         });
 
       } catch (err) {
@@ -91,12 +189,14 @@ const GabonMap = () => {
       }
     };
 
-    initializeMap();
+    if (doleances.length > 0) {
+      initializeMap();
+    }
 
     return () => {
       map.current?.remove();
     };
-  }, []);
+  }, [doleances]);
 
   if (error) {
     return (
