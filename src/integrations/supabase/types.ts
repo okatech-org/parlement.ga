@@ -212,6 +212,47 @@ export type Database = {
         }
         Relationships: []
       }
+      message_feedback: {
+        Row: {
+          comment: string | null
+          created_at: string
+          feedback_type: string | null
+          id: string
+          message_id: string
+          rating: number
+          session_id: string | null
+          user_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          feedback_type?: string | null
+          id?: string
+          message_id: string
+          rating: number
+          session_id?: string | null
+          user_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          feedback_type?: string | null
+          id?: string
+          message_id?: string
+          rating?: number
+          session_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_feedback_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "conversation_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           address: string | null

@@ -6,12 +6,14 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Send, Bot, User, Paperclip, Mic, Sparkles, Loader2 } from 'lucide-react';
 import { useUser } from '@/contexts/UserContext';
 import { toast } from 'sonner';
+import { MessageFeedback } from './MessageFeedback';
 
 interface Message {
     id: string;
     role: 'user' | 'assistant' | 'system';
     content: string;
     timestamp: Date;
+    showFeedback?: boolean;
 }
 
 interface ChatInterfaceProps {
@@ -107,7 +109,8 @@ export function ChatInterface({ isExpanded }: ChatInterfaceProps) {
                 id: assistantMsgId,
                 role: 'assistant',
                 content: '',
-                timestamp: new Date()
+                timestamp: new Date(),
+                showFeedback: true,
             }]);
 
             while (true) {
@@ -244,6 +247,10 @@ export function ChatInterface({ isExpanded }: ChatInterfaceProps) {
                                         </span>
                                     ) : null)}
                                 </div>
+                                {/* Feedback component for assistant messages */}
+                                {msg.role === 'assistant' && msg.showFeedback && msg.content && !isLoading && (
+                                    <MessageFeedback messageId={msg.id} />
+                                )}
                             </div>
                         </div>
                     ))}
