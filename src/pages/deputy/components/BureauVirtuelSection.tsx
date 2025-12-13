@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { AmendmentDetailModal } from "@/components/parliamentary/AmendmentDetailModal";
 
 interface Amendment {
     id: string;
@@ -46,6 +47,7 @@ export const BureauVirtuelSection = () => {
     const [cosignatures, setCosignatures] = useState<Record<string, Cosignature[]>>({});
     const [loadingAmendments, setLoadingAmendments] = useState(true);
     const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+    const [selectedAmendmentId, setSelectedAmendmentId] = useState<string | null>(null);
     const [amendmentForm, setAmendmentForm] = useState({
         billReference: "",
         articleNumber: "",
@@ -612,27 +614,36 @@ export const BureauVirtuelSection = () => {
                                                 )}
                                             </TableCell>
                                             <TableCell>
-                                                {amendment.status === 'en_attente' && amendment.author_id !== currentUserId && (
-                                                    hasCosigned(amendment.id) ? (
-                                                        <Button 
-                                                            size="sm" 
-                                                            variant="outline"
-                                                            onClick={() => handleRemoveCosign(amendment.id)}
-                                                        >
-                                                            <CheckCircle className="w-4 h-4 mr-1 text-green-600" />
-                                                            Signé
-                                                        </Button>
-                                                    ) : (
-                                                        <Button 
-                                                            size="sm" 
-                                                            variant="secondary"
-                                                            onClick={() => handleCosign(amendment.id)}
-                                                        >
-                                                            <UserPlus className="w-4 h-4 mr-1" />
-                                                            Co-signer
-                                                        </Button>
-                                                    )
-                                                )}
+                                                <div className="flex items-center gap-1">
+                                                    <Button
+                                                        size="sm"
+                                                        variant="ghost"
+                                                        onClick={() => setSelectedAmendmentId(amendment.id)}
+                                                    >
+                                                        <Eye className="w-4 h-4" />
+                                                    </Button>
+                                                    {amendment.status === 'en_attente' && amendment.author_id !== currentUserId && (
+                                                        hasCosigned(amendment.id) ? (
+                                                            <Button 
+                                                                size="sm" 
+                                                                variant="outline"
+                                                                onClick={() => handleRemoveCosign(amendment.id)}
+                                                            >
+                                                                <CheckCircle className="w-4 h-4 mr-1 text-green-600" />
+                                                                Signé
+                                                            </Button>
+                                                        ) : (
+                                                            <Button 
+                                                                size="sm" 
+                                                                variant="secondary"
+                                                                onClick={() => handleCosign(amendment.id)}
+                                                            >
+                                                                <UserPlus className="w-4 h-4 mr-1" />
+                                                                Co-signer
+                                                            </Button>
+                                                        )
+                                                    )}
+                                                </div>
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -642,6 +653,13 @@ export const BureauVirtuelSection = () => {
                     </div>
                 )}
             </Card>
+
+            {/* Amendment Detail Modal */}
+            <AmendmentDetailModal
+                amendmentId={selectedAmendmentId}
+                open={!!selectedAmendmentId}
+                onOpenChange={(open) => !open && setSelectedAmendmentId(null)}
+            />
         </div>
     );
 };
