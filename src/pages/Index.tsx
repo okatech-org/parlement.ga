@@ -124,7 +124,7 @@ const Index = () => {
               </Button>
 
               {/* Login Button */}
-              <Button size="sm" onClick={() => navigate("/login")}>
+              <Button variant="outline" size="sm" onClick={() => navigate("/auth")}>
                 {t('common.login')}
               </Button>
             </div>
