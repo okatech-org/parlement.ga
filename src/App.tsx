@@ -62,6 +62,7 @@ import Sensibilisation from "./pages/Sensibilisation";
 import Tutoriels from "./pages/Tutoriels";
 import Statistiques from "./pages/Statistiques";
 import Login from "./pages/Login";
+import IAstedAnalytics from "./pages/iasted/IAstedAnalytics";
 
 // Secretary Space Imports
 import LayoutSecretary from "./layouts/LayoutSecretary";
@@ -164,6 +165,7 @@ const App = () => (
               <Route path="/sensibilisation" element={<Sensibilisation />} />
               <Route path="/tutoriels" element={<Tutoriels />} />
               <Route path="/statistiques" element={<Statistiques />} />
+              <Route path="/iasted/analytics" element={<ProtectedRoute><IAstedAnalytics /></ProtectedRoute>} />
 
               {/* Login */}
               <Route path="/login" element={<Login />} />
