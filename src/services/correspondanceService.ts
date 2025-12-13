@@ -152,7 +152,7 @@ class CorrespondanceService {
         // In production: copy files to user's documents storage
         // For now, create entries in documents table
         for (const doc of folder.documents) {
-            const { data, error } = await supabase
+            const { data, error } = await (supabase as any)
                 .from('documents')
                 .insert({
                     user_id: user.id,

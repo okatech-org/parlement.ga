@@ -313,11 +313,12 @@ class AssociationService {
         if (association.memberCount !== undefined) result.member_count = association.memberCount;
         if (association.foundingYear !== undefined) result.founding_year = association.foundingYear;
         if (association.logoUrl) result.logo_url = association.logoUrl;
-        if (association.address) {
-            result.address_street = association.address.street;
-            result.address_city = association.address.city;
-            result.address_postal_code = association.address.postalCode;
-            result.address_country = association.address.country;
+        if (association.address && typeof association.address === 'object') {
+            const addr = association.address as { street: string; city: string; postalCode: string; country: string };
+            result.address_street = addr.street;
+            result.address_city = addr.city;
+            result.address_postal_code = addr.postalCode;
+            result.address_country = addr.country;
         }
         if (association.ownerId) result.owner_id = association.ownerId;
         if (association.ownerRole) result.owner_role = association.ownerRole;

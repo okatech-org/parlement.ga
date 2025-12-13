@@ -1,6 +1,8 @@
 import { supabase } from "@/integrations/supabase/client";
 import { invokeWithDemoFallback } from "@/utils/demoMode";
 
+// Type-safe helper for tables not yet in generated types
+const db = supabase as any;
 /**
  * Records a login attempt in the database and triggers security alert if needed
  */

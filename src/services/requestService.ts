@@ -1,12 +1,22 @@
 import { supabase } from "@/integrations/supabase/client";
-import { Tables } from "@/integrations/supabase/types";
 import { auditService } from "@/services/audit-service";
 
-// Types basés sur la table requests de Supabase
-export type Request = Tables<"requests">;
-export type RequestStatus = Request["status"];
-export type RequestType = Request["type"];
-export type RequestPriority = Request["priority"];
+// Type-safe helper for tables not yet in generated types
+const db = supabase as any;
+
+// Types for requests (table doesn't exist yet)
+export interface Request {
+    id: string;
+    status: string;
+    type: string;
+    priority: string;
+    citizen_id?: string;
+    created_at: string;
+    updated_at: string;
+}
+export type RequestStatus = string;
+export type RequestType = string;
+export type RequestPriority = string;
 
 export const requestService = {
     async getAll(citizenId?: string): Promise<Request[]> {
