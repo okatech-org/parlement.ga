@@ -14,6 +14,35 @@ export type Database = {
   }
   public: {
     Tables: {
+      amendment_cosignatures: {
+        Row: {
+          amendment_id: string
+          deputy_id: string
+          id: string
+          signed_at: string
+        }
+        Insert: {
+          amendment_id: string
+          deputy_id: string
+          id?: string
+          signed_at?: string
+        }
+        Update: {
+          amendment_id?: string
+          deputy_id?: string
+          id?: string
+          signed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "amendment_cosignatures_amendment_id_fkey"
+            columns: ["amendment_id"]
+            isOneToOne: false
+            referencedRelation: "amendments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       amendments: {
         Row: {
           amendment_type: string

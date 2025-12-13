@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { FileText, PenTool, Calendar, Download, Search, Send, Loader2, CheckCircle, XCircle, Clock, Eye } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { FileText, PenTool, Calendar, Download, Search, Send, Loader2, CheckCircle, XCircle, Clock, Eye, Users, UserPlus, Bell } from "lucide-react";
 import { LegislativeSkills } from "@/Cortex/Skills/AdministrativeSkills";
 import { iAstedSoul } from "@/Consciousness/iAstedSoul";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,6 +19,7 @@ import { fr } from "date-fns/locale";
 
 interface Amendment {
     id: string;
+    author_id: string;
     project_law_id: string;
     article_number: number;
     amendment_type: string;
@@ -27,13 +29,23 @@ interface Amendment {
     created_at: string;
     vote_pour: number;
     vote_contre: number;
+    cosignatures_count?: number;
+}
+
+interface Cosignature {
+    id: string;
+    amendment_id: string;
+    deputy_id: string;
+    signed_at: string;
 }
 
 export const BureauVirtuelSection = () => {
     const [isAmendmentDialogOpen, setIsAmendmentDialogOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [amendments, setAmendments] = useState<Amendment[]>([]);
+    const [cosignatures, setCosignatures] = useState<Record<string, Cosignature[]>>({});
     const [loadingAmendments, setLoadingAmendments] = useState(true);
+    const [currentUserId, setCurrentUserId] = useState<string | null>(null);
     const [amendmentForm, setAmendmentForm] = useState({
         billReference: "",
         articleNumber: "",
@@ -43,10 +55,113 @@ export const BureauVirtuelSection = () => {
         justification: ""
     });
 
-    // Fetch amendments from database
+    // Get current user
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser();
+            setCurrentUserId(user?.id || null);
+        };
+        getUser();
+    }, []);
+
+    // Fetch amendments and cosignatures
     useEffect(() => {
         fetchAmendments();
+        fetchAllCosignatures();
     }, []);
+
+    // Subscribe to realtime changes
+    useEffect(() => {
+        const channel = supabase
+            .channel('amendments-changes')
+            .on(
+                'postgres_changes',
+                {
+                    event: 'UPDATE',
+                    schema: 'public',
+                    table: 'amendments'
+                },
+                (payload) => {
+                    console.log('Amendment updated:', payload);
+                    const updated = payload.new as Amendment;
+                    const old = payload.old as Amendment;
+                    
+                    // Show notification for status change
+                    if (old.status !== updated.status) {
+                        const statusLabels: Record<string, string> = {
+                            'adopte': 'adopté',
+                            'rejete': 'rejeté',
+                            'en_examen': 'en examen',
+                            'retire': 'retiré'
+                        };
+                        
+                        const statusLabel = statusLabels[updated.status] || updated.status;
+                        
+                        if (updated.status === 'adopte') {
+                            toast.success(`Amendement ${updated.project_law_id} Art.${updated.article_number} adopté !`, {
+                                icon: <CheckCircle className="w-5 h-5 text-green-500" />,
+                                description: `Votes: ${updated.vote_pour} pour / ${updated.vote_contre} contre`
+                            });
+                        } else if (updated.status === 'rejete') {
+                            toast.error(`Amendement ${updated.project_law_id} Art.${updated.article_number} rejeté`, {
+                                icon: <XCircle className="w-5 h-5 text-red-500" />,
+                                description: `Votes: ${updated.vote_pour} pour / ${updated.vote_contre} contre`
+                            });
+                        } else {
+                            toast.info(`Statut de l'amendement ${updated.project_law_id} Art.${updated.article_number} : ${statusLabel}`, {
+                                icon: <Bell className="w-5 h-5" />
+                            });
+                        }
+                    }
+                    
+                    // Update local state
+                    setAmendments(prev => prev.map(a => a.id === updated.id ? { ...a, ...updated } : a));
+                }
+            )
+            .on(
+                'postgres_changes',
+                {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'amendments'
+                },
+                (payload) => {
+                    console.log('New amendment:', payload);
+                    const newAmendment = payload.new as Amendment;
+                    setAmendments(prev => [newAmendment, ...prev]);
+                    toast.info(`Nouvel amendement déposé sur ${newAmendment.project_law_id}`, {
+                        icon: <PenTool className="w-5 h-5" />
+                    });
+                }
+            )
+            .on(
+                'postgres_changes',
+                {
+                    event: '*',
+                    schema: 'public',
+                    table: 'amendment_cosignatures'
+                },
+                (payload) => {
+                    console.log('Cosignature change:', payload);
+                    fetchAllCosignatures();
+                    
+                    if (payload.eventType === 'INSERT') {
+                        const newCosig = payload.new as Cosignature;
+                        const amendment = amendments.find(a => a.id === newCosig.amendment_id);
+                        if (amendment) {
+                            toast.info(`Nouvelle co-signature sur l'amendement ${amendment.project_law_id}`, {
+                                icon: <UserPlus className="w-5 h-5" />
+                            });
+                        }
+                    }
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [amendments]);
 
     const fetchAmendments = async () => {
         try {
@@ -65,6 +180,84 @@ export const BureauVirtuelSection = () => {
         }
     };
 
+    const fetchAllCosignatures = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('amendment_cosignatures')
+                .select('*');
+
+            if (error) throw error;
+            
+            // Group by amendment_id
+            const grouped: Record<string, Cosignature[]> = {};
+            (data || []).forEach((cosig: Cosignature) => {
+                if (!grouped[cosig.amendment_id]) {
+                    grouped[cosig.amendment_id] = [];
+                }
+                grouped[cosig.amendment_id].push(cosig);
+            });
+            setCosignatures(grouped);
+        } catch (error) {
+            console.error('Error fetching cosignatures:', error);
+        }
+    };
+
+    const handleCosign = async (amendmentId: string) => {
+        if (!currentUserId) {
+            toast.error("Vous devez être connecté pour co-signer");
+            return;
+        }
+
+        try {
+            const { error } = await supabase
+                .from('amendment_cosignatures')
+                .insert({
+                    amendment_id: amendmentId,
+                    deputy_id: currentUserId
+                });
+
+            if (error) {
+                if (error.code === '23505') {
+                    toast.info("Vous avez déjà co-signé cet amendement");
+                } else {
+                    throw error;
+                }
+            } else {
+                toast.success("Co-signature enregistrée !");
+            }
+        } catch (error) {
+            console.error('Error cosigning:', error);
+            toast.error("Erreur lors de la co-signature");
+        }
+    };
+
+    const handleRemoveCosign = async (amendmentId: string) => {
+        if (!currentUserId) return;
+
+        try {
+            const { error } = await supabase
+                .from('amendment_cosignatures')
+                .delete()
+                .eq('amendment_id', amendmentId)
+                .eq('deputy_id', currentUserId);
+
+            if (error) throw error;
+            toast.success("Co-signature retirée");
+        } catch (error) {
+            console.error('Error removing cosignature:', error);
+            toast.error("Erreur lors du retrait de la co-signature");
+        }
+    };
+
+    const hasCosigned = (amendmentId: string) => {
+        const amendmentCosigs = cosignatures[amendmentId] || [];
+        return amendmentCosigs.some(c => c.deputy_id === currentUserId);
+    };
+
+    const getCosignaturesCount = (amendmentId: string) => {
+        return (cosignatures[amendmentId] || []).length;
+    };
+
     const handleAmendmentSubmit = async () => {
         if (!amendmentForm.billReference || !amendmentForm.articleNumber || !amendmentForm.proposedText || !amendmentForm.justification) {
             toast.error("Veuillez remplir tous les champs obligatoires");
@@ -74,9 +267,8 @@ export const BureauVirtuelSection = () => {
         setIsSubmitting(true);
         try {
             const soulState = iAstedSoul.getState();
-            const userId = soulState.user.id;
+            const userId = soulState.user.id || currentUserId;
 
-            // Prepare amendment with skill
             const result = await LegislativeSkills.prepareAmendment(
                 {
                     skillName: "prepareAmendment",
@@ -97,7 +289,6 @@ export const BureauVirtuelSection = () => {
             );
 
             if (result.success && userId) {
-                // Persist to database
                 const { error } = await supabase.from('amendments').insert({
                     author_id: userId,
                     project_law_id: amendmentForm.billReference,
@@ -124,9 +315,6 @@ export const BureauVirtuelSection = () => {
                     proposedText: "",
                     justification: ""
                 });
-                
-                // Refresh list
-                fetchAmendments();
             } else if (!userId) {
                 toast.error("Vous devez être connecté pour déposer un amendement");
             } else {
@@ -165,11 +353,17 @@ export const BureauVirtuelSection = () => {
 
     return (
         <div className="p-6 space-y-6 animate-fade-in">
-            <div>
-                <h1 className="text-3xl font-serif font-bold mb-2">Bureau Virtuel</h1>
-                <p className="text-muted-foreground">
-                    Espace de travail législatif : Textes, Amendements et Commissions
-                </p>
+            <div className="flex justify-between items-start">
+                <div>
+                    <h1 className="text-3xl font-serif font-bold mb-2">Bureau Virtuel</h1>
+                    <p className="text-muted-foreground">
+                        Espace de travail législatif : Textes, Amendements et Commissions
+                    </p>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    Temps réel activé
+                </div>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -371,40 +565,80 @@ export const BureauVirtuelSection = () => {
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Texte</TableHead>
-                                    <TableHead>Article</TableHead>
-                                    <TableHead>Type</TableHead>
-                                    <TableHead>Statut</TableHead>
-                                    <TableHead>Date</TableHead>
-                                    <TableHead>Votes</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {amendments.map((amendment) => (
-                                    <TableRow key={amendment.id}>
-                                        <TableCell className="font-medium">{amendment.project_law_id}</TableCell>
-                                        <TableCell>Art. {amendment.article_number}</TableCell>
-                                        <TableCell>{getTypeLabel(amendment.amendment_type)}</TableCell>
-                                        <TableCell>{getStatusBadge(amendment.status)}</TableCell>
-                                        <TableCell className="text-muted-foreground text-sm">
-                                            {format(new Date(amendment.created_at), 'dd MMM yyyy', { locale: fr })}
-                                        </TableCell>
-                                        <TableCell>
-                                            {amendment.status !== 'en_attente' && (
-                                                <span className="text-sm">
-                                                    <span className="text-green-600">{amendment.vote_pour}</span>
-                                                    {' / '}
-                                                    <span className="text-red-600">{amendment.vote_contre}</span>
-                                                </span>
-                                            )}
-                                        </TableCell>
+                        <TooltipProvider>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Texte</TableHead>
+                                        <TableHead>Article</TableHead>
+                                        <TableHead>Type</TableHead>
+                                        <TableHead>Statut</TableHead>
+                                        <TableHead>Co-signatures</TableHead>
+                                        <TableHead>Date</TableHead>
+                                        <TableHead>Votes</TableHead>
+                                        <TableHead>Actions</TableHead>
                                     </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                </TableHeader>
+                                <TableBody>
+                                    {amendments.map((amendment) => (
+                                        <TableRow key={amendment.id}>
+                                            <TableCell className="font-medium">{amendment.project_law_id}</TableCell>
+                                            <TableCell>Art. {amendment.article_number}</TableCell>
+                                            <TableCell>{getTypeLabel(amendment.amendment_type)}</TableCell>
+                                            <TableCell>{getStatusBadge(amendment.status)}</TableCell>
+                                            <TableCell>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <div className="flex items-center gap-1 cursor-help">
+                                                            <Users className="w-4 h-4 text-muted-foreground" />
+                                                            <span className="font-medium">{getCosignaturesCount(amendment.id)}</span>
+                                                        </div>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        {getCosignaturesCount(amendment.id)} co-signataire(s)
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TableCell>
+                                            <TableCell className="text-muted-foreground text-sm">
+                                                {format(new Date(amendment.created_at), 'dd MMM yyyy', { locale: fr })}
+                                            </TableCell>
+                                            <TableCell>
+                                                {amendment.status !== 'en_attente' && (
+                                                    <span className="text-sm">
+                                                        <span className="text-green-600">{amendment.vote_pour}</span>
+                                                        {' / '}
+                                                        <span className="text-red-600">{amendment.vote_contre}</span>
+                                                    </span>
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {amendment.status === 'en_attente' && amendment.author_id !== currentUserId && (
+                                                    hasCosigned(amendment.id) ? (
+                                                        <Button 
+                                                            size="sm" 
+                                                            variant="outline"
+                                                            onClick={() => handleRemoveCosign(amendment.id)}
+                                                        >
+                                                            <CheckCircle className="w-4 h-4 mr-1 text-green-600" />
+                                                            Signé
+                                                        </Button>
+                                                    ) : (
+                                                        <Button 
+                                                            size="sm" 
+                                                            variant="secondary"
+                                                            onClick={() => handleCosign(amendment.id)}
+                                                        >
+                                                            <UserPlus className="w-4 h-4 mr-1" />
+                                                            Co-signer
+                                                        </Button>
+                                                    )
+                                                )}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </TooltipProvider>
                     </div>
                 )}
             </Card>
