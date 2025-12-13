@@ -36,12 +36,16 @@ import {
   UserCircle,
   Building2,
   MessageSquare,
-  ArrowLeft,
+  Home,
+  Sun,
+  Moon,
   Briefcase,
-  LogIn
+  LogIn,
+  ArrowRight
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { useTheme } from 'next-themes';
 
 const DEMO_ROLES: ParliamentaryRole[] = [
   'PRESIDENT',
@@ -98,6 +102,7 @@ const DEMO_ACCOUNTS = [
 
 const ProtocolDemoPage = () => {
   const navigate = useNavigate();
+  const { theme, setTheme } = useTheme();
   const [selectedRole, setSelectedRole] = useState<ParliamentaryRole>('DEPUTY');
   const [isFemale, setIsFemale] = useState(false);
   const [simulatedTime, setSimulatedTime] = useState<'morning' | 'afternoon' | 'evening'>('morning');
@@ -158,17 +163,33 @@ const ProtocolDemoPage = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4 flex items-center gap-4">
-          <Link to="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="w-4 h-4" />
-            Retour
-          </Link>
-          <Separator orientation="vertical" className="h-6" />
-          <div className="flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-primary" />
-            <h1 className="font-semibold">Démo Protocole iAsted</h1>
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate('/')}
+              className="hover:bg-muted"
+            >
+              <Home className="w-5 h-5" />
+            </Button>
+            <Separator orientation="vertical" className="h-6" />
+            <div className="flex items-center gap-2">
+              <MessageSquare className="w-5 h-5 text-primary" />
+              <h1 className="font-semibold">Démo Protocole iAsted</h1>
+            </div>
           </div>
-          <Badge variant="outline" className="ml-auto">Parlement Gabonais</Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="outline">Parlement Gabonais</Badge>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="hover:bg-muted"
+            >
+              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -432,7 +453,7 @@ const ProtocolDemoPage = () => {
 
                   <div className="space-y-2">
                     <h4 className="font-medium text-sm flex items-center gap-2">
-                      <ArrowLeft className="w-4 h-4 text-amber-500" />
+                      <ArrowRight className="w-4 h-4 text-amber-500" />
                       Formule de Conclusion
                     </h4>
                     <div className="bg-amber-500/5 border border-amber-500/20 p-4 rounded-lg">
