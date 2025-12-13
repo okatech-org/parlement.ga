@@ -1752,6 +1752,8 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                     </div>
                 </Tabs>
             </motion.div>
-        </div >
+        </div>
     );
 };
+
+export default IAstedChatModal;
