@@ -46,7 +46,9 @@ import { ConversationHistory } from '@/components/iasted/ConversationHistory';
 import { NotificationBell } from '@/components/iasted/NotificationBell';
 import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 import { iastedStorageService } from '@/services/iasted-storage-service';
-import { History, Paperclip } from 'lucide-react';
+import { History, Paperclip, BarChart3 } from 'lucide-react';
+import { PresenceIndicator } from '@/components/iasted/PresenceIndicator';
+import { LiveTranscription } from '@/components/iasted/LiveTranscription';
 
 // Type-safe Supabase helper for tables not yet in generated types
 const db = supabase as any;
@@ -1719,6 +1721,20 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                 />
                             )}
 
+                            {/* Presence Indicator */}
+                            {userId && (
+                                <PresenceIndicator userId={userId} userName="Utilisateur" compact />
+                            )}
+
+                            {/* Analytics Link */}
+                            <button
+                                onClick={() => navigate('/iasted/analytics')}
+                                className="neu-button-sm flex items-center gap-2 px-3 py-2 text-sm hover:bg-primary/10 transition-colors"
+                                title="Voir les analytiques iAsted"
+                            >
+                                <BarChart3 className="w-4 h-4" />
+                            </button>
+
                             <button
                                 onClick={onClose}
                                 className="neu-raised p-2 rounded-lg hover:shadow-neo-md transition-all"
@@ -1848,6 +1864,15 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                 >
                                     <Paperclip className={`w-6 h-6 ${showUpload ? 'text-primary' : 'text-muted-foreground'}`} />
                                 </button>
+
+                                {/* Live Transcription */}
+                                <LiveTranscription
+                                    compact
+                                    autoSend
+                                    onTranscriptComplete={(text) => {
+                                        setInputText(text);
+                                    }}
+                                />
 
                                 <div className="flex-1 relative">
                                     <textarea
