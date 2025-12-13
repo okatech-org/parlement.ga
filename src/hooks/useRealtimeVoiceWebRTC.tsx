@@ -141,13 +141,31 @@ export const useRealtimeVoiceWebRTC = (onToolCall?: (name: string, args: any) =>
                 }),
             });
 
+            const data = await tokenResponse.json();
+
+            // Check if fallback mode is requested
+            if (data?.fallback === true) {
+                console.log('🔄 Server requested TTS fallback mode:', data.message);
+                setVoiceState('idle');
+                
+                toast({
+                    title: "Mode vocal alternatif",
+                    description: "Synthèse vocale activée. Pour la voix temps réel, ajoutez une clé OPENAI_API_KEY.",
+                    variant: "default"
+                });
+                
+                // Signal that fallback should be used
+                window.dispatchEvent(new CustomEvent('iasted-use-tts-fallback', { 
+                    detail: { systemPrompt: systemPrompt } 
+                }));
+                return;
+            }
+
             if (!tokenResponse.ok) {
-                const errorText = await tokenResponse.text();
+                const errorText = JSON.stringify(data);
                 console.error('❌ Token HTTP error:', tokenResponse.status, errorText);
                 throw new Error('Erreur lors de la récupération du token: ' + tokenResponse.status);
             }
-
-            const data = await tokenResponse.json();
 
             if (!data?.client_secret?.value) {
                 console.error('❌ Invalid token response:', data);
