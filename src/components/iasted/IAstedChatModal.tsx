@@ -1834,11 +1834,13 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                 <Star className={`w-4 h-4 ${showFavorites ? 'fill-warning' : ''}`} />
                             </button>
 
+                            {/* Close Button - Made more visible */}
                             <button
                                 onClick={onClose}
-                                className="neu-raised p-2 rounded-lg hover:shadow-neo-md transition-all"
+                                className="ml-2 neu-raised p-2.5 rounded-full bg-destructive/10 hover:bg-destructive/20 border border-destructive/30 hover:border-destructive/50 transition-all"
+                                title="Fermer (Échap)"
                             >
-                                <X className="w-5 h-5 text-foreground" />
+                                <X className="w-5 h-5 text-destructive" />
                             </button>
                         </div>
                     </div>
