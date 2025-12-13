@@ -105,9 +105,6 @@ const Index = () => {
               <Button variant="ghost" size="sm" onClick={() => navigate("/iasted/protocol-demo")}>
                 Démo Protocole
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/portail")}>
-                {t('hub.title')}
-              </Button>
             </nav>
             <div className="flex items-center gap-2">
               {/* Language Selector */}
