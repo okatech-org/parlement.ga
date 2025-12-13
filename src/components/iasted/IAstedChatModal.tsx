@@ -43,7 +43,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRealtimeVoiceWebRTC, UseRealtimeVoiceWebRTC } from '@/hooks/useRealtimeVoiceWebRTC';
 import { DocumentUploadZone } from '@/components/iasted/DocumentUploadZone';
 import { ConversationHistory } from '@/components/iasted/ConversationHistory';
-import { History } from 'lucide-react';
+import { NotificationBell } from '@/components/iasted/NotificationBell';
+import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
+import { iastedStorageService } from '@/services/iasted-storage-service';
+import { History, Paperclip } from 'lucide-react';
 
 // Type-safe Supabase helper for tables not yet in generated types
 const db = supabase as any;
@@ -521,10 +524,14 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
     const [isProcessing, setIsProcessing] = useState(false);
     const [sessionId, setSessionId] = useState<string | null>(null);
     const [showHistory, setShowHistory] = useState(false);
+    const [showUpload, setShowUpload] = useState(false);
     const [userId, setUserId] = useState<string | null>(null);
     const [selectedVoice, setSelectedVoice] = useState<'echo' | 'ash' | 'shimmer'>(() => {
         return currentVoice || (localStorage.getItem('iasted-voice-selection') as 'echo' | 'ash' | 'shimmer') || 'ash';
     });
+
+    // Real-time notifications
+    const { notifications, unreadCount, markAsRead, markAllAsRead, clearNotifications } = useRealtimeNotifications(userId);
 
     // Ref pour tracker si la session a été initialisée (évite les problèmes de timing)
     const sessionInitializedRef = useRef(false);
@@ -851,6 +858,55 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
             title: "✨ Nouvelle conversation",
             duration: 2000,
         });
+    };
+
+    // Handle file upload with persistence
+    const handleFileUpload = async (file: File) => {
+        if (!sessionId) return;
+
+        try {
+            toast({
+                title: "📤 Upload en cours...",
+                description: file.name,
+            });
+
+            const uploadedFile = await iastedStorageService.uploadFile(file, sessionId);
+            
+            if (uploadedFile) {
+                // Add file as message in chat
+                const fileMessage: Message = {
+                    id: crypto.randomUUID(),
+                    role: 'user',
+                    content: `📎 Fichier uploadé: ${uploadedFile.name}`,
+                    timestamp: new Date().toISOString(),
+                    metadata: {
+                        documents: [{
+                            id: uploadedFile.id,
+                            name: uploadedFile.name,
+                            url: uploadedFile.url,
+                            type: uploadedFile.type
+                        }]
+                    }
+                };
+
+                setMessages(prev => [...prev, fileMessage]);
+                if (sessionId) await saveMessage(sessionId, fileMessage);
+
+                toast({
+                    title: "✅ Fichier uploadé",
+                    description: uploadedFile.name,
+                });
+
+                setShowUpload(false);
+            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+            toast({
+                title: "Erreur d'upload",
+                description: "Impossible d'uploader le fichier",
+                variant: "destructive"
+            });
+        }
     };
 
 
@@ -1646,6 +1702,23 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                 </button>
                             </div>
 
+                            {/* Notification Bell */}
+                            {userId && (
+                                <NotificationBell
+                                    notifications={notifications}
+                                    unreadCount={unreadCount}
+                                    onMarkAsRead={markAsRead}
+                                    onMarkAllAsRead={markAllAsRead}
+                                    onClear={clearNotifications}
+                                    onNotificationClick={(notification) => {
+                                        if (notification.sessionId) {
+                                            loadSessionMessages(notification.sessionId);
+                                            setSessionId(notification.sessionId);
+                                        }
+                                    }}
+                                />
+                            )}
+
                             <button
                                 onClick={onClose}
                                 className="neu-raised p-2 rounded-lg hover:shadow-neo-md transition-all"
@@ -1735,6 +1808,23 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                 <div ref={messagesEndRef} />
                             </div>
 
+                            {/* File Upload Zone */}
+                            <AnimatePresence>
+                                {showUpload && (
+                                    <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        className="border-t border-border p-4 overflow-hidden"
+                                    >
+                                        <DocumentUploadZone
+                                            onFileSelect={handleFileUpload}
+                                            mode="assisted"
+                                        />
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+
                             {/* Input Area */}
                             <div className="p-4 border-t border-border bg-background/50 backdrop-blur-md flex items-end gap-2">
                                 <button
@@ -1748,6 +1838,15 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                     ) : (
                                         <Mic className="w-6 h-6 text-primary" />
                                     )}
+                                </button>
+
+                                {/* File upload button */}
+                                <button
+                                    onClick={() => setShowUpload(!showUpload)}
+                                    className={`neu-raised p-4 rounded-xl hover:shadow-neo-lg transition-all ${showUpload ? 'bg-primary/10' : ''}`}
+                                    title="Joindre un fichier"
+                                >
+                                    <Paperclip className={`w-6 h-6 ${showUpload ? 'text-primary' : 'text-muted-foreground'}`} />
                                 </button>
 
                                 <div className="flex-1 relative">
