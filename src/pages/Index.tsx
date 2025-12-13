@@ -6,6 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { NotificationCenter } from "@/components/parliamentary/NotificationCenter";
+import { AmendmentDetailModal } from "@/components/parliamentary/AmendmentDetailModal";
+import { useParliamentaryNotifications } from "@/hooks/useParliamentaryNotifications";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -13,10 +17,29 @@ const Index = () => {
   const { theme, setTheme } = useTheme();
   const { t, language, setLanguage, dir } = useLanguage();
   const [mounted, setMounted] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [selectedAmendmentId, setSelectedAmendmentId] = useState<string | null>(null);
+
+  const {
+    notifications,
+    unreadCount,
+    markAsRead,
+    markAllAsRead,
+    clearNotifications
+  } = useParliamentaryNotifications(userId);
 
   useEffect(() => {
     setMounted(true);
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUserId(user?.id || null);
+    });
   }, []);
+
+  const handleNotificationClick = (notification: any) => {
+    if (notification.metadata?.amendmentId) {
+      setSelectedAmendmentId(notification.metadata.amendmentId);
+    }
+  };
 
   const features = [
     {
@@ -100,6 +123,16 @@ const Index = () => {
                 <option value="pt">🇵🇹 Português</option>
               </select>
 
+              {/* Notification Center */}
+              <NotificationCenter
+                notifications={notifications}
+                unreadCount={unreadCount}
+                onMarkAsRead={markAsRead}
+                onMarkAllAsRead={markAllAsRead}
+                onClear={clearNotifications}
+                onNotificationClick={handleNotificationClick}
+              />
+
               {/* Theme Toggle */}
               <Button
                 variant="ghost"
@@ -131,6 +164,13 @@ const Index = () => {
                 {t('common.login')}
               </Button>
             </div>
+
+            {/* Amendment Detail Modal */}
+            <AmendmentDetailModal
+              amendmentId={selectedAmendmentId}
+              open={!!selectedAmendmentId}
+              onOpenChange={(open) => !open && setSelectedAmendmentId(null)}
+            />
           </div>
         </div>
       </header>
