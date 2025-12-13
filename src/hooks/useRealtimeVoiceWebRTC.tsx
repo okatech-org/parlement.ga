@@ -125,17 +125,20 @@ export const useRealtimeVoiceWebRTC = (onToolCall?: (name: string, args: any) =>
 
             setVoiceState('connecting');
 
-            // 1. Get Ephemeral Token from edge function (direct HTTP call to avoid mocked client)
+            // 1. Get Ephemeral Token from edge function
             console.log('🔑 Requesting ephemeral token...');
-            const FUNCTION_URL =
-                'https://csmegxwehniyfvbbjqbz.functions.supabase.co/functions/v1/get-realtime-token';
+            const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+            const FUNCTION_URL = `${SUPABASE_URL}/functions/v1/get-realtime-token`;
 
             const tokenResponse = await fetch(FUNCTION_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({}),
+                body: JSON.stringify({
+                    voice: voice === 'echo' ? 'echo' : voice === 'ash' ? 'ash' : 'shimmer',
+                    instructions: systemPrompt
+                }),
             });
 
             if (!tokenResponse.ok) {
