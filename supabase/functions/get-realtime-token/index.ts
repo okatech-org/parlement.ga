@@ -13,11 +13,19 @@ serve(async (req) => {
   }
 
   try {
-    const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY');
+    // Check for direct OpenAI API key first
+    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
     
-    if (!OPENROUTER_API_KEY) {
-      console.error('OPENROUTER_API_KEY is not set');
-      throw new Error('OPENROUTER_API_KEY is not configured');
+    if (!OPENAI_API_KEY) {
+      console.log('OPENAI_API_KEY not set, returning fallback mode');
+      // Return a response indicating to use TTS fallback
+      return new Response(JSON.stringify({ 
+        fallback: true,
+        message: 'OpenAI Realtime API requires a direct OpenAI API key. Using TTS fallback mode.',
+        hint: 'Add OPENAI_API_KEY secret for real-time voice capabilities.'
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     // Parse request body for voice and instructions
@@ -32,15 +40,14 @@ serve(async (req) => {
       // Use defaults if no body
     }
 
-    console.log('🔑 Requesting ephemeral token from OpenAI via OpenRouter...');
+    console.log('🔑 Requesting ephemeral token from OpenAI Realtime API...');
     console.log('Voice:', voice);
 
     // Request ephemeral token from OpenAI Realtime API
-    // OpenRouter provides access to OpenAI models including realtime
     const response = await fetch("https://api.openai.com/v1/realtime/sessions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+        "Authorization": `Bearer ${OPENAI_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -54,12 +61,14 @@ serve(async (req) => {
       const errorText = await response.text();
       console.error('OpenAI API error:', response.status, errorText);
       
-      // If OpenRouter key doesn't work for realtime, try alternative approach
-      if (response.status === 401 || response.status === 403) {
-        throw new Error('La clé API OpenRouter ne permet pas l\'accès à l\'API Realtime OpenAI. Une clé OpenAI directe est nécessaire.');
-      }
-      
-      throw new Error(`Erreur API OpenAI: ${response.status} - ${errorText}`);
+      // Return fallback mode on error
+      return new Response(JSON.stringify({ 
+        fallback: true,
+        message: `OpenAI API error: ${response.status}`,
+        hint: 'Using TTS fallback mode due to API error.'
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     const data = await response.json();
@@ -74,11 +83,11 @@ serve(async (req) => {
     console.error("Error in get-realtime-token:", errorMessage);
     return new Response(
       JSON.stringify({ 
-        error: errorMessage,
-        hint: 'Pour utiliser la voix en temps réel, une clé API OpenAI directe est nécessaire.'
+        fallback: true,
+        message: errorMessage,
+        hint: 'Using TTS fallback mode due to error.'
       }), 
       {
-        status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
