@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      amendments: {
+        Row: {
+          amendment_type: string
+          article_number: number
+          author_id: string
+          commission: string | null
+          cosignatories: string[] | null
+          created_at: string
+          id: string
+          justification: string
+          original_text: string | null
+          project_law_id: string
+          proposed_text: string
+          status: string
+          updated_at: string
+          vote_abstention: number | null
+          vote_contre: number | null
+          vote_pour: number | null
+        }
+        Insert: {
+          amendment_type: string
+          article_number: number
+          author_id: string
+          commission?: string | null
+          cosignatories?: string[] | null
+          created_at?: string
+          id?: string
+          justification: string
+          original_text?: string | null
+          project_law_id: string
+          proposed_text: string
+          status?: string
+          updated_at?: string
+          vote_abstention?: number | null
+          vote_contre?: number | null
+          vote_pour?: number | null
+        }
+        Update: {
+          amendment_type?: string
+          article_number?: number
+          author_id?: string
+          commission?: string | null
+          cosignatories?: string[] | null
+          created_at?: string
+          id?: string
+          justification?: string
+          original_text?: string | null
+          project_law_id?: string
+          proposed_text?: string
+          status?: string
+          updated_at?: string
+          vote_abstention?: number | null
+          vote_contre?: number | null
+          vote_pour?: number | null
+        }
+        Relationships: []
+      }
       conversation_messages: {
         Row: {
           content: string
