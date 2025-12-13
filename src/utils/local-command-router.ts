@@ -1,10 +1,6 @@
 /**
- * iAsted Local Command Router v2.0
- * 
- * Système de routage intelligent des commandes vocales :
- * - Matching par regex pour les commandes exactes
- * - Matching par mots-clés pour une reconnaissance plus flexible
- * - Matching par similarité pour les commandes approximatives
+ * iAsted Local Command Router - ÉDITION PARLEMENTAIRE
+ * Reconnaissance vocale locale pour l'Assemblée Nationale & le Sénat
  * 
  * Pattern: commande vocale → match local → action immédiate (0 coût)
  *          commande vocale → pas de match → API OpenAI (payant)
@@ -16,21 +12,21 @@ export interface LocalCommandResult {
     toolName?: string;
     toolArgs?: Record<string, any>;
     response?: string;
-    confidence?: number; // 0-1, higher is better
+    confidence?: number;
 }
 
-// Normalize text for matching (lowercase, remove accents, trim, remove punctuation)
+// Normalize text for matching
 const normalize = (text: string): string => {
     return text
         .toLowerCase()
         .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '') // Remove accents
-        .replace(/[.,!?;:'"()]/g, '') // Remove punctuation
-        .replace(/\s+/g, ' ') // Normalize spaces
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[.,!?;:'"()]/g, '')
+        .replace(/\s+/g, ' ')
         .trim();
 };
 
-// Simple Levenshtein distance for fuzzy matching
+// Levenshtein distance for fuzzy matching
 const levenshteinDistance = (a: string, b: string): number => {
     const matrix: number[][] = [];
     for (let i = 0; i <= b.length; i++) {
@@ -55,420 +51,296 @@ const levenshteinDistance = (a: string, b: string): number => {
     return matrix[b.length][a.length];
 };
 
-// Calculate similarity ratio (0-1)
 const similarity = (a: string, b: string): number => {
     const maxLen = Math.max(a.length, b.length);
     if (maxLen === 0) return 1;
     return 1 - levenshteinDistance(a, b) / maxLen;
 };
 
-// Check if text contains all required keywords
 const containsKeywords = (text: string, keywords: string[]): boolean => {
     return keywords.every(kw => text.includes(kw));
 };
 
-// Check if text contains any of the keywords
 const containsAnyKeyword = (text: string, keywords: string[]): boolean => {
     return keywords.some(kw => text.includes(kw));
 };
 
 interface CommandDef {
-    // Regex patterns for exact matching (highest priority)
     patterns?: RegExp[];
-    // Required keywords that must all be present (medium priority)
     requiredKeywords?: string[];
-    // Any of these keywords + any action keyword (lower priority)
     anyKeywords?: string[];
-    // Action keywords that indicate intent
     actionKeywords?: string[];
-    // Exact phrases for fuzzy matching
     exactPhrases?: string[];
-    // Tool to execute
     toolName: string;
     toolArgs?: Record<string, any>;
     response: string;
 }
 
-// Command definitions with multiple matching strategies
 const COMMAND_DEFINITIONS: CommandDef[] = [
-    // ========== OUVRIR LE CHAT ==========
+    // ========== 1. NAVIGATION LÉGISLATIVE (Prioritaire) ==========
+    {
+        patterns: [
+            /ordre\s*(du\s*)?jour/,
+            /agenda(\s*parlementaire)?/,
+            /calendrier\s*des\s*seances/,
+            /planning\s*des\s*commissions/,
+            /prochaine\s*seance/,
+            /ouvre\s*(l\s*)?agenda/,
+            /va\s*(a\s*)?(l\s*)?agenda/,
+        ],
+        anyKeywords: ['agenda', 'calendrier', 'seance', 'ordre', 'jour', 'planning'],
+        actionKeywords: ['ouvre', 'va', 'montre', 'affiche'],
+        exactPhrases: ['ordre du jour', 'agenda parlementaire', 'calendrier des seances'],
+        toolName: 'global_navigate',
+        toolArgs: { query: 'agenda' },
+        response: 'Voici l\'ordre du jour de la session.'
+    },
+    {
+        patterns: [
+            /projets?\s*de\s*lois?/,
+            /propositions?\s*de\s*lois?/,
+            /textes?\s*en\s*examen/,
+            /dossiers?\s*legislatifs?/,
+            /ouvre\s*(les\s*)?textes/,
+            /legislation/,
+        ],
+        anyKeywords: ['projet', 'loi', 'proposition', 'texte', 'legislation', 'dossier'],
+        exactPhrases: ['projets de loi', 'textes en examen', 'dossiers legislatifs'],
+        toolName: 'global_navigate',
+        toolArgs: { query: 'legislation' },
+        response: 'J\'affiche les textes de loi en cours d\'examen.'
+    },
+    {
+        patterns: [
+            /hemicycle/,
+            /seances?\s*plenieres?/,
+            /direct\s*tv/,
+            /voir\s*la\s*seance/,
+            /pleniere/,
+            /ouvre\s*(l\s*)?hemicycle/,
+        ],
+        anyKeywords: ['hemicycle', 'pleniere', 'seance', 'direct'],
+        exactPhrases: ['hemicycle', 'seance pleniere', 'direct tv'],
+        toolName: 'global_navigate',
+        toolArgs: { query: 'hemicycle' },
+        response: 'Connexion au direct de l\'Hémicycle.'
+    },
+    {
+        patterns: [
+            /mes\s*amendements/,
+            /deposer\s*(un\s*)?amendement/,
+            /rediger\s*(un\s*)?amendement/,
+            /ouvre\s*(les\s*)?amendements/,
+            /cosigner\s*(un\s*)?amendement/,
+        ],
+        anyKeywords: ['amendement', 'amendements', 'cosign'],
+        actionKeywords: ['ouvre', 'deposer', 'rediger', 'cosigner'],
+        exactPhrases: ['mes amendements', 'deposer un amendement'],
+        toolName: 'global_navigate',
+        toolArgs: { query: 'amendements' },
+        response: 'Ouverture du module de gestion des amendements.'
+    },
+    {
+        patterns: [
+            /commissions?/,
+            /travaux\s*en\s*commission/,
+            /reunion\s*(de\s*)?commission/,
+            /mes\s*commissions/,
+            /ouvre\s*(les\s*)?commissions/,
+        ],
+        anyKeywords: ['commission', 'commissions'],
+        actionKeywords: ['ouvre', 'va', 'montre', 'affiche'],
+        exactPhrases: ['travaux en commission', 'reunion de commission'],
+        toolName: 'global_navigate',
+        toolArgs: { query: 'commissions' },
+        response: 'Accès aux travaux des commissions permanentes.'
+    },
+
+    // ========== 2. CONTRÔLE GOUVERNEMENTAL ==========
+    {
+        patterns: [
+            /questions?\s*(au\s*)?gouvernement/,
+            /interpellation/,
+            /questions?\s*orales?/,
+            /questions?\s*ecrites?/,
+            /poser\s*(une\s*)?question/,
+            /mes\s*questions/,
+        ],
+        anyKeywords: ['question', 'questions', 'gouvernement', 'interpellation'],
+        exactPhrases: ['questions au gouvernement', 'question orale', 'question ecrite'],
+        toolName: 'global_navigate',
+        toolArgs: { query: 'questions' },
+        response: 'J\'ouvre le module des Questions au Gouvernement.'
+    },
+
+    // ========== 3. OUTILS DE SÉANCE ==========
+    {
+        patterns: [
+            /reglement\s*interieur/,
+            /constitution/,
+            /article\s*\d+/,
+            /textes?\s*fondamentaux/,
+        ],
+        anyKeywords: ['reglement', 'constitution', 'article'],
+        toolName: 'search_legislation',
+        toolArgs: { type: 'law' },
+        response: 'Recherche dans les textes fondamentaux.'
+    },
+    {
+        patterns: [
+            /suspension\s*de\s*seance/,
+            /demande\s*de\s*parole/,
+            /scrutin\s*public/,
+            /vote\s*solennel/,
+        ],
+        anyKeywords: ['suspension', 'parole', 'scrutin', 'vote'],
+        toolName: 'manage_session',
+        toolArgs: { action: 'alert' },
+        response: 'Note prise pour la présidence.'
+    },
+
+    // ========== 4. GESTION DU MANDAT ==========
+    {
+        patterns: [
+            /ma\s*circonscription/,
+            /mes\s*electeurs/,
+            /doleances/,
+            /terrain/,
+            /citoyens/,
+        ],
+        anyKeywords: ['circonscription', 'terrain', 'electeur', 'citoyen', 'doleance'],
+        exactPhrases: ['ma circonscription', 'mes electeurs'],
+        toolName: 'global_navigate',
+        toolArgs: { query: 'circonscription' },
+        response: 'Affichage des données de votre circonscription.'
+    },
+    {
+        patterns: [
+            /mon\s*espace\s*depute/,
+            /espace\s*depute/,
+            /mon\s*espace\s*senateur/,
+            /espace\s*parlementaire/,
+            /va\s*(a\s*)?(mon\s*)?espace/,
+        ],
+        requiredKeywords: ['espace'],
+        anyKeywords: ['depute', 'senateur', 'parlementaire'],
+        toolName: 'global_navigate',
+        toolArgs: { query: 'espace député' },
+        response: 'Navigation vers votre espace parlementaire.'
+    },
+    {
+        patterns: [
+            /bureau\s*virtuel/,
+            /mon\s*bureau/,
+            /ouvre\s*(le\s*)?bureau/,
+        ],
+        anyKeywords: ['bureau'],
+        exactPhrases: ['bureau virtuel', 'mon bureau'],
+        toolName: 'global_navigate',
+        toolArgs: { query: 'bureau' },
+        response: 'Ouverture de votre bureau virtuel.'
+    },
+
+    // ========== 5. DOCUMENTS PARLEMENTAIRES ==========
+    {
+        patterns: [
+            /mes\s*documents/,
+            /ouvre\s*(mes\s*)?documents/,
+            /rapports?\s*parlementaires?/,
+            /comptes?\s*rendus?/,
+        ],
+        anyKeywords: ['document', 'documents', 'rapport', 'compte', 'rendu'],
+        toolName: 'global_navigate',
+        toolArgs: { query: 'documents' },
+        response: 'Navigation vers vos documents parlementaires.'
+    },
+
+    // ========== 6. GESTION DU CHAT ==========
     {
         patterns: [
             /ouvre\s*(le\s*|la\s*)?chat/,
             /ouvre\s*(la\s*)?fenetre\s*(de|du)\s*chat/,
-            /affiche\s*(le\s*|la\s*)?chat/,
-            /affiche\s*(la\s*)?fenetre\s*(de|du)\s*chat/,
-            /montre\s*(le\s*|la\s*)?chat/,
-            /montre\s*(la\s*)?fenetre\s*(de|du)\s*chat/,
             /ouvre\s*(la\s*)?conversation/,
-            /lance\s*(le\s*)?chat/,
-            /demarre\s*(le\s*)?chat/,
-            /ouvrir\s*(le\s*|la\s*)?chat/,
-            /ouvrir\s*(la\s*)?fenetre/,
             /parler\s*(par\s*)?(ecrit|texte)/,
             /mode\s*texte/,
-            /mode\s*ecrit/,
+            /messagerie\s*securisee/,
+            /confidentiel/,
         ],
         requiredKeywords: ['ouvr', 'chat'],
-        anyKeywords: ['chat', 'fenetre', 'conversation', 'texte', 'ecrit'],
-        actionKeywords: ['ouvre', 'ouvrir', 'affiche', 'montre', 'lance', 'demarre'],
-        exactPhrases: [
-            'ouvre le chat',
-            'ouvre la fenetre du chat',
-            'ouvre la fenetre de chat',
-            'affiche le chat',
-            'montre le chat',
-            'mode texte'
-        ],
+        anyKeywords: ['chat', 'fenetre', 'conversation', 'texte'],
+        exactPhrases: ['ouvre le chat', 'mode texte'],
         toolName: 'manage_chat',
         toolArgs: { action: 'open' },
-        response: 'Chat ouvert.'
+        response: 'Ouverture du canal sécurisé.'
     },
-
-    // ========== FERMER LE CHAT ==========
     {
         patterns: [
             /ferme\s*(le\s*|la\s*)?chat/,
-            /ferme\s*(la\s*)?fenetre\s*(de|du)?\s*chat/,
             /ferme\s*(la\s*)?fenetre/,
-            /cache\s*(le\s*|la\s*)?chat/,
-            /masque\s*(le\s*)?chat/,
+            /cache\s*(le\s*)?chat/,
             /quitte\s*(le\s*)?chat/,
-            /fermer\s*(le\s*|la\s*)?chat/,
-            /fermer\s*(la\s*)?fenetre/,
-            /sort\s*(du\s*)?chat/,
-            /sors\s*(du\s*)?chat/,
         ],
         requiredKeywords: ['ferm', 'chat'],
-        anyKeywords: ['chat', 'fenetre', 'conversation'],
-        actionKeywords: ['ferme', 'fermer', 'cache', 'masque', 'quitte', 'quitter', 'sort', 'sors'],
-        exactPhrases: [
-            'ferme le chat',
-            'ferme la fenetre',
-            'ferme la fenetre du chat',
-            'cache le chat',
-            'quitte le chat'
-        ],
+        anyKeywords: ['chat', 'fenetre'],
+        exactPhrases: ['ferme le chat', 'ferme la fenetre'],
         toolName: 'manage_chat',
         toolArgs: { action: 'close' },
         response: 'Chat fermé.'
     },
-
-    // ========== EFFACER LA CONVERSATION ==========
     {
         patterns: [
             /efface\s*(la\s*)?conversation/,
             /nouvelle\s*conversation/,
             /recommence/,
             /clear\s*chat/,
-            /efface\s*(l\s*)?historique/,
-            /supprime\s*(la\s*)?conversation/,
-            /nettoie\s*(le\s*)?chat/,
         ],
-        requiredKeywords: ['effac', 'conversation'],
-        exactPhrases: [
-            'efface la conversation',
-            'nouvelle conversation',
-            'recommence',
-            'effacer historique'
-        ],
+        exactPhrases: ['efface la conversation', 'nouvelle conversation'],
         toolName: 'manage_chat',
         toolArgs: { action: 'clear' },
         response: 'Conversation effacée.'
     },
 
-    // ========== THÈME SOMBRE ==========
+    // ========== 7. THÈME & INTERFACE ==========
     {
         patterns: [
             /mode\s*sombre/,
             /theme\s*sombre/,
             /dark\s*mode/,
-            /passe\s*(en\s*)?sombre/,
-            /active\s*(le\s*)?mode\s*sombre/,
-            /mets\s*(le\s*)?mode\s*sombre/,
-            /theme\s*noir/,
-            /mode\s*noir/,
             /mode\s*nuit/,
         ],
-        requiredKeywords: ['mode', 'sombre'],
         anyKeywords: ['sombre', 'noir', 'dark', 'nuit'],
-        actionKeywords: ['mode', 'theme', 'passe', 'active', 'mets'],
-        exactPhrases: ['mode sombre', 'theme sombre', 'dark mode'],
+        exactPhrases: ['mode sombre', 'theme sombre'],
         toolName: 'control_ui',
         toolArgs: { action: 'set_theme_dark' },
-        response: 'Mode sombre activé.'
+        response: 'Mode sombre activé pour la séance nocturne.'
     },
-
-    // ========== THÈME CLAIR ==========
     {
         patterns: [
             /mode\s*clair/,
             /theme\s*clair/,
             /light\s*mode/,
-            /passe\s*(en\s*)?clair/,
-            /active\s*(le\s*)?mode\s*clair/,
-            /mets\s*(le\s*)?mode\s*clair/,
             /mode\s*jour/,
         ],
-        requiredKeywords: ['mode', 'clair'],
-        anyKeywords: ['clair', 'light', 'jour', 'blanc'],
-        actionKeywords: ['mode', 'theme', 'passe', 'active', 'mets'],
-        exactPhrases: ['mode clair', 'theme clair', 'light mode'],
+        anyKeywords: ['clair', 'light', 'jour'],
+        exactPhrases: ['mode clair', 'theme clair'],
         toolName: 'control_ui',
         toolArgs: { action: 'set_theme_light' },
         response: 'Mode clair activé.'
     },
-
-    // ========== TOGGLE THÈME ==========
     {
         patterns: [
             /change\s*(le\s*)?theme/,
             /bascule\s*(le\s*)?theme/,
             /toggle\s*theme/,
-            /inverse\s*(le\s*)?theme/,
         ],
         toolName: 'control_ui',
         toolArgs: { action: 'toggle_theme' },
         response: 'Thème changé.'
     },
-
-    // ========== NAVIGATION - DOCUMENTS ==========
-    {
-        patterns: [
-            /mes\s*documents/,
-            /ouvre\s*(mes\s*)?documents/,
-            /va\s*(aux|a\s*mes)\s*documents/,
-            /affiche\s*(mes\s*)?documents/,
-            /voir\s*(mes\s*)?documents/,
-            /montre\s*(mes\s*)?documents/,
-        ],
-        requiredKeywords: ['document'],
-        toolName: 'global_navigate',
-        toolArgs: { query: 'documents' },
-        response: 'Navigation vers vos documents.'
-    },
-
-    // ========== NAVIGATION - DEMANDES ==========
-    // Ne matcher que les patterns explicites de navigation vers les demandes
-    {
-        patterns: [
-            /^mes\s*demandes$/,
-            /ouvre\s*(mes\s*)?demandes/,
-            /va\s*(aux|a\s*mes)\s*demandes/,
-            /suivi\s*(de\s*mes\s*)?(demandes|dossiers)/,
-            /voir\s*(mes\s*)?demandes/,
-            /consulte\s*(mes\s*)?demandes/,
-        ],
-        // Pas de requiredKeywords car "demandé" peut apparaître dans d'autres contextes
-        exactPhrases: [
-            'mes demandes',
-            'ouvre mes demandes',
-            'suivi des demandes'
-        ],
-        toolName: 'global_navigate',
-        toolArgs: { query: 'demandes' },
-        response: 'Navigation vers vos demandes.'
-    },
-
-    // ========== NAVIGATION - TABLEAU DE BORD ==========
-    {
-        patterns: [
-            /tableau\s*de\s*bord/,
-            /dashboard/,
-            /accueil/,
-            /page\s*principale/,
-            /va\s*(a\s*l\s*)?accueil/,
-        ],
-        anyKeywords: ['tableau', 'bord', 'dashboard', 'accueil'],
-        toolName: 'global_navigate',
-        toolArgs: { query: 'tableau de bord' },
-        response: 'Navigation vers le tableau de bord.'
-    },
-
-    // ========== NAVIGATION - MESSAGERIE (iBoîte) ==========
-    // IMPORTANT: Ne PAS matcher "courrier" seul car ça peut être une demande de génération de document
-    // Matcher uniquement les demandes explicites de navigation vers la messagerie
-    {
-        patterns: [
-            /^messagerie$/,
-            /^iboite$/,
-            /^i\s*boite$/,
-            /ouvre\s*(la\s*)?messagerie/,
-            /ouvre\s*(la\s*)?iboite/,
-            /ouvre\s*(mes\s*)?emails/,
-            /ouvre\s*(mes\s*)?mails/,
-            /va\s*(a\s*)?(la\s*)?messagerie/,
-            /va\s*(a\s*)?(la\s*)?iboite/,
-            /consulte\s*(mes\s*)?(emails|mails|messages)/,
-            /voir\s*(mes\s*)?(emails|mails)/,
-            /mes\s*emails/,
-            /mes\s*mails/,
-            /envoie\s*(un\s*)?(email|mail|message)/,
-            /ecris\s*(un\s*)?(email|mail|message)/,
-            /reponds\s*(a\s*)?(un\s*)?(email|mail|message)/,
-        ],
-        // Ne PAS utiliser anyKeywords car "courrier" ou "message" peuvent apparaître dans des demandes de documents
-        exactPhrases: [
-            'ouvre la messagerie',
-            'ouvre iboite',
-            'va a la messagerie',
-            'mes emails',
-            'mes mails',
-            'envoie un email',
-            'envoie un mail'
-        ],
-        toolName: 'global_navigate',
-        toolArgs: { query: 'messagerie' },
-        response: 'Navigation vers la messagerie.'
-    },
-
-    // ========== NAVIGATION - PARAMÈTRES ==========
-    {
-        patterns: [
-            /parametres/,
-            /reglages/,
-            /settings/,
-            /ouvre\s*(les\s*)?parametres/,
-            /configuration/,
-        ],
-        anyKeywords: ['parametre', 'reglage', 'setting', 'config'],
-        toolName: 'global_navigate',
-        toolArgs: { query: 'parametres' },
-        response: 'Navigation vers les paramètres.'
-    },
-
-    // ========== NAVIGATION - CONTACTS ==========
-    {
-        patterns: [
-            /ouvre\s*(les\s*)?contacts/,
-            /affiche\s*(les\s*)?contacts/,
-            /montre\s*(les\s*)?contacts/,
-            /va\s*(aux\s*)?contacts/,
-            /annuaire/,
-            /liste\s*(des\s*)?contacts/,
-            /repertoire\s*(des\s*)?contacts/,
-            /carnet\s*(d'adresses|de\s*contacts)/,
-        ],
-        anyKeywords: ['contact', 'annuaire', 'repertoire'],
-        exactPhrases: [
-            'ouvre les contacts',
-            'mes contacts',
-            'annuaire',
-            'liste des contacts'
-        ],
-        toolName: 'open_contacts',
-        toolArgs: {},
-        response: 'Ouverture de l\'annuaire des contacts.'
-    },
-    {
-        patterns: [
-            /contacts?\s*(des\s*)?collaborateurs?/,
-            /mes\s*collegues/,
-            /equipe/,
-        ],
-        toolName: 'open_contacts',
-        toolArgs: { category: 'collaborator' },
-        response: 'Ouverture des contacts collaborateurs.'
-    },
-    {
-        patterns: [
-            /contacts?\s*(des\s*)?entreprises?/,
-            /societes/,
-        ],
-        toolName: 'open_contacts',
-        toolArgs: { category: 'enterprise' },
-        response: 'Ouverture des contacts entreprises.'
-    },
-    {
-        patterns: [
-            /contacts?\s*(des\s*)?mairies?/,
-            /inter[\s-]?municipalite/,
-            /autres?\s*mairies?/,
-        ],
-        toolName: 'open_contacts',
-        toolArgs: { category: 'inter_municipality' },
-        response: 'Ouverture des contacts inter-municipalité.'
-    },
-
-    // ========== VOIX ==========
-    {
-        patterns: [
-            /change\s*(de\s*)?voix/,
-            /autre\s*voix/,
-            /voix\s*differente/,
-        ],
-        toolName: 'change_voice',
-        toolArgs: {},
-        response: 'Voix changée.'
-    },
-    {
-        patterns: [
-            /voix\s*feminine/,
-            /voix\s*femme/,
-            /voix\s*de\s*femme/,
-        ],
-        toolName: 'change_voice',
-        toolArgs: { voice_id: 'shimmer' },
-        response: 'Voix féminine activée.'
-    },
-    {
-        patterns: [
-            /voix\s*masculine/,
-            /voix\s*homme/,
-            /voix\s*d\s*homme/,
-        ],
-        toolName: 'change_voice',
-        toolArgs: { voice_id: 'ash' },
-        response: 'Voix masculine activée.'
-    },
-
-    // ========== ARRÊT / DÉCONNEXION VOCALE ==========
-    {
-        patterns: [
-            /^stop$/,
-            /^arrete$/,
-            /arrete\s*toi/,
-            /^au\s*revoir$/,
-            /^bye$/,
-            /ferme\s*toi/,
-            /desactive\s*toi/,
-            /^silence$/,
-            /tais\s*toi/,
-            /deconnecte\s*(toi|la\s*voix)/,
-            /arrete\s*(la\s*)?voix/,
-            /coupe\s*(la\s*)?voix/,
-            /stop\s*ecoute/,
-            /arrete\s*ecouter/,
-        ],
-        anyKeywords: ['stop', 'arrete', 'bye', 'revoir', 'silence', 'tais', 'deconnect', 'coupe'],
-        exactPhrases: ['stop', 'arrete', 'au revoir', 'tais toi', 'deconnecte toi'],
-        toolName: 'stop_conversation',
-        toolArgs: {},
-        response: 'Au revoir !'
-    },
-
-    // ========== DÉCONNEXION UTILISATEUR ==========
-    {
-        patterns: [
-            /deconnexion/,
-            /deconnecte\s*moi/,
-            /logout/,
-            /log\s*out/,
-            /me\s*deconnecter/,
-        ],
-        requiredKeywords: ['deconnect'],
-        toolName: 'logout_user',
-        toolArgs: {},
-        response: 'Déconnexion en cours...'
-    },
-
-    // ========== SIDEBAR ==========
     {
         patterns: [
             /ouvre\s*(le\s*)?menu/,
             /deplie\s*(le\s*)?menu/,
-            /affiche\s*(le\s*)?menu/,
-            /montre\s*(le\s*)?menu\s*lateral/,
             /montre\s*(la\s*)?sidebar/,
         ],
         requiredKeywords: ['menu'],
@@ -490,13 +362,92 @@ const COMMAND_DEFINITIONS: CommandDef[] = [
         response: 'Menu fermé.'
     },
 
-    // ========== PRÉSENTATION ==========
+    // ========== 8. VOIX ==========
+    {
+        patterns: [
+            /change\s*(de\s*)?voix/,
+            /autre\s*voix/,
+        ],
+        toolName: 'change_voice',
+        toolArgs: {},
+        response: 'Voix changée.'
+    },
+    {
+        patterns: [
+            /voix\s*feminine/,
+            /voix\s*femme/,
+        ],
+        toolName: 'change_voice',
+        toolArgs: { voice_id: 'shimmer' },
+        response: 'Voix féminine activée.'
+    },
+    {
+        patterns: [
+            /voix\s*masculine/,
+            /voix\s*homme/,
+        ],
+        toolName: 'change_voice',
+        toolArgs: { voice_id: 'ash' },
+        response: 'Voix masculine activée.'
+    },
+    {
+        patterns: [
+            /parle\s*plus\s*vite/,
+            /accelere/,
+        ],
+        requiredKeywords: ['parle', 'vite'],
+        toolName: 'control_ui',
+        toolArgs: { action: 'set_speech_rate', value: '1.3' },
+        response: 'Je parle plus vite maintenant.'
+    },
+    {
+        patterns: [
+            /parle\s*plus\s*lentement/,
+            /ralentis/,
+        ],
+        toolName: 'control_ui',
+        toolArgs: { action: 'set_speech_rate', value: '0.8' },
+        response: 'Je parle plus lentement maintenant.'
+    },
+
+    // ========== 9. COMMANDES SYSTÈME ==========
+    {
+        patterns: [
+            /^stop$/,
+            /^arrete$/,
+            /^silence$/,
+            /arrete\s*toi/,
+            /tais\s*toi/,
+            /fin\s*de\s*seance/,
+            /^au\s*revoir$/,
+            /^bye$/,
+            /deconnecte\s*(toi|la\s*voix)/,
+        ],
+        anyKeywords: ['stop', 'arrete', 'silence', 'bye', 'revoir'],
+        exactPhrases: ['stop', 'arrete', 'au revoir', 'fin de seance'],
+        toolName: 'stop_conversation',
+        toolArgs: {},
+        response: 'À votre service. Fin de l\'écoute.'
+    },
+    {
+        patterns: [
+            /deconnexion/,
+            /deconnecte\s*moi/,
+            /logout/,
+            /me\s*deconnecter/,
+        ],
+        requiredKeywords: ['deconnect'],
+        toolName: 'logout_user',
+        toolArgs: {},
+        response: 'Déconnexion en cours...'
+    },
+
+    // ========== 10. GUIDE & AIDE ==========
     {
         patterns: [
             /lance\s*(la\s*)?presentation/,
             /demarre\s*(la\s*)?presentation/,
             /mode\s*presentation/,
-            /presente\s*moi\s*(le\s*site|l\s*application)?/,
         ],
         requiredKeywords: ['presentation'],
         toolName: 'start_presentation',
@@ -513,15 +464,12 @@ const COMMAND_DEFINITIONS: CommandDef[] = [
         toolArgs: {},
         response: 'Présentation arrêtée.'
     },
-
-    // ========== GUIDE ==========
     {
         patterns: [
             /guide\s*moi/,
             /aide\s*moi/,
             /comment\s*ca\s*marche/,
             /montre\s*moi\s*comment/,
-            /explique\s*moi/,
         ],
         toolName: 'start_guide',
         toolArgs: {},
@@ -530,138 +478,61 @@ const COMMAND_DEFINITIONS: CommandDef[] = [
     {
         patterns: [
             /c\s*est\s*quoi\s*(cette\s*page|ici)/,
-            /a\s*quoi\s*sert\s*cette\s*page/,
             /ou\s*suis\s*je/,
-            /qu\s*est\s*ce\s*que\s*je\s*vois/,
+            /a\s*quoi\s*sert/,
         ],
         toolName: 'explain_context',
         toolArgs: {},
         response: 'Je vais vous expliquer cette page.'
     },
 
-    // ========== NAVIGATION PARLEMENTAIRE ==========
+    // ========== 11. PARAMÈTRES ==========
     {
         patterns: [
-            /agenda\\s*parlementaire/,
-            /calendrier\\s*des\\s*seances/,
-            /prochaine\\s*seance/,
-            /ouvre\\s*(l\\s*)?agenda/,
-            /va\\s*(a\\s*)?(l\\s*)?agenda/,
+            /parametres/,
+            /reglages/,
+            /settings/,
+            /ouvre\s*(les\s*)?parametres/,
+            /configuration/,
         ],
-        anyKeywords: ['agenda', 'calendrier', 'seance', 'planning'],
-        actionKeywords: ['ouvre', 'va', 'montre', 'affiche'],
+        anyKeywords: ['parametre', 'reglage', 'setting', 'config'],
         toolName: 'global_navigate',
-        toolArgs: { query: 'agenda' },
-        response: 'Navigation vers l\'agenda parlementaire.'
-    },
-    {
-        patterns: [
-            /mes\\s*commissions/,
-            /ouvre\\s*(les\\s*)?commissions/,
-            /travail\\s*(en\\s*)?commission/,
-            /reunion\\s*(de\\s*)?commission/,
-        ],
-        anyKeywords: ['commission', 'commissions'],
-        actionKeywords: ['ouvre', 'va', 'montre', 'affiche'],
-        toolName: 'global_navigate',
-        toolArgs: { query: 'commissions' },
-        response: 'Navigation vers les commissions.'
-    },
-    {
-        patterns: [
-            /seances?\\s*plenieres?/,
-            /hemicycle/,
-            /ouvre\\s*(l\\s*)?hemicycle/,
-            /pleniere/,
-        ],
-        anyKeywords: ['pleniere', 'hemicycle', 'seance'],
-        toolName: 'global_navigate',
-        toolArgs: { query: 'hemicycle' },
-        response: 'Navigation vers l\'hémicycle.'
-    },
-    {
-        patterns: [
-            /questions?\\s*(au\\s*)?gouvernement/,
-            /poser\\s*(une\\s*)?question/,
-            /mes\\s*questions/,
-        ],
-        anyKeywords: ['question', 'questions', 'gouvernement'],
-        toolName: 'global_navigate',
-        toolArgs: { query: 'questions' },
-        response: 'Navigation vers les questions au gouvernement.'
-    },
-    {
-        patterns: [
-            /mes\\s*amendements/,
-            /ouvre\\s*(les\\s*)?amendements/,
-            /deposer\\s*(un\\s*)?amendement/,
-        ],
-        anyKeywords: ['amendement', 'amendements'],
-        toolName: 'global_navigate',
-        toolArgs: { query: 'amendements' },
-        response: 'Navigation vers les amendements.'
-    },
-    {
-        patterns: [
-            /mon\\s*espace\\s*depute/,
-            /espace\\s*depute/,
-            /va\\s*(a\\s*)?(mon\\s*)?espace/,
-        ],
-        requiredKeywords: ['espace'],
-        toolName: 'global_navigate',
-        toolArgs: { query: 'espace député' },
-        response: 'Navigation vers votre espace.'
-    },
-    {
-        patterns: [
-            /circonscription/,
-            /terrain/,
-            /mes\\s*electeurs/,
-            /citoyens/,
-        ],
-        anyKeywords: ['circonscription', 'terrain', 'electeur', 'citoyen'],
-        toolName: 'global_navigate',
-        toolArgs: { query: 'circonscription' },
-        response: 'Navigation vers la gestion de circonscription.'
+        toolArgs: { query: 'parametres' },
+        response: 'Navigation vers les paramètres.'
     },
 
-    // ========== PARLER PLUS VITE/LENTEMENT ==========
+    // ========== 12. STATISTIQUES & VOTES ==========
     {
         patterns: [
-            /parle\s*plus\s*vite/,
-            /parle\s*plus\s*rapidement/,
-            /accelere\s*(ta|la)?\s*(voix|parole|vitesse)?/,
-            /vitesse\s*(de\s*)?(parole|voix)?\s*plus\s*(vite|rapide)/,
-            /parle\s*rapidement/,
-            /parler\s*plus\s*vite/,
+            /statistiques/,
+            /stats/,
+            /resultats?\s*des\s*votes/,
+            /historique\s*des\s*votes/,
         ],
-        requiredKeywords: ['parle', 'vite'],
-        toolName: 'control_ui',
-        toolArgs: { action: 'set_speech_rate', value: '1.3' },
-        response: 'Je parle plus vite maintenant.'
+        anyKeywords: ['statistique', 'stats', 'vote', 'resultat'],
+        toolName: 'global_navigate',
+        toolArgs: { query: 'statistiques' },
+        response: 'Affichage des statistiques parlementaires.'
     },
     {
         patterns: [
-            /parle\s*plus\s*lentement/,
-            /ralentis/,
-            /moins\s*vite/,
-            /plus\s*lent/,
+            /voter\s*(pour|contre)?/,
+            /ouvrir\s*(le\s*)?vote/,
+            /lance\s*(le\s*)?scrutin/,
         ],
-        toolName: 'control_ui',
-        toolArgs: { action: 'set_speech_rate', value: '0.8' },
-        response: 'Je parle plus lentement maintenant.'
+        anyKeywords: ['vote', 'voter', 'scrutin'],
+        toolName: 'global_navigate',
+        toolArgs: { query: 'vote' },
+        response: 'Accès au module de vote.'
     },
 ];
 
 /**
  * Match une commande vocale avec plusieurs stratégies
- * @param transcript - Le texte transcrit de la commande vocale
- * @returns Le résultat du matching (matched: true si trouvé)
  */
 export function matchLocalCommand(transcript: string): LocalCommandResult {
     const normalized = normalize(transcript);
 
-    // Skip very short or obviously non-command text
     if (normalized.length < 3) {
         return { matched: false };
     }
@@ -706,30 +577,27 @@ export function matchLocalCommand(transcript: string): LocalCommandResult {
 
         // Strategy 4: Any keywords alone (confidence: 0.5)
         if (cmd.anyKeywords && containsAnyKeyword(normalized, cmd.anyKeywords)) {
-            // Only if the text is short enough to be a command
             if (normalized.split(' ').length <= 5) {
                 confidence = Math.max(confidence, 0.5);
             }
         }
 
-        // Strategy 5: Fuzzy matching with exact phrases (confidence: 0.6-0.9)
+        // Strategy 5: Fuzzy matching (confidence: 0.6-0.9)
         if (cmd.exactPhrases) {
             for (const phrase of cmd.exactPhrases) {
                 const sim = similarity(normalized, phrase);
-                if (sim > 0.7) { // 70% similarity threshold
-                    const fuzzyConfidence = 0.6 + (sim - 0.7) * 1.0; // 0.6 to 0.9
+                if (sim > 0.7) {
+                    const fuzzyConfidence = 0.6 + (sim - 0.7) * 1.0;
                     confidence = Math.max(confidence, fuzzyConfidence);
                 }
             }
         }
 
-        // Update best match if this one is better
         if (confidence > 0 && (!bestMatch || confidence > bestMatch.confidence)) {
             bestMatch = { cmd, confidence };
         }
     }
 
-    // Return best match if confidence is above threshold
     if (bestMatch && bestMatch.confidence >= 0.6) {
         console.log(`✅ [LocalRouter] FUZZY MATCH (${(bestMatch.confidence * 100).toFixed(0)}%): "${normalized}" → ${bestMatch.cmd.toolName}`);
         return {
@@ -748,26 +616,30 @@ export function matchLocalCommand(transcript: string): LocalCommandResult {
 
 /**
  * Vérifie si une commande peut être traitée localement
- * @param transcript - Le texte transcrit
- * @returns true si la commande peut être traitée sans API
  */
 export function canHandleLocally(transcript: string): boolean {
     return matchLocalCommand(transcript).matched;
 }
 
 /**
- * Statistiques de matching (pour debug/analytics)
+ * Statistiques de matching
  */
 export function getLocalCommandStats() {
     return {
         totalCommands: COMMAND_DEFINITIONS.length,
         categories: {
+            legislation: COMMAND_DEFINITIONS.filter(c => 
+                ['legislation', 'hemicycle', 'commissions', 'amendements', 'questions'].some(q => 
+                    c.toolArgs?.query?.includes(q)
+                )
+            ).length,
+            navigation: COMMAND_DEFINITIONS.filter(c => c.toolName === 'global_navigate').length,
             chat: COMMAND_DEFINITIONS.filter(c => c.toolName === 'manage_chat').length,
             theme: COMMAND_DEFINITIONS.filter(c => c.toolName === 'control_ui').length,
-            navigation: COMMAND_DEFINITIONS.filter(c => c.toolName === 'global_navigate').length,
             voice: COMMAND_DEFINITIONS.filter(c => c.toolName === 'change_voice').length,
+            session: COMMAND_DEFINITIONS.filter(c => c.toolName === 'manage_session').length,
             other: COMMAND_DEFINITIONS.filter(c =>
-                !['control_ui', 'global_navigate', 'manage_chat', 'change_voice'].includes(c.toolName)
+                !['control_ui', 'global_navigate', 'manage_chat', 'change_voice', 'manage_session'].includes(c.toolName)
             ).length
         }
     };
