@@ -6,3 +6,4 @@
 
 export * from './Organization';
 export * from './Request';
+export * from './ParliamentaryRole';

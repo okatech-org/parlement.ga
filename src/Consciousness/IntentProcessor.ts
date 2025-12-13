@@ -383,37 +383,74 @@ class IntentProcessorClass {
     ): Promise<{ skill: string; result: SkillResult }> {
         const rawInput = intent.rawInput.toLowerCase();
 
-        if (rawInput.includes('acte') || rawInput.includes('document') || rawInput.includes('certificat')) {
-            let docType: 'acte_naissance' | 'acte_mariage' | 'acte_deces' | 'attestation' = 'attestation';
-
-            if (rawInput.includes('naissance')) docType = 'acte_naissance';
-            else if (rawInput.includes('mariage')) docType = 'acte_mariage';
-            else if (rawInput.includes('décès')) docType = 'acte_deces';
-
-            const result = await AdministrativeSkills.generateDocument(signal, {
-                type: docType,
-                data: {}
-            });
-            return { skill: 'GenerateDocument', result };
+        // Demandes hors périmètre parlementaire (état civil, urbanisme, etc.)
+        if (rawInput.includes('acte') && (rawInput.includes('naissance') || rawInput.includes('mariage') || rawInput.includes('décès'))) {
+            const result = AdministrativeSkills.getOutOfScopeResponse();
+            return { skill: 'OutOfScope', result };
         }
 
-        if (rawInput.includes('rdv') || rawInput.includes('rendez-vous')) {
-            const result = await AdministrativeSkills.scheduleAppointment(signal, {
-                serviceId: 'general',
+        if (rawInput.includes('permis de construire') || rawInput.includes('urbanisme')) {
+            const result = AdministrativeSkills.getOutOfScopeResponse();
+            return { skill: 'OutOfScope', result };
+        }
+
+        // Amendements
+        if (rawInput.includes('amendement')) {
+            const result = await AdministrativeSkills.prepareAmendment(signal, {
+                projectLawId: intent.entities.target || 'current',
+                articleNumber: parseInt(intent.entities.secondary) || 1,
+                amendmentType: 'modification',
+                proposedText: '',
+                justification: '',
+                authorId: 'current-user'
+            });
+            return { skill: 'PrepareAmendment', result };
+        }
+
+        // Questions au gouvernement
+        if (rawInput.includes('question') && (rawInput.includes('gouvernement') || rawInput.includes('ministre'))) {
+            const result = await AdministrativeSkills.prepareGovernmentQuestion(signal, {
+                type: rawInput.includes('orale') ? 'orale' : 'ecrite',
+                ministry: intent.entities.target || 'Ministère concerné',
+                subject: intent.entities.secondary || 'Question parlementaire',
+                questionText: '',
+                authorId: 'current-user'
+            });
+            return { skill: 'PrepareGovernmentQuestion', result };
+        }
+
+        // Procès-verbaux
+        if (rawInput.includes('procès-verbal') || rawInput.includes('pv')) {
+            const result = await AdministrativeSkills.generateSessionMinutes(signal, {
+                sessionType: rawInput.includes('commission') ? 'commission' : 'pleniere',
+                sessionDate: new Date(),
+                attendees: [],
+                agendaItems: [],
+                decisions: []
+            });
+            return { skill: 'GenerateSessionMinutes', result };
+        }
+
+        // Rendez-vous parlementaires
+        if (rawInput.includes('rdv') || rawInput.includes('rendez-vous') || rawInput.includes('réunion')) {
+            const appointmentType = rawInput.includes('commission') ? 'commission' : 
+                                   rawInput.includes('circonscription') ? 'circonscription' : 
+                                   rawInput.includes('groupe') ? 'groupe' : 'pleniere';
+            const result = await AdministrativeSkills.scheduleParliamentaryAppointment(signal, {
+                type: appointmentType,
                 requestedDate: new Date(),
                 requestedTime: '10:00',
-                reason: intent.entities.target || 'Consultation'
+                subject: intent.entities.target || 'Réunion parlementaire'
             });
-            return { skill: 'ScheduleAppointment', result };
+            return { skill: 'ScheduleParliamentaryAppointment', result };
         }
 
-        // Par défaut: demande de service
-        const result = await AdministrativeSkills.submitServiceRequest(signal, {
-            serviceType: intent.entities.target || 'general',
-            requesterId: 'current-user',
-            details: {}
+        // Documents législatifs par défaut
+        const result = await AdministrativeSkills.generateLegislativeDocument(signal, {
+            type: 'autre',
+            data: { subject: intent.entities.target || 'Document parlementaire' }
         });
-        return { skill: 'SubmitServiceRequest', result };
+        return { skill: 'GenerateLegislativeDocument', result };
     }
 
     private async handleControl(
