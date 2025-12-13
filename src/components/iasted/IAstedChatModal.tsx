@@ -46,9 +46,10 @@ import { ConversationHistory } from '@/components/iasted/ConversationHistory';
 import { NotificationBell } from '@/components/iasted/NotificationBell';
 import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 import { iastedStorageService } from '@/services/iasted-storage-service';
-import { History, Paperclip, BarChart3 } from 'lucide-react';
+import { History, Paperclip, BarChart3, Shield } from 'lucide-react';
 import { PresenceIndicator } from '@/components/iasted/PresenceIndicator';
 import { LiveTranscription } from '@/components/iasted/LiveTranscription';
+import { SmartSuggestions } from '@/components/iasted/SmartSuggestions';
 
 // Type-safe Supabase helper for tables not yet in generated types
 const db = supabase as any;
@@ -1735,6 +1736,15 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                 <BarChart3 className="w-4 h-4" />
                             </button>
 
+                            {/* Admin Feedback Link */}
+                            <button
+                                onClick={() => navigate('/iasted/admin-feedback')}
+                                className="neu-button-sm flex items-center gap-2 px-3 py-2 text-sm hover:bg-warning/10 text-warning transition-colors"
+                                title="Administration des feedbacks"
+                            >
+                                <Shield className="w-4 h-4" />
+                            </button>
+
                             <button
                                 onClick={onClose}
                                 className="neu-raised p-2 rounded-lg hover:shadow-neo-md transition-all"
@@ -1819,6 +1829,18 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                         <Loader2 className="w-4 h-4 animate-spin" />
                                         <span className="text-sm">iAsted réfléchit...</span>
                                     </motion.div>
+                                )}
+
+                                {/* Smart Suggestions - Show when conversation is empty or few messages */}
+                                {messages.length <= 2 && !isProcessing && (
+                                    <div className="py-4">
+                                        <SmartSuggestions
+                                            userId={userId}
+                                            onSuggestionClick={(text) => {
+                                                setInputText(text);
+                                            }}
+                                        />
+                                    </div>
                                 )}
 
                                 <div ref={messagesEndRef} />

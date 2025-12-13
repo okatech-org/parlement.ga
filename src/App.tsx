@@ -63,6 +63,7 @@ import Tutoriels from "./pages/Tutoriels";
 import Statistiques from "./pages/Statistiques";
 import Login from "./pages/Login";
 import IAstedAnalytics from "./pages/iasted/IAstedAnalytics";
+import IAstedAdminFeedback from "./pages/iasted/IAstedAdminFeedback";
 
 // Secretary Space Imports
 import LayoutSecretary from "./layouts/LayoutSecretary";
@@ -166,6 +167,7 @@ const App = () => (
               <Route path="/tutoriels" element={<Tutoriels />} />
               <Route path="/statistiques" element={<Statistiques />} />
               <Route path="/iasted/analytics" element={<ProtectedRoute><IAstedAnalytics /></ProtectedRoute>} />
+              <Route path="/iasted/admin-feedback" element={<ProtectedRoute><IAstedAdminFeedback /></ProtectedRoute>} />
 
               {/* Login */}
               <Route path="/login" element={<Login />} />
