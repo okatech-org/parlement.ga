@@ -9,6 +9,12 @@ import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
 import newsHeroImage from "@/assets/news-parliament-hero.jpg";
+import newsEnvironment from "@/assets/news-environment.jpg";
+import newsLegislation from "@/assets/news-legislation.jpg";
+import newsFinance from "@/assets/news-finance.jpg";
+import newsInnovation from "@/assets/news-innovation.jpg";
+import newsInternational from "@/assets/news-international.jpg";
+import newsDemocracy from "@/assets/news-democracy.jpg";
 
 const Actualites = () => {
     const navigate = useNavigate();
@@ -25,42 +31,48 @@ const Actualites = () => {
             excerpt: t('news.items.commission.excerpt'),
             date: "30 Nov 2025",
             category: "Environnement",
-            categoryColor: "bg-green-600"
+            categoryColor: "bg-green-600",
+            image: newsEnvironment
         },
         {
             title: t('news.items.reform.title'),
             excerpt: t('news.items.reform.excerpt'),
             date: "28 Nov 2025",
             category: "Législation",
-            categoryColor: "bg-blue-600"
+            categoryColor: "bg-blue-600",
+            image: newsLegislation
         },
         {
             title: t('news.items.budget.title'),
             excerpt: t('news.items.budget.excerpt'),
             date: "25 Nov 2025",
             category: "Finances",
-            categoryColor: "bg-amber-600"
+            categoryColor: "bg-amber-600",
+            image: newsFinance
         },
         {
             title: t('news.items.digital.title'),
             excerpt: t('news.items.digital.excerpt'),
             date: "22 Nov 2025",
             category: "Innovation",
-            categoryColor: "bg-purple-600"
+            categoryColor: "bg-purple-600",
+            image: newsInnovation
         },
         {
             title: t('news.items.diplomacy.title'),
             excerpt: t('news.items.diplomacy.excerpt'),
             date: "20 Nov 2025",
             category: "International",
-            categoryColor: "bg-indigo-600"
+            categoryColor: "bg-indigo-600",
+            image: newsInternational
         },
         {
             title: t('news.items.youth.title'),
             excerpt: t('news.items.youth.excerpt'),
             date: "18 Nov 2025",
             category: "Démocratie",
-            categoryColor: "bg-rose-600"
+            categoryColor: "bg-rose-600",
+            image: newsDemocracy
         }
     ];
 
@@ -172,20 +184,25 @@ const Actualites = () => {
                     {filteredNews.map((news, index) => (
                         <Card
                             key={index}
-                            className="group flex flex-col overflow-hidden hover:shadow-elegant transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm"
+                            className="group flex flex-col overflow-hidden hover:shadow-elegant transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm cursor-pointer"
                             onClick={() => handleReadMore(news.title)}
                         >
+                            <div className="relative h-48 overflow-hidden">
+                                <img 
+                                    src={news.image} 
+                                    alt={news.title}
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                                <Badge className={`absolute top-3 left-3 ${news.categoryColor} text-white border-none`}>
+                                    {news.category}
+                                </Badge>
+                                <span className="absolute top-3 right-3 text-xs text-white flex items-center gap-1 bg-black/40 backdrop-blur-sm px-2 py-1 rounded-md">
+                                    <Calendar className="w-3 h-3" />
+                                    {news.date}
+                                </span>
+                            </div>
                             <div className="p-6 flex-1 flex flex-col">
-                                <div className="flex justify-between items-start mb-4">
-                                    <Badge className={`${news.categoryColor} text-white border-none`}>
-                                        {news.category}
-                                    </Badge>
-                                    <span className="text-xs text-muted-foreground flex items-center gap-1 bg-muted/50 px-2 py-1 rounded-md">
-                                        <Calendar className="w-3 h-3" />
-                                        {news.date}
-                                    </span>
-                                </div>
-
                                 <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2">
                                     {news.title}
                                 </h3>
