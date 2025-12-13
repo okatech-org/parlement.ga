@@ -79,6 +79,9 @@ const Index = () => {
               <Button variant="ghost" size="sm" onClick={() => navigate("/tutoriels")}>
                 {t('home.resources.tutorials.title')}
               </Button>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/iasted/protocol-demo")}>
+                Démo Protocole
+              </Button>
               <Button variant="ghost" size="sm" onClick={() => navigate("/portail")}>
                 {t('hub.title')}
               </Button>
