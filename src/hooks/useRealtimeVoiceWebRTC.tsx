@@ -248,12 +248,21 @@ export const useRealtimeVoiceWebRTC = (onToolCall?: (name: string, args: any) =>
 
         } catch (err: any) {
             console.error('Connection failed:', err);
-            toast({
-                title: "Erreur de connexion",
-                description: err.message,
-                variant: "destructive"
-            });
+            console.log('🔄 Activating TTS fallback mode...');
+            
+            // Activate TTS fallback mode
             setVoiceState('idle');
+            
+            toast({
+                title: "Mode alternatif activé",
+                description: "La voix en temps réel n'est pas disponible. Utilisez le mode texte avec synthèse vocale.",
+                variant: "default"
+            });
+            
+            // Signal that fallback should be used
+            window.dispatchEvent(new CustomEvent('iasted-use-tts-fallback', { 
+                detail: { systemPrompt: systemPrompt } 
+            }));
         }
     };
 
