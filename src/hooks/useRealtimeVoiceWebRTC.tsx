@@ -175,9 +175,22 @@ export const useRealtimeVoiceWebRTC = (onToolCall?: (name: string, args: any) =>
             const EPHEMERAL_KEY = data.client_secret.value;
             console.log('✅ Ephemeral token obtained');
 
-            // 2. Setup WebRTC
+            // 2. Get microphone FIRST (before WebRTC setup)
+            console.log('🎤 Requesting microphone access...');
+            const ms = await navigator.mediaDevices.getUserMedia({ audio: true });
+            setIsMicrophoneAllowed(true);
+            console.log('✅ Microphone access granted');
+
+            // 3. Setup WebRTC AFTER microphone is ready
             const pc = new RTCPeerConnection();
             peerConnection.current = pc;
+
+            // Check if component unmounted during async operations
+            if (!peerConnection.current) {
+                console.log('⚠️ Component unmounted, aborting connection');
+                ms.getTracks().forEach(track => track.stop());
+                return;
+            }
 
             // Audio Element for output
             const audioEl = document.createElement('audio');
@@ -196,7 +209,6 @@ export const useRealtimeVoiceWebRTC = (onToolCall?: (name: string, args: any) =>
                 updateSession(voice, systemPrompt); // Send initial config
 
                 // IMPORTANT: Trigger iAsted greeting AFTER session update is processed
-                // Using presidence.ga approach: response.create with explicit instructions
                 setTimeout(() => {
                     if (dc.readyState === 'open') {
                         console.log('👋 [WebRTC] Déclenchement de la salutation initiale contextuelle');
@@ -208,7 +220,7 @@ export const useRealtimeVoiceWebRTC = (onToolCall?: (name: string, args: any) =>
                             }
                         }));
                     }
-                }, 1000); // 1 seconde de délai pour que session.update soit traité
+                }, 1000);
             };
 
             dc.onmessage = (e) => {
@@ -216,9 +228,7 @@ export const useRealtimeVoiceWebRTC = (onToolCall?: (name: string, args: any) =>
                 handleServerEvent(event);
             };
 
-            // 3. Microphone Input
-            const ms = await navigator.mediaDevices.getUserMedia({ audio: true });
-            setIsMicrophoneAllowed(true);
+            // Add audio track to peer connection
             pc.addTrack(ms.getTracks()[0]);
 
             // Audio Analysis Setup
@@ -232,6 +242,14 @@ export const useRealtimeVoiceWebRTC = (onToolCall?: (name: string, args: any) =>
             // 4. Create and send WebRTC Offer
             console.log('📡 Creating WebRTC offer...');
             const offer = await pc.createOffer();
+            
+            // Check if peerConnection ref was cleared (component unmounted)
+            if (!peerConnection.current) {
+                console.log('⚠️ PeerConnection unavailable, aborting');
+                ms.getTracks().forEach(track => track.stop());
+                return;
+            }
+            
             await pc.setLocalDescription(offer);
 
             // 5. Exchange SDP with OpenAI
@@ -256,6 +274,13 @@ export const useRealtimeVoiceWebRTC = (onToolCall?: (name: string, args: any) =>
 
             const answerSdp = await sdpResponse.text();
             console.log('✅ Received SDP answer from OpenAI');
+
+            // Check if peerConnection ref was cleared (component unmounted)
+            if (!peerConnection.current) {
+                console.log('⚠️ PeerConnection unavailable during SDP exchange, aborting');
+                ms.getTracks().forEach(track => track.stop());
+                return;
+            }
 
             const answer = {
                 type: 'answer' as RTCSdpType,
