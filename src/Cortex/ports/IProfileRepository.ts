@@ -4,31 +4,31 @@
  * Defines the contract for profile persistence operations.
  */
 
-import { MunicipalRole } from '../entities/MunicipalRole';
+import { ParliamentaryRole } from '@/Consciousness/SocialProtocolAdapter';
 
 // ============================================================
 // VALUE OBJECTS
 // ============================================================
 
 export interface ProfileIdentity {
-    readonly id: string;
-    readonly userId: string;
-    readonly email: string;
+  readonly id: string;
+  readonly userId: string;
+  readonly email: string;
 }
 
 export interface ProfilePersonalInfo {
-    readonly firstName: string;
-    readonly lastName: string;
-    readonly dateOfBirth?: string;
-    readonly phone?: string;
-    readonly nationality?: string;
-    readonly placeOfBirth?: string;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly dateOfBirth?: string;
+  readonly phone?: string;
+  readonly nationality?: string;
+  readonly placeOfBirth?: string;
 }
 
 export interface ProfileEmployment {
-    readonly employer?: string;
-    readonly profession?: string;
-    readonly organizationId?: string;
+  readonly employer?: string;
+  readonly profession?: string;
+  readonly organizationId?: string;
 }
 
 // ============================================================
@@ -36,12 +36,12 @@ export interface ProfileEmployment {
 // ============================================================
 
 export interface Profile {
-    readonly identity: ProfileIdentity;
-    readonly personalInfo: ProfilePersonalInfo;
-    readonly employment: ProfileEmployment;
-    readonly role: MunicipalRole;
-    readonly createdAt: Date;
-    readonly updatedAt: Date;
+  readonly identity: ProfileIdentity;
+  readonly personalInfo: ProfilePersonalInfo;
+  readonly employment: ProfileEmployment;
+  readonly role: ParliamentaryRole;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
 }
 
 // ============================================================
@@ -49,9 +49,9 @@ export interface Profile {
 // ============================================================
 
 export interface IProfileRepository {
-    findAll(organizationId?: string): Promise<Profile[]>;
-    findById(id: string): Promise<Profile | null>;
-    findByUserId(userId: string): Promise<Profile | null>;
-    save(profile: Profile): Promise<Profile>;
-    exists(userId: string): Promise<boolean>;
+  findAll(organizationId?: string): Promise<Profile[]>;
+  findById(id: string): Promise<Profile | null>;
+  findByUserId(userId: string): Promise<Profile | null>;
+  save(profile: Profile): Promise<Profile>;
+  exists(userId: string): Promise<boolean>;
 }
