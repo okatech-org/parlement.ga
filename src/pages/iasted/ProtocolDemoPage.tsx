@@ -43,7 +43,7 @@ import {
   LogIn,
   ArrowRight
 } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useTheme } from 'next-themes';
 
@@ -88,17 +88,26 @@ const ROLE_LABELS: Record<ParliamentaryRole, string> = {
   ANONYMOUS: 'Anonyme'
 };
 
-// Comptes démo avec connexion
-const DEMO_ACCOUNTS = [
-  { label: 'Président', phone: '01010101', path: '/president', icon: Crown, color: 'text-amber-500' },
-  { label: '1er Vice-Président', phone: '02020202', path: '/vp', icon: Crown, color: 'text-amber-400' },
-  { label: 'Député', phone: '00000000', path: '/deputy', icon: UserCheck, color: 'text-primary' },
-  { label: 'Suppléant', phone: '03030303', path: '/suppleant', icon: Users, color: 'text-slate-500' },
-  { label: 'Questeur (Budget)', phone: '04040401', path: '/questeurs', icon: Briefcase, color: 'text-blue-500' },
-  { label: 'Questeur (Ressources)', phone: '04040402', path: '/questeurs', icon: Briefcase, color: 'text-cyan-500' },
-  { label: 'Questeur (Services)', phone: '04040403', path: '/questeurs', icon: Briefcase, color: 'text-teal-500' },
-  { label: 'Secrétaire', phone: '05050505', path: '/secretaires', icon: FileText, color: 'text-green-500' },
-];
+// Comptes démo organisés par catégorie hiérarchique
+const DEMO_ACCOUNTS = {
+  bureau: [
+    { label: 'Président', phone: '01010101', path: '/president', icon: Crown, color: 'text-amber-500', description: 'Présidence de l\'Assemblée' },
+    { label: '1er Vice-Président', phone: '02020202', path: '/vp', icon: Crown, color: 'text-amber-400', description: 'Vice-présidence' },
+  ],
+  questeurs: [
+    { label: 'Questeur Budget', phone: '04040401', path: '/questeurs', icon: Briefcase, color: 'text-blue-500', description: 'Gestion budgétaire' },
+    { label: 'Questeur Ressources', phone: '04040402', path: '/questeurs', icon: Briefcase, color: 'text-cyan-500', description: 'Ressources matérielles' },
+    { label: 'Questeur Services', phone: '04040403', path: '/questeurs', icon: Briefcase, color: 'text-teal-500', description: 'Services administratifs' },
+  ],
+  parlementaires: [
+    { label: 'Député', phone: '00000000', path: '/deputy', icon: UserCheck, color: 'text-primary', description: 'Espace législatif complet' },
+    { label: 'Suppléant', phone: '03030303', path: '/suppleant', icon: Users, color: 'text-slate-500', description: 'Suivi du titulaire' },
+    { label: 'Secrétaire', phone: '05050505', path: '/secretaires', icon: FileText, color: 'text-green-500', description: 'Gestion documentaire' },
+  ],
+  public: [
+    { label: 'Espace Citoyen', phone: null, path: '/citizen', icon: UserCircle, color: 'text-green-400', description: 'Accès public sans connexion' },
+  ]
+};
 
 const ProtocolDemoPage = () => {
   const navigate = useNavigate();
@@ -194,7 +203,7 @@ const ProtocolDemoPage = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-8">
-        {/* Comptes démo avec connexion */}
+        {/* Accès aux Espaces Parlementaires - Section unifiée */}
         <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -202,25 +211,122 @@ const ProtocolDemoPage = () => {
               Accès aux Espaces Parlementaires
             </CardTitle>
             <CardDescription>
-              Connectez-vous avec un compte démo pour explorer les fonctionnalités
+              Explorez les fonctionnalités selon votre rôle. Les comptes démo connectent automatiquement.
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {DEMO_ACCOUNTS.map((account) => {
-                const Icon = account.icon;
-                return (
-                  <Button
-                    key={account.phone}
-                    variant="outline"
-                    className="flex flex-col items-center gap-2 h-auto py-4 hover:bg-primary/10 hover:border-primary/50 transition-all"
-                    onClick={() => handleDemoLogin(account.phone, account.path)}
-                  >
-                    <Icon className={`w-6 h-6 ${account.color}`} />
-                    <span className="text-sm font-medium text-center">{account.label}</span>
-                  </Button>
-                );
-              })}
+          <CardContent className="space-y-6">
+            {/* Bureau de l'Assemblée */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                <Crown className="w-4 h-4 text-amber-500" />
+                Bureau de l'Assemblée
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {DEMO_ACCOUNTS.bureau.map((account) => {
+                  const Icon = account.icon;
+                  return (
+                    <Button
+                      key={account.phone}
+                      variant="outline"
+                      className="flex flex-col items-start gap-1 h-auto py-3 px-4 hover:bg-primary/10 hover:border-primary/50 transition-all text-left"
+                      onClick={() => handleDemoLogin(account.phone, account.path)}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Icon className={`w-5 h-5 ${account.color}`} />
+                        <span className="font-medium">{account.label}</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground">{account.description}</span>
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Questeurs */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                <Shield className="w-4 h-4 text-blue-500" />
+                Questure
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {DEMO_ACCOUNTS.questeurs.map((account) => {
+                  const Icon = account.icon;
+                  return (
+                    <Button
+                      key={account.phone}
+                      variant="outline"
+                      className="flex flex-col items-start gap-1 h-auto py-3 px-4 hover:bg-blue-500/10 hover:border-blue-500/50 transition-all text-left"
+                      onClick={() => handleDemoLogin(account.phone, account.path)}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Icon className={`w-5 h-5 ${account.color}`} />
+                        <span className="font-medium">{account.label}</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground">{account.description}</span>
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Parlementaires */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                <UserCheck className="w-4 h-4 text-primary" />
+                Parlementaires & Staff
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {DEMO_ACCOUNTS.parlementaires.map((account) => {
+                  const Icon = account.icon;
+                  return (
+                    <Button
+                      key={account.phone}
+                      variant="outline"
+                      className="flex flex-col items-start gap-1 h-auto py-3 px-4 hover:bg-primary/10 hover:border-primary/50 transition-all text-left"
+                      onClick={() => handleDemoLogin(account.phone, account.path)}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Icon className={`w-5 h-5 ${account.color}`} />
+                        <span className="font-medium">{account.label}</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground">{account.description}</span>
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <Separator />
+
+            {/* Accès Public */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                <UserCircle className="w-4 h-4 text-green-500" />
+                Accès Public
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {DEMO_ACCOUNTS.public.map((account) => {
+                  const Icon = account.icon;
+                  return (
+                    <Button
+                      key={account.path}
+                      variant="outline"
+                      className="flex flex-col items-start gap-1 h-auto py-3 px-4 hover:bg-green-500/10 hover:border-green-500/50 transition-all text-left"
+                      onClick={() => navigate(account.path)}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Icon className={`w-5 h-5 ${account.color}`} />
+                        <span className="font-medium">{account.label}</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground">{account.description}</span>
+                    </Button>
+                  );
+                })}
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -479,55 +585,6 @@ const ProtocolDemoPage = () => {
           </Card>
         </div>
 
-        {/* Actions rapides */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Tester les Espaces Parlementaires</CardTitle>
-            <CardDescription>
-              Accédez aux différents espaces pour voir le protocole en action
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-wrap gap-3">
-              <Link to="/deputy">
-                <Button variant="outline" className="gap-2">
-                  <UserCheck className="w-4 h-4" />
-                  Espace Député
-                </Button>
-              </Link>
-              <Link to="/president">
-                <Button variant="outline" className="gap-2">
-                  <Crown className="w-4 h-4" />
-                  Espace Président
-                </Button>
-              </Link>
-              <Link to="/vp">
-                <Button variant="outline" className="gap-2">
-                  <Crown className="w-4 h-4" />
-                  Espace Vice-Président
-                </Button>
-              </Link>
-              <Link to="/questeurs">
-                <Button variant="outline" className="gap-2">
-                  <Shield className="w-4 h-4" />
-                  Espace Questeur
-                </Button>
-              </Link>
-              <Link to="/secretaires">
-                <Button variant="outline" className="gap-2">
-                  <FileText className="w-4 h-4" />
-                  Espace Secrétaire
-                </Button>
-              </Link>
-              <Link to="/citizen">
-                <Button variant="outline" className="gap-2">
-                  <UserCircle className="w-4 h-4" />
-                  Espace Citoyen
-                </Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
       </main>
     </div>
   );
