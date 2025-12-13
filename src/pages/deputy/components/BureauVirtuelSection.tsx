@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,14 +9,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { FileText, PenTool, Calendar, Download, Search, Send, Loader2, CheckCircle, XCircle, Clock, Eye, Users, UserPlus, Bell } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { FileText, PenTool, Calendar, Download, Search, Send, Loader2, CheckCircle, XCircle, Clock, Eye, Users, UserPlus, Bell, Filter, BarChart3 } from "lucide-react";
 import { LegislativeSkills } from "@/Cortex/Skills/AdministrativeSkills";
 import { iAstedSoul } from "@/Consciousness/iAstedSoul";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { format } from "date-fns";
+import { format, isAfter, isBefore, startOfDay, endOfDay } from "date-fns";
 import { fr } from "date-fns/locale";
 import { AmendmentDetailModal } from "@/components/parliamentary/AmendmentDetailModal";
+import { AmendmentFiltersComponent, AmendmentFilters } from "@/components/parliamentary/AmendmentFilters";
+import { LegislativeAnalyticsDashboard } from "@/components/parliamentary/LegislativeAnalyticsDashboard";
 
 interface Amendment {
     id: string;
@@ -30,6 +33,7 @@ interface Amendment {
     created_at: string;
     vote_pour: number;
     vote_contre: number;
+    vote_abstention?: number;
     cosignatures_count?: number;
 }
 
@@ -40,6 +44,14 @@ interface Cosignature {
     signed_at: string;
 }
 
+const defaultFilters: AmendmentFilters = {
+    status: 'all',
+    type: 'all',
+    dateFrom: undefined,
+    dateTo: undefined,
+    search: ''
+};
+
 export const BureauVirtuelSection = () => {
     const [isAmendmentDialogOpen, setIsAmendmentDialogOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,6 +60,8 @@ export const BureauVirtuelSection = () => {
     const [loadingAmendments, setLoadingAmendments] = useState(true);
     const [currentUserId, setCurrentUserId] = useState<string | null>(null);
     const [selectedAmendmentId, setSelectedAmendmentId] = useState<string | null>(null);
+    const [filters, setFilters] = useState<AmendmentFilters>(defaultFilters);
+    const [activeTab, setActiveTab] = useState('amendements');
     const [amendmentForm, setAmendmentForm] = useState({
         billReference: "",
         articleNumber: "",
@@ -330,6 +344,55 @@ export const BureauVirtuelSection = () => {
         }
     };
 
+    // Filtrage des amendements
+    const filteredAmendments = useMemo(() => {
+        return amendments.filter(amendment => {
+            // Filtre par statut
+            if (filters.status !== 'all' && amendment.status !== filters.status) {
+                return false;
+            }
+            // Filtre par type
+            if (filters.type !== 'all' && amendment.amendment_type !== filters.type) {
+                return false;
+            }
+            // Filtre par date de début
+            if (filters.dateFrom) {
+                const amendmentDate = new Date(amendment.created_at);
+                if (isBefore(amendmentDate, startOfDay(filters.dateFrom))) {
+                    return false;
+                }
+            }
+            // Filtre par date de fin
+            if (filters.dateTo) {
+                const amendmentDate = new Date(amendment.created_at);
+                if (isAfter(amendmentDate, endOfDay(filters.dateTo))) {
+                    return false;
+                }
+            }
+            // Filtre par recherche textuelle
+            if (filters.search) {
+                const searchLower = filters.search.toLowerCase();
+                return (
+                    amendment.project_law_id.toLowerCase().includes(searchLower) ||
+                    amendment.proposed_text.toLowerCase().includes(searchLower) ||
+                    amendment.justification.toLowerCase().includes(searchLower)
+                );
+            }
+            return true;
+        });
+    }, [amendments, filters]);
+
+    // Compteur de filtres actifs
+    const activeFiltersCount = useMemo(() => {
+        let count = 0;
+        if (filters.status !== 'all') count++;
+        if (filters.type !== 'all') count++;
+        if (filters.dateFrom) count++;
+        if (filters.dateTo) count++;
+        if (filters.search) count++;
+        return count;
+    }, [filters]);
+
     const getStatusBadge = (status: string) => {
         switch (status) {
             case 'adopte':
@@ -368,7 +431,25 @@ export const BureauVirtuelSection = () => {
                 </div>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
+            {/* Tabs pour basculer entre amendements et analytics */}
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList>
+                    <TabsTrigger value="amendements" className="gap-2">
+                        <PenTool className="w-4 h-4" />
+                        Amendements
+                    </TabsTrigger>
+                    <TabsTrigger value="analytics" className="gap-2">
+                        <BarChart3 className="w-4 h-4" />
+                        Tableau de bord
+                    </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="analytics" className="mt-6">
+                    <LegislativeAnalyticsDashboard amendments={amendments} />
+                </TabsContent>
+
+                <TabsContent value="amendements" className="mt-6 space-y-6">
+                    <div className="grid md:grid-cols-3 gap-6">
 
                 {/* Textes en examen */}
                 <Card className="md:col-span-2 p-6 neu-raised">
@@ -547,23 +628,48 @@ export const BureauVirtuelSection = () => {
                 </div>
             </div>
 
-            {/* Tableau de suivi des amendements */}
+            {/* Tableau de suivi des amendements avec filtres */}
             <Card className="p-6 neu-raised">
-                <div className="flex justify-between items-center mb-6">
+                <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-bold flex items-center gap-2">
                         <PenTool className="text-primary" /> Suivi des Amendements
                     </h3>
-                    <Badge variant="outline">{amendments.length} amendement(s)</Badge>
+                    <div className="flex items-center gap-2">
+                        {activeFiltersCount > 0 && (
+                            <Badge variant="secondary">
+                                <Filter className="w-3 h-3 mr-1" />
+                                {activeFiltersCount} filtre(s)
+                            </Badge>
+                        )}
+                        <Badge variant="outline">
+                            {filteredAmendments.length} / {amendments.length} amendement(s)
+                        </Badge>
+                    </div>
+                </div>
+
+                {/* Filtres avancés */}
+                <div className="mb-6">
+                    <AmendmentFiltersComponent
+                        filters={filters}
+                        onFiltersChange={setFilters}
+                        onReset={() => setFilters(defaultFilters)}
+                        activeFiltersCount={activeFiltersCount}
+                    />
                 </div>
 
                 {loadingAmendments ? (
                     <div className="flex items-center justify-center py-8">
                         <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
                     </div>
-                ) : amendments.length === 0 ? (
+                ) : filteredAmendments.length === 0 ? (
                     <div className="text-center py-8 text-muted-foreground">
                         <PenTool className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                        <p>Aucun amendement déposé pour le moment</p>
+                        <p>{amendments.length === 0 ? "Aucun amendement déposé pour le moment" : "Aucun amendement ne correspond aux filtres"}</p>
+                        {activeFiltersCount > 0 && (
+                            <Button variant="link" onClick={() => setFilters(defaultFilters)} className="mt-2">
+                                Réinitialiser les filtres
+                            </Button>
+                        )}
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
@@ -582,7 +688,7 @@ export const BureauVirtuelSection = () => {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {amendments.map((amendment) => (
+                                    {filteredAmendments.map((amendment) => (
                                         <TableRow key={amendment.id}>
                                             <TableCell className="font-medium">{amendment.project_law_id}</TableCell>
                                             <TableCell>Art. {amendment.article_number}</TableCell>
@@ -653,6 +759,8 @@ export const BureauVirtuelSection = () => {
                     </div>
                 )}
             </Card>
+                </TabsContent>
+            </Tabs>
 
             {/* Amendment Detail Modal */}
             <AmendmentDetailModal
