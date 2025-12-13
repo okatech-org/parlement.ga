@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.get-realtime-token]
 verify_jwt = false
+
+[functions.iasted-tts-fallback]
+verify_jwt = false
