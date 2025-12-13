@@ -47,15 +47,15 @@ const AdminSpace = () => {
               </p>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
-              <Card className="p-6 bg-card shadow-card-custom">
+              <Card className="p-6 neu-raised">
                 <h3 className="text-2xl font-bold mb-1">120</h3>
                 <p className="text-sm text-muted-foreground">Députés Actifs</p>
               </Card>
-              <Card className="p-6 bg-card shadow-card-custom">
+              <Card className="p-6 neu-raised">
                 <h3 className="text-2xl font-bold mb-1">8</h3>
                 <p className="text-sm text-muted-foreground">Sessions en cours</p>
               </Card>
-              <Card className="p-6 bg-card shadow-card-custom">
+              <Card className="p-6 neu-raised">
                 <h3 className="text-2xl font-bold mb-1">42</h3>
                 <p className="text-sm text-muted-foreground">Lois votées (2025)</p>
               </Card>
@@ -72,7 +72,7 @@ const AdminSpace = () => {
                 Créer et gérer les sessions de vote
               </p>
             </div>
-            <Card className="p-6 bg-card shadow-card-custom">
+            <Card className="p-6 neu-raised">
               <FileText className="h-8 w-8 text-primary mb-3" />
               <h3 className="font-semibold mb-2">Sessions Actives</h3>
               <p className="text-sm text-muted-foreground">
@@ -91,7 +91,7 @@ const AdminSpace = () => {
                 Administration des comptes et permissions
               </p>
             </div>
-            <Card className="p-6 bg-card shadow-card-custom">
+            <Card className="p-6 neu-raised">
               <Users className="h-8 w-8 text-primary mb-3" />
               <h3 className="font-semibold mb-2">Utilisateurs</h3>
               <p className="text-sm text-muted-foreground">
@@ -110,7 +110,7 @@ const AdminSpace = () => {
                 Modération des doléances citoyennes
               </p>
             </div>
-            <Card className="p-6 bg-card shadow-card-custom">
+            <Card className="p-6 neu-raised">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold">En attente de validation</h3>
                 <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
@@ -133,7 +133,7 @@ const AdminSpace = () => {
                 Analyses et rapports du système
               </p>
             </div>
-            <Card className="p-6 bg-card shadow-card-custom">
+            <Card className="p-6 neu-raised">
               <BarChart3 className="h-8 w-8 text-primary mb-3" />
               <h3 className="font-semibold mb-2">Rapports</h3>
               <p className="text-sm text-muted-foreground">
@@ -152,7 +152,7 @@ const AdminSpace = () => {
                 Configuration du système parlementaire
               </p>
             </div>
-            <Card className="p-6 bg-card shadow-card-custom">
+            <Card className="p-6 neu-raised">
               <Settings className="h-8 w-8 text-primary mb-3" />
               <h3 className="font-semibold mb-2">Configuration</h3>
               <p className="text-sm text-muted-foreground">

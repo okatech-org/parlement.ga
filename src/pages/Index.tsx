@@ -1,54 +1,63 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Landmark, Users, FileText, Map, Vote, Shield, ChevronRight, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "next-themes";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Index = () => {
   const navigate = useNavigate();
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const { theme, setTheme } = useTheme();
+  const { t, language, setLanguage, dir } = useLanguage();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const features = [
     {
       icon: Vote,
-      title: "Vote Électronique",
-      description: "Système de vote sécurisé en temps réel avec traçabilité complète",
+      title: t('home.features.vote.title'),
+      description: t('home.features.vote.desc'),
       color: "primary",
       path: "/vote"
     },
     {
       icon: FileText,
-      title: "Suivi Législatif",
-      description: "Timeline visuelle de l'avancée des projets de loi",
+      title: t('home.features.legislation.title'),
+      description: t('home.features.legislation.desc'),
       color: "secondary",
       path: "/legislation"
     },
     {
       icon: Map,
-      title: "Gestion Territoriale",
-      description: "Carte interactive du Gabon avec doléances citoyennes",
+      title: t('home.features.territory.title'),
+      description: t('home.features.territory.desc'),
       color: "accent",
       path: "/territoire"
     },
     {
       icon: BarChart3,
-      title: "Statistiques",
-      description: "Données transparentes sur l'activité parlementaire",
+      title: t('home.features.statistics.title'),
+      description: t('home.features.statistics.desc'),
       color: "primary",
       path: "/statistiques"
     }
   ];
 
   const stats = [
-    { value: "14e", label: "Législature" },
-    { value: "120", label: "Députés" },
-    { value: "150+", label: "Lois votées" },
-    { value: "100%", label: "Digital" }
+    { value: "14e", label: t('home.stats.legislature') },
+    { value: "120", label: t('home.stats.deputies') },
+    { value: "150+", label: t('home.stats.lawsVoted') },
+    { value: "100%", label: t('home.stats.digital') }
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir={dir}>
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -60,17 +69,63 @@ const Index = () => {
                 <p className="text-xs text-muted-foreground">Assemblée Nationale du Gabon</p>
               </div>
             </div>
+            <nav className="hidden md:flex items-center gap-4">
+              <Button variant="ghost" size="sm" onClick={() => navigate("/actualites")}>
+                {t('home.resources.news.title')}
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/sensibilisation")}>
+                {t('home.resources.awareness.title')}
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/tutoriels")}>
+                {t('home.resources.tutorials.title')}
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/portail")}>
+                {t('hub.title')}
+              </Button>
+            </nav>
             <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm" onClick={() => navigate("/citizen")}>
-                Mode Citoyen
+              {/* Language Selector */}
+              <select
+                className="text-sm border border-border rounded-md px-2 py-1 bg-background cursor-pointer hover:bg-muted transition-colors"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value as any)}
+              >
+                <option value="fr">🇫🇷 Français</option>
+                <option value="en">🇬🇧 English</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="ar">🇸🇦 العربية</option>
+                <option value="pt">🇵🇹 Português</option>
+              </select>
+
+              {/* Theme Toggle */}
+              <Button
+                variant="ghost"
+                size="sm"
+                title={t('common.changeTheme')}
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              >
+                {mounted && theme === "dark" ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                  </svg>
+                )}
               </Button>
-              <Button variant="outline" size="sm" onClick={() => navigate("/deputy")}>
-                <Shield className="mr-2 h-4 w-4" />
-                Espace Député
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => navigate("/admin")}>
-                <Shield className="mr-2 h-4 w-4" />
-                Administration
+
+              {/* Login Button */}
+              <Button size="sm" onClick={() => navigate("/login")}>
+                {t('common.login')}
               </Button>
             </div>
           </div>
@@ -83,24 +138,23 @@ const Index = () => {
         <div className="container mx-auto px-4 py-20 relative">
           <div className="max-w-4xl mx-auto text-center">
             <Badge className="mb-4 bg-primary/10 text-primary border-primary/20" variant="outline">
-              XIVe Législature • Souveraineté Digitale
+              {t('home.badge')}
             </Badge>
             <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 animate-fade-in">
-              Parlement <span className="text-gradient">Digital</span> du Gabon
+              {t('home.title')}
             </h1>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: "0.1s" }}>
-              Transparence, efficacité et proximité citoyenne au cœur de la démocratie gabonaise. 
-              Zéro papier, sécurité maximale, engagement total.
+              {t('home.subtitle')}
             </p>
             <div className="flex gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.2s" }}>
               <Button size="lg" className="shadow-elegant" onClick={() => navigate("/legislation")}>
                 <FileText className="mr-2 h-5 w-5" />
-                Suivre les Lois
+                {t('home.followLaws')}
                 <ChevronRight className="ml-2 h-5 w-5" />
               </Button>
               <Button size="lg" variant="outline" onClick={() => navigate("/territoire")}>
                 <Map className="mr-2 h-5 w-5" />
-                Explorer la Carte
+                {t('home.exploreMap')}
               </Button>
             </div>
           </div>
@@ -108,8 +162,8 @@ const Index = () => {
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-4xl mx-auto">
             {stats.map((stat, index) => (
-              <Card 
-                key={index} 
+              <Card
+                key={index}
                 className="p-6 text-center bg-card shadow-card-custom border-border/50 hover:shadow-elegant transition-all duration-300 animate-fade-in"
                 style={{ animationDelay: `${0.3 + index * 0.1}s` }}
               >
@@ -121,66 +175,66 @@ const Index = () => {
         </div>
       </section>
 
-      {/* User Spaces Section */}
+      {/* Resources Section */}
       <section className="py-20 bg-gradient-subtle">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-serif font-bold mb-4">Espaces Utilisateurs</h2>
+            <h2 className="text-4xl font-serif font-bold mb-4">{t('home.resources.title')}</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Accédez à votre espace personnalisé selon votre rôle
+              {t('home.resources.subtitle')}
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             <Card
-              className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-primary/20 animate-fade-in"
-              onClick={() => navigate("/deputy")}
+              className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-red-600/20 animate-fade-in"
+              onClick={() => navigate("/actualites")}
             >
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4 mx-auto">
-                <Shield className="h-8 w-8 text-primary" />
+              <div className="w-16 h-16 rounded-full bg-red-600/10 flex items-center justify-center mb-4 mx-auto">
+                <FileText className="h-8 w-8 text-red-600" />
               </div>
-              <h3 className="text-xl font-serif font-semibold mb-3 text-center">Espace Député</h3>
+              <h3 className="text-xl font-serif font-semibold mb-3 text-center">{t('home.resources.news.title')}</h3>
               <p className="text-sm text-muted-foreground text-center mb-4">
-                E-Hémicycle, bureau virtuel, CRM circonscription, messagerie sécurisée, et plus
+                {t('home.resources.news.desc')}
               </p>
-              <Button className="w-full shadow-elegant">
-                Accéder
+              <Button className="w-full shadow-elegant bg-red-600 hover:bg-red-700">
+                {t('home.resources.news.action')}
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </Card>
 
             <Card
-              className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-secondary/20 animate-fade-in"
+              className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-amber-600/20 animate-fade-in"
               style={{ animationDelay: "0.1s" }}
-              onClick={() => navigate("/admin")}
+              onClick={() => navigate("/sensibilisation")}
             >
-              <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mb-4 mx-auto">
-                <Users className="h-8 w-8 text-secondary" />
+              <div className="w-16 h-16 rounded-full bg-amber-600/10 flex items-center justify-center mb-4 mx-auto">
+                <Users className="h-8 w-8 text-amber-600" />
               </div>
-              <h3 className="text-xl font-serif font-semibold mb-3 text-center">Espace Administrateur</h3>
+              <h3 className="text-xl font-serif font-semibold mb-3 text-center">{t('home.resources.awareness.title')}</h3>
               <p className="text-sm text-muted-foreground text-center mb-4">
-                Gestion des sessions, modération, statistiques, administration système
+                {t('home.resources.awareness.desc')}
               </p>
-              <Button variant="secondary" className="w-full shadow-elegant">
-                Accéder
+              <Button className="w-full shadow-elegant bg-amber-600 hover:bg-amber-700">
+                {t('home.resources.awareness.action')}
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </Card>
 
             <Card
-              className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-accent/20 animate-fade-in"
+              className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-indigo-600/20 animate-fade-in"
               style={{ animationDelay: "0.2s" }}
-              onClick={() => navigate("/citizen")}
+              onClick={() => navigate("/tutoriels")}
             >
-              <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center mb-4 mx-auto">
-                <FileText className="h-8 w-8 text-accent" />
+              <div className="w-16 h-16 rounded-full bg-indigo-600/10 flex items-center justify-center mb-4 mx-auto">
+                <BarChart3 className="h-8 w-8 text-indigo-600" />
               </div>
-              <h3 className="text-xl font-serif font-semibold mb-3 text-center">Espace Citoyen</h3>
+              <h3 className="text-xl font-serif font-semibold mb-3 text-center">{t('home.resources.tutorials.title')}</h3>
               <p className="text-sm text-muted-foreground text-center mb-4">
-                Suivi législatif, interpellation député, direct TV, transparence totale
+                {t('home.resources.tutorials.desc')}
               </p>
-              <Button variant="outline" className="w-full shadow-elegant">
-                Accéder
+              <Button variant="outline" className="w-full shadow-elegant border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white">
+                {t('home.resources.tutorials.action')}
                 <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </Card>
@@ -192,9 +246,9 @@ const Index = () => {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-serif font-bold mb-4">Fonctionnalités Principales</h2>
+            <h2 className="text-4xl font-serif font-bold mb-4">{t('home.features.title')}</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Une plateforme complète pour moderniser le travail parlementaire et renforcer le lien démocratique
+              {t('home.features.subtitle')}
             </p>
           </div>
 
@@ -230,22 +284,22 @@ const Index = () => {
             <div className="flex items-center gap-3">
               <Shield className="h-8 w-8 text-primary" />
               <div>
-                <div className="font-semibold">Sécurité Maximale</div>
-                <div className="text-sm text-muted-foreground">Chiffrement AES-256</div>
+                <div className="font-semibold">{t('home.security.maxSecurity')}</div>
+                <div className="text-sm text-muted-foreground">{t('home.security.encryption')}</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Users className="h-8 w-8 text-secondary" />
               <div>
-                <div className="font-semibold">Authentification 2FA</div>
-                <div className="text-sm text-muted-foreground">Accès sécurisé</div>
+                <div className="font-semibold">{t('home.security.auth2fa')}</div>
+                <div className="text-sm text-muted-foreground">{t('home.security.secureAccess')}</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Landmark className="h-8 w-8 text-accent" />
               <div>
-                <div className="font-semibold">Souveraineté Nationale</div>
-                <div className="text-sm text-muted-foreground">Données au Gabon</div>
+                <div className="font-semibold">{t('home.security.sovereignty')}</div>
+                <div className="text-sm text-muted-foreground">{t('home.security.dataLoc')}</div>
               </div>
             </div>
           </div>
@@ -262,28 +316,27 @@ const Index = () => {
                 <span className="font-serif font-bold">Gabon E-Parlement</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                Plateforme officielle de l'Assemblée Nationale de la République Gabonaise
+                {t('common.copyright')}
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Liens Rapides</h4>
+              <h4 className="font-semibold mb-4">{t('common.quickLinks')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="/legislation" className="hover:text-primary transition-colors">Projets de Loi</a></li>
-                <li><a href="/vote" className="hover:text-primary transition-colors">Espace Député</a></li>
-                <li><a href="/territoire" className="hover:text-primary transition-colors">Carte du Gabon</a></li>
+                <li><a href="/legislation" className="hover:text-primary transition-colors">{t('home.features.legislation.title')}</a></li>
+                <li><a href="/vote" className="hover:text-primary transition-colors">{t('hub.roles.deputy.title')}</a></li>
+                <li><a href="/territoire" className="hover:text-primary transition-colors">{t('home.features.territory.title')}</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
+              <h4 className="font-semibold mb-4">{t('common.contact')}</h4>
               <p className="text-sm text-muted-foreground">
-                Assemblée Nationale du Gabon<br />
-                Libreville, Gabon<br />
-                contact@parlement.ga
+                {t('common.address')}<br />
+                {t('common.email')}
               </p>
             </div>
           </div>
           <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
-            © 2025 Assemblée Nationale du Gabon • Tous droits réservés
+            {t('common.copyright')}
           </div>
         </div>
       </footer>

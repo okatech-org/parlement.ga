@@ -8,105 +8,176 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Mode Citoyen - Couleurs du drapeau gabonais */
-    --background: 0 0% 98%;
-    --foreground: 215 25% 15%;
+    /* === DESIGN NEOMORPHIQUE (Administrative Theme) === */
+    --background: 0 0% 88%;
+    --foreground: 0 0% 5%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card: 0 0% 96%;
+    --card-foreground: 0 0% 5%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --primary: 0 0% 20%;
+    --primary-foreground: 0 0% 98%;
 
-    /* Vert du drapeau gabonais */
-    --primary: 152 100% 31%;
-    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 75%;
+    --secondary-foreground: 0 0% 10%;
 
-    /* Bleu du drapeau */
-    --secondary: 211 52% 51%;
-    --secondary-foreground: 0 0% 100%;
+    --accent: 0 0% 70%;
+    --accent-foreground: 0 0% 8%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-
-    /* Jaune du drapeau (accent) */
-    --accent: 48 98% 54%;
-    --accent-foreground: 215 25% 15%;
+    --muted: 0 0% 80%;
+    --muted-foreground: 0 0% 25%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 152 100% 31%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 8%;
 
-    --radius: 0.5rem;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
 
-    /* Gradients institutionnels */
-    --gradient-hero: linear-gradient(135deg, hsl(152 100% 31%) 0%, hsl(211 52% 51%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
-    
-    /* Shadows élégantes */
-    --shadow-elegant: 0 10px 40px -10px hsl(152 100% 31% / 0.15);
-    --shadow-card: 0 4px 20px -4px hsl(215 25% 15% / 0.08);
-    
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 215 25% 15%;
-    --sidebar-primary: 152 100% 31%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 96%;
-    --sidebar-accent-foreground: 215 25% 15%;
-    --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 152 100% 31%;
+    --border: 0 0% 68%;
+    --input: 0 0% 92%;
+    --ring: 0 0% 25%;
+
+    --radius: 1rem;
+
+    /* === OMBRES NEOMORPHIQUES === */
+    --neo-shadow-sm: 6px 6px 12px rgba(130, 130, 130, 0.4), -6px -6px 12px rgba(255, 255, 255, 0.9);
+    --neo-shadow-md: 10px 10px 20px rgba(120, 120, 120, 0.45), -10px -10px 20px rgba(255, 255, 255, 0.95);
+    --neo-shadow-lg: 15px 15px 30px rgba(110, 110, 110, 0.5), -15px -15px 30px rgba(255, 255, 255, 1);
+    --neo-shadow-inset: inset 6px 6px 12px rgba(130, 130, 130, 0.35), inset -6px -6px 12px rgba(255, 255, 255, 0.8);
+    --neo-shadow-inset-lg: inset 10px 10px 20px rgba(120, 120, 120, 0.4), inset -10px -10px 20px rgba(255, 255, 255, 0.85);
+
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Compatibility mappings */
+    --popover: var(--card);
+    --popover-foreground: var(--card-foreground);
+    --sidebar-background: var(--card);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
   }
 
   .dark {
-    /* Mode Député - Thème institutionnel sombre */
-    --background: 215 28% 7%;
-    --foreground: 210 40% 98%;
-
-    --card: 215 25% 10%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 215 25% 10%;
-    --popover-foreground: 210 40% 98%;
-
-    /* Or institutionnel */
-    --primary: 43 74% 49%;
-    --primary-foreground: 215 28% 7%;
-
-    /* Bleu royal */
-    --secondary: 211 52% 51%;
+    --background: 0 0% 8%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 98%;
+    --primary: 0 0% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 45%;
     --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 65%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
 
-    --muted: 215 25% 15%;
-    --muted-foreground: 215 20% 65%;
+    /* Ombres néomorphiques pour mode sombre */
+    --neo-shadow-sm: 4px 4px 8px rgba(0, 0, 0, 0.5), -4px -4px 8px rgba(255, 255, 255, 0.05);
+    --neo-shadow-md: 8px 8px 16px rgba(0, 0, 0, 0.6), -8px -8px 16px rgba(255, 255, 255, 0.08);
+    --neo-shadow-lg: 12px 12px 24px rgba(0, 0, 0, 0.7), -12px -12px 24px rgba(255, 255, 255, 0.1);
+    --neo-shadow-inset: inset 4px 4px 8px rgba(0, 0, 0, 0.5), inset -4px -4px 8px rgba(255, 255, 255, 0.05);
+    --neo-shadow-inset-lg: inset 10px 10px 20px rgba(0, 0, 0, 0.6), inset -10px -10px 20px rgba(255, 255, 255, 0.05);
 
-    --accent: 43 74% 49%;
-    --accent-foreground: 215 28% 7%;
+    /* Compatibility mappings */
+    --popover: var(--card);
+    --popover-foreground: var(--card-foreground);
+    --sidebar-background: var(--card);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
+  }
+}
 
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
+@layer components {
+  .neu-card {
+    @apply bg-card transition-all duration-300;
+    box-shadow:
+      4px 4px 8px rgba(150, 150, 150, 0.5),
+      -4px -4px 8px rgba(255, 255, 255, 1),
+      inset 1px 1px 2px rgba(255, 255, 255, 0.8),
+      inset -1px -1px 2px rgba(150, 150, 150, 0.3);
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
 
-    --border: 215 25% 18%;
-    --input: 215 25% 18%;
-    --ring: 43 74% 49%;
+  .dark .neu-card {
+    box-shadow:
+      4px 4px 8px rgba(0, 0, 0, 0.4),
+      -4px -4px 8px rgba(255, 255, 255, 0.05),
+      inset 1px 1px 2px rgba(0, 0, 0, 0.3),
+      inset -1px -1px 2px rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
 
-    /* Gradients mode député */
-    --gradient-hero: linear-gradient(135deg, hsl(215 28% 7%) 0%, hsl(215 25% 15%) 100%);
-    --gradient-accent: linear-gradient(135deg, hsl(43 74% 49%) 0%, hsl(48 98% 54%) 100%);
-    
-    --shadow-elegant: 0 10px 40px -10px hsl(43 74% 49% / 0.2);
-    --shadow-card: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
-    
-    --sidebar-background: 215 28% 7%;
-    --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 43 74% 49%;
-    --sidebar-primary-foreground: 215 28% 7%;
-    --sidebar-accent: 215 25% 15%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 215 25% 18%;
-    --sidebar-ring: 43 74% 49%;
+  .neu-raised {
+    @apply bg-card transition-all duration-150;
+    box-shadow:
+      3px 3px 6px rgba(150, 150, 150, 0.4),
+      -3px -3px 6px rgba(255, 255, 255, 0.9),
+      inset 1px 1px 1px rgba(255, 255, 255, 0.7),
+      inset -1px -1px 1px rgba(150, 150, 150, 0.25);
+    border-radius: var(--radius);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+  }
+
+  .dark .neu-raised {
+    box-shadow:
+      3px 3px 6px rgba(0, 0, 0, 0.3),
+      -3px -3px 6px rgba(255, 255, 255, 0.04),
+      inset 1px 1px 1px rgba(0, 0, 0, 0.25),
+      inset -1px -1px 1px rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .neu-raised:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      4px 4px 8px rgba(140, 140, 140, 0.5),
+      -4px -4px 8px rgba(255, 255, 255, 1),
+      inset 1px 1px 1px rgba(255, 255, 255, 0.8),
+      inset -1px -1px 1px rgba(140, 140, 140, 0.3);
+  }
+
+  .dark .neu-raised:hover {
+    box-shadow:
+      4px 4px 8px rgba(0, 0, 0, 0.4),
+      -4px -4px 8px rgba(255, 255, 255, 0.06),
+      inset 1px 1px 1px rgba(0, 0, 0, 0.3),
+      inset -1px -1px 1px rgba(255, 255, 255, 0.03);
+  }
+
+  .neu-inset {
+    @apply bg-card transition-all duration-150;
+    box-shadow: var(--neo-shadow-inset);
+    border-radius: var(--radius);
+    border: none;
+  }
+
+  .neu-icon-btn {
+    @apply rounded-full p-2 flex items-center justify-center transition-all duration-200 text-foreground;
+    box-shadow: var(--neo-shadow-sm);
+  }
+
+  .neu-icon-btn:hover {
+    @apply text-primary;
+    transform: translateY(-1px);
+  }
+
+  .neu-icon-btn:active {
+    box-shadow: var(--neo-shadow-inset);
+    transform: translateY(1px);
   }
 }
 
@@ -120,7 +191,12 @@ All colors MUST be HSL.
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-serif;
   }
 }
@@ -130,7 +206,7 @@ All colors MUST be HSL.
     @apply bg-clip-text text-transparent;
     background-image: var(--gradient-hero);
   }
-  
+
   .border-gradient {
     border-image: var(--gradient-hero) 1;
   }

@@ -5,12 +5,16 @@ import {
   Send,
   Tv,
   User,
+  Mail,
+  FolderOpen
 } from "lucide-react";
 import { AdminSpaceLayout } from "@/components/layout/AdminSpaceLayout";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import Mailbox from "@/pages/shared/Mailbox";
+import Documents from "@/pages/shared/Documents";
 
 const CitizenSpace = () => {
   const [activeSection, setActiveSection] = useState("accueil");
@@ -27,6 +31,8 @@ const CitizenSpace = () => {
     { id: "interpellation", label: "Interpeller mon Député", icon: Send },
     { id: "direct", label: "Direct TV", icon: Tv },
     { id: "profil", label: "Mon Profil", icon: User },
+    { id: "mail", label: "iBoîte", icon: Mail },
+    { id: "documents", label: "Mes Documents", icon: FolderOpen },
   ];
 
   const quickAccessItems = [
@@ -47,14 +53,14 @@ const CitizenSpace = () => {
               </p>
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-              <Card className="p-6 bg-card shadow-card-custom hover:shadow-elegant transition-shadow cursor-pointer" onClick={() => setActiveSection("legislation")}>
+              <Card className="p-6 neu-raised cursor-pointer" onClick={() => setActiveSection("legislation")}>
                 <FileText className="h-8 w-8 text-primary mb-3" />
                 <h3 className="font-semibold mb-2">Suivi des Lois</h3>
                 <p className="text-sm text-muted-foreground">
                   Consultez l'avancement des projets de loi
                 </p>
               </Card>
-              <Card className="p-6 bg-card shadow-card-custom hover:shadow-elegant transition-shadow cursor-pointer" onClick={() => setActiveSection("interpellation")}>
+              <Card className="p-6 neu-raised cursor-pointer" onClick={() => setActiveSection("interpellation")}>
                 <Send className="h-8 w-8 text-primary mb-3" />
                 <h3 className="font-semibold mb-2">Contactez votre Député</h3>
                 <p className="text-sm text-muted-foreground">
@@ -74,7 +80,7 @@ const CitizenSpace = () => {
                 Timeline des projets de loi en cours
               </p>
             </div>
-            <Card className="p-6 bg-card shadow-card-custom">
+            <Card className="p-6 neu-raised">
               <div className="space-y-4">
                 <div className="p-4 border border-border rounded-lg">
                   <h4 className="font-semibold mb-2">
@@ -109,7 +115,7 @@ const CitizenSpace = () => {
                 Formulaire de contact certifié
               </p>
             </div>
-            <Card className="p-6 bg-card shadow-card-custom">
+            <Card className="p-6 neu-raised">
               <form className="space-y-4">
                 <div>
                   <label className="text-sm font-medium mb-2 block">Votre Nom</label>
@@ -125,12 +131,12 @@ const CitizenSpace = () => {
                 </div>
                 <div>
                   <label className="text-sm font-medium mb-2 block">Message</label>
-                  <Textarea 
-                    placeholder="Décrivez votre demande ou préoccupation..." 
+                  <Textarea
+                    placeholder="Décrivez votre demande ou préoccupation..."
                     rows={5}
                   />
                 </div>
-                <Button className="w-full shadow-elegant">
+                <Button className="w-full neu-raised hover:scale-[1.02] transition-transform">
                   <Send className="mr-2 h-4 w-4" />
                   Envoyer l'interpellation
                 </Button>
@@ -148,7 +154,7 @@ const CitizenSpace = () => {
                 Streaming des séances plénières
               </p>
             </div>
-            <Card className="p-6 bg-card shadow-card-custom">
+            <Card className="p-6 neu-raised">
               <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
                 <Tv className="h-12 w-12 text-muted-foreground" />
               </div>
@@ -168,7 +174,7 @@ const CitizenSpace = () => {
                 Informations et préférences
               </p>
             </div>
-            <Card className="p-6 bg-card shadow-card-custom">
+            <Card className="p-6 neu-raised">
               <User className="h-8 w-8 text-primary mb-3" />
               <h3 className="font-semibold mb-2">Profil Citoyen</h3>
               <p className="text-sm text-muted-foreground">
@@ -177,6 +183,12 @@ const CitizenSpace = () => {
             </Card>
           </div>
         );
+
+      case "mail":
+        return <Mailbox />;
+
+      case "documents":
+        return <Documents />;
 
       default:
         return null;
