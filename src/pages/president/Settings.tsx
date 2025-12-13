@@ -82,7 +82,7 @@ const Settings = () => {
                                     key={lang.code}
                                     variant={language === lang.code ? "default" : "outline"}
                                     className="justify-start"
-                                    onClick={() => setLanguage(lang.code)}
+                                    onClick={() => setLanguage(lang.code as 'fr' | 'ar' | 'en' | 'es' | 'pt')}
                                 >
                                     <span className="mr-2 text-xl">{lang.flag}</span>
                                     {lang.name}

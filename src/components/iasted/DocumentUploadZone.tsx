@@ -163,7 +163,8 @@ export const DocumentUploadZone: React.FC<DocumentUploadZoneProps> = ({
 
             updateFileStatus(uploadedFile.id, 'uploading', 50);
 
-            const { data: document, error: docError } = await supabase
+            // Use type assertion since 'documents' table doesn't exist in generated types yet
+            const { data: document, error: docError } = await (supabase as any)
                 .from('documents')
                 .insert({
                     user_id: user.id,
@@ -171,7 +172,7 @@ export const DocumentUploadZone: React.FC<DocumentUploadZoneProps> = ({
                     file_path: filePath,
                     file_type: uploadedFile.file.type,
                     file_size: uploadedFile.file.size,
-                } as any)
+                })
                 .select()
                 .single();
 

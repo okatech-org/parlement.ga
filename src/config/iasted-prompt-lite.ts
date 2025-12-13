@@ -80,3 +80,31 @@ export function canUseCorrespondance(role: string): boolean {
     ];
     return allowedRoles.includes(role);
 }
+
+interface BuildContextualPromptParams {
+    userTitle: string;
+    userRole: string;
+    isConnected: boolean;
+    currentPage: string;
+    timeOfDay: string;
+    userFirstName?: string;
+}
+
+export function buildContextualPrompt(params: BuildContextualPromptParams): string {
+    const { userTitle, userRole, isConnected, currentPage, timeOfDay, userFirstName } = params;
+    
+    let prompt = IASTED_VOICE_PROMPT_LITE;
+    
+    prompt += `\n\n## CONTEXTE ACTUEL\n`;
+    prompt += `- Salutation: ${timeOfDay}\n`;
+    prompt += `- Titre utilisateur: ${userTitle}\n`;
+    prompt += `- Rôle: ${userRole}\n`;
+    prompt += `- Connecté: ${isConnected ? 'Oui' : 'Non'}\n`;
+    prompt += `- Page actuelle: ${currentPage}\n`;
+    
+    if (userFirstName) {
+        prompt += `- Prénom: ${userFirstName}\n`;
+    }
+    
+    return prompt;
+}

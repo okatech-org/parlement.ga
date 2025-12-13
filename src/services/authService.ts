@@ -77,7 +77,7 @@ export async function registerUser(data: RegistrationData) {
       }
 
       // Create document record
-      const { error: docError } = await supabase
+      const { error: docError } = await (supabase as any)
         .from('documents')
         .insert({
           user_id: authData.user!.id,
@@ -98,7 +98,7 @@ export async function registerUser(data: RegistrationData) {
   }
 
   // 3. Update the profile with additional data and PIN code
-  const { error: profileError } = await supabase
+  const { error: profileError } = await (supabase as any)
     .from('profiles')
     .update({
       date_of_birth: profileData.dateOfBirth || null,
@@ -110,7 +110,6 @@ export async function registerUser(data: RegistrationData) {
       address: profileData.address ? { full: profileData.address, city: profileData.city, postalCode: profileData.postalCode } : null,
       pin_code: pinCode,
       pin_enabled: true,
-      // Extended fields
       father_name: profileData.fatherName || null,
       mother_name: profileData.motherName || null,
       emergency_contact_first_name: profileData.emergencyContactFirstName || null,
@@ -126,7 +125,7 @@ export async function registerUser(data: RegistrationData) {
   }
 
   // 4. Assign citizen role
-  const { error: roleError } = await supabase
+  const { error: roleError } = await (supabase as any)
     .from('user_roles')
     .insert({
       user_id: authData.user.id,
