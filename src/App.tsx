@@ -74,6 +74,7 @@ const queryClient = new QueryClient();
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { UserProvider } from "@/contexts/UserContext";
 import IAstedFloatingButton from "@/components/iasted/IAstedFloatingButton";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -94,68 +95,69 @@ const App = () => (
               <Route path="/admin" element={<AdminSpace />} />
               <Route path="/citizen" element={<CitizenSpace />} />
 
-              {/* User Space Routes */}
-              <Route path="/user" element={<UserSpaceLayout />}>
+              {/* User Space Routes - Protected */}
+              <Route path="/user" element={<ProtectedRoute><UserSpaceLayout /></ProtectedRoute>}>
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="settings" element={<Settings />} />
               </Route>
 
-              {/* President Space Route */}
-              <Route path="/president" element={<LayoutPresident><DashboardView /></LayoutPresident>} />
-              <Route path="/president/bureau" element={<LayoutPresident><Bureau /></LayoutPresident>} />
-              <Route path="/president/conference" element={<LayoutPresident><Conference /></LayoutPresident>} />
-              <Route path="/president/commissions" element={<LayoutPresident><Commissions /></LayoutPresident>} />
-              <Route path="/president/plenary" element={<LayoutPresident><Plenary /></LayoutPresident>} />
-              <Route path="/president/agenda" element={<LayoutPresident><Agenda /></LayoutPresident>} />
-              <Route path="/president/documents" element={<LayoutPresident><Documents /></LayoutPresident>} />
-              <Route path="/president/mail" element={<LayoutPresident><Mailbox /></LayoutPresident>} />
-              <Route path="/president/settings" element={<LayoutPresident><PresidentSettings /></LayoutPresident>} />
+              {/* President Space Route - Protected */}
+              <Route path="/president" element={<ProtectedRoute><LayoutPresident><DashboardView /></LayoutPresident></ProtectedRoute>} />
+              <Route path="/president/bureau" element={<ProtectedRoute><LayoutPresident><Bureau /></LayoutPresident></ProtectedRoute>} />
+              <Route path="/president/conference" element={<ProtectedRoute><LayoutPresident><Conference /></LayoutPresident></ProtectedRoute>} />
+              <Route path="/president/commissions" element={<ProtectedRoute><LayoutPresident><Commissions /></LayoutPresident></ProtectedRoute>} />
+              <Route path="/president/plenary" element={<ProtectedRoute><LayoutPresident><Plenary /></LayoutPresident></ProtectedRoute>} />
+              <Route path="/president/agenda" element={<ProtectedRoute><LayoutPresident><Agenda /></LayoutPresident></ProtectedRoute>} />
+              <Route path="/president/documents" element={<ProtectedRoute><LayoutPresident><Documents /></LayoutPresident></ProtectedRoute>} />
+              <Route path="/president/mail" element={<ProtectedRoute><LayoutPresident><Mailbox /></LayoutPresident></ProtectedRoute>} />
+              <Route path="/president/settings" element={<ProtectedRoute><LayoutPresident><PresidentSettings /></LayoutPresident></ProtectedRoute>} />
 
-              {/* Deputy Space Routes */}
-              <Route path="/vote" element={<LayoutDeputy><DashboardDeputy /></LayoutDeputy>} />
-              <Route path="/vote/tools" element={<LayoutDeputy><LegislativeTools /></LayoutDeputy>} />
-              <Route path="/vote/agenda" element={<LayoutDeputy><ParliamentaryAgenda /></LayoutDeputy>} />
-              <Route path="/vote/mandate" element={<LayoutDeputy><MandateManagement /></LayoutDeputy>} />
-              <Route path="/vote/mail" element={<LayoutDeputy><Mailbox /></LayoutDeputy>} />
-              <Route path="/vote/documents" element={<LayoutDeputy><SharedDocuments /></LayoutDeputy>} />
-              <Route path="/vote/settings" element={<LayoutDeputy><PresidentSettings /></LayoutDeputy>} /> {/* Reusing Settings for now */}
+              {/* Deputy Space Routes - Protected */}
+              <Route path="/vote" element={<ProtectedRoute><LayoutDeputy><DashboardDeputy /></LayoutDeputy></ProtectedRoute>} />
+              <Route path="/vote/tools" element={<ProtectedRoute><LayoutDeputy><LegislativeTools /></LayoutDeputy></ProtectedRoute>} />
+              <Route path="/vote/agenda" element={<ProtectedRoute><LayoutDeputy><ParliamentaryAgenda /></LayoutDeputy></ProtectedRoute>} />
+              <Route path="/vote/mandate" element={<ProtectedRoute><LayoutDeputy><MandateManagement /></LayoutDeputy></ProtectedRoute>} />
+              <Route path="/vote/mail" element={<ProtectedRoute><LayoutDeputy><Mailbox /></LayoutDeputy></ProtectedRoute>} />
+              <Route path="/vote/documents" element={<ProtectedRoute><LayoutDeputy><SharedDocuments /></LayoutDeputy></ProtectedRoute>} />
+              <Route path="/vote/settings" element={<ProtectedRoute><LayoutDeputy><PresidentSettings /></LayoutDeputy></ProtectedRoute>} />
 
-              {/* Substitute Deputy Space Routes */}
-              <Route path="/suppleant" element={<LayoutSubstitute><DashboardSubstitute /></LayoutSubstitute>} />
-              <Route path="/suppleant/tracking" element={<LayoutSubstitute><LegislativeTracking /></LayoutSubstitute>} />
-              <Route path="/suppleant/training" element={<LayoutSubstitute><TrainingResources /></LayoutSubstitute>} />
-              <Route path="/suppleant/agenda" element={<LayoutSubstitute><TitularAgenda /></LayoutSubstitute>} />
-              <Route path="/suppleant/mail" element={<LayoutSubstitute><Mailbox /></LayoutSubstitute>} />
-              <Route path="/suppleant/documents" element={<LayoutSubstitute><SharedDocuments /></LayoutSubstitute>} />
-              <Route path="/suppleant/settings" element={<LayoutSubstitute><PresidentSettings /></LayoutSubstitute>} />
+              {/* Substitute Deputy Space Routes - Protected */}
+              <Route path="/suppleant" element={<ProtectedRoute><LayoutSubstitute><DashboardSubstitute /></LayoutSubstitute></ProtectedRoute>} />
+              <Route path="/suppleant/tracking" element={<ProtectedRoute><LayoutSubstitute><LegislativeTracking /></LayoutSubstitute></ProtectedRoute>} />
+              <Route path="/suppleant/training" element={<ProtectedRoute><LayoutSubstitute><TrainingResources /></LayoutSubstitute></ProtectedRoute>} />
+              <Route path="/suppleant/agenda" element={<ProtectedRoute><LayoutSubstitute><TitularAgenda /></LayoutSubstitute></ProtectedRoute>} />
+              <Route path="/suppleant/mail" element={<ProtectedRoute><LayoutSubstitute><Mailbox /></LayoutSubstitute></ProtectedRoute>} />
+              <Route path="/suppleant/documents" element={<ProtectedRoute><LayoutSubstitute><SharedDocuments /></LayoutSubstitute></ProtectedRoute>} />
+              <Route path="/suppleant/settings" element={<ProtectedRoute><LayoutSubstitute><PresidentSettings /></LayoutSubstitute></ProtectedRoute>} />
 
-              {/* 1st VP Space Routes */}
-              <Route path="/vp" element={<LayoutVP><DashboardVP /></LayoutVP>} />
-              <Route path="/vp/delegations" element={<LayoutVP><DelegationManagement /></LayoutVP>} />
-              <Route path="/vp/interim" element={<LayoutVP><InterimMode /></LayoutVP>} />
-              <Route path="/vp/agenda" element={<LayoutVP><VPAgenda /></LayoutVP>} />
-              <Route path="/vp/mail" element={<LayoutVP><Mailbox /></LayoutVP>} />
-              <Route path="/vp/documents" element={<LayoutVP><SharedDocuments /></LayoutVP>} />
-              <Route path="/vp/settings" element={<LayoutVP><PresidentSettings /></LayoutVP>} />
+              {/* 1st VP Space Routes - Protected */}
+              <Route path="/vp" element={<ProtectedRoute><LayoutVP><DashboardVP /></LayoutVP></ProtectedRoute>} />
+              <Route path="/vp/delegations" element={<ProtectedRoute><LayoutVP><DelegationManagement /></LayoutVP></ProtectedRoute>} />
+              <Route path="/vp/interim" element={<ProtectedRoute><LayoutVP><InterimMode /></LayoutVP></ProtectedRoute>} />
+              <Route path="/vp/agenda" element={<ProtectedRoute><LayoutVP><VPAgenda /></LayoutVP></ProtectedRoute>} />
+              <Route path="/vp/mail" element={<ProtectedRoute><LayoutVP><Mailbox /></LayoutVP></ProtectedRoute>} />
+              <Route path="/vp/documents" element={<ProtectedRoute><LayoutVP><SharedDocuments /></LayoutVP></ProtectedRoute>} />
+              <Route path="/vp/settings" element={<ProtectedRoute><LayoutVP><PresidentSettings /></LayoutVP></ProtectedRoute>} />
 
-              {/* Questeurs Space Routes */}
-              <Route path="/questeurs" element={<LayoutQuesteur><DashboardQuesteur /></LayoutQuesteur>} />
-              <Route path="/questeurs/budget" element={<LayoutQuesteur><BudgetManagement /></LayoutQuesteur>} />
-              <Route path="/questeurs/ressources" element={<LayoutQuesteur><MaterialResources /></LayoutQuesteur>} />
-              <Route path="/questeurs/services" element={<LayoutQuesteur><AdministrativeServices /></LayoutQuesteur>} />
-              <Route path="/questeurs/mail" element={<LayoutQuesteur><Mailbox /></LayoutQuesteur>} />
-              <Route path="/questeurs/documents" element={<LayoutQuesteur><SharedDocuments /></LayoutQuesteur>} />
-              <Route path="/questeurs/settings" element={<LayoutQuesteur><PresidentSettings /></LayoutQuesteur>} />
-              {/* Secretary Space Routes */}
-              <Route path="/secretaires" element={<LayoutSecretary><DashboardSecretary /></LayoutSecretary>} />
-              <Route path="/secretaires/agenda" element={<LayoutSecretary><SecretaryAgenda /></LayoutSecretary>} />
-              <Route path="/secretaires/documents" element={<LayoutSecretary><SecretaryDocuments /></LayoutSecretary>} />
-              <Route path="/secretaires/mail" element={<LayoutSecretary><Mailbox /></LayoutSecretary>} />
-              <Route path="/secretaires/settings" element={<LayoutSecretary><PresidentSettings /></LayoutSecretary>} />
+              {/* Questeurs Space Routes - Protected */}
+              <Route path="/questeurs" element={<ProtectedRoute><LayoutQuesteur><DashboardQuesteur /></LayoutQuesteur></ProtectedRoute>} />
+              <Route path="/questeurs/budget" element={<ProtectedRoute><LayoutQuesteur><BudgetManagement /></LayoutQuesteur></ProtectedRoute>} />
+              <Route path="/questeurs/ressources" element={<ProtectedRoute><LayoutQuesteur><MaterialResources /></LayoutQuesteur></ProtectedRoute>} />
+              <Route path="/questeurs/services" element={<ProtectedRoute><LayoutQuesteur><AdministrativeServices /></LayoutQuesteur></ProtectedRoute>} />
+              <Route path="/questeurs/mail" element={<ProtectedRoute><LayoutQuesteur><Mailbox /></LayoutQuesteur></ProtectedRoute>} />
+              <Route path="/questeurs/documents" element={<ProtectedRoute><LayoutQuesteur><SharedDocuments /></LayoutQuesteur></ProtectedRoute>} />
+              <Route path="/questeurs/settings" element={<ProtectedRoute><LayoutQuesteur><PresidentSettings /></LayoutQuesteur></ProtectedRoute>} />
+              
+              {/* Secretary Space Routes - Protected */}
+              <Route path="/secretaires" element={<ProtectedRoute><LayoutSecretary><DashboardSecretary /></LayoutSecretary></ProtectedRoute>} />
+              <Route path="/secretaires/agenda" element={<ProtectedRoute><LayoutSecretary><SecretaryAgenda /></LayoutSecretary></ProtectedRoute>} />
+              <Route path="/secretaires/documents" element={<ProtectedRoute><LayoutSecretary><SecretaryDocuments /></LayoutSecretary></ProtectedRoute>} />
+              <Route path="/secretaires/mail" element={<ProtectedRoute><LayoutSecretary><Mailbox /></LayoutSecretary></ProtectedRoute>} />
+              <Route path="/secretaires/settings" element={<ProtectedRoute><LayoutSecretary><PresidentSettings /></LayoutSecretary></ProtectedRoute>} />
 
-              {/* User Spaces Hub Portal */}
-              <Route path="/portail" element={<UserSpacesHub />} />
+              {/* User Spaces Hub Portal - Protected */}
+              <Route path="/portail" element={<ProtectedRoute><UserSpacesHub /></ProtectedRoute>} />
 
               {/* Resource Pages */}
               <Route path="/actualites" element={<Actualites />} />
