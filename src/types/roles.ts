@@ -30,6 +30,7 @@ export interface DemoUser {
   lastName?: string;
   role: UserRole;
   avatar?: string;
+  entityId?: string;
 }
 
 export const ROLE_CONFIGS: Record<UserRole, RoleConfig> = {

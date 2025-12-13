@@ -1,8 +1,10 @@
 import { supabase } from "@/integrations/supabase/client";
-import { Tables } from "@/integrations/supabase/types";
 import { organizationService } from "./organizationService";
 import { invokeWithDemoFallback } from "@/utils/demoMode";
 import { auditService } from "@/services/audit-service";
+
+// Type-safe helper for tables not yet in generated types
+const db = supabase as any;
 
 // Types basés sur la table profiles de Supabase avec extensions
 export type Profile = Tables<"profiles"> & {

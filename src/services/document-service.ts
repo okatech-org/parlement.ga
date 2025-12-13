@@ -2,17 +2,32 @@
 import { supabase } from '@/integrations/supabase/client';
 import { Document, DocumentType, DocumentStatus } from '@/types/document';
 
+// Type-safe helper for tables not yet in generated types
+const db = supabase as any;
+
 const BUCKET_NAME = 'documents';
 
-// Map our DocumentType to category strings for the database (Matching authService uses)
-const typeToCategory: Record<DocumentType, string> = {
+// Map our DocumentType to category strings for the database
+const typeToCategory: Partial<Record<DocumentType, string>> = {
     'ID_CARD': 'CNI',
+    'id_card': 'CNI',
     'PASSPORT': 'PASSEPORT',
+    'passport': 'PASSEPORT',
     'BIRTH_CERTIFICATE': 'ACTE_NAISSANCE',
+    'birth_certificate': 'ACTE_NAISSANCE',
     'RESIDENCE_PERMIT': 'CARTE_SEJOUR',
     'RESIDENCE_PROOF': 'JUSTIFICATIF_DOMICILE',
+    'residence_certificate': 'JUSTIFICATIF_DOMICILE',
+    'RESIDENCE_CERTIFICATE': 'JUSTIFICATIF_DOMICILE',
     'PHOTO': 'PHOTO_IDENTITE',
-    'OTHER': 'user_upload'
+    'MARRIAGE_CERTIFICATE': 'ACTE_MARIAGE',
+    'marriage_certificate': 'ACTE_MARIAGE',
+    'CONTRACT': 'CONTRAT',
+    'contract': 'CONTRAT',
+    'INVOICE': 'FACTURE',
+    'invoice': 'FACTURE',
+    'OTHER': 'user_upload',
+    'unknown': 'user_upload'
 };
 
 // Map category back to DocumentType

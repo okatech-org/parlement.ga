@@ -302,11 +302,12 @@ class CompanyService {
         if (company.description) result.description = company.description;
         if (company.shortDescription) result.short_description = company.shortDescription;
         if (company.logoUrl) result.logo_url = company.logoUrl;
-        if (company.address) {
-            result.address_street = company.address.street;
-            result.address_city = company.address.city;
-            result.address_postal_code = company.address.postalCode;
-            result.address_country = company.address.country;
+        if (company.address && typeof company.address === 'object') {
+            const addr = company.address as { street: string; city: string; postalCode: string; country: string };
+            result.address_street = addr.street;
+            result.address_city = addr.city;
+            result.address_postal_code = addr.postalCode;
+            result.address_country = addr.country;
         }
         if (company.ownerId) result.owner_id = company.ownerId;
         if (company.ownerRole) result.owner_role = company.ownerRole;

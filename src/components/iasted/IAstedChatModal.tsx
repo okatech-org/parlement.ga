@@ -8,9 +8,6 @@ import { documentGenerationService } from '@/services/documentGenerationService'
 import { canUseCorrespondance } from '@/config/iasted-prompt-lite';
 import { invokeWithDemoFallback } from '@/utils/demoMode';
 import { useGeneratedDocumentsStore } from '@/stores/generatedDocumentsStore';
-
-// Type-safe Supabase helper for tables not yet in generated types
-const db = supabase as any;
 import {
     Send,
     Loader2,
@@ -45,6 +42,9 @@ import { MeetingInterface } from './MeetingInterface';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRealtimeVoiceWebRTC, UseRealtimeVoiceWebRTC } from '@/hooks/useRealtimeVoiceWebRTC';
 import { DocumentUploadZone } from '@/components/iasted/DocumentUploadZone';
+
+// Type-safe Supabase helper for tables not yet in generated types
+const db = supabase as any;
 
 interface Message {
     id: string;
@@ -1444,7 +1444,6 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
             console.error('❌ [saveMessage] Erreur:', JSON.stringify(error, null, 2));
         }
     };
-    };
 
     // Gestion de l'envoi de message texte
     const handleSendMessage = async () => {
@@ -1757,4 +1756,3 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
 };
 
 export default IAstedChatModal;
-

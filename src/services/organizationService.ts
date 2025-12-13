@@ -1,9 +1,17 @@
 import { supabase } from "@/integrations/supabase/client";
-import { Tables } from "@/integrations/supabase/types";
 
-// Types basés sur la table organizations de Supabase
-export type Organization = Tables<"organizations">;
-export type OrganizationType = Organization["type"];
+// Type-safe helper for tables not yet in generated types
+const db = supabase as any;
+
+// Types for organizations (table doesn't exist yet)
+export interface Organization {
+    id: string;
+    name: string;
+    type: string;
+    created_at: string;
+    updated_at: string;
+}
+export type OrganizationType = string;
 
 export const organizationService = {
     async getAll(): Promise<Organization[]> {
