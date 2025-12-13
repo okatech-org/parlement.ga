@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
+import awarenessCivic from "@/assets/awareness-civic.jpg";
+import awarenessYouth from "@/assets/awareness-youth.jpg";
 
 const Sensibilisation = () => {
     const navigate = useNavigate();
@@ -73,36 +75,50 @@ const Sensibilisation = () => {
 
                     <TabsContent value="campaigns" className="space-y-8 animate-fade-in">
                         <div className="grid md:grid-cols-2 gap-8">
-                            <Card className="p-8 border-l-4 border-l-amber-500 hover:shadow-elegant transition-all">
-                                <div className="flex items-start justify-between mb-4">
-                                    <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-200 border-none">
+                            <Card className="overflow-hidden border-l-4 border-l-amber-500 hover:shadow-elegant transition-all">
+                                <div className="relative h-48 overflow-hidden">
+                                    <img 
+                                        src={awarenessCivic} 
+                                        alt="Campagne civique"
+                                        className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                    <Badge className="absolute top-4 left-4 bg-amber-100 text-amber-800 hover:bg-amber-200 border-none">
                                         {t('sensibilisation.campaigns.active')}
                                     </Badge>
-                                    <Info className="w-5 h-5 text-muted-foreground" />
                                 </div>
-                                <h3 className="text-2xl font-bold mb-3">{t('sensibilisation.campaigns.civic.title')}</h3>
-                                <p className="text-muted-foreground mb-6">
-                                    {t('sensibilisation.campaigns.civic.desc')}
-                                </p>
-                                <div className="flex items-center gap-4">
-                                    <Button>{t('common.participate')}</Button>
-                                    <Button variant="outline">{t('common.learnMore')}</Button>
+                                <div className="p-6">
+                                    <h3 className="text-2xl font-bold mb-3">{t('sensibilisation.campaigns.civic.title')}</h3>
+                                    <p className="text-muted-foreground mb-6">
+                                        {t('sensibilisation.campaigns.civic.desc')}
+                                    </p>
+                                    <div className="flex items-center gap-4">
+                                        <Button>{t('common.participate')}</Button>
+                                        <Button variant="outline">{t('common.learnMore')}</Button>
+                                    </div>
                                 </div>
                             </Card>
 
-                            <Card className="p-8 border-l-4 border-l-green-500 hover:shadow-elegant transition-all">
-                                <div className="flex items-start justify-between mb-4">
-                                    <Badge className="bg-green-100 text-green-800 hover:bg-green-200 border-none">
+                            <Card className="overflow-hidden border-l-4 border-l-green-500 hover:shadow-elegant transition-all">
+                                <div className="relative h-48 overflow-hidden">
+                                    <img 
+                                        src={awarenessYouth} 
+                                        alt="Programme jeunesse"
+                                        className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                    <Badge className="absolute top-4 left-4 bg-green-100 text-green-800 hover:bg-green-200 border-none">
                                         {t('sensibilisation.campaigns.upcoming')}
                                     </Badge>
-                                    <Users className="w-5 h-5 text-muted-foreground" />
                                 </div>
-                                <h3 className="text-2xl font-bold mb-3">{t('sensibilisation.campaigns.youth.title')}</h3>
-                                <p className="text-muted-foreground mb-6">
-                                    {t('sensibilisation.campaigns.youth.desc')}
-                                </p>
-                                <div className="flex items-center gap-4">
-                                    <Button variant="outline" disabled>{t('common.comingSoon')}</Button>
+                                <div className="p-6">
+                                    <h3 className="text-2xl font-bold mb-3">{t('sensibilisation.campaigns.youth.title')}</h3>
+                                    <p className="text-muted-foreground mb-6">
+                                        {t('sensibilisation.campaigns.youth.desc')}
+                                    </p>
+                                    <div className="flex items-center gap-4">
+                                        <Button variant="outline" disabled>{t('common.comingSoon')}</Button>
+                                    </div>
                                 </div>
                             </Card>
                         </div>

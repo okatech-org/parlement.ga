@@ -7,6 +7,9 @@ import { GraduationCap, Play, BookOpen, CheckCircle, Clock, Home, Sun, Moon, Sta
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
+import tutorialParliament from "@/assets/tutorial-parliament.jpg";
+import tutorialLaw from "@/assets/tutorial-law.jpg";
+import tutorialBudget from "@/assets/tutorial-budget.jpg";
 
 const Tutoriels = () => {
     const navigate = useNavigate();
@@ -20,7 +23,7 @@ const Tutoriels = () => {
             duration: "15 min",
             level: t('tutorials.levels.beginner'),
             progress: 100,
-            image: "https://images.unsplash.com/photo-1555848962-6e79363ec58f?auto=format&fit=crop&q=80&w=2000"
+            image: tutorialParliament
         },
         {
             id: 2,
@@ -28,7 +31,7 @@ const Tutoriels = () => {
             duration: "25 min",
             level: t('tutorials.levels.intermediate'),
             progress: 45,
-            image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=2000"
+            image: tutorialLaw
         },
         {
             id: 3,
@@ -36,7 +39,7 @@ const Tutoriels = () => {
             duration: "20 min",
             level: t('tutorials.levels.advanced'),
             progress: 0,
-            image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&q=80&w=2000"
+            image: tutorialBudget
         }
     ];
 
