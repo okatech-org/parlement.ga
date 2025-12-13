@@ -72,6 +72,7 @@ const queryClient = new QueryClient();
 
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { UserProvider } from "@/contexts/UserContext";
+import IAstedFloatingButton from "@/components/iasted/IAstedFloatingButton";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -167,6 +168,9 @@ const App = () => (
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+
+            {/* Bouton flottant iAsted disponible sur toutes les pages */}
+            <IAstedFloatingButton />
           </UserProvider>
         </BrowserRouter>
       </TooltipProvider>
