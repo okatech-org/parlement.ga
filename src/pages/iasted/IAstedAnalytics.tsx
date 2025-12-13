@@ -16,9 +16,14 @@ import {
   BarChart3,
   Activity,
   Zap,
+  Download,
+  FileDown,
 } from 'lucide-react';
+import { exportToCSV, exportToPDF } from '@/utils/analytics-export';
 import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 import {
   BarChart,
   Bar,
@@ -240,12 +245,38 @@ export const IAstedAnalytics: React.FC = () => {
               </p>
             </div>
           </div>
-          <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="p-2 rounded-lg hover:bg-muted transition-colors"
-          >
-            {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                exportToCSV(analytics, weeklyData);
+                toast.success('Export CSV téléchargé');
+              }}
+              className="flex items-center gap-2"
+            >
+              <FileDown className="w-4 h-4" />
+              CSV
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={async () => {
+                await exportToPDF(analytics, weeklyData);
+                toast.success('Export PDF téléchargé');
+              }}
+              className="flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              PDF
+            </Button>
+            <button
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="p-2 rounded-lg hover:bg-muted transition-colors"
+            >
+              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </header>
 
