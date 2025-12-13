@@ -4,4 +4,5 @@
  * Exports all business rules and policies.
  */
 
-export * from './RolePermissionPolicy';
+// Parliamentary rules will be added here
+export {};
