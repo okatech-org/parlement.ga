@@ -49,6 +49,42 @@ export type Database = {
           },
         ]
       }
+      conversation_session_tags: {
+        Row: {
+          created_at: string
+          id: string
+          session_id: string
+          tag_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          session_id: string
+          tag_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          session_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversation_session_tags_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "conversation_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversation_session_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "conversation_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conversation_sessions: {
         Row: {
           created_at: string
@@ -83,6 +119,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      conversation_tags: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       documents: {
         Row: {
@@ -184,6 +244,47 @@ export type Database = {
           ville?: string | null
         }
         Relationships: []
+      }
+      favorite_responses: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string
+          id: string
+          message_id: string
+          session_id: string | null
+          title: string | null
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          message_id: string
+          session_id?: string | null
+          title?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          message_id?: string
+          session_id?: string | null
+          title?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorite_responses_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "conversation_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       login_attempts: {
         Row: {

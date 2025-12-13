@@ -46,10 +46,13 @@ import { ConversationHistory } from '@/components/iasted/ConversationHistory';
 import { NotificationBell } from '@/components/iasted/NotificationBell';
 import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 import { iastedStorageService } from '@/services/iasted-storage-service';
-import { History, Paperclip, BarChart3, Shield } from 'lucide-react';
+import { History, Paperclip, BarChart3, Shield, Star } from 'lucide-react';
 import { PresenceIndicator } from '@/components/iasted/PresenceIndicator';
 import { LiveTranscription } from '@/components/iasted/LiveTranscription';
 import { SmartSuggestions } from '@/components/iasted/SmartSuggestions';
+import { TagSelector } from '@/components/iasted/TagSelector';
+import { FavoriteButton } from '@/components/iasted/FavoriteButton';
+import { FavoritesPanel } from '@/components/iasted/FavoritesPanel';
 
 // Type-safe Supabase helper for tables not yet in generated types
 const db = supabase as any;
@@ -90,7 +93,9 @@ const MessageBubble: React.FC<{
     onSendByMail?: (doc: any) => void;
     onSendByCorrespondance?: (doc: any) => void;
     userRole?: string;
-}> = ({ message, onDelete, onEdit, onCopy, onSaveToDocuments, onSendByMail, onSendByCorrespondance, userRole }) => {
+    userId?: string;
+    sessionId?: string;
+}> = ({ message, onDelete, onEdit, onCopy, onSaveToDocuments, onSendByMail, onSendByCorrespondance, userRole, userId, sessionId }) => {
     const isUser = message.role === 'user';
     const [isEditing, setIsEditing] = useState(false);
     const [editedContent, setEditedContent] = useState(message.content);
@@ -488,6 +493,17 @@ const MessageBubble: React.FC<{
                                             <Copy className="w-3.5 h-3.5" />
                                         </button>
                                     )}
+
+                                    {/* Favorite button for assistant messages */}
+                                    {!isUser && userId && (
+                                        <FavoriteButton
+                                            messageId={message.id}
+                                            content={message.content}
+                                            sessionId={sessionId}
+                                            userId={userId}
+                                        />
+                                    )}
+
                                     {onDelete && (
                                         <button
                                             onClick={() => onDelete(message.id)}
@@ -535,6 +551,7 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
 
     // Real-time notifications
     const { notifications, unreadCount, markAsRead, markAllAsRead, clearNotifications } = useRealtimeNotifications(userId);
+    const [showFavorites, setShowFavorites] = useState(false);
 
     // Ref pour tracker si la session a été initialisée (évite les problèmes de timing)
     const sessionInitializedRef = useRef(false);
@@ -1736,13 +1753,15 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                 <BarChart3 className="w-4 h-4" />
                             </button>
 
-                            {/* Admin Feedback Link */}
+                            {/* Favorites Panel Toggle */}
                             <button
-                                onClick={() => navigate('/iasted/admin-feedback')}
-                                className="neu-button-sm flex items-center gap-2 px-3 py-2 text-sm hover:bg-warning/10 text-warning transition-colors"
-                                title="Administration des feedbacks"
+                                onClick={() => setShowFavorites(!showFavorites)}
+                                className={`neu-button-sm flex items-center gap-2 px-3 py-2 text-sm transition-colors ${
+                                    showFavorites ? 'bg-warning/10 text-warning' : 'hover:bg-warning/10'
+                                }`}
+                                title="Réponses favorites"
                             >
-                                <Shield className="w-4 h-4" />
+                                <Star className={`w-4 h-4 ${showFavorites ? 'fill-warning' : ''}`} />
                             </button>
 
                             <button
@@ -1816,6 +1835,8 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                             onSendByMail={handleSendByMail}
                                             onSendByCorrespondance={handleSendByCorrespondance}
                                             userRole={userRole}
+                                            userId={userId}
+                                            sessionId={sessionId || undefined}
                                         />
                                     ))}
                                 </AnimatePresence>
@@ -1942,6 +1963,18 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                         </TabsContent>
                     </div>
                 </Tabs>
+
+                {/* Favorites Panel */}
+                {userId && (
+                    <FavoritesPanel
+                        userId={userId}
+                        isOpen={showFavorites}
+                        onClose={() => setShowFavorites(false)}
+                        onInsertFavorite={(content) => {
+                            setInputText(content);
+                        }}
+                    />
+                )}
             </motion.div>
         </div>
     );
