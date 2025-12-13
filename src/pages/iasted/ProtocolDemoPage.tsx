@@ -36,9 +36,12 @@ import {
   UserCircle,
   Building2,
   MessageSquare,
-  ArrowLeft
+  ArrowLeft,
+  Briefcase,
+  LogIn
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const DEMO_ROLES: ParliamentaryRole[] = [
   'PRESIDENT',
@@ -81,10 +84,51 @@ const ROLE_LABELS: Record<ParliamentaryRole, string> = {
   ANONYMOUS: 'Anonyme'
 };
 
+// Comptes démo avec connexion
+const DEMO_ACCOUNTS = [
+  { label: 'Président', phone: '01010101', path: '/president', icon: Crown, color: 'text-amber-500' },
+  { label: '1er Vice-Président', phone: '02020202', path: '/vp', icon: Crown, color: 'text-amber-400' },
+  { label: 'Député', phone: '00000000', path: '/deputy', icon: UserCheck, color: 'text-primary' },
+  { label: 'Suppléant', phone: '03030303', path: '/suppleant', icon: Users, color: 'text-slate-500' },
+  { label: 'Questeur (Budget)', phone: '04040401', path: '/questeurs', icon: Briefcase, color: 'text-blue-500' },
+  { label: 'Questeur (Ressources)', phone: '04040402', path: '/questeurs', icon: Briefcase, color: 'text-cyan-500' },
+  { label: 'Questeur (Services)', phone: '04040403', path: '/questeurs', icon: Briefcase, color: 'text-teal-500' },
+  { label: 'Secrétaire', phone: '05050505', path: '/secretaires', icon: FileText, color: 'text-green-500' },
+];
+
 const ProtocolDemoPage = () => {
+  const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<ParliamentaryRole>('DEPUTY');
   const [isFemale, setIsFemale] = useState(false);
   const [simulatedTime, setSimulatedTime] = useState<'morning' | 'afternoon' | 'evening'>('morning');
+
+  const handleDemoLogin = (phone: string, redirectPath: string) => {
+    const mockUsers: Record<string, { name: string; roles: string[] }> = {
+      '01010101': { name: 'Michel Régis Onanga Ndiaye', roles: ['president', 'deputy', 'citizen'] },
+      '02020202': { name: 'François Ndong Obiang', roles: ['vp', 'deputy', 'citizen'] },
+      '03030303': { name: 'M. Suppléant', roles: ['substitute', 'citizen'] },
+      '04040401': { name: 'Questeur Budget', roles: ['questeur_budget', 'citizen'] },
+      '04040402': { name: 'Questeur Ressources', roles: ['questeur_ressources', 'citizen'] },
+      '04040403': { name: 'Questeur Services', roles: ['questeur_services', 'citizen'] },
+      '05050505': { name: 'M. Secrétaire', roles: ['secretary', 'citizen'] },
+      '00000000': { name: 'Honorable Député', roles: ['deputy', 'citizen'] },
+    };
+    
+    const userData = mockUsers[phone] || { name: 'Utilisateur Démo', roles: ['citizen'] };
+    const user = {
+      id: phone,
+      name: userData.name,
+      phoneNumber: phone,
+      roles: userData.roles,
+    };
+    
+    sessionStorage.setItem('user_data', JSON.stringify(user));
+    sessionStorage.setItem('current_role', userData.roles[0]);
+    
+    toast.success('Connexion démo réussie !');
+    navigate(redirectPath);
+    window.location.href = redirectPath;
+  };
 
   const roleDefinition = PARLIAMENTARY_ROLE_DEFINITIONS[selectedRole as ParliamentaryRoleEnum];
 
@@ -129,6 +173,37 @@ const ProtocolDemoPage = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-8">
+        {/* Comptes démo avec connexion */}
+        <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <LogIn className="w-5 h-5 text-primary" />
+              Accès aux Espaces Parlementaires
+            </CardTitle>
+            <CardDescription>
+              Connectez-vous avec un compte démo pour explorer les fonctionnalités
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {DEMO_ACCOUNTS.map((account) => {
+                const Icon = account.icon;
+                return (
+                  <Button
+                    key={account.phone}
+                    variant="outline"
+                    className="flex flex-col items-center gap-2 h-auto py-4 hover:bg-primary/10 hover:border-primary/50 transition-all"
+                    onClick={() => handleDemoLogin(account.phone, account.path)}
+                  >
+                    <Icon className={`w-6 h-6 ${account.color}`} />
+                    <span className="text-sm font-medium text-center">{account.label}</span>
+                  </Button>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Sélection du rôle */}
         <Card>
           <CardHeader>
