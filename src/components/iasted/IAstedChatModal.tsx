@@ -42,6 +42,8 @@ import { MeetingInterface } from './MeetingInterface';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRealtimeVoiceWebRTC, UseRealtimeVoiceWebRTC } from '@/hooks/useRealtimeVoiceWebRTC';
 import { DocumentUploadZone } from '@/components/iasted/DocumentUploadZone';
+import { ConversationHistory } from '@/components/iasted/ConversationHistory';
+import { History } from 'lucide-react';
 
 // Type-safe Supabase helper for tables not yet in generated types
 const db = supabase as any;
@@ -518,6 +520,8 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
     const [messages, setMessages] = useState<Message[]>([]);
     const [isProcessing, setIsProcessing] = useState(false);
     const [sessionId, setSessionId] = useState<string | null>(null);
+    const [showHistory, setShowHistory] = useState(false);
+    const [userId, setUserId] = useState<string | null>(null);
     const [selectedVoice, setSelectedVoice] = useState<'echo' | 'ash' | 'shimmer'>(() => {
         return currentVoice || (localStorage.getItem('iasted-voice-selection') as 'echo' | 'ash' | 'shimmer') || 'ash';
     });
@@ -956,6 +960,7 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
             // Mode démo : pas d'utilisateur authentifié, utiliser session locale
             if (!user) {
                 console.log('ℹ️ [IAstedChatModal] Mode démo - session locale uniquement');
+                setUserId(null);
 
                 // Ne créer une session que si pas encore de sessionId
                 if (!sessionId) {
@@ -978,6 +983,9 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                 console.log('✅ [IAstedChatModal] Session démo prête');
                 return;
             }
+
+            // Store user ID for conversation history
+            setUserId(user.id);
 
             // Utilisateur authentifié : chercher ou créer une session persistante
             const { data: existingSession } = await db
@@ -1573,6 +1581,18 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                         </div>
 
                         <div className="flex items-center gap-2">
+                            {/* Bouton historique des conversations */}
+                            {userId && (
+                                <button
+                                    onClick={() => setShowHistory(!showHistory)}
+                                    className={`neu-button-sm flex items-center gap-2 px-3 py-2 text-sm transition-colors ${showHistory ? 'bg-primary/10 text-primary' : 'hover:bg-muted'}`}
+                                    title="Historique des conversations"
+                                >
+                                    <History className="w-4 h-4" />
+                                    <span className="hidden sm:inline">Historique</span>
+                                </button>
+                            )}
+
                             {/* Boutons de gestion de conversation */}
                             <button
                                 onClick={handleNewConversation}
@@ -1655,8 +1675,34 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                         </TabsList>
                     </div>
 
-                    <div className="flex-1 overflow-hidden relative">
-                        <TabsContent value="chat" className="h-full m-0 flex flex-col">
+                    <div className="flex-1 overflow-hidden relative flex">
+                        {/* Conversation History Panel */}
+                        <AnimatePresence>
+                            {showHistory && userId && (
+                                <motion.div
+                                    initial={{ width: 0, opacity: 0 }}
+                                    animate={{ width: 280, opacity: 1 }}
+                                    exit={{ width: 0, opacity: 0 }}
+                                    className="border-r border-border bg-muted/30 overflow-hidden"
+                                >
+                                    <ConversationHistory
+                                        userId={userId}
+                                        currentSessionId={sessionId || undefined}
+                                        onSelectSession={async (selectedSessionId) => {
+                                            setSessionId(selectedSessionId);
+                                            await loadSessionMessages(selectedSessionId);
+                                            setShowHistory(false);
+                                        }}
+                                        onNewSession={async () => {
+                                            await handleNewConversation();
+                                            setShowHistory(false);
+                                        }}
+                                    />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        <TabsContent value="chat" className="h-full m-0 flex flex-col flex-1">
                             {/* Messages */}
                             <div className="flex-1 overflow-y-auto p-4 space-y-2">
                                 <AnimatePresence>
