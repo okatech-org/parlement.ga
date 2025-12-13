@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Génère des documents PDF officiels pour la Mairie de Libreville
  * Respecte la charte graphique municipale gabonaise

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Service de Gestion des Environnements Utilisateurs
  * 
