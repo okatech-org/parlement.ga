@@ -44,9 +44,32 @@ export default function Auth() {
   const [signupErrors, setSignupErrors] = useState<{ email?: string; password?: string; firstName?: string; lastName?: string }>({});
 
   const handleDemoLogin = (phone: string, accountType: string, redirectPath: string) => {
-    login(phone, accountType);
+    // Set demo user directly without using login() which redirects to /portail
+    const mockUsers: Record<string, { name: string; roles: string[] }> = {
+      '01010101': { name: 'Michel Régis Onanga Ndiaye', roles: ['president', 'deputy', 'citizen'] },
+      '02020202': { name: 'François Ndong Obiang', roles: ['vp', 'deputy', 'citizen'] },
+      '03030303': { name: 'M. Suppléant', roles: ['substitute', 'citizen'] },
+      '04040401': { name: 'Questeur Budget', roles: ['questeur_budget', 'citizen'] },
+      '05050505': { name: 'M. Secrétaire', roles: ['secretary', 'citizen'] },
+      '00000000': { name: 'Honorable Député', roles: ['deputy', 'citizen'] },
+      '99999999': { name: 'Citoyen', roles: ['citizen'] },
+    };
+    
+    const userData = mockUsers[phone] || { name: 'Utilisateur Démo', roles: ['citizen'] };
+    const user = {
+      id: phone,
+      name: userData.name,
+      phoneNumber: phone,
+      roles: userData.roles,
+    };
+    
+    sessionStorage.setItem('user_data', JSON.stringify(user));
+    sessionStorage.setItem('current_role', userData.roles[0]);
+    
     toast.success('Connexion démo réussie !');
     navigate(redirectPath);
+    // Force reload to update UserContext
+    window.location.href = redirectPath;
   };
 
   const demoAccounts = [
