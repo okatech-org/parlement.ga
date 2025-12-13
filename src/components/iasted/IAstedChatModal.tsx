@@ -58,6 +58,9 @@ import { ResponseTemplates } from '@/components/iasted/ResponseTemplates';
 import { SemanticSearch } from '@/components/iasted/SemanticSearch';
 import { ContinuousDictation } from '@/components/iasted/ContinuousDictation';
 import { KeyboardShortcuts, KeyboardShortcutsManager } from '@/components/iasted/KeyboardShortcuts';
+import { ConversationSummary } from '@/components/iasted/ConversationSummary';
+import { OfflineIndicator } from '@/components/iasted/OfflineIndicator';
+import { offlineSyncService } from '@/services/offline-sync-service';
 
 // Type-safe Supabase helper for tables not yet in generated types
 const db = supabase as any;
@@ -561,6 +564,7 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
     const [showSemanticSearch, setShowSemanticSearch] = useState(false);
     const [showDictation, setShowDictation] = useState(false);
     const [showShortcuts, setShowShortcuts] = useState(false);
+    const [showSummary, setShowSummary] = useState(false);
 
     // Ref pour tracker si la session a été initialisée (évite les problèmes de timing)
     const sessionInitializedRef = useRef(false);
@@ -1805,6 +1809,20 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                 <Keyboard className="w-4 h-4" />
                             </button>
 
+                            {/* Summary Toggle */}
+                            <button
+                                onClick={() => setShowSummary(!showSummary)}
+                                className={`p-2 hover:bg-info/10 rounded-lg transition-colors ${
+                                    showSummary ? 'bg-info/10 text-info' : ''
+                                }`}
+                                title="Résumé de la conversation"
+                            >
+                                <FileText className="w-4 h-4" />
+                            </button>
+
+                            {/* Offline Indicator */}
+                            <OfflineIndicator />
+
                             {/* Favorites Panel Toggle */}
                             <button
                                 onClick={() => setShowFavorites(!showFavorites)}
@@ -1918,6 +1936,20 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
 
                                 <div ref={messagesEndRef} />
                             </div>
+
+                            {/* Conversation Summary Panel */}
+                            <AnimatePresence>
+                                {showSummary && messages.length > 0 && (
+                                    <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        className="border-t border-border p-4 overflow-hidden bg-muted/20"
+                                    >
+                                        <ConversationSummary messages={messages} />
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
 
                             {/* File Upload Zone */}
                             <AnimatePresence>
