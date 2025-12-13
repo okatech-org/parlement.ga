@@ -1657,19 +1657,27 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                 className="neu-card w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden"
             >
                 {/* Header */}
-                <div className="neu-card p-6 rounded-t-2xl rounded-b-none">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="neu-raised w-14 h-14 rounded-full flex items-center justify-center p-3">
-                                <Brain className="w-7 h-7 text-primary" />
+                <div className="neu-card p-4 rounded-t-2xl rounded-b-none">
+                    <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                            <div className="neu-raised w-10 h-10 rounded-full flex items-center justify-center">
+                                <Brain className="w-5 h-5 text-primary" />
                             </div>
                             <div>
-                                <h2 className="text-xl font-bold text-foreground">iAsted - Chat Stratégique</h2>
-                                <p className="text-sm text-muted-foreground">Agent de Commande Totale</p>
+                                <h2 className="text-lg font-bold text-foreground">iAsted</h2>
+                                <p className="text-xs text-muted-foreground">Assistant IA</p>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-1 flex-wrap justify-end">
+                            {/* Close Button - FIRST for visibility */}
+                            <button
+                                onClick={onClose}
+                                className="neu-raised p-2 rounded-full bg-destructive/10 hover:bg-destructive/20 border border-destructive/30 hover:border-destructive/50 transition-all flex-shrink-0"
+                                title="Fermer (Échap)"
+                            >
+                                <X className="w-5 h-5 text-destructive" />
+                            </button>
                             {/* Bouton historique des conversations */}
                             {userId && (
                                 <button
@@ -1834,14 +1842,6 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                 <Star className={`w-4 h-4 ${showFavorites ? 'fill-warning' : ''}`} />
                             </button>
 
-                            {/* Close Button - Made more visible */}
-                            <button
-                                onClick={onClose}
-                                className="ml-2 neu-raised p-2.5 rounded-full bg-destructive/10 hover:bg-destructive/20 border border-destructive/30 hover:border-destructive/50 transition-all"
-                                title="Fermer (Échap)"
-                            >
-                                <X className="w-5 h-5 text-destructive" />
-                            </button>
                         </div>
                     </div>
                 </div >
