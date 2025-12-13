@@ -1232,7 +1232,7 @@ export const IAstedButtonFull: React.FC<IAstedButtonProps> = ({
       // Premier clic - attendre pour voir s'il y a un double clic
       clickTimer.current = setTimeout(() => {
         // Simple clic confirmé
-        onClick();
+        onClick?.();
         clickCount.current = 0;
       }, 300); // Délai de 300ms pour détecter le double clic
     } else if (clickCount.current === 2) {
