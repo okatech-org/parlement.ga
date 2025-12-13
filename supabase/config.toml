@@ -2,3 +2,6 @@ project_id = "uqbbwzidusocjtwlwtbb"
 
 [functions.get-mapbox-token]
 verify_jwt = false
+
+[functions.iasted-chat]
+verify_jwt = false
