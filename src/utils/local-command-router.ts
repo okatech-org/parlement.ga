@@ -501,7 +501,7 @@ const COMMAND_DEFINITIONS: CommandDef[] = [
         response: 'Navigation vers les paramètres.'
     },
 
-    // ========== 12. STATISTIQUES & VOTES ==========
+    // ========== 12. STATISTIQUES ==========
     {
         patterns: [
             /statistiques/,
@@ -509,21 +509,197 @@ const COMMAND_DEFINITIONS: CommandDef[] = [
             /resultats?\s*des\s*votes/,
             /historique\s*des\s*votes/,
         ],
-        anyKeywords: ['statistique', 'stats', 'vote', 'resultat'],
+        anyKeywords: ['statistique', 'stats', 'resultat'],
         toolName: 'global_navigate',
         toolArgs: { query: 'statistiques' },
         response: 'Affichage des statistiques parlementaires.'
     },
+
+    // ========== 13. VOTES SUR AMENDEMENTS ==========
     {
         patterns: [
-            /voter\s*(pour|contre)?/,
+            /je\s*vote\s*pour/,
+            /voter?\s*pour/,
+            /^pour$/,
+            /favorable/,
+            /j\s*approuve/,
+            /mon\s*vote\s*(est\s*)?pour/,
+        ],
+        anyKeywords: ['pour', 'favorable', 'approuve'],
+        exactPhrases: ['je vote pour', 'vote pour', 'pour'],
+        toolName: 'cast_vote',
+        toolArgs: { vote: 'pour' },
+        response: 'Vote POUR enregistré.'
+    },
+    {
+        patterns: [
+            /je\s*vote\s*contre/,
+            /voter?\s*contre/,
+            /^contre$/,
+            /defavorable/,
+            /je\s*refuse/,
+            /je\s*m\s*oppose/,
+            /mon\s*vote\s*(est\s*)?contre/,
+        ],
+        anyKeywords: ['contre', 'defavorable', 'refuse', 'oppose'],
+        exactPhrases: ['je vote contre', 'vote contre', 'contre'],
+        toolName: 'cast_vote',
+        toolArgs: { vote: 'contre' },
+        response: 'Vote CONTRE enregistré.'
+    },
+    {
+        patterns: [
+            /je\s*m\s*abstiens?/,
+            /abstention/,
+            /je\s*vote\s*abstention/,
+            /voter?\s*abstention/,
+            /ni\s*pour\s*ni\s*contre/,
+            /mon\s*vote\s*(est\s*)?abstention/,
+        ],
+        anyKeywords: ['abstention', 'abstiens', 'abstient'],
+        exactPhrases: ['je m abstiens', 'abstention', 'vote abstention'],
+        toolName: 'cast_vote',
+        toolArgs: { vote: 'abstention' },
+        response: 'Vote ABSTENTION enregistré.'
+    },
+    {
+        patterns: [
+            /annule\s*(mon\s*)?vote/,
+            /retire\s*(mon\s*)?vote/,
+            /modifier\s*(mon\s*)?vote/,
+        ],
+        anyKeywords: ['annule', 'retire', 'modifier'],
+        requiredKeywords: ['vote'],
+        toolName: 'cancel_vote',
+        toolArgs: {},
+        response: 'Vote annulé.'
+    },
+    {
+        patterns: [
             /ouvrir\s*(le\s*)?vote/,
             /lance\s*(le\s*)?scrutin/,
+            /ouvre\s*(le\s*)?scrutin/,
+            /demarrer\s*(le\s*)?vote/,
         ],
-        anyKeywords: ['vote', 'voter', 'scrutin'],
+        anyKeywords: ['vote', 'scrutin'],
+        actionKeywords: ['ouvre', 'ouvrir', 'lance', 'demarre'],
         toolName: 'global_navigate',
         toolArgs: { query: 'vote' },
         response: 'Accès au module de vote.'
+    },
+
+    // ========== 14. DICTÉE PARLEMENTAIRE ==========
+    {
+        patterns: [
+            /dicter?\s*(un\s*)?amendement/,
+            /rediger?\s*(un\s*)?amendement\s*(vocal)?/,
+            /nouvel?\s*amendement/,
+            /commencer?\s*(un\s*)?amendement/,
+            /dicte\s*(la\s*)?modification/,
+        ],
+        anyKeywords: ['dicter', 'rediger', 'amendement', 'modification'],
+        exactPhrases: ['dicter un amendement', 'rediger un amendement', 'nouvel amendement'],
+        toolName: 'start_dictation',
+        toolArgs: { type: 'amendment' },
+        response: 'Mode dictée d\'amendement activé. Énoncez votre texte.'
+    },
+    {
+        patterns: [
+            /dicter?\s*(une\s*)?question/,
+            /rediger?\s*(une\s*)?question\s*(au\s*gouvernement)?/,
+            /nouvelle\s*question/,
+            /question\s*orale/,
+            /commencer?\s*(une\s*)?question/,
+        ],
+        anyKeywords: ['dicter', 'rediger', 'question'],
+        exactPhrases: ['dicter une question', 'nouvelle question', 'question orale'],
+        toolName: 'start_dictation',
+        toolArgs: { type: 'question' },
+        response: 'Mode dictée de question activé. Énoncez votre question.'
+    },
+    {
+        patterns: [
+            /terminer?\s*(la\s*)?dictee/,
+            /fin\s*(de\s*)?dictee/,
+            /valider?\s*(la\s*)?dictee/,
+            /enregistrer?\s*(le\s*)?(texte|amendement|question)/,
+            /c\s*est\s*termine/,
+        ],
+        anyKeywords: ['terminer', 'fin', 'valider', 'enregistrer', 'termine'],
+        requiredKeywords: ['dictee'],
+        exactPhrases: ['terminer la dictee', 'fin de dictee', 'valider la dictee'],
+        toolName: 'stop_dictation',
+        toolArgs: { action: 'save' },
+        response: 'Dictée terminée et enregistrée.'
+    },
+    {
+        patterns: [
+            /annuler?\s*(la\s*)?dictee/,
+            /abandonner?\s*(la\s*)?dictee/,
+            /effacer?\s*(le\s*)?(texte|amendement|question)/,
+        ],
+        anyKeywords: ['annuler', 'abandonner', 'effacer'],
+        exactPhrases: ['annuler la dictee', 'abandonner la dictee'],
+        toolName: 'stop_dictation',
+        toolArgs: { action: 'cancel' },
+        response: 'Dictée annulée.'
+    },
+    {
+        patterns: [
+            /repete\s*(le\s*)?texte/,
+            /relis\s*(le\s*)?texte/,
+            /qu\s*est\s*ce\s*que\s*j\s*ai\s*dicte/,
+            /relecture/,
+        ],
+        anyKeywords: ['repete', 'relis', 'relecture', 'dicte'],
+        exactPhrases: ['repete le texte', 'relis le texte', 'relecture'],
+        toolName: 'read_dictation',
+        toolArgs: {},
+        response: 'Relecture du texte dicté.'
+    },
+    {
+        patterns: [
+            /corrige\s*(le\s*)?dernier\s*(mot|phrase)/,
+            /supprime\s*(le\s*)?dernier\s*(mot|phrase)/,
+            /efface\s*(le\s*)?dernier\s*(mot|phrase)/,
+        ],
+        anyKeywords: ['corrige', 'supprime', 'efface'],
+        requiredKeywords: ['dernier'],
+        toolName: 'edit_dictation',
+        toolArgs: { action: 'delete_last' },
+        response: 'Dernière partie supprimée.'
+    },
+    {
+        patterns: [
+            /a\s*la\s*ligne/,
+            /nouveau\s*paragraphe/,
+            /saut\s*de\s*ligne/,
+            /retour\s*a\s*la\s*ligne/,
+        ],
+        exactPhrases: ['a la ligne', 'nouveau paragraphe', 'saut de ligne'],
+        toolName: 'edit_dictation',
+        toolArgs: { action: 'new_line' },
+        response: 'Nouvelle ligne ajoutée.'
+    },
+    {
+        patterns: [
+            /point\s*final/,
+            /point\s*$/,
+        ],
+        exactPhrases: ['point final', 'point'],
+        toolName: 'edit_dictation',
+        toolArgs: { action: 'add_punctuation', value: '.' },
+        response: 'Point ajouté.'
+    },
+    {
+        patterns: [
+            /virgule$/,
+            /ajoute\s*(une\s*)?virgule/,
+        ],
+        exactPhrases: ['virgule', 'ajoute une virgule'],
+        toolName: 'edit_dictation',
+        toolArgs: { action: 'add_punctuation', value: ',' },
+        response: 'Virgule ajoutée.'
     },
 ];
 
