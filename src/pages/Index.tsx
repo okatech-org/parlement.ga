@@ -120,15 +120,17 @@ const Index = () => {
                 <option value="pt">🇵🇹 Português</option>
               </select>
 
-              {/* Notification Center */}
-              <NotificationCenter
-                notifications={notifications}
-                unreadCount={unreadCount}
-                onMarkAsRead={markAsRead}
-                onMarkAllAsRead={markAllAsRead}
-                onClear={clearNotifications}
-                onNotificationClick={handleNotificationClick}
-              />
+              {/* Notification Center - Only for authenticated users */}
+              {userId && (
+                <NotificationCenter
+                  notifications={notifications}
+                  unreadCount={unreadCount}
+                  onMarkAsRead={markAsRead}
+                  onMarkAllAsRead={markAllAsRead}
+                  onClear={clearNotifications}
+                  onNotificationClick={handleNotificationClick}
+                />
+              )}
 
               {/* Theme Toggle */}
               <Button
