@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
+import newsHeroImage from "@/assets/news-parliament-hero.jpg";
 
 const Actualites = () => {
     const navigate = useNavigate();
@@ -120,7 +121,7 @@ const Actualites = () => {
                     <Card className="overflow-hidden border-none shadow-elegant hover:shadow-xl transition-all duration-500 group cursor-pointer relative h-[400px]">
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10" />
                         <img
-                            src="https://images.unsplash.com/photo-1541872703-74c5e4436bb7?auto=format&fit=crop&q=80&w=2000"
+                            src={newsHeroImage}
                             alt="Featured"
                             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
