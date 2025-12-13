@@ -46,7 +46,7 @@ import { ConversationHistory } from '@/components/iasted/ConversationHistory';
 import { NotificationBell } from '@/components/iasted/NotificationBell';
 import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 import { iastedStorageService } from '@/services/iasted-storage-service';
-import { History, Paperclip, BarChart3, Shield, Star, LayoutTemplate } from 'lucide-react';
+import { History, Paperclip, BarChart3, Shield, Star, LayoutTemplate, Search, Mic as MicIcon, Keyboard } from 'lucide-react';
 import { PresenceIndicator } from '@/components/iasted/PresenceIndicator';
 import { LiveTranscription } from '@/components/iasted/LiveTranscription';
 import { SmartSuggestions } from '@/components/iasted/SmartSuggestions';
@@ -55,6 +55,9 @@ import { FavoriteButton } from '@/components/iasted/FavoriteButton';
 import { FavoritesPanel } from '@/components/iasted/FavoritesPanel';
 import { ConversationExport } from '@/components/iasted/ConversationExport';
 import { ResponseTemplates } from '@/components/iasted/ResponseTemplates';
+import { SemanticSearch } from '@/components/iasted/SemanticSearch';
+import { ContinuousDictation } from '@/components/iasted/ContinuousDictation';
+import { KeyboardShortcuts, KeyboardShortcutsManager } from '@/components/iasted/KeyboardShortcuts';
 
 // Type-safe Supabase helper for tables not yet in generated types
 const db = supabase as any;
@@ -555,6 +558,9 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
     const { notifications, unreadCount, markAsRead, markAllAsRead, clearNotifications } = useRealtimeNotifications(userId);
     const [showFavorites, setShowFavorites] = useState(false);
     const [showTemplates, setShowTemplates] = useState(false);
+    const [showSemanticSearch, setShowSemanticSearch] = useState(false);
+    const [showDictation, setShowDictation] = useState(false);
+    const [showShortcuts, setShowShortcuts] = useState(false);
 
     // Ref pour tracker si la session a été initialisée (évite les problèmes de timing)
     const sessionInitializedRef = useRef(false);
@@ -1763,13 +1769,40 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                 title="Conversation iAsted"
                             />
 
+                            {/* Semantic Search */}
+                            <button
+                                onClick={() => setShowSemanticSearch(true)}
+                                className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
+                                title="Recherche sémantique (Ctrl+K)"
+                            >
+                                <Search className="w-4 h-4 text-primary" />
+                            </button>
+
+                            {/* Dictation Mode */}
+                            <button
+                                onClick={() => setShowDictation(true)}
+                                className="p-2 hover:bg-success/10 rounded-lg transition-colors"
+                                title="Mode dictée (Ctrl+D)"
+                            >
+                                <MicIcon className="w-4 h-4 text-success" />
+                            </button>
+
                             {/* Templates Toggle */}
                             <button
                                 onClick={() => setShowTemplates(true)}
                                 className="p-2 hover:bg-secondary/10 rounded-lg transition-colors"
-                                title="Templates de réponses"
+                                title="Templates (Ctrl+T)"
                             >
                                 <LayoutTemplate className="w-4 h-4 text-secondary" />
+                            </button>
+
+                            {/* Keyboard Shortcuts */}
+                            <button
+                                onClick={() => setShowShortcuts(true)}
+                                className="p-2 hover:bg-muted rounded-lg transition-colors"
+                                title="Raccourcis clavier"
+                            >
+                                <Keyboard className="w-4 h-4" />
                             </button>
 
                             {/* Favorites Panel Toggle */}
@@ -1778,7 +1811,7 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                 className={`neu-button-sm flex items-center gap-2 px-3 py-2 text-sm transition-colors ${
                                     showFavorites ? 'bg-warning/10 text-warning' : 'hover:bg-warning/10'
                                 }`}
-                                title="Réponses favorites"
+                                title="Favoris (Ctrl+F)"
                             >
                                 <Star className={`w-4 h-4 ${showFavorites ? 'fill-warning' : ''}`} />
                             </button>
@@ -2002,6 +2035,28 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                     onSelectTemplate={(content) => {
                         setInputText(content);
                     }}
+                />
+
+                {/* Semantic Search */}
+                {userId && (
+                    <SemanticSearch
+                        userId={userId}
+                        isOpen={showSemanticSearch}
+                        onClose={() => setShowSemanticSearch(false)}
+                    />
+                )}
+
+                {/* Continuous Dictation */}
+                <ContinuousDictation
+                    isOpen={showDictation}
+                    onClose={() => setShowDictation(false)}
+                    onComplete={(text) => setInputText(prev => prev + text)}
+                />
+
+                {/* Keyboard Shortcuts */}
+                <KeyboardShortcuts
+                    isOpen={showShortcuts}
+                    onClose={() => setShowShortcuts(false)}
                 />
             </motion.div>
         </div>
