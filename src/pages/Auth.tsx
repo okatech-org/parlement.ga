@@ -31,7 +31,7 @@ export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [activeTab, setActiveTab] = useState('login');
-  const [showDemoAccounts, setShowDemoAccounts] = useState(false);
+  
   
   // Login form state
   const [loginEmail, setLoginEmail] = useState('');
@@ -410,35 +410,11 @@ export default function Auth() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => setShowDemoAccounts(!showDemoAccounts)}
+                onClick={() => navigate('/iasted/protocol-demo')}
               >
-                {showDemoAccounts ? 'Masquer les comptes démo' : 'Accéder aux espaces démo'}
+                Accéder aux espaces démo
               </Button>
 
-              {showDemoAccounts && (
-                <div className="w-full space-y-2 animate-fade-in">
-                  <p className="text-xs text-muted-foreground text-center mb-3">
-                    Sélectionnez un rôle pour accéder à l'espace correspondant
-                  </p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {demoAccounts.map((account) => {
-                      const Icon = account.icon;
-                      return (
-                        <Button
-                          key={account.phone}
-                          variant="ghost"
-                          size="sm"
-                          className="justify-start gap-2 h-auto py-2"
-                          onClick={() => handleDemoLogin(account.phone, account.type, account.path)}
-                        >
-                          <Icon className={`w-4 h-4 ${account.color}`} />
-                          <span className="text-xs">{account.label}</span>
-                        </Button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
             </CardFooter>
           </Tabs>
         </Card>
