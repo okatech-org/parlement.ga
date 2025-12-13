@@ -7,9 +7,10 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Eye, EyeOff, Loader2, Mail, Lock, User, Gavel, Shield, UserCheck, Users, FileText, Briefcase } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Mail, Lock, User, Gavel, Shield, UserCheck, Users, FileText, Briefcase, Home, Moon, Sun } from 'lucide-react';
 import { z } from 'zod';
 import { useUser } from '@/contexts/UserContext';
+import { useTheme } from 'next-themes';
 
 const loginSchema = z.object({
   email: z.string().email('Email invalide'),
@@ -25,6 +26,7 @@ const signupSchema = z.object({
 
 export default function Auth() {
   const navigate = useNavigate();
+  const { theme, setTheme } = useTheme();
   const { login } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -200,7 +202,27 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/30 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/30 p-4 relative">
+      {/* Top navigation buttons */}
+      <div className="absolute top-4 left-4 right-4 flex justify-between items-center">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate('/')}
+          className="hover:bg-muted"
+        >
+          <Home className="w-5 h-5" />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="hover:bg-muted"
+        >
+          {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+        </Button>
+      </div>
+
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-foreground mb-2">Assemblée Nationale</h1>
