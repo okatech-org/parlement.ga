@@ -4,11 +4,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { Eye, EyeOff, Loader2, Mail, Lock, User } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Mail, Lock, User, Gavel, Shield, UserCheck, Users, FileText, Briefcase } from 'lucide-react';
 import { z } from 'zod';
+import { useUser } from '@/contexts/UserContext';
 
 const loginSchema = z.object({
   email: z.string().email('Email invalide'),
@@ -24,9 +25,11 @@ const signupSchema = z.object({
 
 export default function Auth() {
   const navigate = useNavigate();
+  const { login } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [activeTab, setActiveTab] = useState('login');
+  const [showDemoAccounts, setShowDemoAccounts] = useState(false);
   
   // Login form state
   const [loginEmail, setLoginEmail] = useState('');
@@ -39,6 +42,22 @@ export default function Auth() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [signupErrors, setSignupErrors] = useState<{ email?: string; password?: string; firstName?: string; lastName?: string }>({});
+
+  const handleDemoLogin = (phone: string, accountType: string, redirectPath: string) => {
+    login(phone, accountType);
+    toast.success('Connexion démo réussie !');
+    navigate(redirectPath);
+  };
+
+  const demoAccounts = [
+    { label: 'Président', phone: '01010101', type: 'parlement', path: '/president', icon: Gavel, color: 'text-primary' },
+    { label: 'Vice-Président', phone: '02020202', type: 'parlement', path: '/vp', icon: UserCheck, color: 'text-secondary' },
+    { label: 'Député', phone: '00000000', type: 'parlement', path: '/vote', icon: Shield, color: 'text-emerald-500' },
+    { label: 'Suppléant', phone: '03030303', type: 'parlement', path: '/suppleant', icon: Users, color: 'text-teal-500' },
+    { label: 'Questeur', phone: '04040401', type: 'admin', path: '/questeurs', icon: Briefcase, color: 'text-accent' },
+    { label: 'Secrétaire', phone: '05050505', type: 'admin', path: '/secretaires', icon: FileText, color: 'text-indigo-500' },
+    { label: 'Citoyen', phone: '99999999', type: 'citoyen', path: '/citizen', icon: Users, color: 'text-amber-500' },
+  ];
 
   useEffect(() => {
     // Check if user is already logged in
@@ -346,10 +365,35 @@ export default function Auth() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => navigate('/')}
+                onClick={() => setShowDemoAccounts(!showDemoAccounts)}
               >
-                Continuer en mode démo
+                {showDemoAccounts ? 'Masquer les comptes démo' : 'Accéder aux espaces démo'}
               </Button>
+
+              {showDemoAccounts && (
+                <div className="w-full space-y-2 animate-fade-in">
+                  <p className="text-xs text-muted-foreground text-center mb-3">
+                    Sélectionnez un rôle pour accéder à l'espace correspondant
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {demoAccounts.map((account) => {
+                      const Icon = account.icon;
+                      return (
+                        <Button
+                          key={account.phone}
+                          variant="ghost"
+                          size="sm"
+                          className="justify-start gap-2 h-auto py-2"
+                          onClick={() => handleDemoLogin(account.phone, account.type, account.path)}
+                        >
+                          <Icon className={`w-4 h-4 ${account.color}`} />
+                          <span className="text-xs">{account.label}</span>
+                        </Button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </CardFooter>
           </Tabs>
         </Card>
