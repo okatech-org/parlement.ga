@@ -8,6 +8,9 @@ import { documentGenerationService } from '@/services/documentGenerationService'
 import { canUseCorrespondance } from '@/config/iasted-prompt-lite';
 import { invokeWithDemoFallback } from '@/utils/demoMode';
 import { useGeneratedDocumentsStore } from '@/stores/generatedDocumentsStore';
+
+// Type-safe Supabase helper for tables not yet in generated types
+const db = supabase as any;
 import {
     Send,
     Loader2,
@@ -572,7 +575,7 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
 
             // Supprimer aussi de la base de données
             if (sessionId) {
-                const { error } = await supabase
+                const { error } = await db
                     .from('conversation_messages')
                     .delete()
                     .eq('id', messageId);
@@ -597,7 +600,7 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
 
             // Mettre à jour dans la base de données
             if (sessionId) {
-                const { error } = await supabase
+                const { error } = await db
                     .from('conversation_messages')
                     .update({ content: newContent })
                     .eq('id', messageId);
@@ -795,7 +798,7 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
             openaiRTC.clearSession(); // Clear WebRTC session history
             if (sessionId) {
                 // Supprimer tous les messages de la session
-                const { error: deleteError } = await supabase
+                const { error: deleteError } = await db
                     .from('conversation_messages')
                     .delete()
                     .eq('session_id', sessionId);
@@ -805,7 +808,7 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                 }
 
                 // Marquer la session comme inactive
-                const { error: updateError } = await supabase
+                const { error: updateError } = await db
                     .from('conversation_sessions')
                     .update({
                         is_active: false,
@@ -832,7 +835,7 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
         const { data: { user } } = await supabase.auth.getUser();
         if (user) {
             // Créer nouvelle session avec colonnes correctes
-            await supabase.from('conversation_sessions').insert({
+            await db.from('conversation_sessions').insert({
                 id: newSessionId,
                 user_id: user.id,
                 title: 'Nouvelle conversation',
@@ -977,7 +980,7 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
             }
 
             // Utilisateur authentifié : chercher ou créer une session persistante
-            const { data: existingSession } = await supabase
+            const { data: existingSession } = await db
                 .from('conversation_sessions')
                 .select('*')
                 .eq('user_id', user.id)
@@ -991,7 +994,7 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                 setSessionId(existingSession.id);
                 await loadSessionMessages(existingSession.id);
             } else {
-                const { data: newSession, error } = await supabase
+                const { data: newSession, error } = await db
                     .from('conversation_sessions')
                     .insert({
                         user_id: user.id,
@@ -1042,14 +1045,14 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
     };
 
     const loadSessionMessages = async (sessionId: string) => {
-        const { data: msgs, error } = await supabase
+        const { data: msgs, error } = await db
             .from('conversation_messages')
             .select('*')
             .eq('session_id', sessionId)
             .order('created_at', { ascending: true });
 
         if (!error && msgs) {
-            setMessages(msgs.map(m => ({
+            setMessages(msgs.map((m: any) => ({
                 id: m.id,
                 role: m.role as 'user' | 'assistant',
                 content: m.content,
@@ -1427,7 +1430,7 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
     // Sauvegarder le message dans Supabase
     const saveMessage = async (sessionId: string, message: Message) => {
         try {
-            const { error } = await supabase
+            const { error } = await db
                 .from('conversation_messages')
                 .insert({
                     session_id: sessionId,
@@ -1440,6 +1443,7 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
         } catch (error) {
             console.error('❌ [saveMessage] Erreur:', JSON.stringify(error, null, 2));
         }
+    };
     };
 
     // Gestion de l'envoi de message texte

@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import { useDemo } from '@/contexts/DemoContext';
 import { useAuth } from '@/hooks/useAuth';
 import { usePresentationSafe } from '@/contexts/PresentationContext';
-import { supabase } from '@/integrations/supabase/client';
 import IAstedInterface from './IAstedInterface';
 
 /**
@@ -53,55 +52,14 @@ export default function IAstedInterfaceWrapper() {
       // Priorité 1: Utilisateur Supabase authentifié
       if (authUser) {
         console.log('🔐 [IAstedWrapper] Utilisateur connecté:', authUser.email);
-
-        // D'abord essayer user_environments pour le rôle précis (MAIRE, AGENT_MUNICIPAL, etc.)
-        const { data: envData } = await supabase
-          .from('user_environments')
-          .select('role, environment')
-          .eq('user_id', authUser.id)
-          .eq('is_active', true)
-          .maybeSingle();
-
-        if (envData?.role) {
-          console.log('🔐 [IAstedWrapper] Rôle précis (user_environments):', envData.role);
-          setUserRole(envData.role);
-        } else {
-          // Fallback sur user_roles
-          const { data: roleData } = await supabase
-            .from('user_roles')
-            .select('role')
-            .eq('user_id', authUser.id)
-            .maybeSingle();
-
-          if (roleData?.role) {
-            console.log('🔐 [IAstedWrapper] Rôle (user_roles):', roleData.role);
-            setUserRole(roleData.role);
-          } else {
-            setUserRole('citizen');
-          }
-        }
-
-        // Récupérer le prénom depuis profiles
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('first_name, last_name')
-          .eq('user_id', authUser.id)
-          .maybeSingle();
-
-        if (profileData) {
-          // Gérer le cas où first_name est "M." (abréviation de Monsieur)
-          let displayName = profileData.first_name || '';
-          
-          // Si le prénom est une abréviation de titre, ne pas l'utiliser comme prénom
-          if (displayName === 'M.' || displayName === 'Mme' || displayName === 'Mlle') {
-            // Ne pas définir de prénom, laisser iAsted utiliser le titre approprié
-            console.log('🔐 [IAstedWrapper] Prénom est un titre, ignoré:', displayName);
-            setUserFirstName(undefined);
-          } else {
-            console.log('🔐 [IAstedWrapper] Prénom détecté:', displayName);
-            setUserFirstName(displayName);
-          }
-        }
+        
+        // Use email metadata or default to citizen
+        const metadata = authUser.user_metadata;
+        const role = metadata?.role || 'citizen';
+        const firstName = metadata?.first_name || authUser.email?.split('@')[0];
+        
+        setUserRole(role);
+        setUserFirstName(firstName);
         return;
       }
 
@@ -156,9 +114,6 @@ export default function IAstedInterfaceWrapper() {
       case 'SUPER_ADMIN':
         return 'super_admin';
       
-      // Le rôle 'admin' de user_roles peut être un maire ou un admin selon le contexte
-      // Priorité donnée à user_environments donc si on arrive ici avec 'admin', 
-      // c'est un admin système, pas un maire
       case 'ADMIN':
         return 'admin';
 

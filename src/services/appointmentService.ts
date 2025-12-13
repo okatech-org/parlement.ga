@@ -1,95 +1,99 @@
-import { supabase } from "@/integrations/supabase/client";
-import { Tables } from "@/integrations/supabase/types";
+// Mock appointment service using localStorage (tables don't exist in Supabase yet)
 
-// Types basés sur la table appointments de Supabase
-export type Appointment = Tables<"appointments">;
+export interface Appointment {
+    id: string;
+    organization_id?: string;
+    citizen_id?: string;
+    service_id?: string;
+    appointment_date: string;
+    status: 'pending' | 'confirmed' | 'cancelled' | 'completed';
+    notes?: string;
+    created_at: string;
+    updated_at: string;
+}
+
 export type AppointmentStatus = Appointment["status"];
+
+const STORAGE_KEY = 'mock_appointments';
+
+function getStoredAppointments(): Appointment[] {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+}
+
+function saveAppointments(appointments: Appointment[]): void {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appointments));
+}
 
 export const appointmentService = {
     async getAll(filters?: { organizationId?: string; citizenId?: string; date?: string }): Promise<Appointment[]> {
-        let query = supabase
-            .from('appointments')
-            .select(`
-                *,
-                service:services(name, category),
-                organization:organizations(name)
-            `)
-            .order('appointment_date', { ascending: true });
-
+        let appointments = getStoredAppointments();
+        
         if (filters?.organizationId) {
-            query = query.eq('organization_id', filters.organizationId);
+            appointments = appointments.filter(a => a.organization_id === filters.organizationId);
         }
         if (filters?.citizenId) {
-            query = query.eq('citizen_id', filters.citizenId);
+            appointments = appointments.filter(a => a.citizen_id === filters.citizenId);
         }
         if (filters?.date) {
-            const startOfDay = `${filters.date}T00:00:00`;
-            const endOfDay = `${filters.date}T23:59:59`;
-            query = query.gte('appointment_date', startOfDay).lte('appointment_date', endOfDay);
+            appointments = appointments.filter(a => a.appointment_date.startsWith(filters.date));
         }
-
-        const { data, error } = await query;
-
-        if (error) throw error;
-        return data as unknown as Appointment[];
+        
+        return appointments.sort((a, b) => 
+            new Date(a.appointment_date).getTime() - new Date(b.appointment_date).getTime()
+        );
     },
 
     async getById(id: string): Promise<Appointment | null> {
-        const { data, error } = await supabase
-            .from('appointments')
-            .select(`
-                *,
-                service:services(name, category),
-                organization:organizations(name)
-            `)
-            .eq('id', id)
-            .single();
-
-        if (error) throw error;
-        return data as unknown as Appointment;
+        const appointments = getStoredAppointments();
+        return appointments.find(a => a.id === id) || null;
     },
 
     async create(appointment: Omit<Appointment, 'id' | 'created_at' | 'updated_at'>): Promise<Appointment> {
-        const { data, error } = await supabase
-            .from('appointments')
-            .insert(appointment as any)
-            .select()
-            .single();
-
-        if (error) throw error;
-        return data as Appointment;
+        const appointments = getStoredAppointments();
+        const now = new Date().toISOString();
+        const newAppointment: Appointment = {
+            ...appointment,
+            id: crypto.randomUUID(),
+            created_at: now,
+            updated_at: now
+        };
+        appointments.push(newAppointment);
+        saveAppointments(appointments);
+        return newAppointment;
     },
 
     async updateStatus(id: string, status: AppointmentStatus): Promise<Appointment> {
-        const { data, error } = await supabase
-            .from('appointments')
-            .update({ status })
-            .eq('id', id)
-            .select()
-            .single();
-
-        if (error) throw error;
-        return data as Appointment;
+        const appointments = getStoredAppointments();
+        const index = appointments.findIndex(a => a.id === id);
+        if (index === -1) throw new Error('Appointment not found');
+        
+        appointments[index] = {
+            ...appointments[index],
+            status,
+            updated_at: new Date().toISOString()
+        };
+        saveAppointments(appointments);
+        return appointments[index];
     },
 
     async update(id: string, updates: Partial<Appointment>): Promise<Appointment> {
-        const { data, error } = await supabase
-            .from('appointments')
-            .update(updates as any)
-            .eq('id', id)
-            .select()
-            .single();
-
-        if (error) throw error;
-        return data as Appointment;
+        const appointments = getStoredAppointments();
+        const index = appointments.findIndex(a => a.id === id);
+        if (index === -1) throw new Error('Appointment not found');
+        
+        appointments[index] = {
+            ...appointments[index],
+            ...updates,
+            updated_at: new Date().toISOString()
+        };
+        saveAppointments(appointments);
+        return appointments[index];
     },
 
     async delete(id: string): Promise<void> {
-        const { error } = await supabase
-            .from('appointments')
-            .delete()
-            .eq('id', id);
-
-        if (error) throw error;
+        const appointments = getStoredAppointments();
+        const filtered = appointments.filter(a => a.id !== id);
+        saveAppointments(filtered);
     }
 };
