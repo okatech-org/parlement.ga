@@ -1,13 +1,16 @@
 // Mock document service types (tables don't exist in Supabase yet)
 
-export type DocumentStatus = 'pending' | 'approved' | 'rejected' | 'archived';
+export type DocumentStatus = 'pending' | 'approved' | 'rejected' | 'archived' | 'PENDING' | 'VERIFIED';
 
 export interface Document {
   id: string;
   user_id: string;
   name: string;
+  title?: string;
+  url?: string;
   file_path: string;
   file_type: string;
+  fileType?: string; // Alias
   file_size: number;
   category?: string;
   tags?: string[];

@@ -12,7 +12,7 @@ export async function recordLoginAttempt(
   ipAddress?: string
 ): Promise<void> {
   try {
-    const { error } = await supabase
+    const { error } = await db
       .from("login_attempts")
       .insert({
         email,

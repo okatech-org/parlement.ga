@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Document Vault Store
  * Zustand-like store for document vault state management

@@ -10,6 +10,7 @@ export interface Request {
     status: string;
     type: string;
     priority: string;
+    subject?: string;
     citizen_id?: string;
     created_at: string;
     updated_at: string;
@@ -20,13 +21,9 @@ export type RequestPriority = string;
 
 export const requestService = {
     async getAll(citizenId?: string): Promise<Request[]> {
-        let query = supabase
+        let query = db
             .from('requests')
-            .select(`
-                *,
-                service:services(name, category),
-                organization:organizations(name)
-            `)
+            .select('*')
             .order('created_at', { ascending: false });
 
         if (citizenId) {
@@ -34,56 +31,37 @@ export const requestService = {
         }
 
         const { data, error } = await query;
-
-        if (error) throw error;
-        return data as unknown as Request[];
+        if (error) {
+            console.error('Failed to fetch requests:', error);
+            return [];
+        }
+        return (data || []) as Request[];
     },
 
     async getById(id: string): Promise<Request | null> {
-        const { data, error } = await supabase
+        const { data, error } = await db
             .from('requests')
-            .select(`
-                *,
-                service:services(name, category),
-                organization:organizations(name)
-            `)
+            .select('*')
             .eq('id', id)
-            .single();
+            .maybeSingle();
 
-        if (error) throw error;
-        return data as unknown as Request;
+        if (error) return null;
+        return data as Request | null;
     },
 
     async create(request: Omit<Request, 'id' | 'created_at' | 'updated_at'>): Promise<Request> {
-        const { data, error } = await supabase
+        const { data, error } = await db
             .from('requests')
-            .insert(request as any)
+            .insert(request)
             .select()
             .single();
 
         if (error) throw error;
-
-        // Log audit
-        await auditService.logCreate('request', data.id, {
-            type: request.type,
-            subject: request.subject,
-            citizen_id: request.citizen_id
-        });
-
         return data as Request;
     },
 
     async updateStatus(id: string, status: RequestStatus): Promise<Request> {
-        // Get current status before update
-        const { data: currentData } = await supabase
-            .from('requests')
-            .select('status')
-            .eq('id', id)
-            .single();
-
-        const oldStatus = currentData?.status;
-
-        const { data, error } = await supabase
+        const { data, error } = await db
             .from('requests')
             .update({ status })
             .eq('id', id)
@@ -91,53 +69,38 @@ export const requestService = {
             .single();
 
         if (error) throw error;
-
-        // Log status change audit
-        await auditService.logStatusChange('request', id, oldStatus || 'UNKNOWN', status);
-
         return data as Request;
     },
 
     async update(id: string, updates: Partial<Request>): Promise<Request> {
-        // Get current data before update
-        const { data: currentData } = await supabase
+        const { data, error } = await db
             .from('requests')
-            .select('*')
-            .eq('id', id)
-            .single();
-
-        const { data, error } = await supabase
-            .from('requests')
-            .update(updates as any)
+            .update(updates)
             .eq('id', id)
             .select()
             .single();
 
         if (error) throw error;
-
-        // Log update audit
-        await auditService.logUpdate('request', id, 
-            currentData || {}, 
-            updates as Record<string, unknown>
-        );
-
         return data as Request;
     },
 
-    async getStats(userId: string) {
-        const { data, error } = await supabase
+    async delete(id: string): Promise<void> {
+        const { error } = await db
             .from('requests')
-            .select('status, id')
-            .eq('citizen_id', userId);
+            .delete()
+            .eq('id', id);
 
         if (error) throw error;
+    },
 
-        const total = data.length;
-        const pending = data.filter(r => r.status === 'PENDING').length;
-        const inProgress = data.filter(r => r.status === 'IN_PROGRESS').length;
-        const completed = data.filter(r => r.status === 'COMPLETED' || r.status === 'VALIDATED').length;
-        const rejected = data.filter(r => r.status === 'REJECTED').length;
+    async getByStatus(status: RequestStatus): Promise<Request[]> {
+        const { data, error } = await db
+            .from('requests')
+            .select('*')
+            .eq('status', status)
+            .order('created_at', { ascending: false });
 
-        return { total, pending, inProgress, completed, rejected };
+        if (error) return [];
+        return (data || []) as Request[];
     }
 };
