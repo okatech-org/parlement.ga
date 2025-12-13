@@ -46,13 +46,15 @@ import { ConversationHistory } from '@/components/iasted/ConversationHistory';
 import { NotificationBell } from '@/components/iasted/NotificationBell';
 import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 import { iastedStorageService } from '@/services/iasted-storage-service';
-import { History, Paperclip, BarChart3, Shield, Star } from 'lucide-react';
+import { History, Paperclip, BarChart3, Shield, Star, LayoutTemplate } from 'lucide-react';
 import { PresenceIndicator } from '@/components/iasted/PresenceIndicator';
 import { LiveTranscription } from '@/components/iasted/LiveTranscription';
 import { SmartSuggestions } from '@/components/iasted/SmartSuggestions';
 import { TagSelector } from '@/components/iasted/TagSelector';
 import { FavoriteButton } from '@/components/iasted/FavoriteButton';
 import { FavoritesPanel } from '@/components/iasted/FavoritesPanel';
+import { ConversationExport } from '@/components/iasted/ConversationExport';
+import { ResponseTemplates } from '@/components/iasted/ResponseTemplates';
 
 // Type-safe Supabase helper for tables not yet in generated types
 const db = supabase as any;
@@ -552,6 +554,7 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
     // Real-time notifications
     const { notifications, unreadCount, markAsRead, markAllAsRead, clearNotifications } = useRealtimeNotifications(userId);
     const [showFavorites, setShowFavorites] = useState(false);
+    const [showTemplates, setShowTemplates] = useState(false);
 
     // Ref pour tracker si la session a été initialisée (évite les problèmes de timing)
     const sessionInitializedRef = useRef(false);
@@ -1753,6 +1756,22 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                                 <BarChart3 className="w-4 h-4" />
                             </button>
 
+                            {/* Export Conversation */}
+                            <ConversationExport
+                                messages={messages}
+                                sessionId={sessionId || undefined}
+                                title="Conversation iAsted"
+                            />
+
+                            {/* Templates Toggle */}
+                            <button
+                                onClick={() => setShowTemplates(true)}
+                                className="p-2 hover:bg-secondary/10 rounded-lg transition-colors"
+                                title="Templates de réponses"
+                            >
+                                <LayoutTemplate className="w-4 h-4 text-secondary" />
+                            </button>
+
                             {/* Favorites Panel Toggle */}
                             <button
                                 onClick={() => setShowFavorites(!showFavorites)}
@@ -1975,6 +1994,15 @@ export const IAstedChatModal: React.FC<IAstedChatModalProps> = ({
                         }}
                     />
                 )}
+
+                {/* Response Templates */}
+                <ResponseTemplates
+                    isOpen={showTemplates}
+                    onClose={() => setShowTemplates(false)}
+                    onSelectTemplate={(content) => {
+                        setInputText(content);
+                    }}
+                />
             </motion.div>
         </div>
     );
