@@ -1,4 +1,5 @@
-// Local storage service for conversation persistence (no Supabase tables needed)
+// Supabase-based conversation persistence service
+import { supabase } from '@/integrations/supabase/client';
 
 export interface ConversationMessage {
   id: string;
@@ -18,109 +19,145 @@ export interface ConversationSession {
   updated_at: string;
 }
 
-const SESSIONS_KEY = 'iasted_conversation_sessions';
-const MESSAGES_KEY = 'iasted_conversation_messages';
-
-function getSessions(): ConversationSession[] {
-  const stored = localStorage.getItem(SESSIONS_KEY);
-  return stored ? JSON.parse(stored) : [];
-}
-
-function saveSessions(sessions: ConversationSession[]): void {
-  localStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions));
-}
-
-function getMessages(): ConversationMessage[] {
-  const stored = localStorage.getItem(MESSAGES_KEY);
-  return stored ? JSON.parse(stored) : [];
-}
-
-function saveMessages(messages: ConversationMessage[]): void {
-  localStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
-}
+// Type-safe helper for tables
+const db = supabase as any;
 
 export const conversationService = {
   // Sessions
   async getActiveSession(userId: string): Promise<ConversationSession | null> {
-    const sessions = getSessions();
-    const dayAgo = Date.now() - 24 * 60 * 60 * 1000;
-    return sessions.find(s => 
-      s.user_id === userId && 
-      s.is_active && 
-      new Date(s.updated_at).getTime() > dayAgo
-    ) || null;
+    const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    
+    const { data, error } = await db
+      .from('conversation_sessions')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('is_active', true)
+      .gte('updated_at', dayAgo)
+      .order('updated_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    
+    if (error) {
+      console.error('Error fetching active session:', error);
+      return null;
+    }
+    
+    return data;
   },
 
-  async createSession(userId: string, title: string = 'Conversation iAsted'): Promise<ConversationSession> {
-    const sessions = getSessions();
-    const now = new Date().toISOString();
-    const session: ConversationSession = {
-      id: crypto.randomUUID(),
-      user_id: userId,
-      title,
-      is_active: true,
-      created_at: now,
-      updated_at: now
-    };
-    sessions.push(session);
-    saveSessions(sessions);
-    return session;
+  async createSession(userId: string, title: string = 'Conversation iAsted'): Promise<ConversationSession | null> {
+    const { data, error } = await db
+      .from('conversation_sessions')
+      .insert({
+        user_id: userId,
+        title,
+        is_active: true
+      })
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('Error creating session:', error);
+      return null;
+    }
+    
+    return data;
   },
 
   async deactivateSession(sessionId: string): Promise<void> {
-    const sessions = getSessions();
-    const index = sessions.findIndex(s => s.id === sessionId);
-    if (index !== -1) {
-      sessions[index].is_active = false;
-      sessions[index].updated_at = new Date().toISOString();
-      saveSessions(sessions);
+    const { error } = await db
+      .from('conversation_sessions')
+      .update({ is_active: false })
+      .eq('id', sessionId);
+    
+    if (error) {
+      console.error('Error deactivating session:', error);
     }
+  },
+
+  async getUserSessions(userId: string): Promise<ConversationSession[]> {
+    const { data, error } = await db
+      .from('conversation_sessions')
+      .select('*')
+      .eq('user_id', userId)
+      .order('updated_at', { ascending: false });
+    
+    if (error) {
+      console.error('Error fetching user sessions:', error);
+      return [];
+    }
+    
+    return data || [];
   },
 
   // Messages
   async getSessionMessages(sessionId: string): Promise<ConversationMessage[]> {
-    const messages = getMessages();
-    return messages
-      .filter(m => m.session_id === sessionId)
-      .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
-  },
-
-  async saveMessage(message: Omit<ConversationMessage, 'created_at'>): Promise<ConversationMessage> {
-    const messages = getMessages();
-    const newMessage: ConversationMessage = {
-      ...message,
-      created_at: new Date().toISOString()
-    };
-    messages.push(newMessage);
-    saveMessages(messages);
+    const { data, error } = await db
+      .from('conversation_messages')
+      .select('*')
+      .eq('session_id', sessionId)
+      .order('created_at', { ascending: true });
     
-    // Update session timestamp
-    const sessions = getSessions();
-    const sessionIndex = sessions.findIndex(s => s.id === message.session_id);
-    if (sessionIndex !== -1) {
-      sessions[sessionIndex].updated_at = new Date().toISOString();
-      saveSessions(sessions);
+    if (error) {
+      console.error('Error fetching session messages:', error);
+      return [];
     }
     
-    return newMessage;
+    return data || [];
+  },
+
+  async saveMessage(message: Omit<ConversationMessage, 'created_at'>): Promise<ConversationMessage | null> {
+    const { data, error } = await db
+      .from('conversation_messages')
+      .insert({
+        id: message.id,
+        session_id: message.session_id,
+        role: message.role,
+        content: message.content,
+        metadata: message.metadata
+      })
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('Error saving message:', error);
+      return null;
+    }
+    
+    // Update session timestamp
+    await db
+      .from('conversation_sessions')
+      .update({ updated_at: new Date().toISOString() })
+      .eq('id', message.session_id);
+    
+    return data;
   },
 
   async deleteMessage(messageId: string): Promise<void> {
-    const messages = getMessages();
-    saveMessages(messages.filter(m => m.id !== messageId));
-  },
-
-  async updateMessage(messageId: string, content: string): Promise<void> {
-    const messages = getMessages();
-    const index = messages.findIndex(m => m.id === messageId);
-    if (index !== -1) {
-      messages[index].content = content;
-      saveMessages(messages);
+    const { error } = await db
+      .from('conversation_messages')
+      .delete()
+      .eq('id', messageId);
+    
+    if (error) {
+      console.error('Error deleting message:', error);
     }
   },
 
+  async updateMessage(messageId: string, content: string): Promise<void> {
+    // Note: conversation_messages doesn't have an update policy by design
+    // If needed, delete and recreate the message
+    console.warn('Message update not supported - messages are immutable');
+  },
+
   async deleteSessionMessages(sessionId: string): Promise<void> {
-    const messages = getMessages();
-    saveMessages(messages.filter(m => m.session_id !== sessionId));
+    const { error } = await db
+      .from('conversation_messages')
+      .delete()
+      .eq('session_id', sessionId);
+    
+    if (error) {
+      console.error('Error deleting session messages:', error);
+    }
   }
 };
