@@ -3,35 +3,37 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Send, Bot, User, Paperclip, Mic, Sparkles } from 'lucide-react';
-import { useDemo } from '@/contexts/DemoContext';
+import { Send, Bot, User, Paperclip, Mic, Sparkles, Loader2 } from 'lucide-react';
+import { useUser } from '@/contexts/UserContext';
+import { toast } from 'sonner';
 
 interface Message {
     id: string;
     role: 'user' | 'assistant' | 'system';
     content: string;
     timestamp: Date;
-    isTyping?: boolean;
 }
 
 interface ChatInterfaceProps {
     isExpanded: boolean;
 }
 
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/iasted-chat`;
+
 export function ChatInterface({ isExpanded }: ChatInterfaceProps) {
     const [messages, setMessages] = useState<Message[]>([
         {
             id: '1',
             role: 'assistant',
-            content: 'Bonjour ! Je suis iAsted. Je peux répondre à vos questions ou vous mettre en relation avec un agent humain. Que souhaitez-vous faire ?',
+            content: 'Bonjour ! Je suis iAsted, votre assistant IA. Je peux répondre à vos questions sur les démarches parlementaires ou vous mettre en relation avec un agent humain. Comment puis-je vous aider ?',
             timestamp: new Date()
         }
     ]);
     const [inputValue, setInputValue] = useState('');
     const [isAiMode, setIsAiMode] = useState(true);
-    const [isTyping, setIsTyping] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const scrollRef = useRef<HTMLDivElement>(null);
-    const { currentUser } = useDemo();
+    const { user } = useUser();
 
     useEffect(() => {
         if (scrollRef.current) {
@@ -42,8 +44,8 @@ export function ChatInterface({ isExpanded }: ChatInterfaceProps) {
         }
     }, [messages]);
 
-    const handleSend = () => {
-        if (!inputValue.trim()) return;
+    const handleSend = async () => {
+        if (!inputValue.trim() || isLoading) return;
 
         const userMsg: Message = {
             id: Date.now().toString(),
@@ -54,34 +56,132 @@ export function ChatInterface({ isExpanded }: ChatInterfaceProps) {
 
         setMessages(prev => [...prev, userMsg]);
         setInputValue('');
-        setIsTyping(true);
 
-        // Simulate Response
-        setTimeout(() => {
-            const responseContent = isAiMode
-                ? generateAiResponse(userMsg.content)
-                : "Un agent va prendre en charge votre demande dans quelques instants...";
+        if (!isAiMode) {
+            // Mode humain - réponse simulée
+            setTimeout(() => {
+                const responseMsg: Message = {
+                    id: (Date.now() + 1).toString(),
+                    role: 'assistant',
+                    content: "Un agent va prendre en charge votre demande dans quelques instants...",
+                    timestamp: new Date()
+                };
+                setMessages(prev => [...prev, responseMsg]);
+            }, 1000);
+            return;
+        }
 
-            const responseMsg: Message = {
+        // Mode IA - appel OpenRouter avec streaming
+        setIsLoading(true);
+        
+        const apiMessages = messages
+            .filter(m => m.role !== 'system')
+            .map(m => ({ role: m.role, content: m.content }));
+        apiMessages.push({ role: 'user', content: inputValue });
+
+        try {
+            const resp = await fetch(CHAT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`
+                },
+                body: JSON.stringify({ messages: apiMessages })
+            });
+
+            if (!resp.ok) {
+                const errorData = await resp.json().catch(() => ({}));
+                throw new Error(errorData.error || `Erreur ${resp.status}`);
+            }
+
+            if (!resp.body) throw new Error('Pas de réponse');
+
+            const reader = resp.body.getReader();
+            const decoder = new TextDecoder();
+            let textBuffer = '';
+            let assistantContent = '';
+            const assistantMsgId = (Date.now() + 1).toString();
+
+            // Créer le message assistant vide
+            setMessages(prev => [...prev, {
+                id: assistantMsgId,
+                role: 'assistant',
+                content: '',
+                timestamp: new Date()
+            }]);
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                textBuffer += decoder.decode(value, { stream: true });
+
+                let newlineIndex: number;
+                while ((newlineIndex = textBuffer.indexOf('\n')) !== -1) {
+                    let line = textBuffer.slice(0, newlineIndex);
+                    textBuffer = textBuffer.slice(newlineIndex + 1);
+
+                    if (line.endsWith('\r')) line = line.slice(0, -1);
+                    if (line.startsWith(':') || line.trim() === '') continue;
+                    if (!line.startsWith('data: ')) continue;
+
+                    const jsonStr = line.slice(6).trim();
+                    if (jsonStr === '[DONE]') break;
+
+                    try {
+                        const parsed = JSON.parse(jsonStr);
+                        const content = parsed.choices?.[0]?.delta?.content;
+                        if (content) {
+                            assistantContent += content;
+                            setMessages(prev => prev.map(m => 
+                                m.id === assistantMsgId 
+                                    ? { ...m, content: assistantContent }
+                                    : m
+                            ));
+                        }
+                    } catch {
+                        // JSON incomplet, on attend plus de données
+                        textBuffer = line + '\n' + textBuffer;
+                        break;
+                    }
+                }
+            }
+
+            // Flush final
+            if (textBuffer.trim()) {
+                for (let raw of textBuffer.split('\n')) {
+                    if (!raw || !raw.startsWith('data: ')) continue;
+                    const jsonStr = raw.slice(6).trim();
+                    if (jsonStr === '[DONE]') continue;
+                    try {
+                        const parsed = JSON.parse(jsonStr);
+                        const content = parsed.choices?.[0]?.delta?.content;
+                        if (content) {
+                            assistantContent += content;
+                            setMessages(prev => prev.map(m => 
+                                m.id === assistantMsgId 
+                                    ? { ...m, content: assistantContent }
+                                    : m
+                            ));
+                        }
+                    } catch { /* ignore */ }
+                }
+            }
+
+        } catch (error) {
+            console.error('Chat error:', error);
+            toast.error(error instanceof Error ? error.message : 'Erreur de connexion');
+            
+            // Fallback message
+            setMessages(prev => [...prev, {
                 id: (Date.now() + 1).toString(),
                 role: 'assistant',
-                content: responseContent,
+                content: "Désolé, je rencontre des difficultés techniques. Voulez-vous parler à un agent humain ?",
                 timestamp: new Date()
-            };
-            setMessages(prev => [...prev, responseMsg]);
-            setIsTyping(false);
-        }, 1500);
-    };
-
-    const generateAiResponse = (input: string): string => {
-        // Mock Logic for "Adaptable Prompts"
-        const lowerInput = input.toLowerCase();
-        if (lowerInput.includes('humain') || lowerInput.includes('agent')) {
-            setIsAiMode(false);
-            return "Je vous transfère immédiatement vers un agent humain disponible. Veuillez patienter un instant.";
+            }]);
+        } finally {
+            setIsLoading(false);
         }
-        if (lowerInput.includes('passeport')) return "Pour le passeport, les délais actuels sont de 3 semaines. Voulez-vous prendre rendez-vous ?";
-        return "Je comprends. Je suis configuré pour vous aider sur les démarches consulaires. Pouvez-vous préciser ?";
     };
 
     return (
@@ -119,7 +219,7 @@ export function ChatInterface({ isExpanded }: ChatInterfaceProps) {
                                         {isAiMode ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
                                     </AvatarFallback>
                                 ) : (
-                                    <AvatarFallback className="bg-accent">{currentUser?.name?.[0] || 'U'}</AvatarFallback>
+                                    <AvatarFallback className="bg-accent">{user?.name?.[0] || 'U'}</AvatarFallback>
                                 )}
                             </Avatar>
                             <div className={`flex flex-col gap-1 max-w-[80%]`}>
@@ -137,12 +237,17 @@ export function ChatInterface({ isExpanded }: ChatInterfaceProps) {
                                             : 'bg-white border shadow-sm rounded-tl-none'
                                         }`}
                                 >
-                                    {msg.content}
+                                    {msg.content || (isLoading && msg.role === 'assistant' ? (
+                                        <span className="flex items-center gap-2 text-muted-foreground">
+                                            <Loader2 className="w-3 h-3 animate-spin" />
+                                            Réflexion...
+                                        </span>
+                                    ) : null)}
                                 </div>
                             </div>
                         </div>
                     ))}
-                    {isTyping && (
+                    {isLoading && messages[messages.length - 1]?.role === 'user' && (
                         <div className="flex gap-3">
                             <Avatar className="w-8 h-8 border shrink-0">
                                 <AvatarFallback className="bg-primary text-primary-foreground"><Bot className="w-4 h-4" /></AvatarFallback>
@@ -166,14 +271,15 @@ export function ChatInterface({ isExpanded }: ChatInterfaceProps) {
                     placeholder={isAiMode ? "Posez une question à iAsted..." : "Écrivez à un agent..."}
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                    onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
                     className="flex-1 bg-muted/30"
+                    disabled={isLoading}
                 />
                 <Button variant="ghost" size="icon" className="shrink-0 text-muted-foreground">
                     <Mic className="w-5 h-5" />
                 </Button>
-                <Button size="icon" onClick={handleSend} disabled={!inputValue.trim()} className="shrink-0">
-                    <Send className="w-4 h-4" />
+                <Button size="icon" onClick={handleSend} disabled={!inputValue.trim() || isLoading} className="shrink-0">
+                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 </Button>
             </div>
         </div>
