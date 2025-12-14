@@ -170,7 +170,7 @@ const HomeParliament = () => {
 
                             {/* Login Button */}
                             <Button variant="outline" size="sm" className="border-slate-400 text-slate-600 hover:bg-slate-50" onClick={() => navigate("/login")}>
-                                Espace Élus
+                                Connexion
                             </Button>
                         </div>
                     </div>
