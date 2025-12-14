@@ -135,7 +135,7 @@ const App = () => (
                 <Route path="/" element={<HomeParliament />} />
                 <Route path="/parlement" element={<HomeParliament />} />
                 <Route path="/cmp" element={<HomeParliament />} />
-                <Route path="/archives" element={<HomeParliament />} />
+                <Route path="/archives" element={<NationalArchives />} />
                 <Route path="/processus-comparaison" element={<ProcessComparison />} />
 
                 {/* Pages publiques interactives */}
