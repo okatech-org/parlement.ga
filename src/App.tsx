@@ -83,11 +83,18 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 // Institution Layouts
 import { AssemblyLayout, SenateLayout, ParliamentLayout } from "@/layouts/institutions";
 
-// Institution Pages
+// Institution Pages (Dashboard internes)
 import AssemblyHome from "@/pages/assembly/AssemblyHome";
 import SenateHome from "@/pages/senate/SenateHome";
 import ParliamentHome from "@/pages/parliament/ParliamentHome";
 import CMPWorkspace from "@/pages/parliament/CMPWorkspace";
+
+// Public Pages (Pages d'accueil publiques)
+import PortalRepublic from "@/pages/public/PortalRepublic";
+import HomeAssembly from "@/pages/public/HomeAssembly";
+import HomeSenate from "@/pages/public/HomeSenate";
+import HomeParliament from "@/pages/public/HomeParliament";
+import ProtocolHub from "@/pages/public/demo/ProtocolHub";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -99,20 +106,33 @@ const App = () => (
           <UserProvider>
             <InstitutionProvider>
               <Routes>
-                <Route path="/" element={<Index />} />
+                {/* ========================================= */}
+                {/* PORTAIL DE LA RÉPUBLIQUE                */}
+                {/* ========================================= */}
+                <Route path="/" element={<PortalRepublic />} />
+                <Route path="/portail" element={<PortalRepublic />} />
+
+                {/* Legacy routes */}
                 <Route path="/legislation" element={<Legislation />} />
-                {/* <Route path="/vote" element={<Vote />} />  Removed in favor of Deputy Space */}
                 <Route path="/territoire" element={<Territoire />} />
                 <Route path="/deputy" element={<DeputySpace />} />
                 <Route path="/admin" element={<AdminSpace />} />
                 <Route path="/citizen" element={<CitizenSpace />} />
 
                 {/* ========================================= */}
-                {/* ROUTES INSTITUTIONNELLES - Parlement.ga  */}
+                {/* ASSEMBLÉE NATIONALE - Thème VERT         */}
                 {/* ========================================= */}
 
-                {/* Assemblée Nationale - Base: /an */}
-                <Route path="/an" element={<AssemblyLayout />}>
+                {/* Page d'accueil publique AN */}
+                <Route path="/an" element={<HomeAssembly />} />
+                <Route path="/an/actualites" element={<HomeAssembly />} />
+                <Route path="/an/sensibilisation" element={<HomeAssembly />} />
+                <Route path="/an/tutoriels" element={<HomeAssembly />} />
+                <Route path="/an/demo" element={<ProtocolHub />} />
+                <Route path="/an/login" element={<Login />} />
+
+                {/* Espace interne AN (avec layout) */}
+                <Route path="/an/espace" element={<AssemblyLayout />}>
                   <Route index element={<AssemblyHome />} />
                   <Route path="hemicycle" element={<AssemblyHome />} />
                   <Route path="deputes" element={<AssemblyHome />} />
@@ -123,8 +143,20 @@ const App = () => (
                   <Route path="textes/:textId" element={<AssemblyHome />} />
                 </Route>
 
-                {/* Sénat - Base: /senat */}
-                <Route path="/senat" element={<SenateLayout />}>
+                {/* ========================================= */}
+                {/* SÉNAT - Thème OR / AMBRE                */}
+                {/* ========================================= */}
+
+                {/* Page d'accueil publique Sénat */}
+                <Route path="/senat" element={<HomeSenate />} />
+                <Route path="/senat/actualites" element={<HomeSenate />} />
+                <Route path="/senat/sensibilisation" element={<HomeSenate />} />
+                <Route path="/senat/tutoriels" element={<HomeSenate />} />
+                <Route path="/senat/demo" element={<ProtocolHub />} />
+                <Route path="/senat/login" element={<Login />} />
+
+                {/* Espace interne Sénat (avec layout) */}
+                <Route path="/senat/espace" element={<SenateLayout />}>
                   <Route index element={<SenateHome />} />
                   <Route path="palais" element={<SenateHome />} />
                   <Route path="senateurs" element={<SenateHome />} />
@@ -135,8 +167,19 @@ const App = () => (
                   <Route path="textes/:textId" element={<SenateHome />} />
                 </Route>
 
-                {/* Congrès (Parlement réuni) - Base: /congres */}
-                <Route path="/congres" element={<ParliamentLayout />}>
+                {/* ========================================= */}
+                {/* PARLEMENT (CONGRÈS) - Thème BLEU ROI     */}
+                {/* ========================================= */}
+
+                {/* Page d'accueil publique Parlement */}
+                <Route path="/congres" element={<HomeParliament />} />
+                <Route path="/congres/sessions" element={<HomeParliament />} />
+                <Route path="/congres/archives" element={<HomeParliament />} />
+                <Route path="/congres/demo" element={<ProtocolHub />} />
+                <Route path="/congres/login" element={<Login />} />
+
+                {/* Espace interne Congrès (avec layout) */}
+                <Route path="/congres/espace" element={<ParliamentLayout />}>
                   <Route index element={<ParliamentHome />} />
                   <Route path="cmp" element={<ParliamentHome />} />
                   <Route path="cmp/:cmpId" element={<CMPWorkspace />} />
@@ -145,7 +188,6 @@ const App = () => (
                   <Route path="textes" element={<ParliamentHome />} />
                   <Route path="navette" element={<ParliamentHome />} />
                   <Route path="decisions" element={<ParliamentHome />} />
-                  <Route path="services" element={<ParliamentHome />} />
                   <Route path="constitution" element={<ParliamentHome />} />
                 </Route>
 
