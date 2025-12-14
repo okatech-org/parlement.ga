@@ -1,0 +1,345 @@
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+    Users,
+    UserPlus,
+    Search,
+    MoreVertical,
+    Shield,
+    Building2,
+    Landmark,
+    Scale,
+    Trash2,
+    Edit,
+    Lock,
+    Unlock,
+    CheckCircle2,
+    XCircle
+} from "lucide-react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+
+const UserManagementSection = () => {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [createDialogOpen, setCreateDialogOpen] = useState(false);
+
+    const admins = [
+        { id: 1, name: "Super Admin", email: "super@parlement.ga", role: "system_admin", status: "active", institution: "Système" },
+        { id: 2, name: "Admin AN", email: "admin.an@parlement.ga", role: "admin_an", status: "active", institution: "Assemblée" },
+        { id: 3, name: "Admin Sénat", email: "admin.senat@parlement.ga", role: "admin_senat", status: "active", institution: "Sénat" },
+        { id: 4, name: "Admin Parlement", email: "admin.parlement@parlement.ga", role: "admin_parlement", status: "active", institution: "Congrès" },
+    ];
+
+    const officials = [
+        { id: 1, name: "Michel Régis Onanga Ndiaye", role: "president", institution: "AN", status: "active", phone: "01010101" },
+        { id: 2, name: "François Ndong Obiang", role: "vp", institution: "AN", status: "active", phone: "02020202" },
+        { id: 3, name: "Jean-Baptiste Bikalou", role: "deputy", institution: "AN", status: "active", phone: "06060606" },
+        { id: 4, name: "Marie Thérèse Bekale", role: "senator", institution: "Sénat", status: "active", phone: "07070707" },
+        { id: 5, name: "Paul Mba Abessole", role: "deputy", institution: "AN", status: "suspended", phone: "08080808" },
+    ];
+
+    const citizens = [
+        { id: 1, name: "Jean Dupont", phone: "+241 74 00 00 01", email: "jean@gmail.com", status: "verified", registeredAt: "2024-01-15" },
+        { id: 2, name: "Marie Claire", phone: "+241 74 00 00 02", email: "marie@gmail.com", status: "verified", registeredAt: "2024-02-20" },
+        { id: 3, name: "Pierre Moussavou", phone: "+241 74 00 00 03", email: "pierre@yahoo.fr", status: "pending", registeredAt: "2024-03-10" },
+        { id: 4, name: "Anne Ondo", phone: "+241 74 00 00 04", email: "anne@outlook.com", status: "suspended", registeredAt: "2024-03-25" },
+    ];
+
+    const getRoleBadge = (role: string) => {
+        const config: Record<string, { label: string; className: string }> = {
+            system_admin: { label: "Super Admin", className: "bg-red-100 text-red-700 border-red-200" },
+            admin_an: { label: "Admin AN", className: "bg-emerald-100 text-emerald-700 border-emerald-200" },
+            admin_senat: { label: "Admin Sénat", className: "bg-amber-100 text-amber-700 border-amber-200" },
+            admin_parlement: { label: "Admin Congrès", className: "bg-blue-100 text-blue-700 border-blue-200" },
+            president: { label: "Président", className: "bg-purple-100 text-purple-700 border-purple-200" },
+            vp: { label: "Vice-Président", className: "bg-indigo-100 text-indigo-700 border-indigo-200" },
+            deputy: { label: "Député", className: "bg-green-100 text-green-700 border-green-200" },
+            senator: { label: "Sénateur", className: "bg-yellow-100 text-yellow-700 border-yellow-200" },
+        };
+        const c = config[role] || { label: role, className: "bg-gray-100 text-gray-700" };
+        return <Badge variant="outline" className={c.className}>{c.label}</Badge>;
+    };
+
+    const getStatusBadge = (status: string) => {
+        if (status === 'active' || status === 'verified') {
+            return <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200"><CheckCircle2 className="h-3 w-3 mr-1" />Actif</Badge>;
+        } else if (status === 'suspended') {
+            return <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200"><XCircle className="h-3 w-3 mr-1" />Suspendu</Badge>;
+        } else {
+            return <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200">En attente</Badge>;
+        }
+    };
+
+    return (
+        <div className="space-y-6">
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight">Gestion des Utilisateurs</h1>
+                    <p className="text-muted-foreground">Création, modification et supervision des comptes</p>
+                </div>
+                <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+                    <DialogTrigger asChild>
+                        <Button className="bg-indigo-600 hover:bg-indigo-700">
+                            <UserPlus className="h-4 w-4 mr-2" />
+                            Nouveau Compte
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[500px]">
+                        <DialogHeader>
+                            <DialogTitle>Créer un Nouveau Compte</DialogTitle>
+                            <DialogDescription>
+                                Remplissez les informations pour créer un compte utilisateur.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                            <div className="grid gap-2">
+                                <Label>Type de Compte</Label>
+                                <Select>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Sélectionner le type" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="admin">Administrateur</SelectItem>
+                                        <SelectItem value="official">Élu / Officiel</SelectItem>
+                                        <SelectItem value="citizen">Citoyen</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="grid gap-2">
+                                <Label>Nom Complet</Label>
+                                <Input placeholder="Prénom et Nom" />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label>Email</Label>
+                                <Input type="email" placeholder="email@domain.com" />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label>Téléphone</Label>
+                                <Input placeholder="+241 XX XX XX XX" />
+                            </div>
+                            <div className="grid gap-2">
+                                <Label>Institution (si applicable)</Label>
+                                <Select>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Sélectionner l'institution" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="an">Assemblée Nationale</SelectItem>
+                                        <SelectItem value="senat">Sénat</SelectItem>
+                                        <SelectItem value="congres">Congrès</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>Annuler</Button>
+                            <Button className="bg-indigo-600 hover:bg-indigo-700" onClick={() => setCreateDialogOpen(false)}>Créer le Compte</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            </div>
+
+            <div className="flex items-center gap-4">
+                <div className="relative flex-1 max-w-md">
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                        className="pl-9"
+                        placeholder="Rechercher un utilisateur..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                </div>
+            </div>
+
+            <Tabs defaultValue="admins" className="w-full">
+                <TabsList className="grid w-full grid-cols-3 max-w-md">
+                    <TabsTrigger value="admins" className="flex items-center gap-2">
+                        <Shield className="h-4 w-4" />
+                        Admins
+                    </TabsTrigger>
+                    <TabsTrigger value="officials" className="flex items-center gap-2">
+                        <Building2 className="h-4 w-4" />
+                        Élus
+                    </TabsTrigger>
+                    <TabsTrigger value="citizens" className="flex items-center gap-2">
+                        <Users className="h-4 w-4" />
+                        Citoyens
+                    </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="admins" className="mt-6">
+                    <Card className="overflow-hidden">
+                        <table className="w-full">
+                            <thead className="bg-slate-50 dark:bg-slate-900">
+                                <tr className="border-b">
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Administrateur</th>
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Rôle</th>
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Institution</th>
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Statut</th>
+                                    <th className="text-right py-3 px-4 font-medium text-sm">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {admins.map((admin) => (
+                                    <tr key={admin.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                                        <td className="py-3 px-4">
+                                            <div>
+                                                <p className="font-medium">{admin.name}</p>
+                                                <p className="text-xs text-muted-foreground">{admin.email}</p>
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-4">{getRoleBadge(admin.role)}</td>
+                                        <td className="py-3 px-4 text-sm">{admin.institution}</td>
+                                        <td className="py-3 px-4">{getStatusBadge(admin.status)}</td>
+                                        <td className="py-3 px-4 text-right">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="sm"><MoreVertical className="h-4 w-4" /></Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem><Edit className="h-4 w-4 mr-2" />Modifier</DropdownMenuItem>
+                                                    <DropdownMenuItem><Lock className="h-4 w-4 mr-2" />Réinitialiser MDP</DropdownMenuItem>
+                                                    <DropdownMenuItem className="text-red-600"><Trash2 className="h-4 w-4 mr-2" />Supprimer</DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="officials" className="mt-6">
+                    <Card className="overflow-hidden">
+                        <table className="w-full">
+                            <thead className="bg-slate-50 dark:bg-slate-900">
+                                <tr className="border-b">
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Élu</th>
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Fonction</th>
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Institution</th>
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Statut</th>
+                                    <th className="text-right py-3 px-4 font-medium text-sm">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {officials.map((official) => (
+                                    <tr key={official.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                                        <td className="py-3 px-4">
+                                            <div>
+                                                <p className="font-medium">{official.name}</p>
+                                                <p className="text-xs text-muted-foreground">{official.phone}</p>
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-4">{getRoleBadge(official.role)}</td>
+                                        <td className="py-3 px-4">
+                                            <Badge variant="outline" className={
+                                                official.institution === 'AN' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
+                                                    'bg-amber-50 text-amber-600 border-amber-200'
+                                            }>
+                                                {official.institution === 'AN' ? <Building2 className="h-3 w-3 mr-1" /> : <Landmark className="h-3 w-3 mr-1" />}
+                                                {official.institution}
+                                            </Badge>
+                                        </td>
+                                        <td className="py-3 px-4">{getStatusBadge(official.status)}</td>
+                                        <td className="py-3 px-4 text-right">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="sm"><MoreVertical className="h-4 w-4" /></Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem><Edit className="h-4 w-4 mr-2" />Modifier le profil</DropdownMenuItem>
+                                                    <DropdownMenuItem><Scale className="h-4 w-4 mr-2" />Gérer les mandats</DropdownMenuItem>
+                                                    {official.status === 'active' ?
+                                                        <DropdownMenuItem className="text-amber-600"><Lock className="h-4 w-4 mr-2" />Suspendre</DropdownMenuItem> :
+                                                        <DropdownMenuItem className="text-green-600"><Unlock className="h-4 w-4 mr-2" />Réactiver</DropdownMenuItem>
+                                                    }
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="citizens" className="mt-6">
+                    <Card className="overflow-hidden">
+                        <table className="w-full">
+                            <thead className="bg-slate-50 dark:bg-slate-900">
+                                <tr className="border-b">
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Citoyen</th>
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Contact</th>
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Inscription</th>
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Statut</th>
+                                    <th className="text-right py-3 px-4 font-medium text-sm">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {citizens.map((citizen) => (
+                                    <tr key={citizen.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-900/50">
+                                        <td className="py-3 px-4">
+                                            <p className="font-medium">{citizen.name}</p>
+                                        </td>
+                                        <td className="py-3 px-4">
+                                            <div>
+                                                <p className="text-sm">{citizen.phone}</p>
+                                                <p className="text-xs text-muted-foreground">{citizen.email}</p>
+                                            </div>
+                                        </td>
+                                        <td className="py-3 px-4 text-sm text-muted-foreground">{citizen.registeredAt}</td>
+                                        <td className="py-3 px-4">{getStatusBadge(citizen.status)}</td>
+                                        <td className="py-3 px-4 text-right">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="sm"><MoreVertical className="h-4 w-4" /></Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end">
+                                                    <DropdownMenuItem><Edit className="h-4 w-4 mr-2" />Modifier</DropdownMenuItem>
+                                                    <DropdownMenuItem><CheckCircle2 className="h-4 w-4 mr-2" />Vérifier identité</DropdownMenuItem>
+                                                    {citizen.status !== 'suspended' ?
+                                                        <DropdownMenuItem className="text-amber-600"><Lock className="h-4 w-4 mr-2" />Suspendre</DropdownMenuItem> :
+                                                        <DropdownMenuItem className="text-green-600"><Unlock className="h-4 w-4 mr-2" />Réactiver</DropdownMenuItem>
+                                                    }
+                                                    <DropdownMenuItem className="text-red-600"><Trash2 className="h-4 w-4 mr-2" />Supprimer</DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </Card>
+                </TabsContent>
+            </Tabs>
+        </div>
+    );
+};
+
+export default UserManagementSection;
