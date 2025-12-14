@@ -20,3 +20,12 @@ verify_jwt = false
 
 [functions.iasted-tts-fallback]
 verify_jwt = false
+
+[functions.legislative-shuttle]
+verify_jwt = false
+
+[functions.cmp-management]
+verify_jwt = false
+
+[functions.parliamentary-stats]
+verify_jwt = false
