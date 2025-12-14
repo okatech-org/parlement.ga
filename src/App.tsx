@@ -107,9 +107,13 @@ const App = () => (
             <InstitutionProvider>
               <Routes>
                 {/* ========================================= */}
-                {/* PORTAIL DE LA RÉPUBLIQUE (Choix)         */}
+                {/* PARLEMENT - HUB CENTRAL (/)               */}
+                {/* Point d'entrée et navigation vers AN/Sénat */}
                 {/* ========================================= */}
-                <Route path="/" element={<PortalRepublic />} />
+                <Route path="/" element={<HomeParliament />} />
+                <Route path="/parlement" element={<HomeParliament />} />
+                <Route path="/cmp" element={<HomeParliament />} />
+                <Route path="/archives" element={<HomeParliament />} />
 
                 {/* ========================================= */}
                 {/* ASSEMBLÉE NATIONALE - /an/*              */}
@@ -233,18 +237,18 @@ const App = () => (
                 </Route>
 
                 {/* ========================================= */}
-                {/* PARLEMENT (CONGRÈS) - /congres/*         */}
-                {/* Thème BLEU ROI                           */}
+                {/* CONGRÈS - Alias vers Hub et espaces       */}
+                {/* Les routes /congres redirigent vers /     */}
                 {/* ========================================= */}
 
-                {/* Page d'accueil publique Parlement */}
+                {/* Alias pour /congres → hub central */}
                 <Route path="/congres" element={<HomeParliament />} />
                 <Route path="/congres/sessions" element={<HomeParliament />} />
                 <Route path="/congres/archives" element={<HomeParliament />} />
-                <Route path="/congres/demo" element={<ProtocolHub />} />
+                <Route path="/congres/demo" element={<ProtocolDemoPage />} />
                 <Route path="/congres/login" element={<Login />} />
 
-                {/* Espace interne Congrès (avec layout) */}
+                {/* Espace interne Congrès (CMP, etc.) */}
                 <Route path="/congres/espace" element={<ParliamentLayout />}>
                   <Route index element={<ParliamentHome />} />
                   <Route path="cmp" element={<ParliamentHome />} />

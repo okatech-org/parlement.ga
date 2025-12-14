@@ -173,6 +173,22 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
 
                     {/* Center: Navigation Links (Desktop) */}
                     <div className="hidden md:flex items-center gap-1">
+                        {/* Bouton de retour vers Parlement (hub central) - visible uniquement sur AN ou Sénat */}
+                        {currentInstitution !== 'PARLIAMENT' && (
+                            <>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => navigate('/')}
+                                    className="border-slate-300 text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 mr-2"
+                                >
+                                    <Scale className="h-4 w-4 mr-1" />
+                                    Parlement
+                                </Button>
+                                <div className="w-px h-6 bg-gray-200 dark:bg-gray-700 mr-2" />
+                            </>
+                        )}
+
                         {links.map((link, index) => (
                             <Link
                                 key={index}

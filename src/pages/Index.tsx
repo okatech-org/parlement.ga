@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Landmark, Users, FileText, Map, Vote, Shield, ChevronRight, BarChart3 } from "lucide-react";
+import { Landmark, Users, FileText, Map, Vote, Shield, ChevronRight, BarChart3, Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -93,16 +93,27 @@ const Index = () => {
               </div>
             </div>
             <nav className="hidden md:flex items-center gap-4">
-              <Button variant="ghost" size="sm" onClick={() => navigate("/actualites")}>
+              {/* Lien retour vers Parlement (hub central) */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/")}
+                className="border-slate-300 text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300"
+              >
+                <Scale className="h-4 w-4 mr-1" />
+                Parlement
+              </Button>
+              <div className="w-px h-6 bg-border" />
+              <Button variant="ghost" size="sm" onClick={() => navigate("/an/actualites")}>
                 {t('home.resources.news.title')}
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/sensibilisation")}>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/an/sensibilisation")}>
                 {t('home.resources.awareness.title')}
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/tutoriels")}>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/an/tutoriels")}>
                 {t('home.resources.tutorials.title')}
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/iasted/protocol-demo")}>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/an/demo")}>
                 Démo Protocole
               </Button>
             </nav>
