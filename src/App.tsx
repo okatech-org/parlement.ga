@@ -114,6 +114,8 @@ import ParliamentSpace from "@/pages/parliament/ParliamentSpace";
 import CongressVote from "@/pages/parliament/CongressVote";
 import NationalArchives from "@/pages/public/NationalArchives";
 import ProcessComparison from "@/pages/parliament/ProcessComparison";
+import CitizenPage from "@/pages/public/CitizenPage";
+import LegislativeQuiz from "@/pages/public/LegislativeQuiz";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -134,6 +136,12 @@ const App = () => (
                 <Route path="/cmp" element={<HomeParliament />} />
                 <Route path="/archives" element={<HomeParliament />} />
                 <Route path="/processus-comparaison" element={<ProcessComparison />} />
+
+                {/* Pages publiques interactives */}
+                <Route path="/citoyen" element={<CitizenPage />} />
+                <Route path="/quiz" element={<LegislativeQuiz />} />
+                <Route path="/parlement/citoyen" element={<CitizenPage />} />
+                <Route path="/parlement/quiz" element={<LegislativeQuiz />} />
 
                 {/* ========================================= */}
                 {/* ASSEMBLÉE NATIONALE - /an/*              */}
