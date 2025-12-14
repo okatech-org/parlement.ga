@@ -378,7 +378,7 @@ const App = () => (
                 {/* Other Legacy Routes */}
                 <Route path="/portail" element={<ProtectedRoute><UserSpacesHub /></ProtectedRoute>} />
                 <Route path="/deputy" element={<DeputySpace />} />
-                <Route path="/admin" element={<AdminSpace />} />
+
                 <Route path="/citizen" element={<CitizenSpace />} />
                 <Route path="/actualites" element={<Actualites />} />
                 <Route path="/sensibilisation" element={<Sensibilisation />} />
