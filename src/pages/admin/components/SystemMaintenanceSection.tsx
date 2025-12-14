@@ -21,32 +21,36 @@ import {
     Calendar,
     Wrench,
     Zap,
-    Activity
+    Loader2
 } from "lucide-react";
+import { toast } from "sonner";
+
+const INITIAL_SERVICES = [
+    { name: "API Gateway", status: "running", uptime: "45j 12h", port: 443, lastRestart: "2024-10-30" },
+    { name: "Base de Données (Primary)", status: "running", uptime: "45j 12h", port: 5432, lastRestart: "2024-10-30" },
+    { name: "Base de Données (Replica)", status: "running", uptime: "45j 10h", port: 5433, lastRestart: "2024-10-30" },
+    { name: "Service Notification", status: "running", uptime: "12j 5h", port: 8080, lastRestart: "2024-12-02" },
+    { name: "Service Auth (OAuth)", status: "running", uptime: "45j 12h", port: 8443, lastRestart: "2024-10-30" },
+    { name: "Cache Redis", status: "running", uptime: "30j 8h", port: 6379, lastRestart: "2024-11-14" },
+];
+
+const INITIAL_BACKUPS = [
+    { type: "Full Backup", date: "2024-12-14 02:00", size: "2.4 TB", status: "completed", duration: "45 min" },
+    { type: "Incremental", date: "2024-12-14 14:00", size: "128 MB", status: "completed", duration: "2 min" },
+    { type: "Incremental", date: "2024-12-14 20:00", size: "256 MB", status: "completed", duration: "3 min" },
+];
 
 const SystemMaintenanceSection = () => {
     const [maintenanceMode, setMaintenanceMode] = useState(false);
+    const [services, setServices] = useState(INITIAL_SERVICES);
+    const [backups, setBackups] = useState(INITIAL_BACKUPS);
+    const [loadingAction, setLoadingAction] = useState<string | null>(null);
 
     const systemResources = [
         { name: "CPU", usage: 12, max: 100, unit: "%", icon: Cpu, status: "optimal" },
         { name: "RAM", usage: 8.2, max: 32, unit: "GB", icon: MemoryStick, status: "optimal" },
         { name: "Stockage Principal", usage: 2.4, max: 10, unit: "TB", icon: HardDrive, status: "normal" },
         { name: "Bande Passante", usage: 45, max: 100, unit: "Mbps", icon: Wifi, status: "optimal" },
-    ];
-
-    const services = [
-        { name: "API Gateway", status: "running", uptime: "45j 12h", port: 443, lastRestart: "2024-10-30" },
-        { name: "Base de Données (Primary)", status: "running", uptime: "45j 12h", port: 5432, lastRestart: "2024-10-30" },
-        { name: "Base de Données (Replica)", status: "running", uptime: "45j 10h", port: 5433, lastRestart: "2024-10-30" },
-        { name: "Service Notification", status: "running", uptime: "12j 5h", port: 8080, lastRestart: "2024-12-02" },
-        { name: "Service Auth (OAuth)", status: "running", uptime: "45j 12h", port: 8443, lastRestart: "2024-10-30" },
-        { name: "Cache Redis", status: "running", uptime: "30j 8h", port: 6379, lastRestart: "2024-11-14" },
-    ];
-
-    const backups = [
-        { type: "Full Backup", date: "2024-12-14 02:00", size: "2.4 TB", status: "completed", duration: "45 min" },
-        { type: "Incremental", date: "2024-12-14 14:00", size: "128 MB", status: "completed", duration: "2 min" },
-        { type: "Incremental", date: "2024-12-14 20:00", size: "256 MB", status: "completed", duration: "3 min" },
     ];
 
     const scheduledTasks = [
@@ -63,6 +67,57 @@ const SystemMaintenanceSection = () => {
         return "bg-red-500";
     };
 
+    const handleToggleMaintenance = async (checked: boolean) => {
+        setLoadingAction("maintenance");
+        // Simulate critical action delay
+        setTimeout(() => {
+            setMaintenanceMode(checked);
+            setLoadingAction(null);
+            toast(checked ? "Mode maintenance ACTIVÉ" : "Mode maintenance DÉSACTIVÉ", {
+                description: checked ? "L'accès utilisateur est restreint." : "Système accessible à tous.",
+                action: { label: "Annuler", onClick: () => setMaintenanceMode(!checked) },
+                className: checked ? "bg-amber-100 border-amber-500 text-amber-900" : ""
+            });
+        }, 1500);
+    };
+
+    const handleRestartService = async (serviceName: string) => {
+        setLoadingAction(`restart-${serviceName}`);
+        try {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            setServices(services.map(s =>
+                s.name === serviceName ? { ...s, uptime: "0s", lastRestart: new Date().toISOString().split('T')[0] } : s
+            ));
+            toast.success(`Service ${serviceName} redémarré`);
+        } catch (e) {
+            toast.error("Échec du redémarrage");
+        } finally {
+            setLoadingAction(null);
+        }
+    };
+
+    const handleCreateBackup = async () => {
+        setLoadingAction("backup");
+        toast.info("Démarrage de la sauvegarde...");
+
+        try {
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            const newBackup = {
+                type: "Manuel Backup",
+                date: new Date().toISOString().replace('T', ' ').substring(0, 16),
+                size: "150 MB",
+                status: "completed",
+                duration: "Active"
+            };
+            setBackups([newBackup, ...backups]);
+            toast.success("Sauvegarde terminée avec succès");
+        } catch (e) {
+            toast.error("Erreur sauvegarde");
+        } finally {
+            setLoadingAction(null);
+        }
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -72,10 +127,12 @@ const SystemMaintenanceSection = () => {
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
+                        {loadingAction === "maintenance" && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
                         <span className="text-sm text-muted-foreground">Mode Maintenance</span>
                         <Switch
                             checked={maintenanceMode}
-                            onCheckedChange={setMaintenanceMode}
+                            onCheckedChange={handleToggleMaintenance}
+                            disabled={loadingAction === "maintenance"}
                             className={maintenanceMode ? "bg-amber-500" : ""}
                         />
                     </div>
@@ -126,7 +183,7 @@ const SystemMaintenanceSection = () => {
                         <Server className="h-5 w-5 text-blue-500" />
                         Services Système
                     </h3>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => toast.info("Vérification en cours...")}>
                         <RefreshCw className="h-4 w-4 mr-2" />
                         Vérifier l'état
                     </Button>
@@ -135,17 +192,23 @@ const SystemMaintenanceSection = () => {
                     {services.map((service, idx) => (
                         <div key={idx} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
                             <div className="flex items-center gap-3">
-                                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                                <div className={`w-2 h-2 rounded-full ${loadingAction === `restart-${service.name}` ? 'bg-amber-500 animate-ping' : 'bg-green-500 animate-pulse'}`}></div>
                                 <div>
                                     <p className="font-medium text-sm">{service.name}</p>
                                     <p className="text-xs text-muted-foreground">Port {service.port} • Uptime: {service.uptime}</p>
                                 </div>
                             </div>
                             <div className="flex gap-1">
-                                <Button variant="ghost" size="icon" className="h-8 w-8">
-                                    <RefreshCw className="h-3 w-3" />
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8"
+                                    onClick={() => handleRestartService(service.name)}
+                                    disabled={loadingAction === `restart-${service.name}`}
+                                >
+                                    <RefreshCw className={`h-3 w-3 ${loadingAction === `restart-${service.name}` ? 'animate-spin' : ''}`} />
                                 </Button>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500">
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-red-500" onClick={() => toast.warning("Arrêt de service non autorisé en production")}>
                                     <Power className="h-3 w-3" />
                                 </Button>
                             </div>
@@ -162,8 +225,13 @@ const SystemMaintenanceSection = () => {
                             <Database className="h-5 w-5 text-purple-500" />
                             Sauvegardes Récentes
                         </h3>
-                        <Button size="sm" className="bg-purple-600 hover:bg-purple-700">
-                            <Download className="h-4 w-4 mr-2" />
+                        <Button
+                            size="sm"
+                            className="bg-purple-600 hover:bg-purple-700"
+                            onClick={handleCreateBackup}
+                            disabled={loadingAction === "backup"}
+                        >
+                            {loadingAction === "backup" ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Download className="h-4 w-4 mr-2" />}
                             Backup Manuel
                         </Button>
                     </div>
@@ -195,7 +263,7 @@ const SystemMaintenanceSection = () => {
                             <Calendar className="h-5 w-5 text-blue-500" />
                             Tâches Planifiées
                         </h3>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" onClick={() => toast.info("Planificateur à venir")}>
                             <Zap className="h-4 w-4 mr-2" />
                             Nouvelle Tâche
                         </Button>
@@ -231,19 +299,19 @@ const SystemMaintenanceSection = () => {
                     Actions Rapides (Zone Critique)
                 </h3>
                 <div className="grid gap-3 md:grid-cols-4">
-                    <Button variant="outline" className="border-slate-700 hover:bg-slate-800 text-white">
+                    <Button variant="outline" className="border-slate-700 hover:bg-slate-800 text-white" onClick={() => toast.info("Redémarrage de masse initié...")}>
                         <RefreshCw className="h-4 w-4 mr-2" />
                         Redémarrer Services
                     </Button>
-                    <Button variant="outline" className="border-slate-700 hover:bg-slate-800 text-white">
+                    <Button variant="outline" className="border-slate-700 hover:bg-slate-800 text-white" onClick={() => toast.success("Cache vidé avec succès")}>
                         <Database className="h-4 w-4 mr-2" />
                         Vider Cache
                     </Button>
-                    <Button variant="outline" className="border-slate-700 hover:bg-slate-800 text-white">
+                    <Button variant="outline" className="border-slate-700 hover:bg-slate-800 text-white" onClick={() => toast.info("Veuillez sélectionner un backup source")}>
                         <Upload className="h-4 w-4 mr-2" />
                         Restaurer Backup
                     </Button>
-                    <Button variant="outline" className="border-red-500/50 hover:bg-red-900/50 text-red-400">
+                    <Button variant="outline" className="border-red-500/50 hover:bg-red-900/50 text-red-400" onClick={() => { if (window.confirm("CONFIRMEZ L'ARRÊT D'URGENCE ?")) toast.error("COMMANDE ENVOYÉE"); }}>
                         <Power className="h-4 w-4 mr-2" />
                         Arrêt d'Urgence
                     </Button>

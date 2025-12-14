@@ -18,7 +18,8 @@ import {
     Lock,
     Unlock,
     CheckCircle2,
-    XCircle
+    XCircle,
+    Loader2
 } from "lucide-react";
 import {
     DropdownMenu,
@@ -43,47 +44,133 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
+
+// Initial Mock Data
+const INITIAL_ADMINS = [
+    { id: 1, name: "Super Admin", email: "super@parlement.ga", role: "system_admin", status: "active", institution: "Système", environment: "system" },
+    { id: 2, name: "Admin AN", email: "admin.an@parlement.ga", role: "admin_an", status: "active", institution: "Assemblée", environment: "an" },
+    { id: 3, name: "Admin Sénat", email: "admin.senat@parlement.ga", role: "admin_senat", status: "active", institution: "Sénat", environment: "senat" },
+    { id: 4, name: "Admin Parlement", email: "admin.parlement@parlement.ga", role: "admin_parlement", status: "active", institution: "Congrès", environment: "congres" },
+];
+
+const INITIAL_OFFICIALS = [
+    { id: 1, name: "Michel Régis Onanga Ndiaye", role: "president", institution: "AN", status: "active", phone: "01010101", environment: "an", province: "Estuaire" },
+    { id: 2, name: "François Ndong Obiang", role: "vp", institution: "AN", status: "active", phone: "02020202", environment: "an", province: "Estuaire" },
+    { id: 3, name: "Jean-Baptiste Bikalou", role: "deputy", institution: "AN", status: "active", phone: "06060606", environment: "an", province: "Haut-Ogooué" },
+    { id: 4, name: "Marie Thérèse Bekale", role: "senator", institution: "Sénat", status: "active", phone: "07070707", environment: "senat", province: "Woleu-Ntem" },
+    { id: 5, name: "Paul Mba Abessole", role: "deputy", institution: "AN", status: "suspended", phone: "08080808", environment: "an", province: "Ogooué-Maritime" },
+    { id: 6, name: "Claire Nyingone", role: "senator", institution: "Sénat", status: "active", phone: "09090909", environment: "senat", province: "Ngounié" },
+    { id: 7, name: "Pierre Essono", role: "deputy", institution: "AN", status: "active", phone: "10101010", environment: "an", province: "Moyen-Ogooué" },
+    { id: 8, name: "Jeanne Mintsa", role: "senator", institution: "Sénat", status: "active", phone: "11111111", environment: "senat", province: "Nyanga" },
+];
+
+const INITIAL_CITIZENS = [
+    { id: 1, name: "Jean Dupont", phone: "+241 74 00 00 01", email: "jean@gmail.com", status: "verified", registeredAt: "2024-01-15", province: "Estuaire" },
+    { id: 2, name: "Marie Claire", phone: "+241 74 00 00 02", email: "marie@gmail.com", status: "verified", registeredAt: "2024-02-20", province: "Haut-Ogooué" },
+    { id: 3, name: "Pierre Moussavou", phone: "+241 74 00 00 03", email: "pierre@yahoo.fr", status: "pending", registeredAt: "2024-03-10", province: "Woleu-Ntem" },
+    { id: 4, name: "Anne Ondo", phone: "+241 74 00 00 04", email: "anne@outlook.com", status: "suspended", registeredAt: "2024-03-25", province: "Ogooué-Maritime" },
+];
 
 const UserManagementSection = () => {
     const [searchQuery, setSearchQuery] = useState("");
-    const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [environmentFilter, setEnvironmentFilter] = useState("all");
+    const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
-    const admins = [
-        { id: 1, name: "Super Admin", email: "super@parlement.ga", role: "system_admin", status: "active", institution: "Système", environment: "system" },
-        { id: 2, name: "Admin AN", email: "admin.an@parlement.ga", role: "admin_an", status: "active", institution: "Assemblée", environment: "an" },
-        { id: 3, name: "Admin Sénat", email: "admin.senat@parlement.ga", role: "admin_senat", status: "active", institution: "Sénat", environment: "senat" },
-        { id: 4, name: "Admin Parlement", email: "admin.parlement@parlement.ga", role: "admin_parlement", status: "active", institution: "Congrès", environment: "congres" },
-    ];
+    // Data State
+    const [admins, setAdmins] = useState(INITIAL_ADMINS);
+    const [officials, setOfficials] = useState(INITIAL_OFFICIALS);
+    const [citizens, setCitizens] = useState(INITIAL_CITIZENS);
 
-    const officials = [
-        { id: 1, name: "Michel Régis Onanga Ndiaye", role: "president", institution: "AN", status: "active", phone: "01010101", environment: "an", province: "Estuaire" },
-        { id: 2, name: "François Ndong Obiang", role: "vp", institution: "AN", status: "active", phone: "02020202", environment: "an", province: "Estuaire" },
-        { id: 3, name: "Jean-Baptiste Bikalou", role: "deputy", institution: "AN", status: "active", phone: "06060606", environment: "an", province: "Haut-Ogooué" },
-        { id: 4, name: "Marie Thérèse Bekale", role: "senator", institution: "Sénat", status: "active", phone: "07070707", environment: "senat", province: "Woleu-Ntem" },
-        { id: 5, name: "Paul Mba Abessole", role: "deputy", institution: "AN", status: "suspended", phone: "08080808", environment: "an", province: "Ogooué-Maritime" },
-        { id: 6, name: "Claire Nyingone", role: "senator", institution: "Sénat", status: "active", phone: "09090909", environment: "senat", province: "Ngounié" },
-        { id: 7, name: "Pierre Essono", role: "deputy", institution: "AN", status: "active", phone: "10101010", environment: "an", province: "Moyen-Ogooué" },
-        { id: 8, name: "Jeanne Mintsa", role: "senator", institution: "Sénat", status: "active", phone: "11111111", environment: "senat", province: "Nyanga" },
-    ];
+    // Form State
+    const [newUserFor, setNewUserFor] = useState({
+        type: "official",
+        name: "",
+        email: "",
+        phone: "",
+        role: "deputy",
+        institution: "an",
+        province: "Estuaire",
+    });
 
-    const citizens = [
-        { id: 1, name: "Jean Dupont", phone: "+241 74 00 00 01", email: "jean@gmail.com", status: "verified", registeredAt: "2024-01-15", province: "Estuaire" },
-        { id: 2, name: "Marie Claire", phone: "+241 74 00 00 02", email: "marie@gmail.com", status: "verified", registeredAt: "2024-02-20", province: "Haut-Ogooué" },
-        { id: 3, name: "Pierre Moussavou", phone: "+241 74 00 00 03", email: "pierre@yahoo.fr", status: "pending", registeredAt: "2024-03-10", province: "Woleu-Ntem" },
-        { id: 4, name: "Anne Ondo", phone: "+241 74 00 00 04", email: "anne@outlook.com", status: "suspended", registeredAt: "2024-03-25", province: "Ogooué-Maritime" },
-    ];
+    const [loading, setLoading] = useState(false);
 
-    // Filter officials by environment
+    // Filter Logic
     const filteredOfficials = environmentFilter === "all"
         ? officials
         : officials.filter(o => o.environment === environmentFilter);
 
-    // Environment stats
-    const envStats = {
-        an: officials.filter(o => o.environment === "an").length,
-        senat: officials.filter(o => o.environment === "senat").length,
-        congres: officials.filter(o => o.environment === "congres").length,
+    // Generic Action Handler Pattern
+    const handleAction = async (actionName: string, actionFn: () => Promise<void>) => {
+        setLoading(true);
+        try {
+            await actionFn();
+            toast.success(`${actionName} effectuée avec succès`);
+        } catch (error) {
+            console.error(error);
+            toast.error(`Erreur lors de: ${actionName}`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCreateUser = async () => {
+        if (!newUserFor.name || !newUserFor.phone) {
+            toast.error("Veuillez remplir les champs obligatoires (Nom, Téléphone)");
+            return;
+        }
+
+        await handleAction("Création utilisateur", async () => {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API
+
+            const newUser = {
+                id: Date.now(),
+                name: newUserFor.name,
+                role: newUserFor.role,
+                institution: newUserFor.institution === "an" ? "AN" : "Sénat",
+                status: "active",
+                phone: newUserFor.phone,
+                environment: newUserFor.institution,
+                province: newUserFor.province
+            };
+
+            if (newUserFor.type === "official") {
+                setOfficials([...officials, newUser as any]);
+            } else if (newUserFor.type === "citizen") {
+                setCitizens([...citizens, { ...newUser, email: newUserFor.email, status: "pending", registeredAt: new Date().toISOString().split('T')[0] } as any]);
+            } else {
+                setAdmins([...admins, { ...newUser, email: newUserFor.email, role: "admin_" + newUserFor.institution, environment: newUserFor.institution } as any]);
+            }
+
+            setCreateDialogOpen(false);
+            // Reset form
+            setNewUserFor({ ...newUserFor, name: "", email: "", phone: "" });
+        });
+    };
+
+    const handleDelete = async (type: "admin" | "official" | "citizen", id: number) => {
+        if (!window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) return;
+
+        await handleAction("Suppression utilisateur", async () => {
+            await new Promise(resolve => setTimeout(resolve, 800));
+            if (type === "admin") setAdmins(admins.filter(u => u.id !== id));
+            else if (type === "official") setOfficials(officials.filter(u => u.id !== id));
+            else setCitizens(citizens.filter(u => u.id !== id));
+        });
+    };
+
+    const handleToggleStatus = async (type: "admin" | "official" | "citizen", id: number, currentStatus: string) => {
+        const newStatus = currentStatus === "active" || currentStatus === "verified" ? "suspended" : "active";
+
+        await handleAction(`Changement statut (${newStatus})`, async () => {
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            const updateList = (list: any[]) => list.map(u => u.id === id ? { ...u, status: newStatus === "active" && type === "citizen" ? "verified" : newStatus } : u);
+
+            if (type === "admin") setAdmins(updateList(admins));
+            else if (type === "official") setOfficials(updateList(officials));
+            else setCitizens(updateList(citizens));
+        });
     };
 
     const getRoleBadge = (role: string) => {
@@ -135,7 +222,10 @@ const UserManagementSection = () => {
                         <div className="grid gap-4 py-4">
                             <div className="grid gap-2">
                                 <Label>Type de Compte</Label>
-                                <Select>
+                                <Select
+                                    value={newUserFor.type}
+                                    onValueChange={(val) => setNewUserFor({ ...newUserFor, type: val })}
+                                >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Sélectionner le type" />
                                     </SelectTrigger>
@@ -147,34 +237,70 @@ const UserManagementSection = () => {
                                 </Select>
                             </div>
                             <div className="grid gap-2">
-                                <Label>Nom Complet</Label>
-                                <Input placeholder="Prénom et Nom" />
+                                <Label>Nom Complet *</Label>
+                                <Input
+                                    placeholder="Prénom et Nom"
+                                    value={newUserFor.name}
+                                    onChange={(e) => setNewUserFor({ ...newUserFor, name: e.target.value })}
+                                />
                             </div>
                             <div className="grid gap-2">
                                 <Label>Email</Label>
-                                <Input type="email" placeholder="email@domain.com" />
+                                <Input
+                                    type="email"
+                                    placeholder="email@domain.com"
+                                    value={newUserFor.email}
+                                    onChange={(e) => setNewUserFor({ ...newUserFor, email: e.target.value })}
+                                />
                             </div>
                             <div className="grid gap-2">
-                                <Label>Téléphone</Label>
-                                <Input placeholder="+241 XX XX XX XX" />
+                                <Label>Téléphone *</Label>
+                                <Input
+                                    placeholder="+241 XX XX XX XX"
+                                    value={newUserFor.phone}
+                                    onChange={(e) => setNewUserFor({ ...newUserFor, phone: e.target.value })}
+                                />
                             </div>
-                            <div className="grid gap-2">
-                                <Label>Institution (si applicable)</Label>
-                                <Select>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Sélectionner l'institution" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="an">Assemblée Nationale</SelectItem>
-                                        <SelectItem value="senat">Sénat</SelectItem>
-                                        <SelectItem value="congres">Congrès</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
+                            {newUserFor.type === "official" && (
+                                <>
+                                    <div className="grid gap-2">
+                                        <Label>Institution</Label>
+                                        <Select
+                                            value={newUserFor.institution}
+                                            onValueChange={(val) => setNewUserFor({ ...newUserFor, institution: val })}
+                                        >
+                                            <SelectTrigger><SelectValue placeholder="Institution" /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="an">Assemblée Nationale</SelectItem>
+                                                <SelectItem value="senat">Sénat</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label>Rôle</Label>
+                                        <Select
+                                            value={newUserFor.role}
+                                            onValueChange={(val) => setNewUserFor({ ...newUserFor, role: val })}
+                                        >
+                                            <SelectTrigger><SelectValue placeholder="Rôle" /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="deputy">Député</SelectItem>
+                                                <SelectItem value="senator">Sénateur</SelectItem>
+                                                <SelectItem value="president">Président</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </>
+                            )}
                         </div>
                         <DialogFooter>
-                            <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>Annuler</Button>
-                            <Button className="bg-indigo-600 hover:bg-indigo-700" onClick={() => setCreateDialogOpen(false)}>Créer le Compte</Button>
+                            <Button variant="outline" onClick={() => setCreateDialogOpen(false)} disabled={loading}>
+                                Annuler
+                            </Button>
+                            <Button className="bg-indigo-600 hover:bg-indigo-700" onClick={handleCreateUser} disabled={loading}>
+                                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                Créer le Compte
+                            </Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
@@ -190,6 +316,18 @@ const UserManagementSection = () => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
+                <Select value={environmentFilter} onValueChange={setEnvironmentFilter}>
+                    <SelectTrigger className="w-[200px]">
+                        <Building2 className="mr-2 h-4 w-4 text-muted-foreground" />
+                        <SelectValue placeholder="Filtrer par environnement" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">Tous environnements</SelectItem>
+                        <SelectItem value="an">Assemblée Nationale</SelectItem>
+                        <SelectItem value="senat">Sénat</SelectItem>
+                        <SelectItem value="congres">Congrès</SelectItem>
+                    </SelectContent>
+                </Select>
             </div>
 
             <Tabs defaultValue="admins" className="w-full">
@@ -200,7 +338,7 @@ const UserManagementSection = () => {
                     </TabsTrigger>
                     <TabsTrigger value="officials" className="flex items-center gap-2">
                         <Building2 className="h-4 w-4" />
-                        Élus
+                        Élus ({filteredOfficials.length})
                     </TabsTrigger>
                     <TabsTrigger value="citizens" className="flex items-center gap-2">
                         <Users className="h-4 w-4" />
@@ -221,7 +359,7 @@ const UserManagementSection = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {admins.map((admin) => (
+                                {admins.filter(a => a.name.toLowerCase().includes(searchQuery.toLowerCase())).map((admin) => (
                                     <tr key={admin.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-900/50">
                                         <td className="py-3 px-4">
                                             <div>
@@ -235,12 +373,14 @@ const UserManagementSection = () => {
                                         <td className="py-3 px-4 text-right">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="sm"><MoreVertical className="h-4 w-4" /></Button>
+                                                    <Button variant="ghost" size="sm" disabled={loading}><MoreVertical className="h-4 w-4" /></Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem><Edit className="h-4 w-4 mr-2" />Modifier</DropdownMenuItem>
-                                                    <DropdownMenuItem><Lock className="h-4 w-4 mr-2" />Réinitialiser MDP</DropdownMenuItem>
-                                                    <DropdownMenuItem className="text-red-600"><Trash2 className="h-4 w-4 mr-2" />Supprimer</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => toast.info("Fonction édition à venir")}><Edit className="h-4 w-4 mr-2" />Modifier</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleToggleStatus("admin", admin.id, admin.status)}>
+                                                        {admin.status === 'active' ? <><Lock className="h-4 w-4 mr-2" />Suspendre</> : <><Unlock className="h-4 w-4 mr-2" />Activer</>}
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem className="text-red-600" onClick={() => handleDelete("admin", admin.id)}><Trash2 className="h-4 w-4 mr-2" />Supprimer</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </td>
@@ -264,7 +404,7 @@ const UserManagementSection = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {officials.map((official) => (
+                                {filteredOfficials.filter(o => o.name.toLowerCase().includes(searchQuery.toLowerCase())).map((official) => (
                                     <tr key={official.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-900/50">
                                         <td className="py-3 px-4">
                                             <div>
@@ -275,10 +415,10 @@ const UserManagementSection = () => {
                                         <td className="py-3 px-4">{getRoleBadge(official.role)}</td>
                                         <td className="py-3 px-4">
                                             <Badge variant="outline" className={
-                                                official.institution === 'AN' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
+                                                official.environment === 'an' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
                                                     'bg-amber-50 text-amber-600 border-amber-200'
                                             }>
-                                                {official.institution === 'AN' ? <Building2 className="h-3 w-3 mr-1" /> : <Landmark className="h-3 w-3 mr-1" />}
+                                                {official.environment === 'an' ? <Building2 className="h-3 w-3 mr-1" /> : <Landmark className="h-3 w-3 mr-1" />}
                                                 {official.institution}
                                             </Badge>
                                         </td>
@@ -286,15 +426,14 @@ const UserManagementSection = () => {
                                         <td className="py-3 px-4 text-right">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="sm"><MoreVertical className="h-4 w-4" /></Button>
+                                                    <Button variant="ghost" size="sm" disabled={loading}><MoreVertical className="h-4 w-4" /></Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem><Edit className="h-4 w-4 mr-2" />Modifier le profil</DropdownMenuItem>
-                                                    <DropdownMenuItem><Scale className="h-4 w-4 mr-2" />Gérer les mandats</DropdownMenuItem>
-                                                    {official.status === 'active' ?
-                                                        <DropdownMenuItem className="text-amber-600"><Lock className="h-4 w-4 mr-2" />Suspendre</DropdownMenuItem> :
-                                                        <DropdownMenuItem className="text-green-600"><Unlock className="h-4 w-4 mr-2" />Réactiver</DropdownMenuItem>
-                                                    }
+                                                    <DropdownMenuItem onClick={() => toast.info("Fonction édition à venir")}><Edit className="h-4 w-4 mr-2" />Modifier</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleToggleStatus("official", official.id, official.status)}>
+                                                        {official.status === 'active' ? <><Lock className="h-4 w-4 mr-2" />Suspendre</> : <><Unlock className="h-4 w-4 mr-2" />Activer</>}
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem className="text-red-600" onClick={() => handleDelete("official", official.id)}><Trash2 className="h-4 w-4 mr-2" />Supprimer</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </td>
@@ -312,13 +451,13 @@ const UserManagementSection = () => {
                                 <tr className="border-b">
                                     <th className="text-left py-3 px-4 font-medium text-sm">Citoyen</th>
                                     <th className="text-left py-3 px-4 font-medium text-sm">Contact</th>
-                                    <th className="text-left py-3 px-4 font-medium text-sm">Inscription</th>
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Province</th>
                                     <th className="text-left py-3 px-4 font-medium text-sm">Statut</th>
                                     <th className="text-right py-3 px-4 font-medium text-sm">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {citizens.map((citizen) => (
+                                {citizens.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase())).map((citizen) => (
                                     <tr key={citizen.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-900/50">
                                         <td className="py-3 px-4">
                                             <p className="font-medium">{citizen.name}</p>
@@ -329,21 +468,19 @@ const UserManagementSection = () => {
                                                 <p className="text-xs text-muted-foreground">{citizen.email}</p>
                                             </div>
                                         </td>
-                                        <td className="py-3 px-4 text-sm text-muted-foreground">{citizen.registeredAt}</td>
+                                        <td className="py-3 px-4 text-sm">{citizen.province}</td>
                                         <td className="py-3 px-4">{getStatusBadge(citizen.status)}</td>
                                         <td className="py-3 px-4 text-right">
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
-                                                    <Button variant="ghost" size="sm"><MoreVertical className="h-4 w-4" /></Button>
+                                                    <Button variant="ghost" size="sm" disabled={loading}><MoreVertical className="h-4 w-4" /></Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem><Edit className="h-4 w-4 mr-2" />Modifier</DropdownMenuItem>
-                                                    <DropdownMenuItem><CheckCircle2 className="h-4 w-4 mr-2" />Vérifier identité</DropdownMenuItem>
-                                                    {citizen.status !== 'suspended' ?
-                                                        <DropdownMenuItem className="text-amber-600"><Lock className="h-4 w-4 mr-2" />Suspendre</DropdownMenuItem> :
-                                                        <DropdownMenuItem className="text-green-600"><Unlock className="h-4 w-4 mr-2" />Réactiver</DropdownMenuItem>
-                                                    }
-                                                    <DropdownMenuItem className="text-red-600"><Trash2 className="h-4 w-4 mr-2" />Supprimer</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => toast.info("Fonction édition à venir")}><Edit className="h-4 w-4 mr-2" />Modifier</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => handleToggleStatus("citizen", citizen.id, citizen.status)}>
+                                                        {citizen.status !== 'suspended' ? <><Lock className="h-4 w-4 mr-2" />Suspendre</> : <><Unlock className="h-4 w-4 mr-2" />Réactiver</>}
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem className="text-red-600" onClick={() => handleDelete("citizen", citizen.id)}><Trash2 className="h-4 w-4 mr-2" />Supprimer</DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                         </td>

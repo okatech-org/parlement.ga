@@ -22,7 +22,8 @@ import {
     ShieldAlert,
     ShieldCheck,
     Key,
-    Fingerprint
+    Fingerprint,
+    Loader2
 } from "lucide-react";
 import {
     Select,
@@ -31,18 +32,22 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
+
+const INITIAL_EVENTS = [
+    { id: 1, type: "auth_success", user: "admin00", ip: "192.168.1.1", location: "Libreville", time: "23:05:12", details: "Connexion réussie via PIN" },
+    { id: 2, type: "auth_failed", user: "unknown", ip: "45.33.32.156", location: "Unknown", time: "23:02:45", details: "Tentative de connexion échouée (3x)" },
+    { id: 3, type: "permission_change", user: "admin01", ip: "192.168.1.2", location: "Libreville", time: "22:58:30", details: "Modification rôle: deputy_042 -> questeur" },
+    { id: 4, type: "config_update", user: "admin00", ip: "192.168.1.1", location: "Libreville", time: "22:45:00", details: "Mise à jour politique de sécurité" },
+    { id: 5, type: "session_timeout", user: "deputy_015", ip: "10.0.0.15", location: "Port-Gentil", time: "22:30:00", details: "Session expirée après 30min d'inactivité" },
+    { id: 6, type: "auth_success", user: "senator_008", ip: "10.0.0.22", location: "Franceville", time: "22:15:00", details: "Connexion biométrique" },
+];
 
 const SecurityLogsSection = () => {
     const [logFilter, setLogFilter] = useState("all");
-
-    const securityEvents = [
-        { id: 1, type: "auth_success", user: "admin00", ip: "192.168.1.1", location: "Libreville", time: "23:05:12", details: "Connexion réussie via PIN" },
-        { id: 2, type: "auth_failed", user: "unknown", ip: "45.33.32.156", location: "Unknown", time: "23:02:45", details: "Tentative de connexion échouée (3x)" },
-        { id: 3, type: "permission_change", user: "admin01", ip: "192.168.1.2", location: "Libreville", time: "22:58:30", details: "Modification rôle: deputy_042 -> questeur" },
-        { id: 4, type: "config_update", user: "admin00", ip: "192.168.1.1", location: "Libreville", time: "22:45:00", details: "Mise à jour politique de sécurité" },
-        { id: 5, type: "session_timeout", user: "deputy_015", ip: "10.0.0.15", location: "Port-Gentil", time: "22:30:00", details: "Session expirée après 30min d'inactivité" },
-        { id: 6, type: "auth_success", user: "senator_008", ip: "10.0.0.22", location: "Franceville", time: "22:15:00", details: "Connexion biométrique" },
-    ];
+    const [searchQuery, setSearchQuery] = useState("");
+    const [events, setEvents] = useState(INITIAL_EVENTS);
+    const [loading, setLoading] = useState(false);
 
     const securityPolicies = [
         { name: "Authentification Multi-Facteurs (MFA)", status: "active", coverage: "100%", lastUpdate: "2024-12-10" },
@@ -57,6 +62,40 @@ const SecurityLogsSection = () => {
         { id: 2, severity: "medium", title: "Activité inhabituelle sur compte", source: "deputy_042", time: "Il y a 15 min", status: "resolved" },
         { id: 3, severity: "low", title: "Certificat SSL expire dans 30 jours", source: "api.parlement.ga", time: "Il y a 2h", status: "pending" },
     ];
+
+    const filteredEvents = events.filter(event => {
+        const matchesFilter = logFilter === "all" ||
+            (logFilter === "auth" && event.type.startsWith("auth")) ||
+            (logFilter === "permission" && event.type === "permission_change") ||
+            (logFilter === "config" && event.type === "config_update");
+
+        const matchesSearch = event.user.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            event.details.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            event.ip.includes(searchQuery);
+
+        return matchesFilter && matchesSearch;
+    });
+
+    const handleRefresh = async () => {
+        setLoading(true);
+        try {
+            await new Promise(resolve => setTimeout(resolve, 800));
+            // Add a mock random event
+            const newEvent = {
+                id: Date.now(),
+                type: Math.random() > 0.5 ? "auth_success" : "auth_failed",
+                user: "user_" + Math.floor(Math.random() * 100),
+                ip: "192.168.1." + Math.floor(Math.random() * 255),
+                location: "Libreville",
+                time: new Date().toLocaleTimeString('fr-FR'),
+                details: "Nouvelle activité détectée"
+            };
+            setEvents([newEvent, ...events]);
+            toast.success("Logs actualisés");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const getEventTypeBadge = (type: string) => {
         const config: Record<string, { label: string; className: string; icon: typeof Shield }> = {
@@ -89,12 +128,12 @@ const SecurityLogsSection = () => {
                     <p className="text-muted-foreground">Surveillance, audit et gestion des menaces</p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" onClick={() => toast.success("Logs exportés (CSV)")}>
                         <Download className="h-4 w-4 mr-2" />
                         Exporter Logs
                     </Button>
-                    <Button variant="outline" size="sm">
-                        <RefreshCw className="h-4 w-4 mr-2" />
+                    <Button variant="outline" size="sm" onClick={handleRefresh} disabled={loading}>
+                        {loading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-2" />}
                         Actualiser
                     </Button>
                 </div>
@@ -160,7 +199,12 @@ const SecurityLogsSection = () => {
                     <div className="flex items-center gap-4">
                         <div className="relative flex-1 max-w-md">
                             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                            <Input className="pl-9" placeholder="Rechercher dans les logs..." />
+                            <Input
+                                className="pl-9"
+                                placeholder="Rechercher dans les logs (User, IP)..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
                         </div>
                         <Select value={logFilter} onValueChange={setLogFilter}>
                             <SelectTrigger className="w-[180px]">
@@ -188,7 +232,7 @@ const SecurityLogsSection = () => {
                                 </tr>
                             </thead>
                             <tbody className="font-mono text-xs">
-                                {securityEvents.map((event) => (
+                                {filteredEvents.map((event) => (
                                     <tr key={event.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-900/50">
                                         <td className="py-3 px-4 text-slate-500">{event.time}</td>
                                         <td className="py-3 px-4">{getEventTypeBadge(event.type)}</td>
@@ -203,6 +247,13 @@ const SecurityLogsSection = () => {
                                         <td className="py-3 px-4 text-muted-foreground">{event.details}</td>
                                     </tr>
                                 ))}
+                                {filteredEvents.length === 0 && (
+                                    <tr>
+                                        <td colSpan={5} className="py-6 text-center text-muted-foreground">
+                                            Aucun log trouvé pour ces critères.
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
                     </Card>
@@ -241,7 +292,7 @@ const SecurityLogsSection = () => {
                                             {alert.status === 'resolved' ? 'Résolu' :
                                                 alert.status === 'investigating' ? 'En cours' : 'En attente'}
                                         </Badge>
-                                        <Button size="sm" variant="outline">
+                                        <Button size="sm" variant="outline" onClick={() => toast.info("Détails alerte")}>
                                             <Eye className="h-4 w-4 mr-1" />
                                             Détails
                                         </Button>
@@ -276,7 +327,7 @@ const SecurityLogsSection = () => {
                                         <td className="py-3 px-4">{policy.coverage}</td>
                                         <td className="py-3 px-4 text-muted-foreground">{policy.lastUpdate}</td>
                                         <td className="py-3 px-4 text-right">
-                                            <Button size="sm" variant="ghost">
+                                            <Button size="sm" variant="ghost" onClick={() => toast.info("Modification politique restreinte")}>
                                                 <Lock className="h-4 w-4 mr-1" />
                                                 Configurer
                                             </Button>

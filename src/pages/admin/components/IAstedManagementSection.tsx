@@ -22,7 +22,9 @@ import {
     CheckCircle2,
     XCircle,
     Edit,
-    Search
+    Search,
+    Loader2,
+    Save
 } from "lucide-react";
 import {
     Dialog,
@@ -35,69 +37,84 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { toast } from "sonner";
+
+const INITIAL_ORGS = [
+    {
+        id: "an",
+        name: "Assemblée Nationale",
+        icon: Building2,
+        color: "emerald",
+        enabled: true,
+        users: 156,
+        usersWithAccess: 45,
+        tokensUsed: 2450000,
+        tokensLimit: 5000000,
+        features: { voice: true, api: false, premium: true }
+    },
+    {
+        id: "senat",
+        name: "Sénat",
+        icon: Landmark,
+        color: "amber",
+        enabled: true,
+        users: 108,
+        usersWithAccess: 32,
+        tokensUsed: 1820000,
+        tokensLimit: 3000000,
+        features: { voice: true, api: false, premium: false }
+    },
+    {
+        id: "congres",
+        name: "Congrès / Parlement",
+        icon: Scale,
+        color: "blue",
+        enabled: true,
+        users: 45,
+        usersWithAccess: 20,
+        tokensUsed: 890000,
+        tokensLimit: 2000000,
+        features: { voice: false, api: false, premium: false }
+    },
+    {
+        id: "citoyens",
+        name: "Espace Citoyen",
+        icon: Users,
+        color: "purple",
+        enabled: false,
+        users: 3500,
+        usersWithAccess: 0,
+        tokensUsed: 0,
+        tokensLimit: 0,
+        features: { voice: false, api: false, premium: false }
+    },
+];
+
+const INITIAL_ACCOUNTS = [
+    { id: 1, name: "Michel Régis Onanga Ndiaye", role: "Président AN", org: "AN", enabled: true, tokensUsed: 125000, tokensLimit: 500000, features: { voice: true, premium: true, api: false } },
+    { id: 2, name: "François Ndong Obiang", role: "Vice-Président AN", org: "AN", enabled: true, tokensUsed: 89000, tokensLimit: 300000, features: { voice: true, premium: false, api: false } },
+    { id: 3, name: "Admin Système", role: "Super Admin", org: "Système", enabled: true, tokensUsed: 450000, tokensLimit: 1000000, features: { voice: true, premium: true, api: true } },
+    { id: 4, name: "Marie Thérèse Bekale", role: "Sénatrice", org: "Sénat", enabled: true, tokensUsed: 45000, tokensLimit: 200000, features: { voice: true, premium: false, api: false } },
+    { id: 5, name: "Jean-Baptiste Bikalou", role: "Député", org: "AN", enabled: false, tokensUsed: 0, tokensLimit: 100000, features: { voice: false, premium: false, api: false } },
+];
 
 const IAstedManagementSection = () => {
+    const [organizations, setOrganizations] = useState(INITIAL_ORGS);
+    const [userAccounts, setUserAccounts] = useState(INITIAL_ACCOUNTS);
+
+    // UI State
     const [configDialogOpen, setConfigDialogOpen] = useState(false);
     const [selectedOrg, setSelectedOrg] = useState<any>(null);
+    const [loading, setLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
-    const organizations = [
-        {
-            id: "an",
-            name: "Assemblée Nationale",
-            icon: Building2,
-            color: "emerald",
-            enabled: true,
-            users: 156,
-            usersWithAccess: 45,
-            tokensUsed: 2450000,
-            tokensLimit: 5000000,
-            features: { voice: true, api: false, premium: true }
-        },
-        {
-            id: "senat",
-            name: "Sénat",
-            icon: Landmark,
-            color: "amber",
-            enabled: true,
-            users: 108,
-            usersWithAccess: 32,
-            tokensUsed: 1820000,
-            tokensLimit: 3000000,
-            features: { voice: true, api: false, premium: false }
-        },
-        {
-            id: "congres",
-            name: "Congrès / Parlement",
-            icon: Scale,
-            color: "blue",
-            enabled: true,
-            users: 45,
-            usersWithAccess: 20,
-            tokensUsed: 890000,
-            tokensLimit: 2000000,
-            features: { voice: false, api: false, premium: false }
-        },
-        {
-            id: "citoyens",
-            name: "Espace Citoyen",
-            icon: Users,
-            color: "purple",
-            enabled: false,
-            users: 3500,
-            usersWithAccess: 0,
-            tokensUsed: 0,
-            tokensLimit: 0,
-            features: { voice: false, api: false, premium: false }
-        },
-    ];
-
-    const userAccounts = [
-        { id: 1, name: "Michel Régis Onanga Ndiaye", role: "Président AN", org: "AN", enabled: true, tokensUsed: 125000, tokensLimit: 500000, features: { voice: true, premium: true } },
-        { id: 2, name: "François Ndong Obiang", role: "Vice-Président AN", org: "AN", enabled: true, tokensUsed: 89000, tokensLimit: 300000, features: { voice: true, premium: false } },
-        { id: 3, name: "Admin Système", role: "Super Admin", org: "Système", enabled: true, tokensUsed: 450000, tokensLimit: 1000000, features: { voice: true, premium: true, api: true } },
-        { id: 4, name: "Marie Thérèse Bekale", role: "Sénatrice", org: "Sénat", enabled: true, tokensUsed: 45000, tokensLimit: 200000, features: { voice: true, premium: false } },
-        { id: 5, name: "Jean-Baptiste Bikalou", role: "Député", org: "AN", enabled: false, tokensUsed: 0, tokensLimit: 100000, features: { voice: false, premium: false } },
-    ];
+    // Config Form State
+    const [configForm, setConfigForm] = useState({
+        limit: 50,
+        voice: false,
+        premium: false,
+        api: false
+    });
 
     const globalStats = {
         totalOrgs: organizations.filter(o => o.enabled).length,
@@ -124,7 +141,58 @@ const IAstedManagementSection = () => {
 
     const openConfigDialog = (org: any) => {
         setSelectedOrg(org);
+        setConfigForm({
+            limit: org.tokensLimit / 100000, // Scale for slider
+            voice: org.features.voice,
+            premium: org.features.premium,
+            api: org.features.api
+        });
         setConfigDialogOpen(true);
+    };
+
+    const handleSaveConfig = async () => {
+        if (!selectedOrg) return;
+
+        setLoading(true);
+        try {
+            await new Promise(resolve => setTimeout(resolve, 800)); // Simulate API
+
+            const newLimit = configForm.limit * 100000;
+
+            setOrganizations(organizations.map(org =>
+                org.id === selectedOrg.id ? {
+                    ...org,
+                    tokensLimit: newLimit,
+                    features: {
+                        voice: configForm.voice,
+                        premium: configForm.premium,
+                        api: configForm.api
+                    }
+                } : org
+            ));
+
+            toast.success(`Configuration sauvegardée pour ${selectedOrg.name}`);
+            setConfigDialogOpen(false);
+        } catch (error) {
+            toast.error("Erreur lors de la sauvegarde");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleToggleOrg = async (id: string, currentStatus: boolean) => {
+        setLoading(true);
+        try {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            setOrganizations(organizations.map(org =>
+                org.id === id ? { ...org, enabled: !currentStatus } : org
+            ));
+            toast.success(`Organisation ${currentStatus ? 'désactivée' : 'activée'}`);
+        } catch (error) {
+            toast.error("Erreur de modification");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -177,7 +245,7 @@ const IAstedManagementSection = () => {
                         <TrendingUp className="h-8 w-8 text-amber-500" />
                         <div>
                             <p className="text-sm text-muted-foreground">Utilisation Globale</p>
-                            <p className="text-2xl font-bold">{Math.round((globalStats.totalTokensUsed / globalStats.totalTokensLimit) * 100)}%</p>
+                            <p className="text-2xl font-bold">{Math.round((globalStats.totalTokensUsed / globalStats.totalTokensLimit || 1) * 100)}%</p>
                         </div>
                     </div>
                 </Card>
@@ -219,7 +287,11 @@ const IAstedManagementSection = () => {
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <Switch checked={org.enabled} />
+                                            <Switch
+                                                checked={org.enabled}
+                                                onCheckedChange={() => handleToggleOrg(org.id, org.enabled)}
+                                                disabled={loading}
+                                            />
                                         </div>
                                     </div>
 
@@ -248,7 +320,7 @@ const IAstedManagementSection = () => {
                                                 </Badge>
                                             </div>
 
-                                            <Button variant="outline" size="sm" className="w-full" onClick={() => openConfigDialog(org)}>
+                                            <Button variant="outline" size="sm" className="w-full" onClick={() => openConfigDialog(org)} disabled={loading}>
                                                 <Settings className="h-4 w-4 mr-2" />
                                                 Configurer
                                             </Button>
@@ -270,7 +342,12 @@ const IAstedManagementSection = () => {
                     <div className="flex items-center gap-4">
                         <div className="relative flex-1 max-w-md">
                             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                            <Input className="pl-9" placeholder="Rechercher un compte..." />
+                            <Input
+                                className="pl-9"
+                                placeholder="Rechercher un compte..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
                         </div>
                     </div>
 
@@ -287,7 +364,7 @@ const IAstedManagementSection = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {userAccounts.map((account) => (
+                                {userAccounts.filter(a => a.name.toLowerCase().includes(searchQuery.toLowerCase())).map((account) => (
                                     <tr key={account.id} className="border-b hover:bg-slate-50 dark:hover:bg-slate-900/50">
                                         <td className="py-3 px-4">
                                             <div>
@@ -322,7 +399,7 @@ const IAstedManagementSection = () => {
                                             )}
                                         </td>
                                         <td className="py-3 px-4 text-right">
-                                            <Button variant="ghost" size="sm"><Edit className="h-4 w-4" /></Button>
+                                            <Button variant="ghost" size="sm" onClick={() => toast.info("Édition compte individuel à venir")}><Edit className="h-4 w-4" /></Button>
                                         </td>
                                     </tr>
                                 ))}
@@ -378,10 +455,18 @@ const IAstedManagementSection = () => {
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
-                            <Label>Limite de Tokens Mensuelle</Label>
+                            <Label>Limite de Tokens Mensuelle ({formatTokens(configForm.limit * 100000)})</Label>
                             <div className="flex items-center gap-4">
-                                <Slider defaultValue={[50]} max={100} step={1} className="flex-1" />
-                                <span className="text-sm font-mono w-16">5M</span>
+                                <Slider
+                                    value={[configForm.limit]}
+                                    onValueChange={(val) => setConfigForm({ ...configForm, limit: val[0] })}
+                                    max={100}
+                                    step={1}
+                                    className="flex-1"
+                                />
+                                <span className="text-sm font-mono w-16 text-right">
+                                    {formatTokens(configForm.limit * 100000)}
+                                </span>
                             </div>
                         </div>
                         <div className="grid gap-2">
@@ -392,28 +477,40 @@ const IAstedManagementSection = () => {
                                         <Mic className="h-4 w-4 text-green-500" />
                                         <span className="text-sm">Mode Vocal</span>
                                     </div>
-                                    <Switch defaultChecked />
+                                    <Switch
+                                        checked={configForm.voice}
+                                        onCheckedChange={(v) => setConfigForm({ ...configForm, voice: v })}
+                                    />
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
                                         <Brain className="h-4 w-4 text-purple-500" />
                                         <span className="text-sm">Modèle Premium</span>
                                     </div>
-                                    <Switch />
+                                    <Switch
+                                        checked={configForm.premium}
+                                        onCheckedChange={(v) => setConfigForm({ ...configForm, premium: v })}
+                                    />
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
                                         <Zap className="h-4 w-4 text-blue-500" />
                                         <span className="text-sm">Accès API</span>
                                     </div>
-                                    <Switch />
+                                    <Switch
+                                        checked={configForm.api}
+                                        onCheckedChange={(v) => setConfigForm({ ...configForm, api: v })}
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setConfigDialogOpen(false)}>Annuler</Button>
-                        <Button className="bg-indigo-600 hover:bg-indigo-700" onClick={() => setConfigDialogOpen(false)}>Enregistrer</Button>
+                        <Button variant="outline" onClick={() => setConfigDialogOpen(false)} disabled={loading}>Annuler</Button>
+                        <Button className="bg-indigo-600 hover:bg-indigo-700" onClick={handleSaveConfig} disabled={loading}>
+                            {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+                            Enregistrer
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
