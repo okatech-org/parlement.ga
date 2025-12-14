@@ -1,15 +1,22 @@
 import { ReactNode } from "react";
-import { Shield, LogOut, User } from "lucide-react";
+import { LogOut, User, Sun, Moon, Settings, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useTheme } from "next-themes";
+import { useState } from "react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 export interface NavItemType {
   id: string;
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: string;
+  children?: NavItemType[];
 }
 
 interface SpaceSidebarProps {
@@ -37,82 +44,153 @@ export const SpaceSidebar = ({
   onLogout,
   hideBranding,
 }: SpaceSidebarProps) => {
-  return (
-    <div className="flex flex-col h-full">
-      {/* Branding */}
-      {!hideBranding && (
-        <div className="p-6 border-b border-border/50">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-xl neu-inset text-primary">
-              <Shield className="h-6 w-6" />
-            </div>
-            <h2 className="text-xl font-serif font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">{title}</h2>
-          </div>
-        </div>
-      )}
+  const { theme, setTheme } = useTheme();
+  const [openGroups, setOpenGroups] = useState<string[]>([navItems[0]?.id || ""]);
 
-      {/* User Info */}
-      <div className="p-6 border-b border-border/50">
-        <div className="neu-raised p-4 rounded-xl flex items-center gap-3">
-          <Avatar className="h-10 w-10 border-2 border-background shadow-sm">
+  const toggleGroup = (id: string) => {
+    setOpenGroups(prev => 
+      prev.includes(id) ? prev.filter(g => g !== id) : [...prev, id]
+    );
+  };
+
+  return (
+    <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground">
+      {/* User Profile Card */}
+      <div className="p-4">
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-sidebar-accent/50">
+          <Avatar className="h-10 w-10 border border-sidebar-border">
             <AvatarImage src={userContext.avatar} />
-            <AvatarFallback className="bg-primary/10 text-primary">
-              <User className="h-5 w-5" />
+            <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground text-sm font-medium">
+              {userContext.name.charAt(0)}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold truncate">{userContext.name}</p>
-            <p className="text-xs text-muted-foreground truncate">
+            <p className="text-sm font-semibold truncate">{userContext.name}</p>
+            <p className="text-xs text-sidebar-foreground/60 truncate">
               {userContext.role}
             </p>
           </div>
         </div>
       </div>
 
+      {/* Main Role Dropdown */}
+      <div className="px-4 pb-2">
+        <Collapsible open={openGroups.includes("role")} onOpenChange={() => toggleGroup("role")}>
+          <CollapsibleTrigger asChild>
+            <button className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg bg-sidebar-accent text-sidebar-foreground hover:bg-sidebar-accent/80 transition-colors">
+              <span className="font-medium text-sm">{title}</span>
+              {openGroups.includes("role") ? (
+                <ChevronUp className="h-4 w-4 text-sidebar-foreground/60" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-sidebar-foreground/60" />
+              )}
+            </button>
+          </CollapsibleTrigger>
+        </Collapsible>
+      </div>
+
+      {/* Navigation Label */}
+      <div className="px-6 py-2">
+        <span className="text-[10px] uppercase tracking-wider text-sidebar-foreground/40 font-medium">
+          Navigation
+        </span>
+      </div>
+
       {/* Navigation */}
-      <ScrollArea className="flex-1">
-        <nav className="p-4 space-y-4">
+      <ScrollArea className="flex-1 px-3">
+        <nav className="space-y-1">
           {customNav ? (
             customNav
           ) : (
-            <div className="space-y-2">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = activeSection === item.id;
+            navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeSection === item.id;
+              const hasChildren = item.children && item.children.length > 0;
+              
+              if (hasChildren) {
                 return (
-                  <button
-                    key={item.id}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium ${isActive
-                        ? "neu-inset text-primary"
-                        : "neu-raised hover:text-primary hover:translate-y-[-2px]"
-                      }`}
-                    onClick={() => setActiveSection(item.id)}
+                  <Collapsible 
+                    key={item.id} 
+                    open={openGroups.includes(item.id)}
+                    onOpenChange={() => toggleGroup(item.id)}
                   >
-                    <Icon className={`h-5 w-5 ${isActive ? "text-primary" : "text-muted-foreground"}`} />
-                    <span className="flex-1 text-left">{item.label}</span>
-                    {item.badge && (
-                      <span className="ml-auto bg-primary text-primary-foreground text-xs px-2 py-0.5 rounded-full shadow-sm">
-                        {item.badge}
-                      </span>
-                    )}
-                  </button>
+                    <CollapsibleTrigger asChild>
+                      <button
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm ${
+                          isActive 
+                            ? "bg-sidebar-accent text-sidebar-foreground" 
+                            : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                        }`}
+                      >
+                        <Icon className="h-4 w-4" />
+                        <span className="flex-1 text-left">{item.label}</span>
+                        <ChevronDown className={`h-4 w-4 transition-transform ${openGroups.includes(item.id) ? "rotate-180" : ""}`} />
+                      </button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="pl-6 space-y-1 mt-1">
+                      {item.children?.map((child) => {
+                        const ChildIcon = child.icon;
+                        const isChildActive = activeSection === child.id;
+                        return (
+                          <button
+                            key={child.id}
+                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
+                              isChildActive 
+                                ? "bg-sidebar-accent text-sidebar-foreground" 
+                                : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                            }`}
+                            onClick={() => setActiveSection(child.id)}
+                          >
+                            <ChildIcon className="h-4 w-4" />
+                            <span>{child.label}</span>
+                          </button>
+                        );
+                      })}
+                    </CollapsibleContent>
+                  </Collapsible>
                 );
-              })}
-            </div>
+              }
+
+              return (
+                <button
+                  key={item.id}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm ${
+                    isActive 
+                      ? "bg-sidebar-accent text-sidebar-foreground" 
+                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                  }`}
+                  onClick={() => setActiveSection(item.id)}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span className="flex-1 text-left">{item.label}</span>
+                  {item.badge && (
+                    <span className="bg-primary text-primary-foreground text-xs px-2 py-0.5 rounded-full">
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })
           )}
         </nav>
       </ScrollArea>
 
       {/* Footer */}
-      <div className="p-6 border-t border-border/50">
-        <Button
-          variant="ghost"
-          className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10 neu-raised"
-          onClick={onLogout}
+      <div className="p-4 space-y-1 border-t border-sidebar-border">
+        <button
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors text-sm"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
         >
-          <LogOut className="mr-3 h-4 w-4" />
-          Déconnexion
-        </Button>
+          {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          <span>{theme === "dark" ? "Clair" : "Sombre"}</span>
+        </button>
+        <button
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors text-sm"
+          onClick={() => setActiveSection("parametres")}
+        >
+          <Settings className="h-4 w-4" />
+          <span>Paramètres</span>
+        </button>
       </div>
     </div>
   );
