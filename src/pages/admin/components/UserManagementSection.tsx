@@ -45,24 +45,25 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
 
 // Initial Mock Data
 const INITIAL_ADMINS = [
-    { id: 1, name: "Super Admin", email: "super@parlement.ga", role: "system_admin", status: "active", institution: "Système", environment: "system" },
-    { id: 2, name: "Admin AN", email: "admin.an@parlement.ga", role: "admin_an", status: "active", institution: "Assemblée", environment: "an" },
-    { id: 3, name: "Admin Sénat", email: "admin.senat@parlement.ga", role: "admin_senat", status: "active", institution: "Sénat", environment: "senat" },
-    { id: 4, name: "Admin Parlement", email: "admin.parlement@parlement.ga", role: "admin_parlement", status: "active", institution: "Congrès", environment: "congres" },
+    { id: 1, name: "Super Admin", email: "super@parlement.ga", roles: ["system_admin"], status: "active", institution: "Système", environment: "system" },
+    { id: 2, name: "Admin AN", email: "admin.an@parlement.ga", roles: ["admin_an"], status: "active", institution: "Assemblée", environment: "an" },
+    { id: 3, name: "Admin Sénat", email: "admin.senat@parlement.ga", roles: ["admin_senat"], status: "active", institution: "Sénat", environment: "senat" },
+    { id: 4, name: "Admin Parlement", email: "admin.parlement@parlement.ga", roles: ["admin_parlement"], status: "active", institution: "Congrès", environment: "congres" },
 ];
 
 const INITIAL_OFFICIALS = [
-    { id: 1, name: "Michel Régis Onanga Ndiaye", role: "president", institution: "AN", status: "active", phone: "01010101", environment: "an", province: "Estuaire" },
-    { id: 2, name: "François Ndong Obiang", role: "vp", institution: "AN", status: "active", phone: "02020202", environment: "an", province: "Estuaire" },
-    { id: 3, name: "Jean-Baptiste Bikalou", role: "deputy", institution: "AN", status: "active", phone: "06060606", environment: "an", province: "Haut-Ogooué" },
-    { id: 4, name: "Marie Thérèse Bekale", role: "senator", institution: "Sénat", status: "active", phone: "07070707", environment: "senat", province: "Woleu-Ntem" },
-    { id: 5, name: "Paul Mba Abessole", role: "deputy", institution: "AN", status: "suspended", phone: "08080808", environment: "an", province: "Ogooué-Maritime" },
-    { id: 6, name: "Claire Nyingone", role: "senator", institution: "Sénat", status: "active", phone: "09090909", environment: "senat", province: "Ngounié" },
-    { id: 7, name: "Pierre Essono", role: "deputy", institution: "AN", status: "active", phone: "10101010", environment: "an", province: "Moyen-Ogooué" },
-    { id: 8, name: "Jeanne Mintsa", role: "senator", institution: "Sénat", status: "active", phone: "11111111", environment: "senat", province: "Nyanga" },
+    { id: 1, name: "Michel Régis Onanga Ndiaye", roles: ["president", "deputy"], institution: "AN", status: "active", phone: "01010101", environment: "an", province: "Estuaire" },
+    { id: 2, name: "François Ndong Obiang", roles: ["vp", "deputy"], institution: "AN", status: "active", phone: "02020202", environment: "an", province: "Estuaire" },
+    { id: 3, name: "Jean-Baptiste Bikalou", roles: ["deputy", "questeur"], institution: "AN", status: "active", phone: "06060606", environment: "an", province: "Haut-Ogooué" },
+    { id: 4, name: "Marie Thérèse Bekale", roles: ["senator"], institution: "Sénat", status: "active", phone: "07070707", environment: "senat", province: "Woleu-Ntem" },
+    { id: 5, name: "Paul Mba Abessole", roles: ["deputy"], institution: "AN", status: "suspended", phone: "08080808", environment: "an", province: "Ogooué-Maritime" },
+    { id: 6, name: "Claire Nyingone", roles: ["senator"], institution: "Sénat", status: "active", phone: "09090909", environment: "senat", province: "Ngounié" },
+    { id: 7, name: "Pierre Essono", roles: ["deputy"], institution: "AN", status: "active", phone: "10101010", environment: "an", province: "Moyen-Ogooué" },
+    { id: 8, name: "Jeanne Mintsa", roles: ["senator"], institution: "Sénat", status: "active", phone: "11111111", environment: "senat", province: "Nyanga" },
 ];
 
 const INITIAL_CITIZENS = [
@@ -84,12 +85,20 @@ const UserManagementSection = () => {
 
     // Form State for Create/Edit
     const [editingUser, setEditingUser] = useState<any>(null);
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<{
+        type: string;
+        name: string;
+        email: string;
+        phone: string;
+        roles: string[];
+        institution: string;
+        province: string;
+    }>({
         type: "official",
         name: "",
         email: "",
         phone: "",
-        role: "deputy",
+        roles: ["deputy"],
         institution: "an",
         province: "Estuaire",
     });
@@ -122,7 +131,7 @@ const UserManagementSection = () => {
             name: "",
             email: "",
             phone: "",
-            role: "deputy",
+            roles: ["deputy"],
             institution: "an",
             province: "Estuaire",
         });
@@ -136,7 +145,7 @@ const UserManagementSection = () => {
             name: user.name,
             email: user.email || "",
             phone: user.phone || "",
-            role: user.role || "deputy",
+            roles: user.roles || (user.role ? [user.role] : []),
             institution: user.institution === "AN" ? "an" : (user.institution === "Sénat" ? "senat" : "an"),
             province: user.province || "Estuaire",
         });
@@ -157,7 +166,7 @@ const UserManagementSection = () => {
             const userData = {
                 id: editingUser ? editingUser.id : Date.now(),
                 name: formData.name,
-                role: formData.role,
+                roles: formData.roles,
                 institution: formData.institution === "an" ? "AN" : "Sénat",
                 status: editingUser ? editingUser.status : "active",
                 phone: formData.phone,
@@ -178,7 +187,7 @@ const UserManagementSection = () => {
                 const citizenData = { ...userData, status: editingUser ? editingUser.status : "pending", registeredAt: editingUser ? editingUser.registeredAt : new Date().toISOString().split('T')[0] };
                 setCitizens(editingUser ? citizens.map(c => c.id === userData.id ? citizenData : c) as any : [...citizens, citizenData] as any);
             } else {
-                const adminData = { ...userData, role: "admin_" + formData.institution, environment: formData.institution };
+                const adminData = { ...userData, roles: formData.roles.length > 0 ? formData.roles : ["admin_" + formData.institution], environment: formData.institution };
                 setAdmins(editingUser ? admins.map(a => a.id === userData.id ? adminData : a) as any : [...admins, adminData] as any);
             }
 
@@ -211,7 +220,8 @@ const UserManagementSection = () => {
         });
     };
 
-    const getRoleBadge = (role: string) => {
+    const getRoleBadge = (roles: string[] | string) => {
+        const rolesArray = Array.isArray(roles) ? roles : [roles];
         const config: Record<string, { label: string; className: string }> = {
             system_admin: { label: "Super Admin", className: "bg-red-100 text-red-700 border-red-200" },
             admin_an: { label: "Admin AN", className: "bg-emerald-100 text-emerald-700 border-emerald-200" },
@@ -221,9 +231,18 @@ const UserManagementSection = () => {
             vp: { label: "Vice-Président", className: "bg-indigo-100 text-indigo-700 border-indigo-200" },
             deputy: { label: "Député", className: "bg-green-100 text-green-700 border-green-200" },
             senator: { label: "Sénateur", className: "bg-yellow-100 text-yellow-700 border-yellow-200" },
+            questeur: { label: "Questeur", className: "bg-orange-100 text-orange-700 border-orange-200" },
+            commission_president: { label: "Président Comm.", className: "bg-teal-100 text-teal-700 border-teal-200" },
         };
-        const c = config[role] || { label: role, className: "bg-gray-100 text-gray-700" };
-        return <Badge variant="outline" className={c.className}>{c.label}</Badge>;
+
+        return (
+            <div className="flex flex-wrap gap-1">
+                {rolesArray.map(role => {
+                    const c = config[role] || { label: role, className: "bg-gray-100 text-gray-700" };
+                    return <Badge key={role} variant="outline" className={c.className}>{c.label}</Badge>;
+                })}
+            </div>
+        );
     };
 
     const getStatusBadge = (status: string) => {
@@ -262,7 +281,10 @@ const UserManagementSection = () => {
                                 <Label>Type de Compte</Label>
                                 <Select
                                     value={formData.type}
-                                    onValueChange={(val) => setFormData({ ...formData, type: val })}
+                                    onValueChange={(val) => {
+                                        const defaultRoles = val === 'official' ? ['deputy'] : (val === 'admin' ? [] : []);
+                                        setFormData({ ...formData, type: val, roles: defaultRoles });
+                                    }}
                                     disabled={!!editingUser}
                                 >
                                     <SelectTrigger>
@@ -316,18 +338,67 @@ const UserManagementSection = () => {
                                         </Select>
                                     </div>
                                     <div className="grid gap-2">
-                                        <Label>Rôle</Label>
-                                        <Select
-                                            value={formData.role}
-                                            onValueChange={(val) => setFormData({ ...formData, role: val })}
-                                        >
-                                            <SelectTrigger><SelectValue placeholder="Rôle" /></SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="deputy">Député</SelectItem>
-                                                <SelectItem value="senator">Sénateur</SelectItem>
-                                                <SelectItem value="president">Président</SelectItem>
-                                            </SelectContent>
-                                        </Select>
+                                        <Label>Rôles (Multi-sélection possible)</Label>
+                                        <div className="flex flex-wrap gap-4 p-3 border rounded-md">
+                                            {formData.institution === 'an' && (
+                                                <>
+                                                    <div className="flex items-center space-x-2">
+                                                        <Checkbox id="r_deputy"
+                                                            checked={formData.roles.includes('deputy')}
+                                                            onCheckedChange={(c) => {
+                                                                const roles = c ? [...formData.roles, 'deputy'] : formData.roles.filter(r => r !== 'deputy');
+                                                                setFormData({ ...formData, roles });
+                                                            }}
+                                                        />
+                                                        <label htmlFor="r_deputy" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Député</label>
+                                                    </div>
+                                                </>
+                                            )}
+                                            {formData.institution === 'senat' && (
+                                                <>
+                                                    <div className="flex items-center space-x-2">
+                                                        <Checkbox id="r_senator"
+                                                            checked={formData.roles.includes('senator')}
+                                                            onCheckedChange={(c) => {
+                                                                const roles = c ? [...formData.roles, 'senator'] : formData.roles.filter(r => r !== 'senator');
+                                                                setFormData({ ...formData, roles });
+                                                            }}
+                                                        />
+                                                        <label htmlFor="r_senator" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Sénateur</label>
+                                                    </div>
+                                                </>
+                                            )}
+                                            <div className="flex items-center space-x-2">
+                                                <Checkbox id="r_questeur"
+                                                    checked={formData.roles.includes('questeur')}
+                                                    onCheckedChange={(c) => {
+                                                        const roles = c ? [...formData.roles, 'questeur'] : formData.roles.filter(r => r !== 'questeur');
+                                                        setFormData({ ...formData, roles });
+                                                    }}
+                                                />
+                                                <label htmlFor="r_questeur" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Questeur</label>
+                                            </div>
+                                            <div className="flex items-center space-x-2">
+                                                <Checkbox id="r_president"
+                                                    checked={formData.roles.includes('president')}
+                                                    onCheckedChange={(c) => {
+                                                        const roles = c ? [...formData.roles, 'president'] : formData.roles.filter(r => r !== 'president');
+                                                        setFormData({ ...formData, roles });
+                                                    }}
+                                                />
+                                                <label htmlFor="r_president" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Président</label>
+                                            </div>
+                                            <div className="flex items-center space-x-2">
+                                                <Checkbox id="r_comm"
+                                                    checked={formData.roles.includes('commission_president')}
+                                                    onCheckedChange={(c) => {
+                                                        const roles = c ? [...formData.roles, 'commission_president'] : formData.roles.filter(r => r !== 'commission_president');
+                                                        setFormData({ ...formData, roles });
+                                                    }}
+                                                />
+                                                <label htmlFor="r_comm" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Prés. Commission</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </>
                             )}
@@ -406,7 +477,7 @@ const UserManagementSection = () => {
                                                 <p className="text-xs text-muted-foreground">{admin.email}</p>
                                             </div>
                                         </td>
-                                        <td className="py-3 px-4">{getRoleBadge(admin.role)}</td>
+                                        <td className="py-3 px-4">{getRoleBadge(admin.roles)}</td>
                                         <td className="py-3 px-4 text-sm">{admin.institution}</td>
                                         <td className="py-3 px-4">{getStatusBadge(admin.status)}</td>
                                         <td className="py-3 px-4 text-right">
@@ -451,7 +522,7 @@ const UserManagementSection = () => {
                                                 <p className="text-xs text-muted-foreground">{official.phone}</p>
                                             </div>
                                         </td>
-                                        <td className="py-3 px-4">{getRoleBadge(official.role)}</td>
+                                        <td className="py-3 px-4">{getRoleBadge(official.roles)}</td>
                                         <td className="py-3 px-4">
                                             <Badge variant="outline" className={
                                                 official.environment === 'an' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
