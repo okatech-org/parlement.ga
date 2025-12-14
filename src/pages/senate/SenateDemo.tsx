@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-    Landmark, Users, MapPin, Crown, PlayCircle, Monitor, Building, 
+    Landmark, Users, MapPin, Crown, PlayCircle, Monitor, Building,
     CheckCircle, LogIn, Sun, Moon, Home, Briefcase, UserCircle, AlertTriangle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
+import { ProtocolDemoSection } from "@/components/iasted/ProtocolDemoSection";
 
 // Structure des comptes démo avec rôles et fonctionnalités intégrées
 const SENATE_DEMO_CARDS = {
@@ -18,29 +19,29 @@ const SENATE_DEMO_CARDS = {
         icon: Crown,
         color: "text-amber-500",
         accounts: [
-            { 
-                label: 'Président du Sénat', 
-                phone: '11111111', 
-                path: '/senat/espace/president', 
-                icon: Crown, 
+            {
+                label: 'Président du Sénat',
+                phone: '11111111',
+                path: '/senat/espace/president',
+                icon: Crown,
                 color: 'text-amber-500',
                 role: 'Présidence',
                 features: ['Validation navette', 'Convocation CMP', 'Ordre du jour', 'Statistiques']
             },
-            { 
-                label: '1er Vice-Président', 
-                phone: '12121212', 
-                path: '/senat/espace/vp', 
-                icon: Crown, 
+            {
+                label: '1er Vice-Président',
+                phone: '12121212',
+                path: '/senat/espace/vp',
+                icon: Crown,
                 color: 'text-amber-400',
                 role: 'Vice-présidence',
                 features: ['Suppléance présidence', 'Gestion commissions', 'Délégations']
             },
-            { 
-                label: 'Questeur', 
-                phone: '14141414', 
-                path: '/senat/espace/questeur', 
-                icon: Briefcase, 
+            {
+                label: 'Questeur',
+                phone: '14141414',
+                path: '/senat/espace/questeur',
+                icon: Briefcase,
                 color: 'text-blue-500',
                 role: 'Questure',
                 features: ['Budget du Sénat', 'Gestion matériel', 'Indemnités', 'Services admin']
@@ -52,29 +53,29 @@ const SENATE_DEMO_CARDS = {
         icon: Users,
         color: "text-primary",
         accounts: [
-            { 
-                label: 'Sénateur Estuaire', 
-                phone: '10101010', 
-                path: '/senat/espace', 
-                icon: Users, 
+            {
+                label: 'Sénateur Estuaire',
+                phone: '10101010',
+                path: '/senat/espace',
+                icon: Users,
                 color: 'text-primary',
                 role: 'Estuaire',
                 features: ['Textes en navette', 'Doléances locales', 'Visites terrain', 'Messagerie élus']
             },
-            { 
-                label: 'Sénateur Woleu-Ntem', 
-                phone: '10101011', 
-                path: '/senat/espace', 
-                icon: Users, 
+            {
+                label: 'Sénateur Woleu-Ntem',
+                phone: '10101011',
+                path: '/senat/espace',
+                icon: Users,
                 color: 'text-emerald-500',
                 role: 'Woleu-Ntem',
                 features: ['Textes en navette', 'Doléances locales', 'Visites terrain', 'Messagerie élus']
             },
-            { 
-                label: 'Sénateur Haut-Ogooué', 
-                phone: '10101012', 
-                path: '/senat/espace', 
-                icon: Users, 
+            {
+                label: 'Sénateur Haut-Ogooué',
+                phone: '10101012',
+                path: '/senat/espace',
+                icon: Users,
                 color: 'text-orange-500',
                 role: 'Haut-Ogooué',
                 features: ['Textes en navette', 'Doléances locales', 'Visites terrain', 'Messagerie élus']
@@ -86,20 +87,20 @@ const SENATE_DEMO_CARDS = {
         icon: MapPin,
         color: "text-blue-600",
         accounts: [
-            { 
-                label: 'Gestion Doléances', 
-                phone: null, 
-                path: '/senat/espace/doleances', 
-                icon: AlertTriangle, 
+            {
+                label: 'Gestion Doléances',
+                phone: null,
+                path: '/senat/espace/doleances',
+                icon: AlertTriangle,
                 color: 'text-amber-600',
                 role: 'Module',
                 features: ['Remontées collectivités', 'Suivi par province', 'Priorités', 'Statistiques']
             },
-            { 
-                label: 'Visites Terrain', 
-                phone: null, 
-                path: '/senat/espace/visites', 
-                icon: MapPin, 
+            {
+                label: 'Visites Terrain',
+                phone: null,
+                path: '/senat/espace/visites',
+                icon: MapPin,
                 color: 'text-blue-600',
                 role: 'Module',
                 features: ['Rapports déplacements', 'Photos terrain', 'Recommandations', 'Suivi']
@@ -111,11 +112,11 @@ const SENATE_DEMO_CARDS = {
         icon: UserCircle,
         color: "text-green-500",
         accounts: [
-            { 
-                label: 'Portail Sénat', 
-                phone: null, 
-                path: '/senat', 
-                icon: UserCircle, 
+            {
+                label: 'Portail Sénat',
+                phone: null,
+                path: '/senat',
+                icon: UserCircle,
                 color: 'text-green-500',
                 role: 'Public',
                 features: ['Actualités', 'Travaux législatifs', 'Sénateurs', 'Contact']
@@ -137,7 +138,7 @@ const SenateDemo = () => {
             navigate(redirectPath);
             return;
         }
-        
+
         const mockUsers: Record<string, { name: string; roles: string[]; province?: string }> = {
             '11111111': { name: 'Paulette Missambo', roles: ['president_senate', 'senator', 'citizen'], province: 'Estuaire' },
             '12121212': { name: 'Pierre Nzeng', roles: ['vp_senate', 'senator', 'citizen'], province: 'Woleu-Ntem' },
@@ -146,7 +147,7 @@ const SenateDemo = () => {
             '10101011': { name: 'François Obiang', roles: ['senator', 'citizen'], province: 'Woleu-Ntem' },
             '10101012': { name: 'Albert Moussavou', roles: ['senator', 'citizen'], province: 'Haut-Ogooué' },
         };
-        
+
         const userData = mockUsers[phone] || { name: 'Sénateur Démo', roles: ['senator', 'citizen'], province: 'Estuaire' };
         const user = {
             id: phone,
@@ -155,10 +156,10 @@ const SenateDemo = () => {
             roles: userData.roles,
             province: userData.province,
         };
-        
+
         sessionStorage.setItem('user_data', JSON.stringify(user));
         sessionStorage.setItem('current_role', userData.roles[0]);
-        
+
         toast.success('Connexion démo réussie !');
         navigate(redirectPath);
     };
@@ -259,7 +260,7 @@ const SenateDemo = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        
+
                                                         {/* Fonctionnalités */}
                                                         <div className="grid grid-cols-2 gap-1.5">
                                                             {account.features.map((feature, idx) => (
@@ -281,6 +282,16 @@ const SenateDemo = () => {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Protocol Demo Section */}
+            <section className="container mx-auto px-4 pb-12">
+                <div className="mb-8 text-center">
+                    <Badge variant="outline" className="mb-2">Intelligence Artificielle</Badge>
+                    <h2 className="text-2xl font-bold font-serif mb-2">Protocole iAsted</h2>
+                    <p className="text-muted-foreground">Configuration et test du protocole de communication parlementaire</p>
+                </div>
+                <ProtocolDemoSection />
+            </section>
 
             {/* Footer */}
             <footer className="bg-card border-t border-border py-8">
