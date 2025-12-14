@@ -99,6 +99,7 @@ import ProtocolHub from "@/pages/public/demo/ProtocolHub";
 
 // Senate specific pages
 import SenateDashboard from "@/pages/senate/senator/SenateDashboard";
+import SenatorSpace from "@/pages/senate/senator/SenatorSpace";
 import PresidentSenateSpace from "@/pages/senate/president/PresidentSenateSpace";
 import SenateDemo from "@/pages/senate/SenateDemo";
 import GrievanceManagement from "@/pages/senate/GrievanceManagement";
@@ -107,6 +108,7 @@ import SenateProcessPage from "@/pages/senate/SenateProcessPage";
 
 // Parliament/Congress specific pages
 import CongressDashboard from "@/pages/parliament/CongressDashboard";
+import ParliamentSpace from "@/pages/parliament/ParliamentSpace";
 import CongressVote from "@/pages/parliament/CongressVote";
 import NationalArchives from "@/pages/public/NationalArchives";
 import ProcessComparison from "@/pages/parliament/ProcessComparison";
@@ -243,24 +245,15 @@ const App = () => (
                 <Route path="/senat/processus" element={<SenateProcessPage />} />
                 <Route path="/senat/login" element={<Login />} />
 
-                {/* Espace Sénateur (Dashboard) */}
-                <Route path="/senat/espace" element={<SenateDashboard />} />
-                <Route path="/senat/espace/dashboard" element={<SenateDashboard />} />
-                <Route path="/senat/espace/territoires" element={<SenateDashboard />} />
-                <Route path="/senat/espace/doleances" element={<GrievanceManagement />} />
-                <Route path="/senat/espace/visites" element={<FieldVisitsPage />} />
-                <Route path="/senat/espace/navette" element={<SenateDashboard />} />
-                <Route path="/senat/espace/amendements" element={<SenateDashboard />} />
-                <Route path="/senat/espace/messages" element={<SenateDashboard />} />
+                {/* Espace Sénateur (avec menu latéral comme AN) */}
+                <Route path="/senat/espace" element={<SenatorSpace />} />
+                <Route path="/senat/espace/senateur" element={<SenatorSpace />} />
 
                 {/* Espace Président du Sénat */}
                 <Route path="/senat/espace/president" element={<PresidentSenateSpace />} />
                 <Route path="/senat/espace/president/navette" element={<PresidentSenateSpace />} />
                 <Route path="/senat/espace/president/agenda" element={<PresidentSenateSpace />} />
                 <Route path="/senat/espace/president/cmp" element={<PresidentSenateSpace />} />
-
-                {/* Espace Questeur Sénat */}
-                <Route path="/senat/espace/questeur" element={<SenateDashboard />} />
 
                 {/* Autres pages Sénat */}
                 <Route path="/senat/senateurs" element={<HomeSenate />} />
@@ -280,12 +273,14 @@ const App = () => (
                 <Route path="/congres/demo" element={<ProtocolDemoPage />} />
                 <Route path="/congres/login" element={<Login />} />
 
-                {/* Dashboard Congrès (Députés + Sénateurs) */}
-                <Route path="/parlement/dashboard" element={<CongressDashboard />} />
-                <Route path="/congres/dashboard" element={<CongressDashboard />} />
+                {/* Espace Congrès (avec menu latéral comme AN) */}
+                <Route path="/parlement/espace" element={<ParliamentSpace />} />
+                <Route path="/congres/espace" element={<ParliamentSpace />} />
+                <Route path="/parlement/dashboard" element={<ParliamentSpace />} />
+                <Route path="/congres/dashboard" element={<ParliamentSpace />} />
 
                 {/* CMP - War Room */}
-                <Route path="/parlement/cmp" element={<CongressDashboard />} />
+                <Route path="/parlement/cmp" element={<ParliamentSpace />} />
                 <Route path="/parlement/cmp/:cmpId" element={<CMPWorkspace />} />
                 <Route path="/congres/cmp/:cmpId" element={<CMPWorkspace />} />
 
@@ -295,17 +290,8 @@ const App = () => (
                 <Route path="/congres/vote/:sessionId" element={<CongressVote />} />
 
                 {/* Sessions et historique */}
-                <Route path="/parlement/sessions" element={<CongressDashboard />} />
-                <Route path="/congres/sessions" element={<CongressDashboard />} />
-
-                {/* Espace interne Congrès (avec layout) */}
-                <Route path="/congres/espace" element={<ParliamentLayout />}>
-                  <Route index element={<ParliamentHome />} />
-                  <Route path="cmp" element={<ParliamentHome />} />
-                  <Route path="cmp/:cmpId" element={<CMPWorkspace />} />
-                  <Route path="navette" element={<ParliamentHome />} />
-                  <Route path="constitution" element={<ParliamentHome />} />
-                </Route>
+                <Route path="/parlement/sessions" element={<ParliamentSpace />} />
+                <Route path="/congres/sessions" element={<ParliamentSpace />} />
 
                 {/* ========================================= */}
                 {/* ROUTES LEGACY (rétrocompatibilité)       */}
