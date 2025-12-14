@@ -1,7 +1,10 @@
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Users, Gavel, FileText, Calendar, TrendingUp } from "lucide-react";
-import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from "recharts";
+import { AnimatedDashboardCard, AnimatedProgressBar } from "@/components/animations/DashboardAnimations";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { DashboardStatsCard } from "@/components/dashboard/DashboardStatsCard";
+import InteractiveDonutChart from "@/components/charts/InteractiveDonutChart";
 
 const DashboardView = () => {
     const { t } = useLanguage();
@@ -33,136 +36,110 @@ const DashboardView = () => {
             subLabel: t('president.metrics.urgent'),
             value: "3",
             icon: Calendar,
-            color: "text-red-500"
+            urgent: true
         }
     ];
 
     const partyData = [
-        { name: 'PDG', value: 98, color: '#22c55e' }, // Green
-        { name: 'LD', value: 25, color: '#ef4444' },  // Red
-        { name: 'Ind.', value: 20, color: '#eab308' }, // Yellow
+        { label: 'PDG', value: 98, color: '#22c55e' }, // Green
+        { label: 'LD', value: 25, color: '#ef4444' },  // Red
+        { label: 'Ind.', value: 20, color: '#eab308' }, // Yellow
     ];
 
     const lawStatusData = [
-        { name: 'Adopted', value: 45 },
-        { name: 'Review', value: 12 },
-        { name: 'Rejected', value: 5 },
+        { name: 'Adoptés', value: 45, color: '#22c55e' },
+        { name: 'En Examen', value: 12, color: '#3b82f6' },
+        { name: 'Rejetés', value: 5, color: '#ef4444' },
     ];
+
+    const totalLaws = lawStatusData.reduce((acc, curr) => acc + curr.value, 0);
 
     return (
         <div className="space-y-8 animate-fade-in">
-            {/* Header */}
-            <div className="flex items-center gap-6">
-                <div className="w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center text-3xl font-bold border border-border/50">
-                    P
-                </div>
-                <div>
-                    <h1 className="text-4xl font-serif font-bold mb-2">{t('president.title')}</h1>
-                    <p className="text-muted-foreground text-lg">{t('president.subtitle')}</p>
-                </div>
-            </div>
+            <AnimatedDashboardCard delay={0}>
+                <DashboardHeader
+                    title={t('president.title')}
+                    subtitle={t('president.subtitle')}
+                    avatarInitial="P"
+                />
+            </AnimatedDashboardCard>
 
             {/* Metrics Grid */}
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {metrics.map((metric, index) => (
-                    <Card key={index} className="p-6 hover:shadow-md transition-shadow duration-300 border-none shadow-sm bg-white dark:bg-card">
-                        <div className="flex flex-col h-full justify-between">
-                            <div className="flex justify-between items-start mb-4">
-                                <div className="p-3 rounded-xl bg-gray-100 dark:bg-muted">
-                                    <metric.icon className="w-6 h-6 text-gray-600 dark:text-foreground" />
-                                </div>
-                                {index === 3 && (
-                                    <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                                )}
-                            </div>
-                            <div>
-                                <h3 className={`text-4xl font-bold mb-1 ${metric.color}`}>{metric.value}</h3>
-                                <p className="font-bold text-sm text-foreground">{metric.label}</p>
-                                <p className="text-xs text-muted-foreground">{metric.subLabel}</p>
-                            </div>
-                        </div>
-                    </Card>
+                    <AnimatedDashboardCard key={index} delay={0.1 + index * 0.05}>
+                        <DashboardStatsCard
+                            icon={metric.icon}
+                            value={metric.value}
+                            label={metric.label}
+                            subLabel={metric.subLabel}
+                            urgent={metric.urgent}
+                        />
+                    </AnimatedDashboardCard>
                 ))}
             </div>
 
-            {/* Performance Card */}
+            {/* Performance Card (Attendance) */}
             <div className="grid md:grid-cols-3 gap-6">
-                <Card className="p-6 border-none shadow-sm bg-white dark:bg-card">
-                    <div className="flex justify-between items-start mb-6">
-                        <div className="p-3 rounded-xl bg-gray-100 dark:bg-muted">
-                            <TrendingUp className="w-6 h-6 text-gray-600 dark:text-foreground" />
+                <AnimatedDashboardCard delay={0.25} className="h-full">
+                    <Card className="h-full border-none shadow-sm bg-white dark:bg-card p-4">
+                        <div className="flex justify-between items-start mb-6">
+                            <div className="p-3 rounded-xl bg-gray-100 dark:bg-muted">
+                                <TrendingUp className="w-6 h-6 text-gray-600 dark:text-foreground" />
+                            </div>
+                            <span className="text-xs font-medium text-green-600 flex items-center gap-1">
+                                <TrendingUp className="w-3 h-3" /> {t('president.charts.increase')}
+                            </span>
                         </div>
-                        <span className="text-xs font-medium text-green-600 flex items-center gap-1">
-                            <TrendingUp className="w-3 h-3" /> {t('president.charts.increase')}
-                        </span>
-                    </div>
-                    <div>
-                        <p className="text-sm text-muted-foreground mb-1">{t('president.charts.attendance')}</p>
-                        <h3 className="text-3xl font-bold">94%</h3>
-                    </div>
-                </Card>
+                        <div>
+                            <p className="text-sm text-muted-foreground mb-1">{t('president.charts.attendance')}</p>
+                            <h3 className="text-3xl font-bold">94%</h3>
+                        </div>
+                    </Card>
+                </AnimatedDashboardCard>
             </div>
 
             {/* Charts Row */}
             <div className="grid md:grid-cols-2 gap-6">
                 {/* Party Distribution */}
-                <Card className="p-8 border-none shadow-sm bg-white dark:bg-card h-[400px]">
-                    <h3 className="text-xl font-serif font-bold mb-8">{t('president.charts.partyDistribution')}</h3>
-                    <div className="h-[250px] relative">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
-                                <Pie
-                                    data={partyData}
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={60}
-                                    outerRadius={80}
-                                    paddingAngle={5}
-                                    dataKey="value"
-                                    stroke="none"
-                                >
-                                    {partyData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={entry.color} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
-                    </div>
-                </Card>
+                <AnimatedDashboardCard delay={0.3}>
+                    <Card className="h-full border-none shadow-sm bg-white dark:bg-card">
+                        <CardHeader>
+                            <CardTitle className="font-serif">{t('president.charts.partyDistribution')}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="flex justify-center">
+                            <InteractiveDonutChart
+                                data={partyData}
+                                size={220}
+                                thickness={40}
+                                centerLabel="Députés"
+                                centerValue="143"
+                            />
+                        </CardContent>
+                    </Card>
+                </AnimatedDashboardCard>
 
                 {/* Law Status Distribution */}
-                <Card className="p-8 border-none shadow-sm bg-white dark:bg-card h-[400px]">
-                    <h3 className="text-xl font-serif font-bold mb-8">{t('president.charts.lawStatus')}</h3>
-                    <div className="h-[250px]">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={lawStatusData}>
-                                <XAxis
-                                    dataKey="name"
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tick={{ fill: '#888888' }}
+                <AnimatedDashboardCard delay={0.4}>
+                    <Card className="h-full border-none shadow-sm bg-white dark:bg-card">
+                        <CardHeader>
+                            <CardTitle className="font-serif">{t('president.charts.lawStatus')}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6 pt-4">
+                            {lawStatusData.map((item, index) => (
+                                <AnimatedProgressBar
+                                    key={index}
+                                    label={item.name}
+                                    value={item.value}
+                                    max={totalLaws}
+                                    color={`bg-[${item.color}]`}
+                                    delay={0.5 + index * 0.1}
+                                    showValue
                                 />
-                                <YAxis
-                                    hide
-                                />
-                                <Tooltip
-                                    cursor={{ fill: 'transparent' }}
-                                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                                />
-                                <Bar
-                                    dataKey="value"
-                                    radius={[4, 4, 0, 0]}
-                                    barSize={60}
-                                >
-                                    {lawStatusData.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={index === 0 ? '#22c55e' : '#aaaaaa'} />
-                                    ))}
-                                </Bar>
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                </Card>
+                            ))}
+                        </CardContent>
+                    </Card>
+                </AnimatedDashboardCard>
             </div>
         </div>
     );
