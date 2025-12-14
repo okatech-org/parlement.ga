@@ -20,7 +20,7 @@ const AN_DEMO_CARDS = {
       {
         label: 'Président de l\'AN',
         phone: '01010101',
-        path: '/president',
+        path: '/an/espace/president',
         icon: Crown,
         color: 'text-amber-500',
         role: 'Présidence',
@@ -29,7 +29,7 @@ const AN_DEMO_CARDS = {
       {
         label: '1er Vice-Président',
         phone: '02020202',
-        path: '/vp',
+        path: '/an/espace/vp',
         icon: Crown,
         color: 'text-amber-400',
         role: 'Vice-présidence',
@@ -38,7 +38,7 @@ const AN_DEMO_CARDS = {
       {
         label: 'Questeur',
         phone: '04040401',
-        path: '/questeurs',
+        path: '/an/espace/questeurs',
         icon: Shield,
         color: 'text-blue-500',
         role: 'Questure',
@@ -54,7 +54,7 @@ const AN_DEMO_CARDS = {
       {
         label: 'Député',
         phone: '00000000',
-        path: '/deputy',
+        path: '/an/espace/deputes',
         icon: UserCheck,
         color: 'text-primary',
         role: 'Député',
@@ -63,7 +63,7 @@ const AN_DEMO_CARDS = {
       {
         label: 'Secrétaire',
         phone: '05050505',
-        path: '/secretaires',
+        path: '/an/espace/secretaires',
         icon: FileText,
         color: 'text-green-500',
         role: 'Secrétariat',
@@ -72,7 +72,7 @@ const AN_DEMO_CARDS = {
       {
         label: 'Suppléant',
         phone: '03030303',
-        path: '/suppleant',
+        path: '/an/espace/suppleants',
         icon: Users,
         color: 'text-slate-500',
         role: 'Suppléance',
@@ -88,7 +88,7 @@ const AN_DEMO_CARDS = {
       {
         label: 'Portail Citoyen',
         phone: null,
-        path: '/citizen',
+        path: '/parlement/citoyen',
         icon: UserCircle,
         color: 'text-green-500',
         role: 'Public',
@@ -127,6 +127,7 @@ const ProtocolDemoPage = () => {
 
     sessionStorage.setItem('user_data', JSON.stringify(user));
     sessionStorage.setItem('current_role', userData.roles[0]);
+    sessionStorage.setItem('is_demo', 'true');
 
     toast.success('Connexion démo réussie !');
     navigate(redirectPath);
@@ -176,7 +177,7 @@ const ProtocolDemoPage = () => {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
             Explorez les fonctionnalités selon votre rôle. Cliquez sur une carte pour accéder à l'espace.
           </p>
-          <Button variant="outline" onClick={() => navigate("/deputy")}>
+          <Button variant="outline" onClick={() => navigate("/an/espace/deputes")}>
             <Monitor className="mr-2 h-4 w-4" />
             Accès direct au Dashboard
           </Button>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { SpaceSidebar, NavItemType } from "./SpaceSidebar";
 import { MobileBottomNav } from "./MobileBottomNav";
 import { IAstedButton } from "../iasted/IAstedButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 interface AdminSpaceLayoutProps {
@@ -20,6 +20,7 @@ interface AdminSpaceLayoutProps {
   setActiveSection: (section: string) => void;
   customSidebarNav?: ReactNode;
   quickAccessItems?: NavItemType[];
+  onLogout?: () => void;
 }
 
 export const AdminSpaceLayout = ({
@@ -31,18 +32,48 @@ export const AdminSpaceLayout = ({
   setActiveSection,
   customSidebarNav,
   quickAccessItems,
+  onLogout,
 }: AdminSpaceLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [iastedOpen, setIastedOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
   const handleLogout = () => {
+    if (onLogout) {
+      onLogout();
+      return;
+    }
+
+    const isDemo = sessionStorage.getItem('is_demo') === 'true';
+
+    // Clear Session
+    sessionStorage.removeItem('user_data');
+    sessionStorage.removeItem('current_role');
+    sessionStorage.removeItem('is_demo');
+
     toast({
       title: "Déconnexion",
       description: "Vous avez été déconnecté avec succès",
     });
-    navigate("/");
+
+    if (isDemo) {
+      if (location.pathname.includes('/senat')) {
+        navigate('/senat/demo');
+      } else {
+        // Includes /an or /parlement or /congres -> Default to Protocol Demo (AN Demo)
+        navigate('/congres/demo');
+      }
+    } else {
+      if (location.pathname.includes('/senat')) {
+        navigate('/senat');
+      } else if (location.pathname.includes('/an')) {
+        navigate('/an');
+      } else {
+        navigate('/parlement');
+      }
+    }
   };
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);

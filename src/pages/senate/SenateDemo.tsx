@@ -159,6 +159,7 @@ const SenateDemo = () => {
 
         sessionStorage.setItem('user_data', JSON.stringify(user));
         sessionStorage.setItem('current_role', userData.roles[0]);
+        sessionStorage.setItem('is_demo', 'true');
 
         toast.success('Connexion démo réussie !');
         navigate(redirectPath);
