@@ -579,20 +579,21 @@ export default function Login() {
                         </div>
                     </div>
                 </Card>
+            </div>
 
-                {/* Footer Admin Shortcut */}
-                <div className="mt-8 text-center">
-                    <Button
-                        variant="link"
-                        size="sm"
-                        className="text-xs text-muted-foreground/50 hover:text-muted-foreground transition-colors flex items-center gap-1.5"
-                        onClick={() => navigate("/admin")}
-                    >
-                        <Settings className="h-3 w-3" />
-                        Accès Administration Système
-                    </Button>
-                </div>
+            {/* Footer Admin Shortcut - Absolute Bottom */}
+            <div className="absolute bottom-4 left-0 right-0 text-center z-20">
+                <Button
+                    variant="link"
+                    size="sm"
+                    className="text-xs text-muted-foreground/80 hover:text-foreground transition-colors flex items-center gap-1.5 mx-auto"
+                    onClick={() => navigate("/admin")}
+                >
+                    <Settings className="h-3 w-3" />
+                    Accès Administration Système
+                </Button>
             </div>
         </div>
     );
 }
+
