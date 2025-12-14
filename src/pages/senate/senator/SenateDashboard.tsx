@@ -2,7 +2,8 @@ import { useState } from "react";
 import {
     Landmark, Users, FileText, MapPin, ArrowLeftRight,
     Bell, Calendar, ChevronRight, AlertTriangle, Scale,
-    Crown, MessageSquare, BarChart3, Clock, LayoutDashboard
+    Crown, MessageSquare, BarChart3, Clock, LayoutDashboard,
+    Eye, Clipboard
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -11,6 +12,14 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNavigate } from "react-router-dom";
 import LocalCollectivityFeed from "@/components/senate/LocalCollectivityFeed";
+
+// Boutons d'accès rapide aux fonctionnalités
+const QUICK_ACCESS = [
+    { label: "Doléances", path: "/senat/espace/doleances", icon: AlertTriangle, color: "bg-amber-500", count: 12 },
+    { label: "Visites terrain", path: "/senat/espace/visites", icon: MapPin, color: "bg-blue-500", count: 3 },
+    { label: "Textes navette", path: "/senat/espace/navette", icon: ArrowLeftRight, color: "bg-primary", count: 8 },
+    { label: "Messages", path: "/senat/espace/messages", icon: MessageSquare, color: "bg-green-500", count: 5 },
+];
 
 /**
  * Dashboard Sénateur - Espace de travail du Sénateur
@@ -112,6 +121,30 @@ const SenateDashboard = () => {
 
                     {/* Onglet Vue d'ensemble */}
                     <TabsContent value="overview" className="space-y-6">
+                        {/* Accès rapide aux fonctionnalités */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            {QUICK_ACCESS.map((item, index) => {
+                                const Icon = item.icon;
+                                return (
+                                    <Card 
+                                        key={index} 
+                                        className="cursor-pointer hover:shadow-lg transition-all hover:-translate-y-1"
+                                        onClick={() => navigate(item.path)}
+                                    >
+                                        <CardContent className="p-4">
+                                            <div className="flex items-center justify-between mb-2">
+                                                <div className={`p-2 rounded-lg ${item.color}`}>
+                                                    <Icon className="h-5 w-5 text-white" />
+                                                </div>
+                                                <Badge variant="secondary">{item.count}</Badge>
+                                            </div>
+                                            <p className="font-medium text-sm">{item.label}</p>
+                                        </CardContent>
+                                    </Card>
+                                );
+                            })}
+                        </div>
+
                         {/* Stats rapides */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             {stats.map((stat, index) => {

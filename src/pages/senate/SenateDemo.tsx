@@ -3,14 +3,40 @@ import {
     Landmark, Users, FileText, MapPin, ArrowLeftRight,
     Scale, ChevronRight, Crown, MessageSquare, BarChart3,
     PlayCircle, Eye, Monitor, Building, CheckCircle,
-    Clock, Calendar, Send
+    Clock, Calendar, Send, LogIn, Sun, Moon, Home, Shield,
+    Briefcase, UserCircle, UserCheck, AlertTriangle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
+import { toast } from "sonner";
+
+// Comptes démo Sénat organisés par catégorie
+const SENATE_DEMO_ACCOUNTS = {
+    bureau: [
+        { label: 'Président du Sénat', phone: '11111111', path: '/senat/espace/president', icon: Crown, color: 'text-amber-500', description: 'Présidence du Sénat' },
+        { label: '1er Vice-Président', phone: '12121212', path: '/senat/espace/president', icon: Crown, color: 'text-amber-400', description: 'Vice-présidence' },
+    ],
+    questeurs: [
+        { label: 'Questeur', phone: '14141414', path: '/senat/espace/questeur', icon: Briefcase, color: 'text-blue-500', description: 'Gestion budgétaire' },
+    ],
+    senateurs: [
+        { label: 'Sénateur Estuaire', phone: '10101010', path: '/senat/espace', icon: Users, color: 'text-primary', description: 'Province de l\'Estuaire' },
+        { label: 'Sénateur Woleu-Ntem', phone: '10101011', path: '/senat/espace', icon: Users, color: 'text-emerald-500', description: 'Province du Woleu-Ntem' },
+        { label: 'Sénateur Haut-Ogooué', phone: '10101012', path: '/senat/espace', icon: Users, color: 'text-orange-500', description: 'Province du Haut-Ogooué' },
+    ],
+    fonctionnalites: [
+        { label: 'Gestion Doléances', phone: null, path: '/senat/espace/doleances', icon: AlertTriangle, color: 'text-amber-600', description: 'Remontées des collectivités' },
+        { label: 'Visites Terrain', phone: null, path: '/senat/espace/visites', icon: MapPin, color: 'text-blue-600', description: 'Rapports de déplacements' },
+    ],
+    public: [
+        { label: 'Portail Sénat', phone: null, path: '/senat', icon: UserCircle, color: 'text-green-400', description: 'Accès public' },
+    ]
+};
 
 /**
  * Page de démonstration du Sénat
@@ -19,7 +45,38 @@ import { useTheme } from "next-themes";
 const SenateDemo = () => {
     const navigate = useNavigate();
     const { theme, setTheme } = useTheme();
-    const [activeDemo, setActiveDemo] = useState("overview");
+    const [activeDemo, setActiveDemo] = useState("access");
+
+    const handleDemoLogin = (phone: string | null, redirectPath: string) => {
+        if (!phone) {
+            navigate(redirectPath);
+            return;
+        }
+        
+        const mockUsers: Record<string, { name: string; roles: string[]; province?: string }> = {
+            '11111111': { name: 'Paulette Missambo', roles: ['president_senate', 'senator', 'citizen'], province: 'Estuaire' },
+            '12121212': { name: 'Pierre Nzeng', roles: ['vp_senate', 'senator', 'citizen'], province: 'Woleu-Ntem' },
+            '14141414': { name: 'Jean Koumba', roles: ['questeur_senate', 'senator', 'citizen'], province: 'Moyen-Ogooué' },
+            '10101010': { name: 'Marie Ndong', roles: ['senator', 'citizen'], province: 'Estuaire' },
+            '10101011': { name: 'François Obiang', roles: ['senator', 'citizen'], province: 'Woleu-Ntem' },
+            '10101012': { name: 'Albert Moussavou', roles: ['senator', 'citizen'], province: 'Haut-Ogooué' },
+        };
+        
+        const userData = mockUsers[phone] || { name: 'Sénateur Démo', roles: ['senator', 'citizen'], province: 'Estuaire' };
+        const user = {
+            id: phone,
+            name: userData.name,
+            phoneNumber: phone,
+            roles: userData.roles,
+            province: userData.province,
+        };
+        
+        sessionStorage.setItem('user_data', JSON.stringify(user));
+        sessionStorage.setItem('current_role', userData.roles[0]);
+        
+        toast.success('Connexion démo réussie !');
+        navigate(redirectPath);
+    };
 
     // Rôles disponibles dans le Sénat
     const senateRoles = [
@@ -147,23 +204,24 @@ const SenateDemo = () => {
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <Landmark className="h-8 w-8 text-primary" />
+                            <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
+                                <Home className="h-5 w-5" />
+                            </Button>
+                            <Separator orientation="vertical" className="h-6" />
+                            <Landmark className="h-7 w-7 text-primary" />
                             <div>
-                                <h1 className="text-xl font-serif font-bold text-foreground">Démo Sénat</h1>
-                                <p className="text-xs text-muted-foreground">Découvrez les fonctionnalités</p>
+                                <h1 className="text-xl font-serif font-bold text-foreground">Démo Protocole Sénat</h1>
+                                <p className="text-xs text-muted-foreground">Accès aux espaces sénatoriaux</p>
                             </div>
                         </div>
                         <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm" onClick={() => navigate("/senat")}>
-                                Retour Sénat
-                            </Button>
+                            <Badge variant="outline">Sénat Gabonais</Badge>
                             <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => navigate("/")}
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                             >
-                                <Scale className="h-4 w-4 mr-1" />
-                                Parlement
+                                {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                             </Button>
                         </div>
                     </div>
@@ -200,12 +258,160 @@ const SenateDemo = () => {
             {/* Contenu principal */}
             <div className="container mx-auto px-4 py-12">
                 <Tabs value={activeDemo} onValueChange={setActiveDemo}>
-                    <TabsList className="mb-8 flex justify-center">
+                    <TabsList className="mb-8 flex justify-center flex-wrap">
+                        <TabsTrigger value="access">Accès Démo</TabsTrigger>
                         <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
-                        <TabsTrigger value="roles">Rôles & Accès</TabsTrigger>
+                        <TabsTrigger value="roles">Rôles & Espaces</TabsTrigger>
                         <TabsTrigger value="features">Fonctionnalités</TabsTrigger>
                         <TabsTrigger value="workflow">Processus Législatif</TabsTrigger>
                     </TabsList>
+
+                    {/* Accès aux Espaces - Nouveau comme AN */}
+                    <TabsContent value="access">
+                        <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <LogIn className="w-5 h-5 text-primary" />
+                                    Accès aux Espaces Sénatoriaux
+                                </CardTitle>
+                                <CardDescription>
+                                    Explorez les fonctionnalités selon votre rôle. Les comptes démo connectent automatiquement.
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                {/* Bureau du Sénat */}
+                                <div className="space-y-3">
+                                    <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                                        <Crown className="w-4 h-4 text-amber-500" />
+                                        Bureau du Sénat
+                                    </h4>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                                        {SENATE_DEMO_ACCOUNTS.bureau.map((account) => {
+                                            const Icon = account.icon;
+                                            return (
+                                                <Button
+                                                    key={account.phone}
+                                                    variant="outline"
+                                                    className="flex flex-col items-start gap-1 h-auto py-3 px-4 hover:bg-primary/10 hover:border-primary/50 transition-all text-left"
+                                                    onClick={() => handleDemoLogin(account.phone, account.path)}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <Icon className={`w-5 h-5 ${account.color}`} />
+                                                        <span className="font-medium">{account.label}</span>
+                                                    </div>
+                                                    <span className="text-xs text-muted-foreground">{account.description}</span>
+                                                </Button>
+                                            );
+                                        })}
+                                        {SENATE_DEMO_ACCOUNTS.questeurs.map((account) => {
+                                            const Icon = account.icon;
+                                            return (
+                                                <Button
+                                                    key={account.phone}
+                                                    variant="outline"
+                                                    className="flex flex-col items-start gap-1 h-auto py-3 px-4 hover:bg-blue-500/10 hover:border-blue-500/50 transition-all text-left"
+                                                    onClick={() => handleDemoLogin(account.phone, account.path)}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <Icon className={`w-5 h-5 ${account.color}`} />
+                                                        <span className="font-medium">{account.label}</span>
+                                                    </div>
+                                                    <span className="text-xs text-muted-foreground">{account.description}</span>
+                                                </Button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                <Separator />
+
+                                {/* Sénateurs */}
+                                <div className="space-y-3">
+                                    <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                                        <Users className="w-4 h-4 text-primary" />
+                                        Sénateurs par Province
+                                    </h4>
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                        {SENATE_DEMO_ACCOUNTS.senateurs.map((account) => {
+                                            const Icon = account.icon;
+                                            return (
+                                                <Button
+                                                    key={account.phone}
+                                                    variant="outline"
+                                                    className="flex flex-col items-start gap-1 h-auto py-3 px-4 hover:bg-primary/10 hover:border-primary/50 transition-all text-left"
+                                                    onClick={() => handleDemoLogin(account.phone, account.path)}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <Icon className={`w-5 h-5 ${account.color}`} />
+                                                        <span className="font-medium">{account.label}</span>
+                                                    </div>
+                                                    <span className="text-xs text-muted-foreground">{account.description}</span>
+                                                </Button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                <Separator />
+
+                                {/* Fonctionnalités spécifiques */}
+                                <div className="space-y-3">
+                                    <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                                        <MapPin className="w-4 h-4 text-blue-500" />
+                                        Fonctionnalités Territoriales
+                                    </h4>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        {SENATE_DEMO_ACCOUNTS.fonctionnalites.map((account) => {
+                                            const Icon = account.icon;
+                                            return (
+                                                <Button
+                                                    key={account.path}
+                                                    variant="outline"
+                                                    className="flex flex-col items-start gap-1 h-auto py-3 px-4 hover:bg-amber-500/10 hover:border-amber-500/50 transition-all text-left"
+                                                    onClick={() => handleDemoLogin(account.phone, account.path)}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <Icon className={`w-5 h-5 ${account.color}`} />
+                                                        <span className="font-medium">{account.label}</span>
+                                                    </div>
+                                                    <span className="text-xs text-muted-foreground">{account.description}</span>
+                                                </Button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                <Separator />
+
+                                {/* Accès Public */}
+                                <div className="space-y-3">
+                                    <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                                        <UserCircle className="w-4 h-4 text-green-500" />
+                                        Accès Public
+                                    </h4>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        {SENATE_DEMO_ACCOUNTS.public.map((account) => {
+                                            const Icon = account.icon;
+                                            return (
+                                                <Button
+                                                    key={account.path}
+                                                    variant="outline"
+                                                    className="flex flex-col items-start gap-1 h-auto py-3 px-4 hover:bg-green-500/10 hover:border-green-500/50 transition-all text-left"
+                                                    onClick={() => navigate(account.path)}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <Icon className={`w-5 h-5 ${account.color}`} />
+                                                        <span className="font-medium">{account.label}</span>
+                                                    </div>
+                                                    <span className="text-xs text-muted-foreground">{account.description}</span>
+                                                </Button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
 
                     {/* Vue d'ensemble */}
                     <TabsContent value="overview">
