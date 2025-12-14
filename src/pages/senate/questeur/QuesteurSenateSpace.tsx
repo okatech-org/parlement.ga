@@ -35,7 +35,6 @@ const QuesteurSenateSpace = () => {
     { id: "indemnites", label: "Indemnités", icon: Banknote },
     { id: "services", label: "Services Admin", icon: Building },
     { id: "messagerie", label: "Messagerie", icon: MessageSquare },
-    { id: "parametres", label: "Paramètres", icon: Settings },
   ];
 
   const quickAccessItems = [

@@ -41,7 +41,6 @@ const SenatorSpace = () => {
     { id: "commissions", label: "Commissions", icon: Users },
     { id: "messagerie", label: "Messagerie", icon: MessageSquare, badge: "5" },
     { id: "documents", label: "Documents", icon: FolderOpen },
-    { id: "parametres", label: "Paramètres", icon: Settings },
   ];
 
   const quickAccessItems = [

@@ -35,7 +35,6 @@ const VPSenateSpace = () => {
     { id: "delegations", label: "Délégations", icon: Shield },
     { id: "agenda", label: "Agenda", icon: Calendar },
     { id: "messagerie", label: "Messagerie", icon: MessageSquare },
-    { id: "parametres", label: "Paramètres", icon: Settings },
   ];
 
   const quickAccessItems = [

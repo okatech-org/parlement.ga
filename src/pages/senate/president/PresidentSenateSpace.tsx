@@ -37,7 +37,6 @@ const PresidentSenateSpace = () => {
     { id: "agenda", label: "Ordre du Jour", icon: Calendar },
     { id: "stats", label: "Statistiques", icon: BarChart3 },
     { id: "messagerie", label: "Messagerie", icon: MessageSquare, badge: "3" },
-    { id: "parametres", label: "Paramètres", icon: Settings },
   ];
 
   const quickAccessItems = [

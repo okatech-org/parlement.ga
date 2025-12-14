@@ -48,7 +48,7 @@ export const SpaceSidebar = ({
   const [openGroups, setOpenGroups] = useState<string[]>([navItems[0]?.id || ""]);
 
   const toggleGroup = (id: string) => {
-    setOpenGroups(prev => 
+    setOpenGroups(prev =>
       prev.includes(id) ? prev.filter(g => g !== id) : [...prev, id]
     );
   };
@@ -106,21 +106,20 @@ export const SpaceSidebar = ({
               const Icon = item.icon;
               const isActive = activeSection === item.id;
               const hasChildren = item.children && item.children.length > 0;
-              
+
               if (hasChildren) {
                 return (
-                  <Collapsible 
-                    key={item.id} 
+                  <Collapsible
+                    key={item.id}
                     open={openGroups.includes(item.id)}
                     onOpenChange={() => toggleGroup(item.id)}
                   >
                     <CollapsibleTrigger asChild>
                       <button
-                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm ${
-                          isActive 
-                            ? "bg-sidebar-accent text-sidebar-foreground" 
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm ${isActive
+                            ? "bg-sidebar-accent text-sidebar-foreground"
                             : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
-                        }`}
+                          }`}
                       >
                         <Icon className="h-4 w-4" />
                         <span className="flex-1 text-left">{item.label}</span>
@@ -134,11 +133,10 @@ export const SpaceSidebar = ({
                         return (
                           <button
                             key={child.id}
-                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${
-                              isChildActive 
-                                ? "bg-sidebar-accent text-sidebar-foreground" 
+                            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${isChildActive
+                                ? "bg-sidebar-accent text-sidebar-foreground"
                                 : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
-                            }`}
+                              }`}
                             onClick={() => setActiveSection(child.id)}
                           >
                             <ChildIcon className="h-4 w-4" />
@@ -154,11 +152,10 @@ export const SpaceSidebar = ({
               return (
                 <button
                   key={item.id}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm ${
-                    isActive 
-                      ? "bg-sidebar-accent text-sidebar-foreground" 
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm ${isActive
+                      ? "bg-sidebar-accent text-sidebar-foreground"
                       : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
-                  }`}
+                    }`}
                   onClick={() => setActiveSection(item.id)}
                 >
                   <Icon className="h-4 w-4" />
@@ -190,6 +187,13 @@ export const SpaceSidebar = ({
         >
           <Settings className="h-4 w-4" />
           <span>Paramètres</span>
+        </button>
+        <button
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-500 hover:bg-red-500/10 hover:text-red-600 transition-colors text-sm"
+          onClick={onLogout}
+        >
+          <LogOut className="h-4 w-4" />
+          <span>Déconnexion</span>
         </button>
       </div>
     </div>
