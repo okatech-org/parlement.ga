@@ -5,7 +5,9 @@ import {
     Users,
     Globe,
     Shield,
-    Server
+    Server,
+    Bot,
+    MapPin
 } from "lucide-react";
 
 // Import Section Components
@@ -14,6 +16,8 @@ import UserManagementSection from "./components/UserManagementSection";
 import EnvironmentsSection from "./components/EnvironmentsSection";
 import SecurityLogsSection from "./components/SecurityLogsSection";
 import SystemMaintenanceSection from "./components/SystemMaintenanceSection";
+import IAstedManagementSection from "./components/IAstedManagementSection";
+import ElectedMapSection from "./components/ElectedMapSection";
 
 const SystemAdminDashboard = () => {
     const [activeSection, setActiveSection] = useState("overview");
@@ -27,6 +31,8 @@ const SystemAdminDashboard = () => {
     const navItems = [
         { id: "overview", label: "Centre de Commande", icon: Activity },
         { id: "users", label: "Gestion Utilisateurs", icon: Users },
+        { id: "iasted", label: "Gestion iAsted", icon: Bot },
+        { id: "map", label: "Cartographie Élus", icon: MapPin },
         { id: "environments", label: "Environnements", icon: Globe },
         { id: "security", label: "Sécurité & Logs", icon: Shield },
         { id: "maintenance", label: "Maintenance", icon: Server },
@@ -38,6 +44,10 @@ const SystemAdminDashboard = () => {
                 return <SuperAdminOverview />;
             case "users":
                 return <UserManagementSection />;
+            case "iasted":
+                return <IAstedManagementSection />;
+            case "map":
+                return <ElectedMapSection />;
             case "environments":
                 return <EnvironmentsSection />;
             case "security":

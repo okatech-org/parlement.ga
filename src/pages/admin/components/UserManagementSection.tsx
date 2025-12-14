@@ -47,28 +47,44 @@ import {
 const UserManagementSection = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
+    const [environmentFilter, setEnvironmentFilter] = useState("all");
 
     const admins = [
-        { id: 1, name: "Super Admin", email: "super@parlement.ga", role: "system_admin", status: "active", institution: "Système" },
-        { id: 2, name: "Admin AN", email: "admin.an@parlement.ga", role: "admin_an", status: "active", institution: "Assemblée" },
-        { id: 3, name: "Admin Sénat", email: "admin.senat@parlement.ga", role: "admin_senat", status: "active", institution: "Sénat" },
-        { id: 4, name: "Admin Parlement", email: "admin.parlement@parlement.ga", role: "admin_parlement", status: "active", institution: "Congrès" },
+        { id: 1, name: "Super Admin", email: "super@parlement.ga", role: "system_admin", status: "active", institution: "Système", environment: "system" },
+        { id: 2, name: "Admin AN", email: "admin.an@parlement.ga", role: "admin_an", status: "active", institution: "Assemblée", environment: "an" },
+        { id: 3, name: "Admin Sénat", email: "admin.senat@parlement.ga", role: "admin_senat", status: "active", institution: "Sénat", environment: "senat" },
+        { id: 4, name: "Admin Parlement", email: "admin.parlement@parlement.ga", role: "admin_parlement", status: "active", institution: "Congrès", environment: "congres" },
     ];
 
     const officials = [
-        { id: 1, name: "Michel Régis Onanga Ndiaye", role: "president", institution: "AN", status: "active", phone: "01010101" },
-        { id: 2, name: "François Ndong Obiang", role: "vp", institution: "AN", status: "active", phone: "02020202" },
-        { id: 3, name: "Jean-Baptiste Bikalou", role: "deputy", institution: "AN", status: "active", phone: "06060606" },
-        { id: 4, name: "Marie Thérèse Bekale", role: "senator", institution: "Sénat", status: "active", phone: "07070707" },
-        { id: 5, name: "Paul Mba Abessole", role: "deputy", institution: "AN", status: "suspended", phone: "08080808" },
+        { id: 1, name: "Michel Régis Onanga Ndiaye", role: "president", institution: "AN", status: "active", phone: "01010101", environment: "an", province: "Estuaire" },
+        { id: 2, name: "François Ndong Obiang", role: "vp", institution: "AN", status: "active", phone: "02020202", environment: "an", province: "Estuaire" },
+        { id: 3, name: "Jean-Baptiste Bikalou", role: "deputy", institution: "AN", status: "active", phone: "06060606", environment: "an", province: "Haut-Ogooué" },
+        { id: 4, name: "Marie Thérèse Bekale", role: "senator", institution: "Sénat", status: "active", phone: "07070707", environment: "senat", province: "Woleu-Ntem" },
+        { id: 5, name: "Paul Mba Abessole", role: "deputy", institution: "AN", status: "suspended", phone: "08080808", environment: "an", province: "Ogooué-Maritime" },
+        { id: 6, name: "Claire Nyingone", role: "senator", institution: "Sénat", status: "active", phone: "09090909", environment: "senat", province: "Ngounié" },
+        { id: 7, name: "Pierre Essono", role: "deputy", institution: "AN", status: "active", phone: "10101010", environment: "an", province: "Moyen-Ogooué" },
+        { id: 8, name: "Jeanne Mintsa", role: "senator", institution: "Sénat", status: "active", phone: "11111111", environment: "senat", province: "Nyanga" },
     ];
 
     const citizens = [
-        { id: 1, name: "Jean Dupont", phone: "+241 74 00 00 01", email: "jean@gmail.com", status: "verified", registeredAt: "2024-01-15" },
-        { id: 2, name: "Marie Claire", phone: "+241 74 00 00 02", email: "marie@gmail.com", status: "verified", registeredAt: "2024-02-20" },
-        { id: 3, name: "Pierre Moussavou", phone: "+241 74 00 00 03", email: "pierre@yahoo.fr", status: "pending", registeredAt: "2024-03-10" },
-        { id: 4, name: "Anne Ondo", phone: "+241 74 00 00 04", email: "anne@outlook.com", status: "suspended", registeredAt: "2024-03-25" },
+        { id: 1, name: "Jean Dupont", phone: "+241 74 00 00 01", email: "jean@gmail.com", status: "verified", registeredAt: "2024-01-15", province: "Estuaire" },
+        { id: 2, name: "Marie Claire", phone: "+241 74 00 00 02", email: "marie@gmail.com", status: "verified", registeredAt: "2024-02-20", province: "Haut-Ogooué" },
+        { id: 3, name: "Pierre Moussavou", phone: "+241 74 00 00 03", email: "pierre@yahoo.fr", status: "pending", registeredAt: "2024-03-10", province: "Woleu-Ntem" },
+        { id: 4, name: "Anne Ondo", phone: "+241 74 00 00 04", email: "anne@outlook.com", status: "suspended", registeredAt: "2024-03-25", province: "Ogooué-Maritime" },
     ];
+
+    // Filter officials by environment
+    const filteredOfficials = environmentFilter === "all"
+        ? officials
+        : officials.filter(o => o.environment === environmentFilter);
+
+    // Environment stats
+    const envStats = {
+        an: officials.filter(o => o.environment === "an").length,
+        senat: officials.filter(o => o.environment === "senat").length,
+        congres: officials.filter(o => o.environment === "congres").length,
+    };
 
     const getRoleBadge = (role: string) => {
         const config: Record<string, { label: string; className: string }> = {
