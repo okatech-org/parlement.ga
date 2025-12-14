@@ -118,14 +118,17 @@ const HomeParliament = () => {
                                 Sénat
                             </Button>
                             <div className="w-px h-6 bg-slate-200 dark:bg-slate-700" />
-                            <Button variant="ghost" size="sm" className="text-slate-600 hover:bg-slate-100 dark:text-slate-400" onClick={() => navigate("/cmp")}>
+                            <Button variant="ghost" size="sm" className="text-slate-600 hover:bg-slate-100 dark:text-slate-400" onClick={() => navigate("/parlement/cmp")}>
                                 CMP
                             </Button>
                             <Button variant="ghost" size="sm" className="text-slate-600 hover:bg-slate-100 dark:text-slate-400" onClick={() => navigate("/archives")}>
                                 Archives
                             </Button>
-                            <Button variant="ghost" size="sm" className="text-slate-600 hover:bg-slate-100 dark:text-slate-400" onClick={() => navigate("/an/demo")}>
-                                Démo Protocole
+                            <Button variant="ghost" size="sm" className="text-slate-600 hover:bg-slate-100 dark:text-slate-400" onClick={() => navigate("/processus-comparaison")}>
+                                Processus
+                            </Button>
+                            <Button variant="ghost" size="sm" className="text-slate-600 hover:bg-slate-100 dark:text-slate-400" onClick={() => navigate("/parlement/demo")}>
+                                Démo
                             </Button>
                         </nav>
                         <div className="flex items-center gap-2">
