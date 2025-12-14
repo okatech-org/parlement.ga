@@ -100,6 +100,8 @@ import ProtocolHub from "@/pages/public/demo/ProtocolHub";
 import SenateDashboard from "@/pages/senate/senator/SenateDashboard";
 import PresidentSenateSpace from "@/pages/senate/president/PresidentSenateSpace";
 import SenateDemo from "@/pages/senate/SenateDemo";
+import GrievanceManagement from "@/pages/senate/GrievanceManagement";
+import FieldVisitsPage from "@/pages/senate/FieldVisitsPage";
 
 // Parliament/Congress specific pages
 import CongressDashboard from "@/pages/parliament/CongressDashboard";
@@ -239,6 +241,8 @@ const App = () => (
                 <Route path="/senat/espace" element={<SenateDashboard />} />
                 <Route path="/senat/espace/dashboard" element={<SenateDashboard />} />
                 <Route path="/senat/espace/territoires" element={<SenateDashboard />} />
+                <Route path="/senat/espace/doleances" element={<GrievanceManagement />} />
+                <Route path="/senat/espace/visites" element={<FieldVisitsPage />} />
                 <Route path="/senat/espace/navette" element={<SenateDashboard />} />
                 <Route path="/senat/espace/amendements" element={<SenateDashboard />} />
                 <Route path="/senat/espace/messages" element={<SenateDashboard />} />
