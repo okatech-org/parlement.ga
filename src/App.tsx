@@ -85,6 +85,7 @@ import { AssemblyLayout, SenateLayout, ParliamentLayout } from "@/layouts/instit
 
 // Institution Pages (Dashboard internes)
 import AssemblyHome from "@/pages/assembly/AssemblyHome";
+import AssemblyProcessPage from "@/pages/assembly/AssemblyProcessPage";
 import SenateHome from "@/pages/senate/SenateHome";
 import ParliamentHome from "@/pages/parliament/ParliamentHome";
 import CMPWorkspace from "@/pages/parliament/CMPWorkspace";
@@ -145,6 +146,7 @@ const App = () => (
                 <Route path="/an/territoire" element={<Territoire />} />
                 <Route path="/an/vote" element={<Vote />} />
                 <Route path="/an/demo" element={<ProtocolDemoPage />} />
+                <Route path="/an/processus" element={<AssemblyProcessPage />} />
                 <Route path="/an/login" element={<Login />} />
 
                 {/* Portail des espaces utilisateurs AN */}
