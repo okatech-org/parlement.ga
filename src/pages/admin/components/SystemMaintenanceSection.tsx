@@ -4,6 +4,24 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import {
     Server,
     Database,
@@ -44,20 +62,28 @@ const SystemMaintenanceSection = () => {
     const [maintenanceMode, setMaintenanceMode] = useState(false);
     const [services, setServices] = useState(INITIAL_SERVICES);
     const [backups, setBackups] = useState(INITIAL_BACKUPS);
+    const [scheduledTasks, setScheduledTasks] = useState([
+        { id: 1, name: "Backup Quotidien", schedule: "02:00 UTC", nextRun: "Demain 02:00", status: "scheduled" },
+        { id: 2, name: "Nettoyage Logs", schedule: "Dimanche 03:00", nextRun: "Dans 5 jours", status: "scheduled" },
+        { id: 3, name: "Renouvellement Certificats", schedule: "2025-01-10", nextRun: "Dans 27 jours", status: "scheduled" },
+        { id: 4, name: "Mise à jour Sécurité", schedule: "Manuel", nextRun: "-", status: "manual" },
+    ]);
+
     const [loadingAction, setLoadingAction] = useState<string | null>(null);
+
+    // Task Dialog State
+    const [taskDialogOpen, setTaskDialogOpen] = useState(false);
+    const [newTask, setNewTask] = useState({ name: "", schedule: "Daily" });
+
+    // Restore Dialog State
+    const [restoreDialogOpen, setRestoreDialogOpen] = useState(false);
+    const [selectedBackup, setSelectedBackup] = useState<string>("");
 
     const systemResources = [
         { name: "CPU", usage: 12, max: 100, unit: "%", icon: Cpu, status: "optimal" },
         { name: "RAM", usage: 8.2, max: 32, unit: "GB", icon: MemoryStick, status: "optimal" },
         { name: "Stockage Principal", usage: 2.4, max: 10, unit: "TB", icon: HardDrive, status: "normal" },
         { name: "Bande Passante", usage: 45, max: 100, unit: "Mbps", icon: Wifi, status: "optimal" },
-    ];
-
-    const scheduledTasks = [
-        { name: "Backup Quotidien", schedule: "02:00 UTC", nextRun: "Demain 02:00", status: "scheduled" },
-        { name: "Nettoyage Logs", schedule: "Dimanche 03:00", nextRun: "Dans 5 jours", status: "scheduled" },
-        { name: "Renouvellement Certificats", schedule: "2025-01-10", nextRun: "Dans 27 jours", status: "scheduled" },
-        { name: "Mise à jour Sécurité", schedule: "Manuel", nextRun: "-", status: "manual" },
     ];
 
     const getUsageColor = (usage: number, max: number) => {
@@ -113,6 +139,40 @@ const SystemMaintenanceSection = () => {
             toast.success("Sauvegarde terminée avec succès");
         } catch (e) {
             toast.error("Erreur sauvegarde");
+        } finally {
+            setLoadingAction(null);
+        }
+    };
+
+    const handleCreateTask = async () => {
+        if (!newTask.name) return;
+        setLoadingAction("create-task");
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            setScheduledTasks([...scheduledTasks, {
+                id: Date.now(),
+                name: newTask.name,
+                schedule: newTask.schedule,
+                nextRun: "Calcul en cours...",
+                status: "scheduled"
+            }]);
+            setTaskDialogOpen(false);
+            setNewTask({ name: "", schedule: "Daily" });
+            toast.success("Tâche planifiée avec succès");
+        } finally {
+            setLoadingAction(null);
+        }
+    };
+
+    const handleRestoreBackup = async () => {
+        if (!selectedBackup) return;
+        setLoadingAction("restore");
+        try {
+            await new Promise(resolve => setTimeout(resolve, 4000)); // Long process
+            toast.success("Système restauré à la version: " + selectedBackup);
+            setRestoreDialogOpen(false);
+        } catch (e) {
+            toast.error("Échec de la restauration");
         } finally {
             setLoadingAction(null);
         }
@@ -263,10 +323,43 @@ const SystemMaintenanceSection = () => {
                             <Calendar className="h-5 w-5 text-blue-500" />
                             Tâches Planifiées
                         </h3>
-                        <Button variant="outline" size="sm" onClick={() => toast.info("Planificateur à venir")}>
-                            <Zap className="h-4 w-4 mr-2" />
-                            Nouvelle Tâche
-                        </Button>
+                        <Dialog open={taskDialogOpen} onOpenChange={setTaskDialogOpen}>
+                            <DialogTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                    <Zap className="h-4 w-4 mr-2" />
+                                    Nouvelle Tâche
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Planifier une Tâche</DialogTitle>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                    <div className="space-y-2">
+                                        <Label>Nom de la Tâche</Label>
+                                        <Input value={newTask.name} onChange={(e) => setNewTask({ ...newTask, name: e.target.value })} placeholder="Ex: Nettoyage Cache" />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label>Fréquence</Label>
+                                        <Select value={newTask.schedule} onValueChange={(val) => setNewTask({ ...newTask, schedule: val })}>
+                                            <SelectTrigger><SelectValue /></SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="Daily">Quotidien</SelectItem>
+                                                <SelectItem value="Weekly">Hebdomadaire</SelectItem>
+                                                <SelectItem value="Monthly">Mensuel</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                    <div className="flex justify-end gap-2 mt-4">
+                                        <Button variant="outline" onClick={() => setTaskDialogOpen(false)}>Annuler</Button>
+                                        <Button onClick={handleCreateTask} disabled={!!loadingAction}>
+                                            {loadingAction === "create-task" && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                            Planifier
+                                        </Button>
+                                    </div>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
                     </div>
                     <div className="space-y-3">
                         {scheduledTasks.map((task, idx) => (
@@ -299,19 +392,51 @@ const SystemMaintenanceSection = () => {
                     Actions Rapides (Zone Critique)
                 </h3>
                 <div className="grid gap-3 md:grid-cols-4">
-                    <Button variant="outline" className="border-slate-700 hover:bg-slate-800 text-white" onClick={() => toast.info("Redémarrage de masse initié...")}>
+                    <Button variant="outline" className="border-slate-700 hover:bg-slate-800 text-white" onClick={() => toast.info("Redémarrage de tous les services...")}>
                         <RefreshCw className="h-4 w-4 mr-2" />
-                        Redémarrer Services
+                        Restart All
                     </Button>
-                    <Button variant="outline" className="border-slate-700 hover:bg-slate-800 text-white" onClick={() => toast.success("Cache vidé avec succès")}>
+                    <Button variant="outline" className="border-slate-700 hover:bg-slate-800 text-white" onClick={() => toast.success("Cache système vidé")}>
                         <Database className="h-4 w-4 mr-2" />
-                        Vider Cache
+                        Flush Redis
                     </Button>
-                    <Button variant="outline" className="border-slate-700 hover:bg-slate-800 text-white" onClick={() => toast.info("Veuillez sélectionner un backup source")}>
-                        <Upload className="h-4 w-4 mr-2" />
-                        Restaurer Backup
-                    </Button>
-                    <Button variant="outline" className="border-red-500/50 hover:bg-red-900/50 text-red-400" onClick={() => { if (window.confirm("CONFIRMEZ L'ARRÊT D'URGENCE ?")) toast.error("COMMANDE ENVOYÉE"); }}>
+
+                    <Dialog open={restoreDialogOpen} onOpenChange={setRestoreDialogOpen}>
+                        <DialogTrigger asChild>
+                            <Button variant="outline" className="border-slate-700 hover:bg-slate-800 text-white">
+                                <Upload className="h-4 w-4 mr-2" />
+                                Restaurer
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Restaurer une Sauvegarde</DialogTitle>
+                                <DialogDescription className="text-red-500">
+                                    Attention: Cette action écrasera toutes les données actuelles.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="py-4">
+                                <Label className="mb-2 block">Sélectionner un point de restauration</Label>
+                                <Select onValueChange={setSelectedBackup}>
+                                    <SelectTrigger><SelectValue placeholder="Choisir un backup..." /></SelectTrigger>
+                                    <SelectContent>
+                                        {backups.map((b, i) => (
+                                            <SelectItem key={i} value={b.date}>{b.type} - {b.date}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <DialogFooter>
+                                <Button variant="outline" onClick={() => setRestoreDialogOpen(false)}>Annuler</Button>
+                                <Button variant="destructive" onClick={handleRestoreBackup} disabled={!selectedBackup || !!loadingAction}>
+                                    {loadingAction === "restore" && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    Restaurer
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+
+                    <Button variant="outline" className="border-red-500/50 hover:bg-red-900/50 text-red-400" onClick={() => { if (window.confirm("CECI EST UN ARRÊT D'URGENCE. CONFIRMER ?")) toast.error("SIGNAL D'ARRÊT ENVOYÉ À L'INFRASTRUCTURE"); }}>
                         <Power className="h-4 w-4 mr-2" />
                         Arrêt d'Urgence
                     </Button>

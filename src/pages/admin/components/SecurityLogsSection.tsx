@@ -23,7 +23,8 @@ import {
     ShieldCheck,
     Key,
     Fingerprint,
-    Loader2
+    Loader2,
+    Activity
 } from "lucide-react";
 import {
     Select,
@@ -32,6 +33,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 
 const INITIAL_EVENTS = [
@@ -49,6 +58,9 @@ const SecurityLogsSection = () => {
     const [events, setEvents] = useState(INITIAL_EVENTS);
     const [loading, setLoading] = useState(false);
 
+    // Alert Dialog State
+    const [selectedAlert, setSelectedAlert] = useState<any>(null);
+
     const securityPolicies = [
         { name: "Authentification Multi-Facteurs (MFA)", status: "active", coverage: "100%", lastUpdate: "2024-12-10" },
         { name: "Politique de Mots de Passe", status: "active", coverage: "100%", lastUpdate: "2024-12-01" },
@@ -58,9 +70,9 @@ const SecurityLogsSection = () => {
     ];
 
     const threatAlerts = [
-        { id: 1, severity: "high", title: "Tentative d'intrusion détectée", source: "45.33.32.156", time: "Il y a 3 min", status: "investigating" },
-        { id: 2, severity: "medium", title: "Activité inhabituelle sur compte", source: "deputy_042", time: "Il y a 15 min", status: "resolved" },
-        { id: 3, severity: "low", title: "Certificat SSL expire dans 30 jours", source: "api.parlement.ga", time: "Il y a 2h", status: "pending" },
+        { id: 1, severity: "high", title: "Tentative d'intrusion détectée", source: "45.33.32.156", time: "Il y a 3 min", status: "investigating", description: "Multiples tentatives de connexion échouées suivies d'un scan de port." },
+        { id: 2, severity: "medium", title: "Activité inhabituelle sur compte", source: "deputy_042", time: "Il y a 15 min", status: "resolved", description: "Accès depuis une nouvelle zone géographique (Paris) sans MFA habituel." },
+        { id: 3, severity: "low", title: "Certificat SSL expire dans 30 jours", source: "api.parlement.ga", time: "Il y a 2h", status: "pending", description: "Le certificat pour *.parlement.ga nécessite un renouvellement." },
     ];
 
     const filteredEvents = events.filter(event => {
@@ -95,6 +107,15 @@ const SecurityLogsSection = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleViewAlert = (alert: any) => {
+        setSelectedAlert(alert);
+    };
+
+    const handleResolveAlert = () => {
+        toast.success("Alerte marquée comme résolue");
+        setSelectedAlert(null);
     };
 
     const getEventTypeBadge = (type: string) => {
@@ -263,15 +284,15 @@ const SecurityLogsSection = () => {
                     <div className="space-y-4">
                         {threatAlerts.map((alert) => (
                             <Card key={alert.id} className={`p-4 border-l-4 ${alert.severity === 'high' ? 'border-l-red-500' :
-                                    alert.severity === 'medium' ? 'border-l-amber-500' : 'border-l-blue-500'
+                                alert.severity === 'medium' ? 'border-l-amber-500' : 'border-l-blue-500'
                                 }`}>
                                 <div className="flex items-start justify-between">
                                     <div className="flex items-start gap-4">
                                         <div className={`p-2 rounded-lg ${alert.severity === 'high' ? 'bg-red-100' :
-                                                alert.severity === 'medium' ? 'bg-amber-100' : 'bg-blue-100'
+                                            alert.severity === 'medium' ? 'bg-amber-100' : 'bg-blue-100'
                                             }`}>
                                             <FileWarning className={`h-5 w-5 ${alert.severity === 'high' ? 'text-red-600' :
-                                                    alert.severity === 'medium' ? 'text-amber-600' : 'text-blue-600'
+                                                alert.severity === 'medium' ? 'text-amber-600' : 'text-blue-600'
                                                 }`} />
                                         </div>
                                         <div>
@@ -292,7 +313,7 @@ const SecurityLogsSection = () => {
                                             {alert.status === 'resolved' ? 'Résolu' :
                                                 alert.status === 'investigating' ? 'En cours' : 'En attente'}
                                         </Badge>
-                                        <Button size="sm" variant="outline" onClick={() => toast.info("Détails alerte")}>
+                                        <Button size="sm" variant="outline" onClick={() => handleViewAlert(alert)}>
                                             <Eye className="h-4 w-4 mr-1" />
                                             Détails
                                         </Button>
@@ -339,6 +360,62 @@ const SecurityLogsSection = () => {
                     </Card>
                 </TabsContent>
             </Tabs>
+
+            <Dialog open={!!selectedAlert} onOpenChange={(open) => !open && setSelectedAlert(null)}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                            <ShieldAlert className="text-red-500 h-5 w-5" />
+                            Détails de l'Alerte
+                        </DialogTitle>
+                    </DialogHeader>
+                    {selectedAlert && (
+                        <div className="py-4 space-y-4">
+                            <div className="flex items-start gap-4 p-3 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
+                                <div>
+                                    <h4 className="font-medium text-sm">Message</h4>
+                                    <p className="text-sm text-muted-foreground">{selectedAlert.description || "Aucune description disponible pour cette alerte."}</p>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <h4 className="font-medium text-xs text-muted-foreground uppercase">Source</h4>
+                                    <p className="text-sm font-mono">{selectedAlert.source}</p>
+                                </div>
+                                <div>
+                                    <h4 className="font-medium text-xs text-muted-foreground uppercase">Temps</h4>
+                                    <p className="text-sm">{selectedAlert.time}</p>
+                                </div>
+                                <div>
+                                    <h4 className="font-medium text-xs text-muted-foreground uppercase">Sévérité</h4>
+                                    <div className="mt-1">{getSeverityBadge(selectedAlert.severity)}</div>
+                                </div>
+                                <div>
+                                    <h4 className="font-medium text-xs text-muted-foreground uppercase">Action Requise</h4>
+                                    <p className="text-sm text-amber-600 font-medium">Investigation imm. recommandée</p>
+                                </div>
+                            </div>
+
+                            <div className="p-3 border rounded-md">
+                                <h4 className="flex items-center gap-2 font-medium text-sm mb-2">
+                                    <Activity className="h-4 w-4" />
+                                    Analyse Automatisée iAsted
+                                </h4>
+                                <p className="text-xs text-muted-foreground">
+                                    L'analyse heuristique indique une probabilité de 85% d'une tentative d'intrusion par force brute. L'adresse IP source a été temporairement bloquée par le pare-feu périmétrique.
+                                </p>
+                            </div>
+                        </div>
+                    )}
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setSelectedAlert(null)}>Fermer</Button>
+                        <Button className="bg-green-600 hover:bg-green-700" onClick={handleResolveAlert}>
+                            <CheckCircle2 className="h-4 w-4 mr-2" />
+                            Marquer comme Résolu
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };

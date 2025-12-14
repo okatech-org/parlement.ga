@@ -82,8 +82,9 @@ const UserManagementSection = () => {
     const [officials, setOfficials] = useState(INITIAL_OFFICIALS);
     const [citizens, setCitizens] = useState(INITIAL_CITIZENS);
 
-    // Form State
-    const [newUserFor, setNewUserFor] = useState({
+    // Form State for Create/Edit
+    const [editingUser, setEditingUser] = useState<any>(null);
+    const [formData, setFormData] = useState({
         type: "official",
         name: "",
         email: "",
@@ -114,37 +115,74 @@ const UserManagementSection = () => {
         }
     };
 
-    const handleCreateUser = async () => {
-        if (!newUserFor.name || !newUserFor.phone) {
+    const openCreateDialog = () => {
+        setEditingUser(null);
+        setFormData({
+            type: "official",
+            name: "",
+            email: "",
+            phone: "",
+            role: "deputy",
+            institution: "an",
+            province: "Estuaire",
+        });
+        setCreateDialogOpen(true);
+    };
+
+    const openEditDialog = (user: any, type: string) => {
+        setEditingUser({ ...user, type });
+        setFormData({
+            type: type,
+            name: user.name,
+            email: user.email || "",
+            phone: user.phone || "",
+            role: user.role || "deputy",
+            institution: user.institution === "AN" ? "an" : (user.institution === "Sénat" ? "senat" : "an"),
+            province: user.province || "Estuaire",
+        });
+        setCreateDialogOpen(true);
+    };
+
+    const handleSaveUser = async () => {
+        if (!formData.name || !formData.phone) {
             toast.error("Veuillez remplir les champs obligatoires (Nom, Téléphone)");
             return;
         }
 
-        await handleAction("Création utilisateur", async () => {
+        const actionName = editingUser ? "Modification utilisateur" : "Création utilisateur";
+
+        await handleAction(actionName, async () => {
             await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API
 
-            const newUser = {
-                id: Date.now(),
-                name: newUserFor.name,
-                role: newUserFor.role,
-                institution: newUserFor.institution === "an" ? "AN" : "Sénat",
-                status: "active",
-                phone: newUserFor.phone,
-                environment: newUserFor.institution,
-                province: newUserFor.province
+            const userData = {
+                id: editingUser ? editingUser.id : Date.now(),
+                name: formData.name,
+                role: formData.role,
+                institution: formData.institution === "an" ? "AN" : "Sénat",
+                status: editingUser ? editingUser.status : "active",
+                phone: formData.phone,
+                environment: formData.institution,
+                province: formData.province,
+                email: formData.email
             };
 
-            if (newUserFor.type === "official") {
-                setOfficials([...officials, newUser as any]);
-            } else if (newUserFor.type === "citizen") {
-                setCitizens([...citizens, { ...newUser, email: newUserFor.email, status: "pending", registeredAt: new Date().toISOString().split('T')[0] } as any]);
+            const updateList = (list: any[]) => {
+                return editingUser
+                    ? list.map(u => u.id === userData.id ? { ...u, ...userData } : u)
+                    : [...list, userData];
+            };
+
+            if (formData.type === "official") {
+                setOfficials(updateList(officials) as any);
+            } else if (formData.type === "citizen") {
+                const citizenData = { ...userData, status: editingUser ? editingUser.status : "pending", registeredAt: editingUser ? editingUser.registeredAt : new Date().toISOString().split('T')[0] };
+                setCitizens(editingUser ? citizens.map(c => c.id === userData.id ? citizenData : c) as any : [...citizens, citizenData] as any);
             } else {
-                setAdmins([...admins, { ...newUser, email: newUserFor.email, role: "admin_" + newUserFor.institution, environment: newUserFor.institution } as any]);
+                const adminData = { ...userData, role: "admin_" + formData.institution, environment: formData.institution };
+                setAdmins(editingUser ? admins.map(a => a.id === userData.id ? adminData : a) as any : [...admins, adminData] as any);
             }
 
             setCreateDialogOpen(false);
-            // Reset form
-            setNewUserFor({ ...newUserFor, name: "", email: "", phone: "" });
         });
     };
 
@@ -207,24 +245,25 @@ const UserManagementSection = () => {
                 </div>
                 <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
                     <DialogTrigger asChild>
-                        <Button className="bg-indigo-600 hover:bg-indigo-700">
+                        <Button className="bg-indigo-600 hover:bg-indigo-700" onClick={openCreateDialog}>
                             <UserPlus className="h-4 w-4 mr-2" />
                             Nouveau Compte
                         </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[500px]">
                         <DialogHeader>
-                            <DialogTitle>Créer un Nouveau Compte</DialogTitle>
+                            <DialogTitle>{editingUser ? "Modifier Utilisateur" : "Créer un Nouveau Compte"}</DialogTitle>
                             <DialogDescription>
-                                Remplissez les informations pour créer un compte utilisateur.
+                                {editingUser ? "Modifiez les informations ci-dessous." : "Remplissez les informations pour créer un compte utilisateur."}
                             </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                             <div className="grid gap-2">
                                 <Label>Type de Compte</Label>
                                 <Select
-                                    value={newUserFor.type}
-                                    onValueChange={(val) => setNewUserFor({ ...newUserFor, type: val })}
+                                    value={formData.type}
+                                    onValueChange={(val) => setFormData({ ...formData, type: val })}
+                                    disabled={!!editingUser}
                                 >
                                     <SelectTrigger>
                                         <SelectValue placeholder="Sélectionner le type" />
@@ -240,8 +279,8 @@ const UserManagementSection = () => {
                                 <Label>Nom Complet *</Label>
                                 <Input
                                     placeholder="Prénom et Nom"
-                                    value={newUserFor.name}
-                                    onChange={(e) => setNewUserFor({ ...newUserFor, name: e.target.value })}
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                 />
                             </div>
                             <div className="grid gap-2">
@@ -249,25 +288,25 @@ const UserManagementSection = () => {
                                 <Input
                                     type="email"
                                     placeholder="email@domain.com"
-                                    value={newUserFor.email}
-                                    onChange={(e) => setNewUserFor({ ...newUserFor, email: e.target.value })}
+                                    value={formData.email}
+                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                 />
                             </div>
                             <div className="grid gap-2">
                                 <Label>Téléphone *</Label>
                                 <Input
                                     placeholder="+241 XX XX XX XX"
-                                    value={newUserFor.phone}
-                                    onChange={(e) => setNewUserFor({ ...newUserFor, phone: e.target.value })}
+                                    value={formData.phone}
+                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                                 />
                             </div>
-                            {newUserFor.type === "official" && (
+                            {formData.type === "official" && (
                                 <>
                                     <div className="grid gap-2">
                                         <Label>Institution</Label>
                                         <Select
-                                            value={newUserFor.institution}
-                                            onValueChange={(val) => setNewUserFor({ ...newUserFor, institution: val })}
+                                            value={formData.institution}
+                                            onValueChange={(val) => setFormData({ ...formData, institution: val })}
                                         >
                                             <SelectTrigger><SelectValue placeholder="Institution" /></SelectTrigger>
                                             <SelectContent>
@@ -279,8 +318,8 @@ const UserManagementSection = () => {
                                     <div className="grid gap-2">
                                         <Label>Rôle</Label>
                                         <Select
-                                            value={newUserFor.role}
-                                            onValueChange={(val) => setNewUserFor({ ...newUserFor, role: val })}
+                                            value={formData.role}
+                                            onValueChange={(val) => setFormData({ ...formData, role: val })}
                                         >
                                             <SelectTrigger><SelectValue placeholder="Rôle" /></SelectTrigger>
                                             <SelectContent>
@@ -297,9 +336,9 @@ const UserManagementSection = () => {
                             <Button variant="outline" onClick={() => setCreateDialogOpen(false)} disabled={loading}>
                                 Annuler
                             </Button>
-                            <Button className="bg-indigo-600 hover:bg-indigo-700" onClick={handleCreateUser} disabled={loading}>
+                            <Button className="bg-indigo-600 hover:bg-indigo-700" onClick={handleSaveUser} disabled={loading}>
                                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                Créer le Compte
+                                {editingUser ? "Enregistrer Modifications" : "Créer le Compte"}
                             </Button>
                         </DialogFooter>
                     </DialogContent>
@@ -376,7 +415,7 @@ const UserManagementSection = () => {
                                                     <Button variant="ghost" size="sm" disabled={loading}><MoreVertical className="h-4 w-4" /></Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem onClick={() => toast.info("Fonction édition à venir")}><Edit className="h-4 w-4 mr-2" />Modifier</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => openEditDialog(admin, "admin")}><Edit className="h-4 w-4 mr-2" />Modifier</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => handleToggleStatus("admin", admin.id, admin.status)}>
                                                         {admin.status === 'active' ? <><Lock className="h-4 w-4 mr-2" />Suspendre</> : <><Unlock className="h-4 w-4 mr-2" />Activer</>}
                                                     </DropdownMenuItem>
@@ -429,7 +468,7 @@ const UserManagementSection = () => {
                                                     <Button variant="ghost" size="sm" disabled={loading}><MoreVertical className="h-4 w-4" /></Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem onClick={() => toast.info("Fonction édition à venir")}><Edit className="h-4 w-4 mr-2" />Modifier</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => openEditDialog(official, "official")}><Edit className="h-4 w-4 mr-2" />Modifier</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => handleToggleStatus("official", official.id, official.status)}>
                                                         {official.status === 'active' ? <><Lock className="h-4 w-4 mr-2" />Suspendre</> : <><Unlock className="h-4 w-4 mr-2" />Activer</>}
                                                     </DropdownMenuItem>
@@ -476,7 +515,7 @@ const UserManagementSection = () => {
                                                     <Button variant="ghost" size="sm" disabled={loading}><MoreVertical className="h-4 w-4" /></Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
-                                                    <DropdownMenuItem onClick={() => toast.info("Fonction édition à venir")}><Edit className="h-4 w-4 mr-2" />Modifier</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => openEditDialog(citizen, "citizen")}><Edit className="h-4 w-4 mr-2" />Modifier</DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => handleToggleStatus("citizen", citizen.id, citizen.status)}>
                                                         {citizen.status !== 'suspended' ? <><Lock className="h-4 w-4 mr-2" />Suspendre</> : <><Unlock className="h-4 w-4 mr-2" />Réactiver</>}
                                                     </DropdownMenuItem>
