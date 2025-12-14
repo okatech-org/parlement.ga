@@ -37,6 +37,49 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, []);
 
+    const navigateToRole = (role: UserRole) => {
+        switch (role) {
+            case 'president':
+                navigate('/president');
+                break;
+            case 'vp':
+                navigate('/vp');
+                break;
+            case 'deputy':
+                navigate('/vote'); // Deputy Dashboard
+                break;
+            case 'substitute':
+                navigate('/suppleant');
+                break;
+            case 'questeur':
+            case 'questeur_budget':
+            case 'questeur_resources':
+            case 'questeur_services':
+                navigate('/questeurs');
+                break;
+            case 'secretary':
+                navigate('/secretaires');
+                break;
+            case 'citizen':
+                navigate('/citizen');
+                break;
+            case 'system_admin':
+                navigate('/admin/dashboard');
+                break;
+            case 'admin_an':
+                navigate('/an/admin');
+                break;
+            case 'admin_senat':
+                navigate('/senat/admin');
+                break;
+            case 'admin_parlement':
+                navigate('/parlement/admin');
+                break;
+            default:
+                navigate('/');
+        }
+    };
+
     const login = (phoneNumber: string, accountType: string) => {
         // Mock User Data based on phone number
         let mockUser: User = {
@@ -95,7 +138,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         if (mockUser.roles.length > 1) {
             navigate('/portail');
         } else {
-            switchRole(mockUser.roles[0]);
+            // Direct navigation to avoid race condition with state
+            const role = mockUser.roles[0];
+            setCurrentRole(role);
+            sessionStorage.setItem('current_role', role);
+            navigateToRole(role);
         }
     };
 
@@ -111,48 +158,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         if (user && user.roles.includes(role)) {
             setCurrentRole(role);
             sessionStorage.setItem('current_role', role);
-
-            // Redirect to appropriate dashboard
-            switch (role) {
-                case 'president':
-                    navigate('/president');
-                    break;
-                case 'vp':
-                    navigate('/vp');
-                    break;
-                case 'deputy':
-                    navigate('/vote'); // Deputy Dashboard
-                    break;
-                case 'substitute':
-                    navigate('/suppleant');
-                    break;
-                case 'questeur':
-                case 'questeur_budget':
-                case 'questeur_resources':
-                case 'questeur_services':
-                    navigate('/questeurs');
-                    break;
-                case 'secretary':
-                    navigate('/secretaires');
-                    break;
-                case 'citizen':
-                    navigate('/citizen');
-                    break;
-                case 'system_admin':
-                    navigate('/admin/dashboard');
-                    break;
-                case 'admin_an':
-                    navigate('/an/admin');
-                    break;
-                case 'admin_senat':
-                    navigate('/senat/admin');
-                    break;
-                case 'admin_parlement':
-                    navigate('/parlement/admin');
-                    break;
-                default:
-                    navigate('/');
-            }
+            navigateToRole(role);
         }
     };
 
