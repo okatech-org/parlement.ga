@@ -96,8 +96,11 @@ const HomeSenate = () => {
                             <Button variant="ghost" size="sm" onClick={() => navigate("/senat/tutoriels")}>
                                 Tutoriels
                             </Button>
+                            <Button variant="ghost" size="sm" onClick={() => navigate("/senat/processus")}>
+                                Processus
+                            </Button>
                             <Button variant="ghost" size="sm" onClick={() => navigate("/senat/demo")}>
-                                Démo Protocole
+                                Démo
                             </Button>
                         </nav>
                         <div className="flex items-center gap-2">
