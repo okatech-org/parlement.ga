@@ -139,6 +139,92 @@ const SenateProcessPage = () => {
         { step: 5, title: "Lecture finale", description: "Examen par les deux chambres" },
     ];
 
+    // Diagramme de la navette complète
+    const navetteCompleteChart = `
+flowchart TD
+    subgraph DEPOT[📄 DÉPÔT]
+        D1[Projet de loi<br/>Gouvernement] --> BUREAU
+        D2[Proposition de loi<br/>Député/Sénateur] --> BUREAU
+        BUREAU[Bureau de la chambre saisie]
+    end
+
+    subgraph AN[🏛️ ASSEMBLÉE NATIONALE]
+        AN_COM[Commission permanente]
+        AN_RAP[Rapport du rapporteur]
+        AN_PLEN[Discussion en plénière]
+        AN_VOTE{Vote AN}
+        AN_COM --> AN_RAP --> AN_PLEN --> AN_VOTE
+    end
+
+    subgraph SN[🏛️ SÉNAT]
+        SN_COM[Commission permanente]
+        SN_RAP[Rapport du rapporteur]
+        SN_PLEN[Discussion en plénière]
+        SN_VOTE{Vote Sénat}
+        SN_COM --> SN_RAP --> SN_PLEN --> SN_VOTE
+    end
+
+    subgraph NAVETTE[🔄 NAVETTE PARLEMENTAIRE]
+        NAV_CHECK{Textes identiques?}
+        L2_AN[2ème lecture AN]
+        L2_SN[2ème lecture Sénat]
+        NAV_CHECK2{Accord?}
+    end
+
+    subgraph CMP[⚖️ COMMISSION MIXTE PARITAIRE]
+        CMP_CONV[Convocation CMP<br/>7 députés + 7 sénateurs]
+        CMP_NEG[Négociation texte commun]
+        CMP_VOTE{Vote CMP}
+        CMP_CONV --> CMP_NEG --> CMP_VOTE
+    end
+
+    subgraph FINAL[✅ ADOPTION DÉFINITIVE]
+        FINAL_AN[Lecture définitive AN]
+        FINAL_SN[Lecture définitive Sénat]
+        PROMULGATION[Promulgation<br/>Journal Officiel]
+    end
+
+    BUREAU --> AN_COM
+    AN_VOTE -->|Adopté| SN_COM
+    AN_VOTE -->|Rejeté| FIN1[Fin de procédure]
+    SN_VOTE --> NAV_CHECK
+    NAV_CHECK -->|Oui| PROMULGATION
+    NAV_CHECK -->|Non| L2_AN
+    L2_AN --> L2_SN --> NAV_CHECK2
+    NAV_CHECK2 -->|Oui| PROMULGATION
+    NAV_CHECK2 -->|Non| CMP_CONV
+    CMP_VOTE -->|Accord| FINAL_AN
+    CMP_VOTE -->|Échec| FINAL_AN
+    FINAL_AN --> FINAL_SN --> PROMULGATION
+
+    style BUREAU fill:#6366f1,color:#fff
+    style AN_VOTE fill:#10b981,color:#fff
+    style SN_VOTE fill:#3b82f6,color:#fff
+    style NAV_CHECK fill:#f59e0b,color:#fff
+    style NAV_CHECK2 fill:#f59e0b,color:#fff
+    style CMP_VOTE fill:#ef4444,color:#fff
+    style PROMULGATION fill:#22c55e,color:#fff
+`;
+
+    // Handler pour les clics sur les noeuds
+    const handleNodeClick = (nodeId: string) => {
+        const sectionMap: Record<string, string> = {
+            'SN_COM': 'phases',
+            'SN_PLEN': 'phases',
+            'SN_VOTE': 'phases',
+            'AN_COM': 'an-link',
+            'CMP': 'cmp-section',
+            'PROMULGATION': 'navette-section'
+        };
+        const section = sectionMap[nodeId];
+        if (section === 'an-link') {
+            navigate('/an/processus');
+        } else if (section) {
+            const element = document.getElementById(section);
+            element?.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
@@ -204,8 +290,33 @@ const SenateProcessPage = () => {
                 </div>
             </section>
 
-            {/* Diagramme du flux législatif */}
-            <section className="py-16 bg-muted/30">
+            {/* Diagramme de la navette complète */}
+            <section id="navette-section" className="py-16 bg-muted/30">
+                <div className="container mx-auto px-4">
+                    <div className="text-center mb-12">
+                        <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
+                            <ArrowLeftRight className="h-3 w-3 mr-1" />
+                            Cycle Complet
+                        </Badge>
+                        <h2 className="text-3xl font-serif font-bold mb-4">Navette Parlementaire Complète</h2>
+                        <p className="text-muted-foreground max-w-2xl mx-auto">
+                            Visualisez le cycle complet d'adoption d'une loi : AN → Sénat → CMP → Promulgation.
+                            <span className="text-primary font-medium"> Cliquez sur les éléments pour naviguer.</span>
+                        </p>
+                    </div>
+                    <div className="max-w-6xl mx-auto">
+                        <MermaidDiagram 
+                            chart={navetteCompleteChart} 
+                            title="Cycle complet de la navette parlementaire"
+                            className="shadow-lg"
+                            onNodeClick={handleNodeClick}
+                        />
+                    </div>
+                </div>
+            </section>
+
+            {/* Diagramme du flux législatif au Sénat */}
+            <section id="flux-senat" className="py-16">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl font-serif font-bold mb-4">Flux Législatif au Sénat</h2>
@@ -241,13 +352,14 @@ flowchart TD
 `} 
                             title="Parcours d'un texte au Sénat"
                             className="shadow-lg"
+                            onNodeClick={handleNodeClick}
                         />
                     </div>
                 </div>
             </section>
 
             {/* Processus détaillé */}
-            <section className="py-16">
+            <section id="phases" className="py-16 bg-muted/30">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl font-serif font-bold mb-4">Les 6 Phases du Processus</h2>
@@ -295,7 +407,7 @@ flowchart TD
             </section>
 
             {/* Spécificités du Sénat */}
-            <section className="py-16 bg-muted/30">
+            <section id="specificites" className="py-16">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
                         <h2 className="text-3xl font-serif font-bold mb-4">Spécificités du Sénat</h2>
@@ -331,7 +443,7 @@ flowchart TD
             </section>
 
             {/* Commission Mixte Paritaire */}
-            <section className="py-16">
+            <section id="cmp-section" className="py-16 bg-muted/30">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
                         <Badge className="mb-4 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">

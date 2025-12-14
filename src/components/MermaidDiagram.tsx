@@ -6,9 +6,10 @@ interface MermaidDiagramProps {
     chart: string;
     title?: string;
     className?: string;
+    onNodeClick?: (nodeId: string) => void;
 }
 
-const MermaidDiagram = ({ chart, title, className = '' }: MermaidDiagramProps) => {
+const MermaidDiagram = ({ chart, title, className = '', onNodeClick }: MermaidDiagramProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [svg, setSvg] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
@@ -46,6 +47,26 @@ const MermaidDiagram = ({ chart, title, className = '' }: MermaidDiagramProps) =
         renderDiagram();
     }, [chart]);
 
+    // Handle click events on nodes
+    useEffect(() => {
+        if (!containerRef.current || !onNodeClick) return;
+
+        const handleClick = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            const node = target.closest('.node');
+            if (node) {
+                const nodeId = node.id?.replace('flowchart-', '').split('-')[0];
+                if (nodeId) {
+                    onNodeClick(nodeId);
+                }
+            }
+        };
+
+        const container = containerRef.current;
+        container.addEventListener('click', handleClick);
+        return () => container.removeEventListener('click', handleClick);
+    }, [onNodeClick, svg]);
+
     if (error) {
         return (
             <Card className={`border-destructive ${className}`}>
@@ -66,7 +87,7 @@ const MermaidDiagram = ({ chart, title, className = '' }: MermaidDiagramProps) =
             <CardContent className="p-4 overflow-x-auto">
                 <div
                     ref={containerRef}
-                    className="flex justify-center"
+                    className={`flex justify-center ${onNodeClick ? 'cursor-pointer [&_.node]:hover:opacity-80 [&_.node]:transition-opacity' : ''}`}
                     dangerouslySetInnerHTML={{ __html: svg }}
                 />
             </CardContent>
