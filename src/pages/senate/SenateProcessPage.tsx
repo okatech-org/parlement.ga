@@ -2,7 +2,7 @@ import {
     Landmark, Users, FileText, ArrowLeftRight, Scale, Crown,
     CheckCircle, Clock, Send, MessageSquare, MapPin, AlertTriangle,
     ChevronRight, Home, Sun, Moon, PlayCircle, Gavel, BookOpen,
-    ArrowDown, Building, Vote
+    ArrowDown, Building, Vote, Download
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -10,7 +10,10 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
+import { motion } from "framer-motion";
 import MermaidDiagram from "@/components/MermaidDiagram";
+import AnimatedPhaseCard from "@/components/AnimatedPhaseCard";
+import { exportProcessPDF } from "@/utils/exportProcessPDF";
 
 /**
  * Page dédiée au Protocole Législatif du Sénat
@@ -225,6 +228,24 @@ flowchart TD
         }
     };
 
+    // Export PDF handler
+    const handleExportPDF = () => {
+        exportProcessPDF({
+            title: "Protocole Législatif du Sénat",
+            subtitle: "République Gabonaise",
+            institution: 'SN',
+            phases: processSteps.map(s => ({
+                phase: s.phase,
+                title: s.title,
+                duration: s.duration,
+                description: s.description,
+                details: s.details
+            })),
+            specificities: senateSpecificities,
+            cmpProcess
+        });
+    };
+
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
@@ -246,6 +267,10 @@ flowchart TD
                             <Button variant="outline" size="sm" onClick={() => navigate("/senat/demo")}>
                                 <PlayCircle className="h-4 w-4 mr-2" />
                                 Démo
+                            </Button>
+                            <Button variant="outline" size="sm" onClick={handleExportPDF}>
+                                <Download className="h-4 w-4 mr-2" />
+                                Export PDF
                             </Button>
                             <Button
                                 variant="ghost"
@@ -369,39 +394,15 @@ flowchart TD
                     </div>
 
                     <div className="max-w-4xl mx-auto space-y-6">
-                        {processSteps.map((step, index) => {
-                            const Icon = step.icon;
-                            return (
-                                <Card key={index} className="overflow-hidden">
-                                    <div className="flex flex-col md:flex-row">
-                                        <div className={`${step.color} p-6 md:w-64 flex flex-col justify-center items-center text-white`}>
-                                            <Badge variant="secondary" className="mb-2 bg-white/20 text-white border-0">
-                                                {step.phase}
-                                            </Badge>
-                                            <Icon className="h-10 w-10 mb-2" />
-                                            <h3 className="font-bold text-center">{step.title}</h3>
-                                            <span className="text-sm opacity-80">{step.duration}</span>
-                                        </div>
-                                        <div className="p-6 flex-1">
-                                            <p className="text-muted-foreground mb-4">{step.description}</p>
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                                {step.details.map((detail, idx) => (
-                                                    <div key={idx} className="flex items-center gap-2 text-sm">
-                                                        <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                                                        <span>{detail}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {index < processSteps.length - 1 && (
-                                        <div className="flex justify-center py-2 bg-muted/30">
-                                            <ArrowDown className="h-5 w-5 text-muted-foreground" />
-                                        </div>
-                                    )}
-                                </Card>
-                            );
-                        })}
+                        {processSteps.map((step, index) => (
+                            <AnimatedPhaseCard 
+                                key={index}
+                                step={step}
+                                index={index}
+                                isLast={index === processSteps.length - 1}
+                                variant="senate"
+                            />
+                        ))}
                     </div>
                 </div>
             </section>
