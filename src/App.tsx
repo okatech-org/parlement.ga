@@ -253,9 +253,12 @@ const App = () => (
 
                 {/* Espace Président du Sénat */}
                 <Route path="/senat/espace/president" element={<PresidentSenateSpace />} />
-                <Route path="/senat/espace/president/navette" element={<PresidentSenateSpace />} />
-                <Route path="/senat/espace/president/agenda" element={<PresidentSenateSpace />} />
-                <Route path="/senat/espace/president/cmp" element={<PresidentSenateSpace />} />
+
+                {/* Espace Vice-Président du Sénat */}
+                <Route path="/senat/espace/vp" element={<VPSenateSpace />} />
+
+                {/* Espace Questeur du Sénat */}
+                <Route path="/senat/espace/questeur" element={<QuesteurSenateSpace />} />
 
                 {/* Autres pages Sénat */}
                 <Route path="/senat/senateurs" element={<HomeSenate />} />

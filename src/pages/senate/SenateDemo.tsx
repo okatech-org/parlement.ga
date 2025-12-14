@@ -30,7 +30,7 @@ const SENATE_DEMO_CARDS = {
             { 
                 label: '1er Vice-Président', 
                 phone: '12121212', 
-                path: '/senat/espace/president', 
+                path: '/senat/espace/vp', 
                 icon: Crown, 
                 color: 'text-amber-400',
                 role: 'Vice-présidence',
