@@ -109,6 +109,7 @@ import SenateProcessPage from "@/pages/senate/SenateProcessPage";
 import CongressDashboard from "@/pages/parliament/CongressDashboard";
 import CongressVote from "@/pages/parliament/CongressVote";
 import NationalArchives from "@/pages/public/NationalArchives";
+import ProcessComparison from "@/pages/parliament/ProcessComparison";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -128,6 +129,7 @@ const App = () => (
                 <Route path="/parlement" element={<HomeParliament />} />
                 <Route path="/cmp" element={<HomeParliament />} />
                 <Route path="/archives" element={<HomeParliament />} />
+                <Route path="/processus-comparaison" element={<ProcessComparison />} />
 
                 {/* ========================================= */}
                 {/* ASSEMBLÉE NATIONALE - /an/*              */}
