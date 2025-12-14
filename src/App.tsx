@@ -111,6 +111,7 @@ import SenateProcessPage from "@/pages/senate/SenateProcessPage";
 // Parliament/Congress specific pages
 import CongressDashboard from "@/pages/parliament/CongressDashboard";
 import ParliamentSpace from "@/pages/parliament/ParliamentSpace";
+import ParliamentDemo from "@/pages/parliament/ParliamentDemo";
 import CongressVote from "@/pages/parliament/CongressVote";
 import NationalArchives from "@/pages/public/NationalArchives";
 import ProcessComparison from "@/pages/parliament/ProcessComparison";
@@ -283,7 +284,8 @@ const App = () => (
                 <Route path="/congres" element={<HomeParliament />} />
                 <Route path="/parlement/archives" element={<NationalArchives />} />
                 <Route path="/congres/archives" element={<NationalArchives />} />
-                <Route path="/congres/demo" element={<ProtocolDemoPage />} />
+                <Route path="/congres/demo" element={<ParliamentDemo />} />
+                <Route path="/parlement/demo" element={<ParliamentDemo />} />
                 <Route path="/congres/login" element={<Login />} />
 
                 {/* Espace Congrès (avec menu latéral comme AN) */}

@@ -2,20 +2,18 @@ import {
   Scale,
   FileText,
   Users,
-  Calendar,
+  BookOpen,
   ArrowLeftRight,
   Vote,
-  BookOpen,
-  Crown,
-  Building2,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardStatsCard } from "@/components/dashboard/DashboardStatsCard";
-import { GroupDistributionChart, LawProgressChart, AttendanceRateCard } from "@/components/dashboard/DashboardCharts";
+import { AttendanceRateCard } from "@/components/dashboard/DashboardCharts"; // Keep generic Attendance
+import { AnimatedDashboardCard, AnimatedProgressBar } from "@/components/animations/DashboardAnimations";
+import InteractiveDonutChart from "@/components/charts/InteractiveDonutChart";
 
 export const ParliamentDashboardSection = () => {
   const stats = [
@@ -26,14 +24,14 @@ export const ParliamentDashboardSection = () => {
   ];
 
   const institutionData = [
-    { name: "Assemblée Nationale", value: 143, color: "#22c55e" },
-    { name: "Sénat", value: 67, color: "#3b82f6" },
+    { label: "Assemblée Nationale", value: 143, color: "#22c55e" },
+    { label: "Sénat", value: 67, color: "#3b82f6" },
   ];
 
   const lawProgress = [
-    { name: "Loi de Finances 2025", progress: 45, color: "#f59e0b" },
-    { name: "Révision Constitutionnelle", progress: 80, color: "#22c55e" },
-    { name: "Code Minier", progress: 25, color: "#3b82f6" },
+    { name: "Loi de Finances 2025", progress: 45, color: "bg-amber-500" },
+    { name: "Révision Constitutionnelle", progress: 80, color: "bg-green-500" },
+    { name: "Code Minier", progress: 25, color: "bg-blue-500" },
   ];
 
   const activeCMP = {
@@ -51,78 +49,120 @@ export const ParliamentDashboardSection = () => {
   };
 
   return (
-    <div className="space-y-8">
-      <DashboardHeader
-        title="Parlement du Gabon"
-        subtitle="République Gabonaise - Union, Travail, Justice"
-        avatarInitial="P"
-      />
+    <div className="space-y-8 animate-fade-in">
+      <AnimatedDashboardCard delay={0}>
+        <DashboardHeader
+          title="Parlement du Gabon"
+          subtitle="République Gabonaise - Union, Travail, Justice"
+          avatarInitial="P"
+        />
+      </AnimatedDashboardCard>
 
       {/* CMP Active Alert */}
-      <Card className="border-l-4 border-l-amber-500 bg-amber-50/50 dark:bg-amber-950/20">
-        <CardContent className="p-5">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
-                <ArrowLeftRight className="h-6 w-6 text-amber-500" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <Badge className="bg-amber-500 text-white">{activeCMP.reference}</Badge>
-                  <Badge variant="outline" className="border-amber-500 text-amber-600 dark:text-amber-400">
-                    CMP en cours
-                  </Badge>
+      <AnimatedDashboardCard delay={0.1}>
+        <Card className="border-l-4 border-l-amber-500 bg-amber-50/50 dark:bg-amber-950/20 shadow-sm border-y-0 border-r-0">
+          <CardContent className="p-5">
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                  <ArrowLeftRight className="h-6 w-6 text-amber-500" />
                 </div>
-                <h3 className="font-bold text-lg text-foreground">{activeCMP.title}</h3>
-                <p className="text-sm text-muted-foreground">{activeCMP.daysLeft} jours restants</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="text-right">
-                <p className="text-sm text-muted-foreground mb-1">Avancement</p>
-                <div className="flex items-center gap-2">
-                  <Progress value={activeCMP.progress} className="w-24 h-3" />
-                  <span className="font-bold">{activeCMP.progress}%</span>
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge className="bg-amber-500 text-white">{activeCMP.reference}</Badge>
+                    <Badge variant="outline" className="border-amber-500 text-amber-600 dark:text-amber-400">
+                      CMP en cours
+                    </Badge>
+                  </div>
+                  <h3 className="font-bold text-lg text-foreground">{activeCMP.title}</h3>
+                  <p className="text-sm text-muted-foreground">{activeCMP.daysLeft} jours restants</p>
                 </div>
               </div>
-              <Button variant="secondary">Accéder</Button>
+              <div className="flex items-center gap-6">
+                <div className="text-right hidden sm:block">
+                  <p className="text-sm text-muted-foreground mb-1">Avancement</p>
+                  <div className="w-32">
+                    <AnimatedProgressBar value={activeCMP.progress} showValue={false} color="bg-amber-500" delay={0.2} />
+                  </div>
+                </div>
+                <Button variant="secondary" className="shadow-sm">Accéder War Room</Button>
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </AnimatedDashboardCard>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
-          <DashboardStatsCard key={index} {...stat} />
+          <AnimatedDashboardCard key={index} delay={0.15 + index * 0.05}>
+            <DashboardStatsCard {...stat} />
+          </AnimatedDashboardCard>
         ))}
       </div>
 
       {/* Attendance + Next Session */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <AttendanceRateCard rate={88} trend="up" label="Taux de Présence Congrès" />
-        
-        <Card className="border-2 border-primary/20">
-          <CardContent className="p-5">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Vote className="h-6 w-6 text-primary" />
+        <AnimatedDashboardCard delay={0.3}>
+          <AttendanceRateCard rate={88} trend="up" label="Taux de Présence Congrès" />
+        </AnimatedDashboardCard>
+
+        <AnimatedDashboardCard delay={0.35}>
+          <Card className="h-full border-none shadow-sm bg-white dark:bg-card p-2 flex flex-col justify-center">
+            <CardContent className="p-5">
+              <div className="flex items-center gap-6">
+                <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Vote className="h-8 w-8 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <Badge className="mb-2 bg-primary/10 text-primary border-primary/20">{nextSession.reference}</Badge>
+                  <h4 className="font-bold text-lg text-foreground mb-1 truncate">{nextSession.title}</h4>
+                  <p className="text-sm text-muted-foreground flex items-center gap-2">
+                    <Scale className="w-4 h-4" />
+                    {nextSession.date} à {nextSession.time}
+                  </p>
+                </div>
+                <Button className="shadow-elegant">Accéder</Button>
               </div>
-              <div className="flex-1">
-                <Badge className="mb-1">{nextSession.reference}</Badge>
-                <h4 className="font-semibold text-foreground">{nextSession.title}</h4>
-                <p className="text-sm text-muted-foreground">{nextSession.date} à {nextSession.time}</p>
-              </div>
-              <Button>Accéder</Button>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </AnimatedDashboardCard>
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <GroupDistributionChart title="Répartition des Parlementaires" data={institutionData} />
-        <LawProgressChart title="Avancement des Textes Majeurs" data={lawProgress} />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <AnimatedDashboardCard delay={0.4}>
+          <Card className="h-full border-none shadow-sm bg-white dark:bg-card">
+            <CardContent className="p-6 flex flex-col items-center">
+              <h3 className="text-xl font-serif font-bold mb-6 self-start w-full">Répartition des Sièges</h3>
+              <InteractiveDonutChart
+                data={institutionData}
+                size={220}
+                thickness={40}
+                centerLabel="Total"
+                centerValue="210"
+              />
+            </CardContent>
+          </Card>
+        </AnimatedDashboardCard>
+
+        <AnimatedDashboardCard delay={0.45}>
+          <Card className="h-full border-none shadow-sm bg-white dark:bg-card">
+            <CardContent className="p-6 space-y-6">
+              <h3 className="text-xl font-serif font-bold mb-4">Avancement des Textes Majeurs</h3>
+              {lawProgress.map((law, idx) => (
+                <AnimatedProgressBar
+                  key={idx}
+                  label={law.name}
+                  value={law.progress}
+                  color={law.color}
+                  delay={0.5 + idx * 0.1}
+                  showValue
+                />
+              ))}
+            </CardContent>
+          </Card>
+        </AnimatedDashboardCard>
       </div>
     </div>
   );

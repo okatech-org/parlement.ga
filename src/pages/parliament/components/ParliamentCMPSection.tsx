@@ -1,8 +1,9 @@
-import { ArrowLeftRight, Clock, AlertTriangle, CheckCircle } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { ArrowLeftRight, Clock } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { AnimatedDashboardCard, AnimatedProgressBar } from "@/components/animations/DashboardAnimations";
 
 export const ParliamentCMPSection = () => {
   const cmpSessions = [
@@ -34,9 +35,9 @@ export const ParliamentCMPSection = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "in_progress":
-        return <Badge className="bg-amber-500">En négociation</Badge>;
+        return <Badge className="bg-amber-500 hover:bg-amber-600">En négociation</Badge>;
       case "success":
-        return <Badge className="bg-green-500">Accord trouvé</Badge>;
+        return <Badge className="bg-green-500 hover:bg-green-600">Accord trouvé</Badge>;
       case "failed":
         return <Badge variant="destructive">Échec</Badge>;
       default:
@@ -45,53 +46,61 @@ export const ParliamentCMPSection = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-serif font-bold text-foreground mb-2">
-          Commissions Mixtes Paritaires
-        </h1>
-        <p className="text-muted-foreground">
-          Suivi des CMP pour la résolution des désaccords entre chambres
-        </p>
-      </div>
+    <div className="space-y-8 animate-fade-in">
+      <AnimatedDashboardCard delay={0}>
+        <DashboardHeader
+          title="Commissions Mixtes Paritaires"
+          subtitle="Suivi des CMP pour la résolution des désaccords entre chambres"
+          avatarInitial="CMP"
+        />
+      </AnimatedDashboardCard>
 
-      <div className="grid gap-4">
-        {cmpSessions.map((cmp) => (
-          <Card key={cmp.id} className={`hover:shadow-lg transition-shadow ${cmp.status === 'in_progress' ? 'border-l-4 border-l-amber-500' : ''}`}>
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge variant="outline">{cmp.reference}</Badge>
-                    {getStatusBadge(cmp.status)}
-                  </div>
-                  <h3 className="font-semibold text-lg text-foreground">{cmp.title}</h3>
-                  {cmp.status === 'in_progress' ? (
-                    <div className="mt-3">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                        <Clock className="h-4 w-4" />
-                        Échéance: {cmp.deadline} ({cmp.daysLeft} jours)
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Progress value={cmp.progress} className="flex-1 h-2" />
-                        <span className="text-sm font-medium">{cmp.progress}%</span>
-                      </div>
+      <div className="grid gap-6">
+        {cmpSessions.map((cmp, index) => (
+          <AnimatedDashboardCard key={cmp.id} delay={0.1 + index * 0.1}>
+            <Card className={`hover:shadow-lg transition-all duration-300 border-none shadow-sm bg-white dark:bg-card ${cmp.status === 'in_progress' ? 'border-l-4 border-l-amber-500' : ''}`}>
+              <CardContent className="p-6">
+                <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                  <div className="flex-1 space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Badge variant="outline" className="font-mono">{cmp.reference}</Badge>
+                      {getStatusBadge(cmp.status)}
                     </div>
-                  ) : (
-                    <p className="text-sm text-muted-foreground mt-2">
-                      Terminée le {cmp.completedAt}
-                    </p>
+
+                    <h3 className="font-serif font-bold text-xl text-foreground">{cmp.title}</h3>
+
+                    {cmp.status === 'in_progress' ? (
+                      <div className="space-y-4 max-w-xl">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 p-2 rounded-md w-fit">
+                          <Clock className="h-4 w-4 text-amber-500" />
+                          <span>Échéance: <span className="font-medium text-foreground">{cmp.deadline}</span> ({cmp.daysLeft} jours restants)</span>
+                        </div>
+                        <AnimatedProgressBar
+                          value={cmp.progress}
+                          color="bg-amber-500"
+                          showValue
+                          delay={0.2 + index * 0.1}
+                          label="Progression des négociations"
+                        />
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground flex items-center gap-2">
+                        {cmp.status === 'success' ? <span className="w-2 h-2 rounded-full bg-green-500" /> : <span className="w-2 h-2 rounded-full bg-red-500" />}
+                        Terminée le {cmp.completedAt}
+                      </p>
+                    )}
+                  </div>
+
+                  {cmp.status === 'in_progress' && (
+                    <Button className="bg-amber-600 hover:bg-amber-700 shadow-md shrink-0 self-start md:self-center">
+                      <ArrowLeftRight className="h-4 w-4 mr-2" />
+                      Accéder à la War Room
+                    </Button>
                   )}
                 </div>
-                {cmp.status === 'in_progress' && (
-                  <Button className="bg-amber-600 hover:bg-amber-700">
-                    <ArrowLeftRight className="h-4 w-4 mr-2" />
-                    War Room
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </AnimatedDashboardCard>
         ))}
       </div>
     </div>
