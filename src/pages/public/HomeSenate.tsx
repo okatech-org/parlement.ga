@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
-import { Landmark, Users, FileText, Map, Crown, Shield, ChevronRight, BarChart3, Scale } from "lucide-react";
+import { 
+    Landmark, Users, FileText, Map, Crown, Shield, ChevronRight, BarChart3, Scale,
+    ArrowLeftRight, MapPin, MessageSquare, CheckCircle, Send, Clock, PlayCircle
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
@@ -293,8 +296,115 @@ const HomeSenate = () => {
                 </div>
             </section>
 
+            {/* Protocole Législatif du Sénat */}
+            <section className="py-20 bg-gradient-to-br from-primary/5 to-primary/10">
+                <div className="container mx-auto px-4">
+                    <div className="text-center mb-12">
+                        <Badge className="mb-4 bg-primary/10 text-primary border-primary/20" variant="outline">
+                            <ArrowLeftRight className="h-3 w-3 mr-1" />
+                            Navette Parlementaire
+                        </Badge>
+                        <h2 className="text-4xl font-serif font-bold mb-4">Protocole Législatif du Sénat</h2>
+                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                            Délai constitutionnel de 20 jours pour l'examen des textes
+                        </p>
+                    </div>
+
+                    {/* Fonctionnalités clés */}
+                    <div className="grid md:grid-cols-3 gap-6 mb-16 max-w-5xl mx-auto">
+                        <Card className="border-t-4 border-t-primary">
+                            <CardHeader>
+                                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
+                                    <ArrowLeftRight className="h-6 w-6 text-primary" />
+                                </div>
+                                <CardTitle className="text-lg">Navette Parlementaire</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2 text-sm text-muted-foreground">
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" />Textes reçus avec délai de 20 jours</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" />Priorité aux textes sur les collectivités</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" />Suivi en temps réel de la navette</div>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="border-t-4 border-t-amber-500">
+                            <CardHeader>
+                                <div className="w-12 h-12 rounded-lg bg-amber-500/10 flex items-center justify-center mb-2">
+                                    <MapPin className="h-6 w-6 text-amber-500" />
+                                </div>
+                                <CardTitle className="text-lg">Lien avec les Territoires</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2 text-sm text-muted-foreground">
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" />Doléances des maires et conseillers</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" />Rapports de visites terrain</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" />Carte interactive des 9 provinces</div>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="border-t-4 border-t-blue-500">
+                            <CardHeader>
+                                <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-2">
+                                    <Scale className="h-6 w-6 text-blue-500" />
+                                </div>
+                                <CardTitle className="text-lg">Commission Mixte Paritaire</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2 text-sm text-muted-foreground">
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" />Composition 7+7 membres</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" />Négociation du texte commun</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-green-500" />Procédure de conciliation</div>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* Processus d'examen */}
+                    <Card className="max-w-4xl mx-auto">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Clock className="h-5 w-5 text-primary" />
+                                Processus d'examen d'un texte
+                            </CardTitle>
+                            <CardDescription>De la réception à la transmission</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                                {[
+                                    { step: 1, title: "Réception", icon: FileText, duration: "Jour 1" },
+                                    { step: 2, title: "Commission", icon: Users, duration: "J 2-10" },
+                                    { step: 3, title: "Plénière", icon: MessageSquare, duration: "J 11-15" },
+                                    { step: 4, title: "Vote", icon: CheckCircle, duration: "J 16-20" },
+                                    { step: 5, title: "Transmission", icon: Send, duration: "Après vote" },
+                                ].map((item, index) => {
+                                    const Icon = item.icon;
+                                    return (
+                                        <div key={item.step} className="relative text-center">
+                                            <div className="w-12 h-12 mx-auto rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold mb-2">
+                                                {item.step}
+                                            </div>
+                                            <Icon className="h-5 w-5 mx-auto text-muted-foreground mb-1" />
+                                            <h4 className="font-medium text-sm">{item.title}</h4>
+                                            <Badge variant="outline" className="text-xs mt-1">{item.duration}</Badge>
+                                            {index < 4 && (
+                                                <div className="hidden md:block absolute top-6 left-[60%] w-[80%] h-0.5 bg-primary/20" />
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* CTA */}
+                    <div className="text-center mt-12">
+                        <Button size="lg" onClick={() => navigate("/senat/demo")}>
+                            <PlayCircle className="mr-2 h-5 w-5" />
+                            Essayer la démo
+                            <ChevronRight className="ml-2 h-5 w-5" />
+                        </Button>
+                    </div>
+                </div>
+            </section>
+
             {/* Security Banner */}
-            <section className="py-16 bg-primary/5 border-y border-primary/10">
+            <section className="py-16 bg-card border-y border-border">
                 <div className="container mx-auto px-4">
                     <div className="flex items-center justify-center gap-8 flex-wrap">
                         <div className="flex items-center gap-3">
