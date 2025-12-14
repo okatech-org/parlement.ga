@@ -107,44 +107,110 @@ const App = () => (
             <InstitutionProvider>
               <Routes>
                 {/* ========================================= */}
-                {/* PORTAIL DE LA RÉPUBLIQUE                */}
+                {/* PORTAIL DE LA RÉPUBLIQUE (Choix)         */}
                 {/* ========================================= */}
                 <Route path="/" element={<PortalRepublic />} />
-                <Route path="/portail" element={<PortalRepublic />} />
-
-                {/* Legacy routes */}
-                <Route path="/legislation" element={<Legislation />} />
-                <Route path="/territoire" element={<Territoire />} />
-                <Route path="/deputy" element={<DeputySpace />} />
-                <Route path="/admin" element={<AdminSpace />} />
-                <Route path="/citizen" element={<CitizenSpace />} />
 
                 {/* ========================================= */}
-                {/* ASSEMBLÉE NATIONALE - Thème VERT         */}
+                {/* ASSEMBLÉE NATIONALE - /an/*              */}
+                {/* Thème VERT - Design existant intégré     */}
                 {/* ========================================= */}
 
-                {/* Page d'accueil publique AN */}
-                <Route path="/an" element={<HomeAssembly />} />
-                <Route path="/an/actualites" element={<HomeAssembly />} />
-                <Route path="/an/sensibilisation" element={<HomeAssembly />} />
-                <Route path="/an/tutoriels" element={<HomeAssembly />} />
-                <Route path="/an/demo" element={<ProtocolHub />} />
+                {/* Page d'accueil AN - Utilise Index.tsx existant (design parfait) */}
+                <Route path="/an" element={<Index />} />
+
+                {/* Pages publiques AN */}
+                <Route path="/an/actualites" element={<Actualites />} />
+                <Route path="/an/sensibilisation" element={<Sensibilisation />} />
+                <Route path="/an/tutoriels" element={<Tutoriels />} />
+                <Route path="/an/statistiques" element={<Statistiques />} />
+                <Route path="/an/legislation" element={<Legislation />} />
+                <Route path="/an/territoire" element={<Territoire />} />
+                <Route path="/an/vote" element={<Vote />} />
+                <Route path="/an/demo" element={<ProtocolDemoPage />} />
                 <Route path="/an/login" element={<Login />} />
 
-                {/* Espace interne AN (avec layout) */}
-                <Route path="/an/espace" element={<AssemblyLayout />}>
-                  <Route index element={<AssemblyHome />} />
-                  <Route path="hemicycle" element={<AssemblyHome />} />
-                  <Route path="deputes" element={<AssemblyHome />} />
-                  <Route path="travaux" element={<AssemblyHome />} />
-                  <Route path="agenda" element={<AssemblyHome />} />
-                  <Route path="commissions" element={<AssemblyHome />} />
-                  <Route path="votes" element={<AssemblyHome />} />
-                  <Route path="textes/:textId" element={<AssemblyHome />} />
+                {/* Portail des espaces utilisateurs AN */}
+                <Route path="/an/portail" element={<ProtectedRoute><UserSpacesHub /></ProtectedRoute>} />
+
+                {/* ========================================= */}
+                {/* ESPACES PROTÉGÉS AN - Président          */}
+                {/* ========================================= */}
+                <Route path="/an/espace/president" element={<ProtectedRoute><LayoutPresident><DashboardView /></LayoutPresident></ProtectedRoute>} />
+                <Route path="/an/espace/president/bureau" element={<ProtectedRoute><LayoutPresident><Bureau /></LayoutPresident></ProtectedRoute>} />
+                <Route path="/an/espace/president/conference" element={<ProtectedRoute><LayoutPresident><Conference /></LayoutPresident></ProtectedRoute>} />
+                <Route path="/an/espace/president/commissions" element={<ProtectedRoute><LayoutPresident><Commissions /></LayoutPresident></ProtectedRoute>} />
+                <Route path="/an/espace/president/plenary" element={<ProtectedRoute><LayoutPresident><Plenary /></LayoutPresident></ProtectedRoute>} />
+                <Route path="/an/espace/president/agenda" element={<ProtectedRoute><LayoutPresident><Agenda /></LayoutPresident></ProtectedRoute>} />
+                <Route path="/an/espace/president/documents" element={<ProtectedRoute><LayoutPresident><Documents /></LayoutPresident></ProtectedRoute>} />
+                <Route path="/an/espace/president/mail" element={<ProtectedRoute><LayoutPresident><Mailbox /></LayoutPresident></ProtectedRoute>} />
+                <Route path="/an/espace/president/settings" element={<ProtectedRoute><LayoutPresident><PresidentSettings /></LayoutPresident></ProtectedRoute>} />
+
+                {/* ========================================= */}
+                {/* ESPACES PROTÉGÉS AN - Députés            */}
+                {/* ========================================= */}
+                <Route path="/an/espace/deputes" element={<ProtectedRoute><LayoutDeputy><DashboardDeputy /></LayoutDeputy></ProtectedRoute>} />
+                <Route path="/an/espace/deputes/tools" element={<ProtectedRoute><LayoutDeputy><LegislativeTools /></LayoutDeputy></ProtectedRoute>} />
+                <Route path="/an/espace/deputes/agenda" element={<ProtectedRoute><LayoutDeputy><ParliamentaryAgenda /></LayoutDeputy></ProtectedRoute>} />
+                <Route path="/an/espace/deputes/mandate" element={<ProtectedRoute><LayoutDeputy><MandateManagement /></LayoutDeputy></ProtectedRoute>} />
+                <Route path="/an/espace/deputes/mail" element={<ProtectedRoute><LayoutDeputy><Mailbox /></LayoutDeputy></ProtectedRoute>} />
+                <Route path="/an/espace/deputes/documents" element={<ProtectedRoute><LayoutDeputy><SharedDocuments /></LayoutDeputy></ProtectedRoute>} />
+                <Route path="/an/espace/deputes/settings" element={<ProtectedRoute><LayoutDeputy><PresidentSettings /></LayoutDeputy></ProtectedRoute>} />
+
+                {/* ========================================= */}
+                {/* ESPACES PROTÉGÉS AN - Vice-Présidents    */}
+                {/* ========================================= */}
+                <Route path="/an/espace/vp" element={<ProtectedRoute><LayoutVP><DashboardVP /></LayoutVP></ProtectedRoute>} />
+                <Route path="/an/espace/vp/delegations" element={<ProtectedRoute><LayoutVP><DelegationManagement /></LayoutVP></ProtectedRoute>} />
+                <Route path="/an/espace/vp/interim" element={<ProtectedRoute><LayoutVP><InterimMode /></LayoutVP></ProtectedRoute>} />
+                <Route path="/an/espace/vp/agenda" element={<ProtectedRoute><LayoutVP><VPAgenda /></LayoutVP></ProtectedRoute>} />
+                <Route path="/an/espace/vp/mail" element={<ProtectedRoute><LayoutVP><Mailbox /></LayoutVP></ProtectedRoute>} />
+                <Route path="/an/espace/vp/documents" element={<ProtectedRoute><LayoutVP><SharedDocuments /></LayoutVP></ProtectedRoute>} />
+                <Route path="/an/espace/vp/settings" element={<ProtectedRoute><LayoutVP><PresidentSettings /></LayoutVP></ProtectedRoute>} />
+
+                {/* ========================================= */}
+                {/* ESPACES PROTÉGÉS AN - Questeurs          */}
+                {/* ========================================= */}
+                <Route path="/an/espace/questeurs" element={<ProtectedRoute><LayoutQuesteur><DashboardQuesteur /></LayoutQuesteur></ProtectedRoute>} />
+                <Route path="/an/espace/questeurs/budget" element={<ProtectedRoute><LayoutQuesteur><BudgetManagement /></LayoutQuesteur></ProtectedRoute>} />
+                <Route path="/an/espace/questeurs/ressources" element={<ProtectedRoute><LayoutQuesteur><MaterialResources /></LayoutQuesteur></ProtectedRoute>} />
+                <Route path="/an/espace/questeurs/services" element={<ProtectedRoute><LayoutQuesteur><AdministrativeServices /></LayoutQuesteur></ProtectedRoute>} />
+                <Route path="/an/espace/questeurs/mail" element={<ProtectedRoute><LayoutQuesteur><Mailbox /></LayoutQuesteur></ProtectedRoute>} />
+                <Route path="/an/espace/questeurs/documents" element={<ProtectedRoute><LayoutQuesteur><SharedDocuments /></LayoutQuesteur></ProtectedRoute>} />
+                <Route path="/an/espace/questeurs/settings" element={<ProtectedRoute><LayoutQuesteur><PresidentSettings /></LayoutQuesteur></ProtectedRoute>} />
+
+                {/* ========================================= */}
+                {/* ESPACES PROTÉGÉS AN - Secrétaires        */}
+                {/* ========================================= */}
+                <Route path="/an/espace/secretaires" element={<ProtectedRoute><LayoutSecretary><DashboardSecretary /></LayoutSecretary></ProtectedRoute>} />
+                <Route path="/an/espace/secretaires/agenda" element={<ProtectedRoute><LayoutSecretary><SecretaryAgenda /></LayoutSecretary></ProtectedRoute>} />
+                <Route path="/an/espace/secretaires/documents" element={<ProtectedRoute><LayoutSecretary><SecretaryDocuments /></LayoutSecretary></ProtectedRoute>} />
+                <Route path="/an/espace/secretaires/mail" element={<ProtectedRoute><LayoutSecretary><Mailbox /></LayoutSecretary></ProtectedRoute>} />
+                <Route path="/an/espace/secretaires/settings" element={<ProtectedRoute><LayoutSecretary><PresidentSettings /></LayoutSecretary></ProtectedRoute>} />
+
+                {/* ========================================= */}
+                {/* ESPACES PROTÉGÉS AN - Suppléants         */}
+                {/* ========================================= */}
+                <Route path="/an/espace/suppleants" element={<ProtectedRoute><LayoutSubstitute><DashboardSubstitute /></LayoutSubstitute></ProtectedRoute>} />
+                <Route path="/an/espace/suppleants/tracking" element={<ProtectedRoute><LayoutSubstitute><LegislativeTracking /></LayoutSubstitute></ProtectedRoute>} />
+                <Route path="/an/espace/suppleants/training" element={<ProtectedRoute><LayoutSubstitute><TrainingResources /></LayoutSubstitute></ProtectedRoute>} />
+                <Route path="/an/espace/suppleants/agenda" element={<ProtectedRoute><LayoutSubstitute><TitularAgenda /></LayoutSubstitute></ProtectedRoute>} />
+                <Route path="/an/espace/suppleants/mail" element={<ProtectedRoute><LayoutSubstitute><Mailbox /></LayoutSubstitute></ProtectedRoute>} />
+                <Route path="/an/espace/suppleants/documents" element={<ProtectedRoute><LayoutSubstitute><SharedDocuments /></LayoutSubstitute></ProtectedRoute>} />
+                <Route path="/an/espace/suppleants/settings" element={<ProtectedRoute><LayoutSubstitute><PresidentSettings /></LayoutSubstitute></ProtectedRoute>} />
+
+                {/* ========================================= */}
+                {/* ESPACES PROTÉGÉS AN - User               */}
+                {/* ========================================= */}
+                <Route path="/an/espace/user" element={<ProtectedRoute><UserSpaceLayout /></ProtectedRoute>}>
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="profile" element={<Profile />} />
+                  <Route path="settings" element={<Settings />} />
                 </Route>
 
                 {/* ========================================= */}
-                {/* SÉNAT - Thème OR / AMBRE                */}
+                {/* SÉNAT - /senat/*                         */}
+                {/* Thème OR / AMBRE                         */}
                 {/* ========================================= */}
 
                 {/* Page d'accueil publique Sénat */}
@@ -164,11 +230,11 @@ const App = () => (
                   <Route path="agenda" element={<SenateHome />} />
                   <Route path="commissions" element={<SenateHome />} />
                   <Route path="collectivites" element={<SenateHome />} />
-                  <Route path="textes/:textId" element={<SenateHome />} />
                 </Route>
 
                 {/* ========================================= */}
-                {/* PARLEMENT (CONGRÈS) - Thème BLEU ROI     */}
+                {/* PARLEMENT (CONGRÈS) - /congres/*         */}
+                {/* Thème BLEU ROI                           */}
                 {/* ========================================= */}
 
                 {/* Page d'accueil publique Parlement */}
@@ -183,26 +249,16 @@ const App = () => (
                   <Route index element={<ParliamentHome />} />
                   <Route path="cmp" element={<ParliamentHome />} />
                   <Route path="cmp/:cmpId" element={<CMPWorkspace />} />
-                  <Route path="sessions" element={<ParliamentHome />} />
-                  <Route path="archives" element={<ParliamentHome />} />
-                  <Route path="textes" element={<ParliamentHome />} />
                   <Route path="navette" element={<ParliamentHome />} />
-                  <Route path="decisions" element={<ParliamentHome />} />
                   <Route path="constitution" element={<ParliamentHome />} />
                 </Route>
 
                 {/* ========================================= */}
-                {/* ROUTES EXISTANTES (Legacy)               */}
+                {/* ROUTES LEGACY (rétrocompatibilité)       */}
+                {/* Redirection vers nouvelles routes AN     */}
                 {/* ========================================= */}
 
-                {/* User Space Routes - Protected */}
-                <Route path="/user" element={<ProtectedRoute><UserSpaceLayout /></ProtectedRoute>}>
-                  <Route path="dashboard" element={<Dashboard />} />
-                  <Route path="profile" element={<Profile />} />
-                  <Route path="settings" element={<Settings />} />
-                </Route>
-
-                {/* President Space Route - Protected */}
+                {/* President Space Legacy - Redirect to AN */}
                 <Route path="/president" element={<ProtectedRoute><LayoutPresident><DashboardView /></LayoutPresident></ProtectedRoute>} />
                 <Route path="/president/bureau" element={<ProtectedRoute><LayoutPresident><Bureau /></LayoutPresident></ProtectedRoute>} />
                 <Route path="/president/conference" element={<ProtectedRoute><LayoutPresident><Conference /></LayoutPresident></ProtectedRoute>} />
@@ -213,7 +269,7 @@ const App = () => (
                 <Route path="/president/mail" element={<ProtectedRoute><LayoutPresident><Mailbox /></LayoutPresident></ProtectedRoute>} />
                 <Route path="/president/settings" element={<ProtectedRoute><LayoutPresident><PresidentSettings /></LayoutPresident></ProtectedRoute>} />
 
-                {/* Deputy Space Routes - Protected */}
+                {/* Deputy Space Legacy */}
                 <Route path="/vote" element={<ProtectedRoute><LayoutDeputy><DashboardDeputy /></LayoutDeputy></ProtectedRoute>} />
                 <Route path="/vote/tools" element={<ProtectedRoute><LayoutDeputy><LegislativeTools /></LayoutDeputy></ProtectedRoute>} />
                 <Route path="/vote/agenda" element={<ProtectedRoute><LayoutDeputy><ParliamentaryAgenda /></LayoutDeputy></ProtectedRoute>} />
@@ -222,7 +278,7 @@ const App = () => (
                 <Route path="/vote/documents" element={<ProtectedRoute><LayoutDeputy><SharedDocuments /></LayoutDeputy></ProtectedRoute>} />
                 <Route path="/vote/settings" element={<ProtectedRoute><LayoutDeputy><PresidentSettings /></LayoutDeputy></ProtectedRoute>} />
 
-                {/* Substitute Deputy Space Routes - Protected */}
+                {/* Substitute Legacy */}
                 <Route path="/suppleant" element={<ProtectedRoute><LayoutSubstitute><DashboardSubstitute /></LayoutSubstitute></ProtectedRoute>} />
                 <Route path="/suppleant/tracking" element={<ProtectedRoute><LayoutSubstitute><LegislativeTracking /></LayoutSubstitute></ProtectedRoute>} />
                 <Route path="/suppleant/training" element={<ProtectedRoute><LayoutSubstitute><TrainingResources /></LayoutSubstitute></ProtectedRoute>} />
@@ -231,7 +287,7 @@ const App = () => (
                 <Route path="/suppleant/documents" element={<ProtectedRoute><LayoutSubstitute><SharedDocuments /></LayoutSubstitute></ProtectedRoute>} />
                 <Route path="/suppleant/settings" element={<ProtectedRoute><LayoutSubstitute><PresidentSettings /></LayoutSubstitute></ProtectedRoute>} />
 
-                {/* 1st VP Space Routes - Protected */}
+                {/* VP Legacy */}
                 <Route path="/vp" element={<ProtectedRoute><LayoutVP><DashboardVP /></LayoutVP></ProtectedRoute>} />
                 <Route path="/vp/delegations" element={<ProtectedRoute><LayoutVP><DelegationManagement /></LayoutVP></ProtectedRoute>} />
                 <Route path="/vp/interim" element={<ProtectedRoute><LayoutVP><InterimMode /></LayoutVP></ProtectedRoute>} />
@@ -240,7 +296,7 @@ const App = () => (
                 <Route path="/vp/documents" element={<ProtectedRoute><LayoutVP><SharedDocuments /></LayoutVP></ProtectedRoute>} />
                 <Route path="/vp/settings" element={<ProtectedRoute><LayoutVP><PresidentSettings /></LayoutVP></ProtectedRoute>} />
 
-                {/* Questeurs Space Routes - Protected */}
+                {/* Questeurs Legacy */}
                 <Route path="/questeurs" element={<ProtectedRoute><LayoutQuesteur><DashboardQuesteur /></LayoutQuesteur></ProtectedRoute>} />
                 <Route path="/questeurs/budget" element={<ProtectedRoute><LayoutQuesteur><BudgetManagement /></LayoutQuesteur></ProtectedRoute>} />
                 <Route path="/questeurs/ressources" element={<ProtectedRoute><LayoutQuesteur><MaterialResources /></LayoutQuesteur></ProtectedRoute>} />
@@ -249,26 +305,36 @@ const App = () => (
                 <Route path="/questeurs/documents" element={<ProtectedRoute><LayoutQuesteur><SharedDocuments /></LayoutQuesteur></ProtectedRoute>} />
                 <Route path="/questeurs/settings" element={<ProtectedRoute><LayoutQuesteur><PresidentSettings /></LayoutQuesteur></ProtectedRoute>} />
 
-                {/* Secretary Space Routes - Protected */}
+                {/* Secretaires Legacy */}
                 <Route path="/secretaires" element={<ProtectedRoute><LayoutSecretary><DashboardSecretary /></LayoutSecretary></ProtectedRoute>} />
                 <Route path="/secretaires/agenda" element={<ProtectedRoute><LayoutSecretary><SecretaryAgenda /></LayoutSecretary></ProtectedRoute>} />
                 <Route path="/secretaires/documents" element={<ProtectedRoute><LayoutSecretary><SecretaryDocuments /></LayoutSecretary></ProtectedRoute>} />
                 <Route path="/secretaires/mail" element={<ProtectedRoute><LayoutSecretary><Mailbox /></LayoutSecretary></ProtectedRoute>} />
                 <Route path="/secretaires/settings" element={<ProtectedRoute><LayoutSecretary><PresidentSettings /></LayoutSecretary></ProtectedRoute>} />
 
-                {/* User Spaces Hub Portal - Protected */}
-                <Route path="/portail" element={<ProtectedRoute><UserSpacesHub /></ProtectedRoute>} />
+                {/* User Space Legacy */}
+                <Route path="/user" element={<ProtectedRoute><UserSpaceLayout /></ProtectedRoute>}>
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="profile" element={<Profile />} />
+                  <Route path="settings" element={<Settings />} />
+                </Route>
 
-                {/* Resource Pages */}
+                {/* Other Legacy Routes */}
+                <Route path="/portail" element={<ProtectedRoute><UserSpacesHub /></ProtectedRoute>} />
+                <Route path="/deputy" element={<DeputySpace />} />
+                <Route path="/admin" element={<AdminSpace />} />
+                <Route path="/citizen" element={<CitizenSpace />} />
                 <Route path="/actualites" element={<Actualites />} />
                 <Route path="/sensibilisation" element={<Sensibilisation />} />
                 <Route path="/tutoriels" element={<Tutoriels />} />
                 <Route path="/statistiques" element={<Statistiques />} />
+                <Route path="/legislation" element={<Legislation />} />
+                <Route path="/territoire" element={<Territoire />} />
                 <Route path="/iasted/analytics" element={<ProtectedRoute><IAstedAnalytics /></ProtectedRoute>} />
                 <Route path="/iasted/admin-feedback" element={<ProtectedRoute><IAstedAdminFeedback /></ProtectedRoute>} />
                 <Route path="/iasted/protocol-demo" element={<ProtocolDemoPage />} />
 
-                {/* Login */}
+                {/* Login & Auth */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/auth" element={<Auth />} />
 
