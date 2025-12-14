@@ -118,6 +118,8 @@ import ProcessComparison from "@/pages/parliament/ProcessComparison";
 import CitizenPage from "@/pages/public/CitizenPage";
 import LegislativeQuiz from "@/pages/public/LegislativeQuiz";
 import SystemAdminLogin from "@/pages/admin/SystemAdminLogin";
+import SystemAdminDashboard from "@/pages/admin/SystemAdminDashboard";
+import InstitutionAdminDashboard from "@/pages/admin/InstitutionAdminDashboard";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -397,8 +399,14 @@ const App = () => (
                 <Route path="/login" element={<Navigate to="/parlement/login" replace />} />
                 <Route path="/auth" element={<Navigate to="/parlement/login" replace />} />
 
-                {/* System Admin Portal */}
+                {/* System Admin Portal (Login) */}
                 <Route path="/admin" element={<SystemAdminLogin />} />
+
+                {/* Admin Dashboards */}
+                <Route path="/admin/dashboard" element={<SystemAdminDashboard />} />
+                <Route path="/an/admin" element={<InstitutionAdminDashboard type="AN" />} />
+                <Route path="/senat/admin" element={<InstitutionAdminDashboard type="Senat" />} />
+                <Route path="/parlement/admin" element={<InstitutionAdminDashboard type="Parlement" />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

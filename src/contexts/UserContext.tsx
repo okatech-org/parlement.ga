@@ -139,16 +139,16 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                     navigate('/citizen');
                     break;
                 case 'system_admin':
-                    navigate('/parlement');
+                    navigate('/admin/dashboard');
                     break;
                 case 'admin_an':
-                    navigate('/an');
+                    navigate('/an/admin');
                     break;
                 case 'admin_senat':
-                    navigate('/senat');
+                    navigate('/senat/admin');
                     break;
                 case 'admin_parlement':
-                    navigate('/parlement');
+                    navigate('/parlement/admin');
                     break;
                 default:
                     navigate('/');
