@@ -34,7 +34,15 @@ export default function Login() {
 
     const [mode, setMode] = useState<"login" | "register">("login");
     const [step, setStep] = useState<"phone" | "pin" | "biometric" | "account-type">("account-type");
-    const [userType, setUserType] = useState<"citizen" | "official">("citizen"); // Tab state
+
+    // Initialize userType based on route: Specific environments prioritize Official (Members), Generic route prioritizes Citizen
+    const [userType, setUserType] = useState<"citizen" | "official">(() => {
+        const path = location.pathname;
+        if (path.includes('/an') || path.includes('/senat') || path.includes('/congres') || path.includes('/parlement')) {
+            return 'official';
+        }
+        return 'citizen';
+    });
     const [accountType, setAccountType] = useState<"citoyen" | "parlement" | null>(null);
     const [phoneNumber, setPhoneNumber] = useState("");
     const [pinCode, setPinCode] = useState("");
@@ -74,6 +82,11 @@ export default function Login() {
 
     // Environment Detection
     const getEnvironmentConfig = () => {
+        // If Citizen tab is active, use Unified Republic Styling
+        if (userType === 'citizen') {
+            return { name: "République Gabonaise", color: "text-primary", bg: "from-primary", icon: Shield };
+        }
+
         const path = location.pathname;
         if (path.includes('/an')) return { name: "Assemblée Nationale", color: "text-emerald-600", bg: "from-emerald-900", icon: Building2 };
         if (path.includes('/senat')) return { name: "Sénat", color: "text-amber-600", bg: "from-amber-900", icon: Landmark };
