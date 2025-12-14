@@ -19,7 +19,7 @@ export interface UploadProgress {
 }
 
 // Mode Mock pour développement (si bucket pas encore créé)
-const USE_MOCK = true;
+const USE_MOCK = false;
 
 // Storage local pour le mode mock
 const MOCK_FILES_KEY = "iasted_mock_files";
