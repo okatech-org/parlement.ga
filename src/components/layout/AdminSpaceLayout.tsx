@@ -47,22 +47,34 @@ export const AdminSpaceLayout = ({
     }
 
     const isDemo = sessionStorage.getItem('is_demo') === 'true';
+    const origin = sessionStorage.getItem('auth_origin');
 
     // Clear Session
     sessionStorage.removeItem('user_data');
     sessionStorage.removeItem('current_role');
     sessionStorage.removeItem('is_demo');
+    sessionStorage.removeItem('auth_origin');
 
     toast({
       title: "Déconnexion",
       description: "Vous avez été déconnecté avec succès",
     });
 
+    if (origin) {
+      if (isDemo) {
+        if (origin === '/an') navigate('/an/demo');
+        else if (origin === '/senat') navigate('/senat/demo');
+        else navigate('/congres/demo');
+      } else {
+        navigate(origin);
+      }
+      return;
+    }
+
     if (isDemo) {
       if (location.pathname.includes('/senat')) {
         navigate('/senat/demo');
       } else {
-        // Includes /an or /parlement or /congres -> Default to Protocol Demo (AN Demo)
         navigate('/congres/demo');
       }
     } else {

@@ -209,6 +209,14 @@ export default function Login() {
     const { login } = useUser();
 
     const handleSuccessfulLogin = () => {
+        // Persist the origin environment for logout redirection
+        let origin = '/parlement';
+        if (location.pathname.includes('/an')) origin = '/an';
+        else if (location.pathname.includes('/senat')) origin = '/senat';
+        else if (location.pathname.includes('/congres') || location.pathname.includes('/parlement')) origin = '/parlement';
+
+        sessionStorage.setItem('auth_origin', origin);
+
         // Here we could enforce checking if the user actually has the role corresponding to the tab
         // For now, we just login
         login(phoneNumber, accountType || (userType === 'official' ? 'parlement' : 'citoyen'));
