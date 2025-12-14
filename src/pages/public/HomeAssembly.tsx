@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
     Building2, Users, FileText, Calendar, Video,
     ArrowRight, Newspaper, GraduationCap, PlayCircle,
-    MapPin, ExternalLink
+    MapPin, ExternalLink, CheckCircle, Send, MessageSquare,
+    Gavel, Clock, ArrowLeftRight, Scale
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -231,6 +232,117 @@ const HomeAssembly: React.FC = () => {
                                 </Card>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Protocole Législatif */}
+            <section className="py-20 bg-gradient-to-br from-emerald-50 to-green-100 dark:from-emerald-950/50 dark:to-gray-900">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="text-center mb-12">
+                        <Badge className="mb-4 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+                            <Gavel className="h-3 w-3 mr-1" />
+                            Processus Législatif
+                        </Badge>
+                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                            Protocole Législatif de l'Assemblée
+                        </h2>
+                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                            Du dépôt d'un projet de loi à son adoption en séance plénière
+                        </p>
+                    </div>
+
+                    {/* Fonctionnalités clés */}
+                    <div className="grid md:grid-cols-3 gap-6 mb-12">
+                        <Card className="border-t-4 border-t-emerald-500">
+                            <CardHeader>
+                                <div className="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-2">
+                                    <FileText className="h-6 w-6 text-emerald-600" />
+                                </div>
+                                <CardTitle className="text-lg">Dépôt des Textes</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Projets de loi du Gouvernement</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Propositions de loi des députés</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Amendements en commission</div>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="border-t-4 border-t-amber-500">
+                            <CardHeader>
+                                <div className="w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-2">
+                                    <Users className="h-6 w-6 text-amber-600" />
+                                </div>
+                                <CardTitle className="text-lg">Travail en Commission</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />6 commissions permanentes</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Auditions des ministres</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Rapport du rapporteur</div>
+                            </CardContent>
+                        </Card>
+
+                        <Card className="border-t-4 border-t-blue-500">
+                            <CardHeader>
+                                <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-2">
+                                    <ArrowLeftRight className="h-6 w-6 text-blue-600" />
+                                </div>
+                                <CardTitle className="text-lg">Navette Parlementaire</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Transmission au Sénat</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Commission Mixte Paritaire</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Lecture définitive</div>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* Processus */}
+                    <Card className="max-w-4xl mx-auto bg-white dark:bg-gray-800">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
+                                <Clock className="h-5 w-5" />
+                                Étapes d'examen d'un texte
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                                {[
+                                    { step: 1, title: "Dépôt", icon: FileText },
+                                    { step: 2, title: "Commission", icon: Users },
+                                    { step: 3, title: "Discussion", icon: MessageSquare },
+                                    { step: 4, title: "Vote", icon: CheckCircle },
+                                    { step: 5, title: "Transmission", icon: Send },
+                                ].map((item, index) => {
+                                    const Icon = item.icon;
+                                    return (
+                                        <div key={item.step} className="relative text-center">
+                                            <div className="w-12 h-12 mx-auto rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold mb-2">
+                                                {item.step}
+                                            </div>
+                                            <Icon className="h-5 w-5 mx-auto text-gray-500 dark:text-gray-400 mb-1" />
+                                            <h4 className="font-medium text-sm text-gray-900 dark:text-white">{item.title}</h4>
+                                            {index < 4 && (
+                                                <div className="hidden md:block absolute top-6 left-[60%] w-[80%] h-0.5 bg-emerald-200 dark:bg-emerald-800" />
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* CTA */}
+                    <div className="text-center mt-10">
+                        <Button
+                            size="lg"
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                            onClick={() => navigate('/an/demo')}
+                        >
+                            <PlayCircle className="mr-2 h-5 w-5" />
+                            Essayer la démo
+                            <ArrowRight className="ml-2 h-5 w-5" />
+                        </Button>
                     </div>
                 </div>
             </section>

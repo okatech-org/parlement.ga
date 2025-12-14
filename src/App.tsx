@@ -102,6 +102,7 @@ import PresidentSenateSpace from "@/pages/senate/president/PresidentSenateSpace"
 import SenateDemo from "@/pages/senate/SenateDemo";
 import GrievanceManagement from "@/pages/senate/GrievanceManagement";
 import FieldVisitsPage from "@/pages/senate/FieldVisitsPage";
+import SenateProcessPage from "@/pages/senate/SenateProcessPage";
 
 // Parliament/Congress specific pages
 import CongressDashboard from "@/pages/parliament/CongressDashboard";
@@ -235,6 +236,7 @@ const App = () => (
                 <Route path="/senat/sensibilisation" element={<HomeSenate />} />
                 <Route path="/senat/tutoriels" element={<HomeSenate />} />
                 <Route path="/senat/demo" element={<SenateDemo />} />
+                <Route path="/senat/processus" element={<SenateProcessPage />} />
                 <Route path="/senat/login" element={<Login />} />
 
                 {/* Espace Sénateur (Dashboard) */}
