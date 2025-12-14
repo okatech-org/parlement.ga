@@ -23,6 +23,7 @@ const SystemAdminLogin = () => {
         e.preventDefault();
         // Fallback login
         if (username === "admin" && password === "admin") {
+            sessionStorage.setItem('auth_origin', '/admin');
             login("admin00", "admin");
         }
     };
@@ -143,7 +144,10 @@ const SystemAdminLogin = () => {
                                 <Card
                                     key={acc.id}
                                     className={`p-4 bg-slate-900/40 cursor-pointer transition-all duration-300 border ${acc.border} hover:bg-slate-800 group`}
-                                    onClick={() => login(acc.phone, "admin")}
+                                    onClick={() => {
+                                        sessionStorage.setItem('auth_origin', '/admin');
+                                        login(acc.phone, "admin");
+                                    }}
                                 >
                                     <div className="flex items-center gap-4 mb-3">
                                         <div className={`p-2 rounded-md bg-slate-950 group-hover:bg-slate-900 transition-colors ${acc.color}`}>
