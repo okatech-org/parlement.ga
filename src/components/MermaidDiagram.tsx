@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useTheme } from 'next-themes';
 
 interface MermaidDiagramProps {
     chart: string;
@@ -9,33 +8,23 @@ interface MermaidDiagramProps {
     className?: string;
 }
 
-// Initialize mermaid with default config
-mermaid.initialize({
-    startOnLoad: false,
-    theme: 'default',
-    securityLevel: 'loose',
-    flowchart: {
-        useMaxWidth: true,
-        htmlLabels: true,
-        curve: 'basis',
-    },
-});
-
 const MermaidDiagram = ({ chart, title, className = '' }: MermaidDiagramProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [svg, setSvg] = useState<string>('');
     const [error, setError] = useState<string | null>(null);
-    const { theme } = useTheme();
 
     useEffect(() => {
         const renderDiagram = async () => {
             if (!containerRef.current) return;
 
             try {
-                // Update theme based on current theme
+                // Check if dark mode is active
+                const isDark = document.documentElement.classList.contains('dark');
+                
+                // Initialize mermaid with theme
                 mermaid.initialize({
                     startOnLoad: false,
-                    theme: theme === 'dark' ? 'dark' : 'default',
+                    theme: isDark ? 'dark' : 'default',
                     securityLevel: 'loose',
                     flowchart: {
                         useMaxWidth: true,
@@ -55,7 +44,7 @@ const MermaidDiagram = ({ chart, title, className = '' }: MermaidDiagramProps) =
         };
 
         renderDiagram();
-    }, [chart, theme]);
+    }, [chart]);
 
     if (error) {
         return (
