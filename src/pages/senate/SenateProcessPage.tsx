@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
+import MermaidDiagram from "@/components/MermaidDiagram";
 
 /**
  * Page dédiée au Protocole Législatif du Sénat
@@ -199,6 +200,48 @@ const SenateProcessPage = () => {
                             <MapPin className="h-4 w-4 mr-1" />
                             9 provinces
                         </Badge>
+                    </div>
+                </div>
+            </section>
+
+            {/* Diagramme du flux législatif */}
+            <section className="py-16 bg-muted/30">
+                <div className="container mx-auto px-4">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl font-serif font-bold mb-4">Flux Législatif au Sénat</h2>
+                        <p className="text-muted-foreground max-w-2xl mx-auto">
+                            Visualisez le parcours complet d'un texte reçu de l'Assemblée Nationale
+                        </p>
+                    </div>
+                    <div className="max-w-4xl mx-auto">
+                        <MermaidDiagram 
+                            chart={`
+flowchart TD
+    A[📨 Réception du texte AN] --> B[Bureau du Sénat]
+    B --> C{Texte sur collectivités?}
+    C -->|Oui| D[Traitement prioritaire]
+    C -->|Non| E[Procédure normale]
+    D --> F[Commission compétente]
+    E --> F
+    F --> G[Nomination rapporteur]
+    G --> H[Examen en commission]
+    H --> I[Auditions]
+    I --> J[Rapport de la commission]
+    J --> K[Discussion en plénière]
+    K --> L[Vote des amendements]
+    L --> M{Vote final}
+    M -->|Conforme| N[Promulgation]
+    M -->|Amendé| O[Retour AN]
+    M -->|Rejeté| P[CMP possible]
+    
+    style A fill:#3b82f6,color:#fff
+    style N fill:#22c55e,color:#fff
+    style O fill:#f59e0b,color:#fff
+    style P fill:#ef4444,color:#fff
+`} 
+                            title="Parcours d'un texte au Sénat"
+                            className="shadow-lg"
+                        />
                     </div>
                 </div>
             </section>

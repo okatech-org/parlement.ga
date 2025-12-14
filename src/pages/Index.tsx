@@ -112,8 +112,11 @@ const Index = () => {
               <Button variant="ghost" size="sm" onClick={() => navigate("/an/tutoriels")}>
                 {t('home.resources.tutorials.title')}
               </Button>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/an/processus")}>
+                Processus
+              </Button>
               <Button variant="ghost" size="sm" onClick={() => navigate("/an/demo")}>
-                Démo Protocole
+                Démo
               </Button>
             </nav>
             <div className="flex items-center gap-2">
