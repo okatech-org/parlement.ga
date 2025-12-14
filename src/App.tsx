@@ -101,6 +101,8 @@ import ProtocolHub from "@/pages/public/demo/ProtocolHub";
 import SenateDashboard from "@/pages/senate/senator/SenateDashboard";
 import SenatorSpace from "@/pages/senate/senator/SenatorSpace";
 import PresidentSenateSpace from "@/pages/senate/president/PresidentSenateSpace";
+import VPSenateSpace from "@/pages/senate/vp/VPSenateSpace";
+import QuesteurSenateSpace from "@/pages/senate/questeur/QuesteurSenateSpace";
 import SenateDemo from "@/pages/senate/SenateDemo";
 import GrievanceManagement from "@/pages/senate/GrievanceManagement";
 import FieldVisitsPage from "@/pages/senate/FieldVisitsPage";
