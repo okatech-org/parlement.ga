@@ -101,6 +101,11 @@ import SenateDashboard from "@/pages/senate/senator/SenateDashboard";
 import PresidentSenateSpace from "@/pages/senate/president/PresidentSenateSpace";
 import SenateDemo from "@/pages/senate/SenateDemo";
 
+// Parliament/Congress specific pages
+import CongressDashboard from "@/pages/parliament/CongressDashboard";
+import CongressVote from "@/pages/parliament/CongressVote";
+import NationalArchives from "@/pages/public/NationalArchives";
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
@@ -254,18 +259,36 @@ const App = () => (
                 <Route path="/senat/provinces" element={<HomeSenate />} />
 
                 {/* ========================================= */}
-                {/* CONGRÈS - Alias vers Hub et espaces       */}
-                {/* Les routes /congres redirigent vers /     */}
+                {/* CONGRÈS / PARLEMENT - Espace Souverain   */}
+                {/* Instance de convergence bicamérale       */}
                 {/* ========================================= */}
 
-                {/* Alias pour /congres → hub central */}
+                {/* Routes publiques du Parlement */}
                 <Route path="/congres" element={<HomeParliament />} />
-                <Route path="/congres/sessions" element={<HomeParliament />} />
-                <Route path="/congres/archives" element={<HomeParliament />} />
+                <Route path="/parlement/archives" element={<NationalArchives />} />
+                <Route path="/congres/archives" element={<NationalArchives />} />
                 <Route path="/congres/demo" element={<ProtocolDemoPage />} />
                 <Route path="/congres/login" element={<Login />} />
 
-                {/* Espace interne Congrès (CMP, etc.) */}
+                {/* Dashboard Congrès (Députés + Sénateurs) */}
+                <Route path="/parlement/dashboard" element={<CongressDashboard />} />
+                <Route path="/congres/dashboard" element={<CongressDashboard />} />
+
+                {/* CMP - War Room */}
+                <Route path="/parlement/cmp" element={<CongressDashboard />} />
+                <Route path="/parlement/cmp/:cmpId" element={<CMPWorkspace />} />
+                <Route path="/congres/cmp/:cmpId" element={<CMPWorkspace />} />
+
+                {/* Vote du Congrès */}
+                <Route path="/parlement/vote" element={<CongressVote />} />
+                <Route path="/parlement/vote/:sessionId" element={<CongressVote />} />
+                <Route path="/congres/vote/:sessionId" element={<CongressVote />} />
+
+                {/* Sessions et historique */}
+                <Route path="/parlement/sessions" element={<CongressDashboard />} />
+                <Route path="/congres/sessions" element={<CongressDashboard />} />
+
+                {/* Espace interne Congrès (avec layout) */}
                 <Route path="/congres/espace" element={<ParliamentLayout />}>
                   <Route index element={<ParliamentHome />} />
                   <Route path="cmp" element={<ParliamentHome />} />
