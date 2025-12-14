@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export type UserRole = 'president' | 'vp' | 'deputy' | 'substitute' | 'citizen' | 'questeur' | 'secretary' | 'questeur_budget' | 'questeur_resources' | 'questeur_services';
+export type UserRole = 'president' | 'vp' | 'deputy' | 'substitute' | 'citizen' | 'questeur' | 'secretary' | 'questeur_budget' | 'questeur_resources' | 'questeur_services' | 'system_admin' | 'admin_an' | 'admin_senat' | 'admin_parlement';
 
 interface User {
     id: string;
@@ -71,6 +71,18 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         } else if (phoneNumber === "05050505") {
             // Secretary: Admin role
             mockUser = { ...mockUser, name: 'M. Secrétaire', roles: ['secretary', 'citizen'] };
+        } else if (phoneNumber === "admin00") {
+            // System Admin / Super Admin
+            mockUser = { ...mockUser, name: 'Administrateur Système', roles: ['system_admin'] };
+        } else if (phoneNumber === "admin01") {
+            // Admin AN
+            mockUser = { ...mockUser, name: 'Administrateur AN', roles: ['admin_an'] };
+        } else if (phoneNumber === "admin02") {
+            // Admin Sénat
+            mockUser = { ...mockUser, name: 'Administrateur Sénat', roles: ['admin_senat'] };
+        } else if (phoneNumber === "admin03") {
+            // Admin Parlement
+            mockUser = { ...mockUser, name: 'Administrateur Parlement', roles: ['admin_parlement'] };
         } else if (accountType === 'parlement') {
             // Standard Deputy
             mockUser = { ...mockUser, name: 'Honorable Député', roles: ['deputy', 'citizen'] };
@@ -125,6 +137,18 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                     break;
                 case 'citizen':
                     navigate('/citizen');
+                    break;
+                case 'system_admin':
+                    navigate('/parlement');
+                    break;
+                case 'admin_an':
+                    navigate('/an');
+                    break;
+                case 'admin_senat':
+                    navigate('/senat');
+                    break;
+                case 'admin_parlement':
+                    navigate('/parlement');
                     break;
                 default:
                     navigate('/');

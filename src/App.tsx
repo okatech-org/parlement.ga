@@ -117,6 +117,7 @@ import NationalArchives from "@/pages/public/NationalArchives";
 import ProcessComparison from "@/pages/parliament/ProcessComparison";
 import CitizenPage from "@/pages/public/CitizenPage";
 import LegislativeQuiz from "@/pages/public/LegislativeQuiz";
+import SystemAdminLogin from "@/pages/admin/SystemAdminLogin";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -395,6 +396,9 @@ const App = () => (
                 {/* Redirect legacy /login to /parlement/login */}
                 <Route path="/login" element={<Navigate to="/parlement/login" replace />} />
                 <Route path="/auth" element={<Navigate to="/parlement/login" replace />} />
+
+                {/* System Admin Portal */}
+                <Route path="/admin" element={<SystemAdminLogin />} />
 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
