@@ -7,18 +7,33 @@ import {
   Vote,
   BookOpen,
   Crown,
+  Building2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { DashboardStatsCard } from "@/components/dashboard/DashboardStatsCard";
+import { GroupDistributionChart, LawProgressChart, AttendanceRateCard } from "@/components/dashboard/DashboardCharts";
 
 export const ParliamentDashboardSection = () => {
   const stats = [
-    { label: "Lois adoptées", value: 47, icon: FileText, subLabel: "Cette législature" },
-    { label: "Révisions const.", value: 3, icon: BookOpen, subLabel: "Depuis 2023" },
-    { label: "CMP convoquées", value: 12, icon: ArrowLeftRight, subLabel: "Toutes législatures" },
-    { label: "Textes archivés", value: 1247, icon: Scale, subLabel: "Fonds historique" },
+    { icon: Users, value: "210", label: "Parlementaires", subLabel: "143 Députés + 67 Sénateurs" },
+    { icon: FileText, value: "47", label: "Lois Adoptées", subLabel: "Cette législature" },
+    { icon: BookOpen, value: "3", label: "Révisions Const.", subLabel: "Depuis 2023" },
+    { icon: ArrowLeftRight, value: "12", label: "CMP Convoquées", subLabel: "Toutes législatures" },
+  ];
+
+  const institutionData = [
+    { name: "Assemblée Nationale", value: 143, color: "#22c55e" },
+    { name: "Sénat", value: 67, color: "#3b82f6" },
+  ];
+
+  const lawProgress = [
+    { name: "Loi de Finances 2025", progress: 45, color: "#f59e0b" },
+    { name: "Révision Constitutionnelle", progress: 80, color: "#22c55e" },
+    { name: "Code Minier", progress: 25, color: "#3b82f6" },
   ];
 
   const activeCMP = {
@@ -36,85 +51,79 @@ export const ParliamentDashboardSection = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-serif font-bold text-foreground mb-2">
-          Bienvenue au Congrès
-        </h1>
-        <p className="text-muted-foreground flex items-center gap-2">
-          <Crown className="h-4 w-4" />
-          Espace du Parlement Gabonais réuni
-        </p>
-      </div>
+    <div className="space-y-8">
+      <DashboardHeader
+        title="Parlement du Gabon"
+        subtitle="République Gabonaise - Union, Travail, Justice"
+        avatarInitial="P"
+      />
 
-      {/* CMP Active */}
-      <Card className="border-l-4 border-l-amber-500 bg-amber-50 dark:bg-amber-950/30">
+      {/* CMP Active Alert */}
+      <Card className="border-l-4 border-l-amber-500 bg-amber-50/50 dark:bg-amber-950/20">
         <CardContent className="p-5">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-4">
-              <div className="p-3 bg-amber-100 dark:bg-amber-900/50 rounded-full">
-                <ArrowLeftRight className="h-6 w-6 text-amber-600" />
+              <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                <ArrowLeftRight className="h-6 w-6 text-amber-500" />
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <Badge className="bg-amber-500 text-white">{activeCMP.reference}</Badge>
-                  <Badge variant="outline" className="border-amber-500 text-amber-700">
-                    Négociation en cours
+                  <Badge variant="outline" className="border-amber-500 text-amber-600 dark:text-amber-400">
+                    CMP en cours
                   </Badge>
                 </div>
-                <h3 className="font-bold text-lg text-foreground">CMP - {activeCMP.title}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {activeCMP.daysLeft} jours restants
-                </p>
+                <h3 className="font-bold text-lg text-foreground">{activeCMP.title}</h3>
+                <p className="text-sm text-muted-foreground">{activeCMP.daysLeft} jours restants</p>
               </div>
             </div>
-            <div className="text-right">
-              <p className="text-sm text-muted-foreground mb-1">Avancement</p>
-              <div className="flex items-center gap-2">
-                <Progress value={activeCMP.progress} className="w-24 h-3" />
-                <span className="font-bold">{activeCMP.progress}%</span>
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <p className="text-sm text-muted-foreground mb-1">Avancement</p>
+                <div className="flex items-center gap-2">
+                  <Progress value={activeCMP.progress} className="w-24 h-3" />
+                  <span className="font-bold">{activeCMP.progress}%</span>
+                </div>
               </div>
+              <Button variant="secondary">Accéder</Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {stats.map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={index} className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-5 text-center">
-                <Icon className="h-8 w-8 mx-auto mb-2 text-primary opacity-80" />
-                <p className="text-3xl font-bold text-foreground">{stat.value}</p>
-                <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
-                <p className="text-xs text-muted-foreground/70">{stat.subLabel}</p>
-              </CardContent>
-            </Card>
-          );
-        })}
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {stats.map((stat, index) => (
+          <DashboardStatsCard key={index} {...stat} />
+        ))}
       </div>
 
-      {/* Prochaine session */}
-      <Card className="border-2 border-primary/20">
-        <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5">
-          <Badge className="w-fit">{nextSession.reference}</Badge>
-          <CardTitle className="text-xl">{nextSession.title}</CardTitle>
-        </CardHeader>
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-2xl font-bold">{nextSession.date}</p>
-              <p className="text-muted-foreground">{nextSession.time}</p>
+      {/* Attendance + Next Session */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <AttendanceRateCard rate={88} trend="up" label="Taux de Présence Congrès" />
+        
+        <Card className="border-2 border-primary/20">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Vote className="h-6 w-6 text-primary" />
+              </div>
+              <div className="flex-1">
+                <Badge className="mb-1">{nextSession.reference}</Badge>
+                <h4 className="font-semibold text-foreground">{nextSession.title}</h4>
+                <p className="text-sm text-muted-foreground">{nextSession.date} à {nextSession.time}</p>
+              </div>
+              <Button>Accéder</Button>
             </div>
-            <Button size="lg">
-              <Vote className="h-5 w-5 mr-2" />
-              Accéder à la session
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <GroupDistributionChart title="Répartition des Parlementaires" data={institutionData} />
+        <LawProgressChart title="Avancement des Textes Majeurs" data={lawProgress} />
+      </div>
     </div>
   );
 };

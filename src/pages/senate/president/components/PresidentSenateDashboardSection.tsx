@@ -2,39 +2,28 @@ import { Users, FileText, Building2, Calendar, TrendingUp, ArrowLeftRight, Gavel
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { DashboardStatsCard } from "@/components/dashboard/DashboardStatsCard";
+import { GroupDistributionChart, LawProgressChart, AttendanceRateCard } from "@/components/dashboard/DashboardCharts";
 
 export const PresidentSenateDashboardSection = () => {
   const stats = [
-    { 
-      icon: Users, 
-      value: "67", 
-      label: "Sénateurs", 
-      subLabel: "Toutes provinces",
-      iconBg: "bg-muted"
-    },
-    { 
-      icon: FileText, 
-      value: "23", 
-      label: "Textes en Navette", 
-      subLabel: "En cours d'examen",
-      iconBg: "bg-muted"
-    },
-    { 
-      icon: Building2, 
-      value: "6", 
-      label: "Commissions Permanentes", 
-      subLabel: "Actives",
-      iconBg: "bg-muted"
-    },
-    { 
-      icon: Calendar, 
-      value: "4", 
-      label: "Séances Plénières", 
-      subLabel: "Ce mois",
-      iconBg: "bg-muted",
-      urgent: true
-    },
+    { icon: Users, value: "67", label: "Sénateurs", subLabel: "Toutes provinces" },
+    { icon: FileText, value: "23", label: "Textes en Navette", subLabel: "En cours d'examen" },
+    { icon: Building2, value: "6", label: "Commissions Permanentes", subLabel: "Actives" },
+    { icon: Calendar, value: "4", label: "Séances Plénières", subLabel: "Ce mois", urgent: true },
+  ];
+
+  const groupDistribution = [
+    { name: "PDG", value: 35, color: "#22c55e" },
+    { name: "CLR", value: 18, color: "#3b82f6" },
+    { name: "Indépendants", value: 14, color: "#f59e0b" },
+  ];
+
+  const lawProgress = [
+    { name: "Loi de Finances 2025", progress: 85, color: "#22c55e" },
+    { name: "Décentralisation", progress: 60, color: "#3b82f6" },
+    { name: "Code Minier", progress: 35, color: "#f59e0b" },
   ];
 
   const pendingActions = [
@@ -45,61 +34,22 @@ export const PresidentSenateDashboardSection = () => {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Avatar className="h-14 w-14 border-2 border-primary/20">
-          <AvatarFallback className="bg-primary/10 text-primary text-xl font-bold">P</AvatarFallback>
-        </Avatar>
-        <div>
-          <h1 className="text-2xl md:text-3xl font-serif font-bold text-foreground">
-            Président du Sénat
-          </h1>
-          <p className="text-muted-foreground">
-            République Gabonaise - Union, Travail, Justice
-          </p>
-        </div>
-      </div>
+      <DashboardHeader
+        title="Président du Sénat"
+        subtitle="République Gabonaise - Union, Travail, Justice"
+        avatarInitial="P"
+      />
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={index} className="relative overflow-hidden hover:shadow-md transition-shadow">
-              <CardContent className="p-5">
-                <div className={`w-12 h-12 rounded-xl ${stat.iconBg} flex items-center justify-center mb-4`}>
-                  <Icon className="h-6 w-6 text-foreground" />
-                </div>
-                <p className={`text-3xl font-bold ${stat.urgent ? "text-red-500" : "text-foreground"}`}>
-                  {stat.value}
-                </p>
-                <p className="font-medium text-foreground text-sm mt-1">{stat.label}</p>
-                <p className="text-xs text-muted-foreground">{stat.subLabel}</p>
-                {stat.urgent && (
-                  <div className="absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full" />
-                )}
-              </CardContent>
-            </Card>
-          );
-        })}
+        {stats.map((stat, index) => (
+          <DashboardStatsCard key={index} {...stat} />
+        ))}
       </div>
 
-      {/* Attendance Rate Card */}
+      {/* Attendance + Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card>
-          <CardContent className="p-5">
-            <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center mb-4">
-              <TrendingUp className="h-6 w-6 text-foreground" />
-            </div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs text-green-500 flex items-center gap-1">
-                <TrendingUp className="h-3 w-3" /> Hausse
-              </span>
-            </div>
-            <p className="text-sm text-muted-foreground">Taux de Présence en Séance</p>
-            <p className="text-4xl font-bold text-foreground mt-1">92%</p>
-          </CardContent>
-        </Card>
+        <AttendanceRateCard rate={92} trend="up" />
 
         <Card className="border-l-4 border-l-primary">
           <CardHeader className="pb-2">
@@ -125,6 +75,12 @@ export const PresidentSenateDashboardSection = () => {
             ))}
           </CardContent>
         </Card>
+      </div>
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <GroupDistributionChart title="Répartition des Groupes Parlementaires" data={groupDistribution} />
+        <LawProgressChart title="Avancement des Lois" data={lawProgress} />
       </div>
     </div>
   );
