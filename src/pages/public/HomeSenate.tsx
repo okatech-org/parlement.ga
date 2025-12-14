@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Landmark, Users, FileText, Map, Crown, Shield, ChevronRight, BarChart3, Scale, Building2 } from "lucide-react";
+import { Landmark, Users, FileText, Map, Crown, Shield, ChevronRight, BarChart3, Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +9,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
  * Page d'accueil du Sénat
- * Design basé sur Index.tsx avec thème Or/Ambre
+ * Design basé sur Index.tsx avec les MÊMES couleurs que l'AN (primary/vert)
  */
 const HomeSenate = () => {
     const navigate = useNavigate();
@@ -27,28 +27,28 @@ const HomeSenate = () => {
             icon: Crown,
             title: "Représentation Territoriale",
             description: "Les sénateurs représentent les collectivités territoriales de la Nation.",
-            color: "amber",
+            color: "primary",
             path: "/senat/collectivites"
         },
         {
             icon: FileText,
             title: "Examen des Lois",
             description: "Seconde lecture et amendements des textes votés par l'Assemblée.",
-            color: "amber",
+            color: "secondary",
             path: "/senat/legislation"
         },
         {
             icon: Map,
             title: "9 Provinces",
             description: "Chaque province du Gabon est représentée au Sénat.",
-            color: "amber",
+            color: "accent",
             path: "/senat/provinces"
         },
         {
             icon: BarChart3,
             title: "Statistiques",
             description: "Travaux législatifs et activités des sénateurs en temps réel.",
-            color: "amber",
+            color: "primary",
             path: "/senat/statistiques"
         }
     ];
@@ -62,12 +62,12 @@ const HomeSenate = () => {
 
     return (
         <div className="min-h-screen bg-background" dir={dir}>
-            {/* Header */}
-            <header className="border-b border-amber-200 dark:border-amber-900 bg-amber-50/50 dark:bg-amber-950/20 backdrop-blur-sm sticky top-0 z-50">
+            {/* Header - Mêmes couleurs que AN */}
+            <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <Landmark className="h-8 w-8 text-amber-600" />
+                            <Landmark className="h-8 w-8 text-primary" />
                             <div>
                                 <h1 className="text-xl font-serif font-bold text-foreground">Sénat</h1>
                             </div>
@@ -83,24 +83,24 @@ const HomeSenate = () => {
                                 <Scale className="h-4 w-4 mr-1" />
                                 Parlement
                             </Button>
-                            <div className="w-px h-6 bg-amber-200 dark:bg-amber-800" />
-                            <Button variant="ghost" size="sm" className="text-amber-700 hover:bg-amber-100 dark:text-amber-300" onClick={() => navigate("/senat/actualites")}>
+                            <div className="w-px h-6 bg-border" />
+                            <Button variant="ghost" size="sm" onClick={() => navigate("/senat/actualites")}>
                                 Actualités
                             </Button>
-                            <Button variant="ghost" size="sm" className="text-amber-700 hover:bg-amber-100 dark:text-amber-300" onClick={() => navigate("/senat/sensibilisation")}>
+                            <Button variant="ghost" size="sm" onClick={() => navigate("/senat/sensibilisation")}>
                                 Sensibilisation
                             </Button>
-                            <Button variant="ghost" size="sm" className="text-amber-700 hover:bg-amber-100 dark:text-amber-300" onClick={() => navigate("/senat/tutoriels")}>
+                            <Button variant="ghost" size="sm" onClick={() => navigate("/senat/tutoriels")}>
                                 Tutoriels
                             </Button>
-                            <Button variant="ghost" size="sm" className="text-amber-700 hover:bg-amber-100 dark:text-amber-300" onClick={() => navigate("/senat/demo")}>
+                            <Button variant="ghost" size="sm" onClick={() => navigate("/senat/demo")}>
                                 Démo Protocole
                             </Button>
                         </nav>
                         <div className="flex items-center gap-2">
                             {/* Language Selector */}
                             <select
-                                className="text-sm border border-amber-200 dark:border-amber-800 rounded-md px-2 py-1 bg-background cursor-pointer hover:bg-amber-50 dark:hover:bg-amber-950 transition-colors"
+                                className="text-sm border border-border rounded-md px-2 py-1 bg-background cursor-pointer hover:bg-muted transition-colors"
                                 value={language}
                                 onChange={(e) => setLanguage(e.target.value as any)}
                             >
@@ -115,7 +115,7 @@ const HomeSenate = () => {
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                className="text-amber-600 hover:bg-amber-100"
+                                title="Changer le thème"
                                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                             >
                                 {mounted && theme === "dark" ? (
@@ -138,7 +138,7 @@ const HomeSenate = () => {
                             </Button>
 
                             {/* Login Button */}
-                            <Button variant="outline" size="sm" className="border-amber-600 text-amber-600 hover:bg-amber-50" onClick={() => navigate("/senat/login")}>
+                            <Button variant="outline" size="sm" onClick={() => navigate("/senat/login")}>
                                 Connexion
                             </Button>
                         </div>
@@ -146,29 +146,29 @@ const HomeSenate = () => {
                 </div>
             </header>
 
-            {/* Hero Section */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-white to-yellow-50 dark:from-amber-950/20 dark:via-background dark:to-yellow-950/20">
-                <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-yellow-500/5"></div>
+            {/* Hero Section - Mêmes couleurs que AN */}
+            <section className="relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-hero opacity-10"></div>
                 <div className="container mx-auto px-4 py-20 relative">
                     <div className="max-w-4xl mx-auto text-center">
-                        <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800" variant="outline">
+                        <Badge className="mb-4 bg-primary/10 text-primary border-primary/20" variant="outline">
                             <Crown className="h-3 w-3 mr-1" />
                             Chambre haute du Parlement
                         </Badge>
-                        <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 animate-fade-in text-amber-900 dark:text-amber-50">
+                        <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 animate-fade-in">
                             La voix des territoires
                         </h1>
-                        <p className="text-xl text-amber-800/70 dark:text-amber-200/70 mb-8 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: "0.1s" }}>
+                        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: "0.1s" }}>
                             Le Sénat représente les collectivités territoriales de la République.
                             Nos 102 sénateurs œuvrent pour l'équilibre institutionnel.
                         </p>
                         <div className="flex gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.2s" }}>
-                            <Button size="lg" className="shadow-lg bg-amber-600 hover:bg-amber-700 text-white" onClick={() => navigate("/senat/travaux")}>
+                            <Button size="lg" className="shadow-elegant" onClick={() => navigate("/senat/travaux")}>
                                 <FileText className="mr-2 h-5 w-5" />
                                 Travaux en cours
                                 <ChevronRight className="ml-2 h-5 w-5" />
                             </Button>
-                            <Button size="lg" variant="outline" className="border-amber-600 text-amber-600 hover:bg-amber-50" onClick={() => navigate("/senat/senateurs")}>
+                            <Button size="lg" variant="outline" onClick={() => navigate("/senat/senateurs")}>
                                 <Users className="mr-2 h-5 w-5" />
                                 Nos Sénateurs
                             </Button>
@@ -180,11 +180,11 @@ const HomeSenate = () => {
                         {stats.map((stat, index) => (
                             <Card
                                 key={index}
-                                className="p-6 text-center bg-white dark:bg-amber-950/20 shadow-lg border-amber-200/50 dark:border-amber-800/50 hover:shadow-xl transition-all duration-300 animate-fade-in"
+                                className="p-6 text-center bg-card shadow-card-custom border-border/50 hover:shadow-elegant transition-all duration-300 animate-fade-in"
                                 style={{ animationDelay: `${0.3 + index * 0.1}s` }}
                             >
-                                <div className="text-3xl font-serif font-bold text-amber-600 mb-2">{stat.value}</div>
-                                <div className="text-sm text-amber-800/70 dark:text-amber-300/70">{stat.label}</div>
+                                <div className="text-3xl font-serif font-bold text-primary mb-2">{stat.value}</div>
+                                <div className="text-sm text-muted-foreground">{stat.label}</div>
                             </Card>
                         ))}
                     </div>
@@ -192,64 +192,64 @@ const HomeSenate = () => {
             </section>
 
             {/* Resources Section */}
-            <section className="py-20 bg-amber-50/50 dark:bg-amber-950/10">
+            <section className="py-20 bg-gradient-subtle">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h2 className="text-4xl font-serif font-bold mb-4 text-amber-900 dark:text-amber-100">Ressources</h2>
-                        <p className="text-xl text-amber-800/70 dark:text-amber-200/70 max-w-2xl mx-auto">
+                        <h2 className="text-4xl font-serif font-bold mb-4">Ressources</h2>
+                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                             Découvrez les activités et ressources du Sénat
                         </p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                         <Card
-                            className="p-8 bg-white dark:bg-amber-950/20 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-amber-200/50 animate-fade-in"
+                            className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-red-600/20 animate-fade-in"
                             onClick={() => navigate("/senat/actualites")}
                         >
-                            <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4 mx-auto">
-                                <FileText className="h-8 w-8 text-amber-600" />
+                            <div className="w-16 h-16 rounded-full bg-red-600/10 flex items-center justify-center mb-4 mx-auto">
+                                <FileText className="h-8 w-8 text-red-600" />
                             </div>
-                            <h3 className="text-xl font-serif font-semibold mb-3 text-center text-amber-900 dark:text-amber-100">Actualités</h3>
-                            <p className="text-sm text-amber-700/70 dark:text-amber-300/70 text-center mb-4">
+                            <h3 className="text-xl font-serif font-semibold mb-3 text-center">Actualités</h3>
+                            <p className="text-sm text-muted-foreground text-center mb-4">
                                 Les dernières nouvelles et décisions du Sénat
                             </p>
-                            <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">
+                            <Button className="w-full shadow-elegant bg-red-600 hover:bg-red-700">
                                 Consulter
                                 <ChevronRight className="ml-2 h-4 w-4" />
                             </Button>
                         </Card>
 
                         <Card
-                            className="p-8 bg-white dark:bg-amber-950/20 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-amber-200/50 animate-fade-in"
+                            className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-amber-600/20 animate-fade-in"
                             style={{ animationDelay: "0.1s" }}
                             onClick={() => navigate("/senat/sensibilisation")}
                         >
-                            <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4 mx-auto">
+                            <div className="w-16 h-16 rounded-full bg-amber-600/10 flex items-center justify-center mb-4 mx-auto">
                                 <Users className="h-8 w-8 text-amber-600" />
                             </div>
-                            <h3 className="text-xl font-serif font-semibold mb-3 text-center text-amber-900 dark:text-amber-100">Sensibilisation</h3>
-                            <p className="text-sm text-amber-700/70 dark:text-amber-300/70 text-center mb-4">
+                            <h3 className="text-xl font-serif font-semibold mb-3 text-center">Sensibilisation</h3>
+                            <p className="text-sm text-muted-foreground text-center mb-4">
                                 Comprendre le rôle du Sénat et des sénateurs
                             </p>
-                            <Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">
+                            <Button className="w-full shadow-elegant bg-amber-600 hover:bg-amber-700">
                                 Découvrir
                                 <ChevronRight className="ml-2 h-4 w-4" />
                             </Button>
                         </Card>
 
                         <Card
-                            className="p-8 bg-white dark:bg-amber-950/20 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-amber-200/50 animate-fade-in"
+                            className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-indigo-600/20 animate-fade-in"
                             style={{ animationDelay: "0.2s" }}
                             onClick={() => navigate("/senat/tutoriels")}
                         >
-                            <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4 mx-auto">
-                                <BarChart3 className="h-8 w-8 text-amber-600" />
+                            <div className="w-16 h-16 rounded-full bg-indigo-600/10 flex items-center justify-center mb-4 mx-auto">
+                                <BarChart3 className="h-8 w-8 text-indigo-600" />
                             </div>
-                            <h3 className="text-xl font-serif font-semibold mb-3 text-center text-amber-900 dark:text-amber-100">Tutoriels</h3>
-                            <p className="text-sm text-amber-700/70 dark:text-amber-300/70 text-center mb-4">
+                            <h3 className="text-xl font-serif font-semibold mb-3 text-center">Tutoriels</h3>
+                            <p className="text-sm text-muted-foreground text-center mb-4">
                                 Guides pratiques pour utiliser la plateforme
                             </p>
-                            <Button variant="outline" className="w-full border-amber-600 text-amber-600 hover:bg-amber-50">
+                            <Button variant="outline" className="w-full shadow-elegant border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white">
                                 Apprendre
                                 <ChevronRight className="ml-2 h-4 w-4" />
                             </Button>
@@ -259,11 +259,11 @@ const HomeSenate = () => {
             </section>
 
             {/* Features */}
-            <section className="py-20 bg-white dark:bg-background">
+            <section className="py-20 bg-muted/30">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h2 className="text-4xl font-serif font-bold mb-4 text-amber-900 dark:text-amber-100">Fonctionnalités</h2>
-                        <p className="text-xl text-amber-800/70 dark:text-amber-200/70 max-w-2xl mx-auto">
+                        <h2 className="text-4xl font-serif font-bold mb-4">Fonctionnalités</h2>
+                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                             Explorez les outils numériques du Sénat
                         </p>
                     </div>
@@ -274,18 +274,18 @@ const HomeSenate = () => {
                             return (
                                 <Card
                                     key={index}
-                                    className="p-6 bg-white dark:bg-amber-950/10 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-amber-200/50 animate-slide-in-right"
+                                    className="p-6 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-border/50 animate-slide-in-right"
                                     style={{ animationDelay: `${index * 0.1}s` }}
                                     onMouseEnter={() => setHoveredCard(index)}
                                     onMouseLeave={() => setHoveredCard(null)}
                                     onClick={() => navigate(feature.path)}
                                 >
-                                    <div className={`w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-4 transition-transform duration-300 ${hoveredCard === index ? 'scale-110' : ''}`}>
-                                        <Icon className="h-6 w-6 text-amber-600" />
+                                    <div className={`w-12 h-12 rounded-lg bg-${feature.color}/10 flex items-center justify-center mb-4 transition-transform duration-300 ${hoveredCard === index ? 'scale-110' : ''}`}>
+                                        <Icon className={`h-6 w-6 text-${feature.color}`} />
                                     </div>
-                                    <h3 className="text-lg font-serif font-semibold mb-2 text-amber-900 dark:text-amber-100">{feature.title}</h3>
-                                    <p className="text-sm text-amber-700/70 dark:text-amber-300/70">{feature.description}</p>
-                                    <ChevronRight className={`h-5 w-5 text-amber-400 mt-4 transition-transform duration-300 ${hoveredCard === index ? 'translate-x-2' : ''}`} />
+                                    <h3 className="text-lg font-serif font-semibold mb-2">{feature.title}</h3>
+                                    <p className="text-sm text-muted-foreground">{feature.description}</p>
+                                    <ChevronRight className={`h-5 w-5 text-muted-foreground mt-4 transition-transform duration-300 ${hoveredCard === index ? 'translate-x-2' : ''}`} />
                                 </Card>
                             );
                         })}
@@ -294,28 +294,28 @@ const HomeSenate = () => {
             </section>
 
             {/* Security Banner */}
-            <section className="py-16 bg-amber-100/50 dark:bg-amber-950/20 border-y border-amber-200 dark:border-amber-800">
+            <section className="py-16 bg-primary/5 border-y border-primary/10">
                 <div className="container mx-auto px-4">
                     <div className="flex items-center justify-center gap-8 flex-wrap">
                         <div className="flex items-center gap-3">
-                            <Shield className="h-8 w-8 text-amber-600" />
+                            <Shield className="h-8 w-8 text-primary" />
                             <div>
-                                <div className="font-semibold text-amber-900 dark:text-amber-100">Sécurité maximale</div>
-                                <div className="text-sm text-amber-700/70 dark:text-amber-300/70">Chiffrement bout-en-bout</div>
+                                <div className="font-semibold">Sécurité maximale</div>
+                                <div className="text-sm text-muted-foreground">Chiffrement bout-en-bout</div>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
-                            <Users className="h-8 w-8 text-amber-600" />
+                            <Users className="h-8 w-8 text-secondary" />
                             <div>
-                                <div className="font-semibold text-amber-900 dark:text-amber-100">Authentification 2FA</div>
-                                <div className="text-sm text-amber-700/70 dark:text-amber-300/70">Accès sécurisé</div>
+                                <div className="font-semibold">Authentification 2FA</div>
+                                <div className="text-sm text-muted-foreground">Accès sécurisé</div>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
-                            <Landmark className="h-8 w-8 text-amber-600" />
+                            <Landmark className="h-8 w-8 text-accent" />
                             <div>
-                                <div className="font-semibold text-amber-900 dark:text-amber-100">Souveraineté</div>
-                                <div className="text-sm text-amber-700/70 dark:text-amber-300/70">Données localisées</div>
+                                <div className="font-semibold">Souveraineté</div>
+                                <div className="text-sm text-muted-foreground">Données localisées</div>
                             </div>
                         </div>
                     </div>
@@ -323,35 +323,35 @@ const HomeSenate = () => {
             </section>
 
             {/* Footer */}
-            <footer className="bg-amber-900 dark:bg-amber-950 text-amber-100 py-12">
+            <footer className="bg-card border-t border-border py-12">
                 <div className="container mx-auto px-4">
                     <div className="grid md:grid-cols-3 gap-8">
                         <div>
                             <div className="flex items-center gap-2 mb-4">
-                                <Landmark className="h-6 w-6 text-amber-400" />
+                                <Landmark className="h-6 w-6 text-primary" />
                                 <span className="font-serif font-bold">Sénat</span>
                             </div>
-                            <p className="text-sm text-amber-300/70">
+                            <p className="text-sm text-muted-foreground">
                                 © {new Date().getFullYear()} Sénat de la République Gabonaise
                             </p>
                         </div>
                         <div>
-                            <h4 className="font-semibold mb-4 text-amber-200">Liens rapides</h4>
-                            <ul className="space-y-2 text-sm text-amber-300/70">
-                                <li><a href="/senat/senateurs" className="hover:text-amber-200 transition-colors">Nos Sénateurs</a></li>
-                                <li><a href="/senat/travaux" className="hover:text-amber-200 transition-colors">Travaux législatifs</a></li>
-                                <li><a href="/senat/collectivites" className="hover:text-amber-200 transition-colors">Collectivités</a></li>
+                            <h4 className="font-semibold mb-4">Liens rapides</h4>
+                            <ul className="space-y-2 text-sm text-muted-foreground">
+                                <li><a href="/senat/senateurs" className="hover:text-primary transition-colors">Nos Sénateurs</a></li>
+                                <li><a href="/senat/travaux" className="hover:text-primary transition-colors">Travaux législatifs</a></li>
+                                <li><a href="/senat/collectivites" className="hover:text-primary transition-colors">Collectivités</a></li>
                             </ul>
                         </div>
                         <div>
-                            <h4 className="font-semibold mb-4 text-amber-200">Contact</h4>
-                            <p className="text-sm text-amber-300/70">
+                            <h4 className="font-semibold mb-4">Contact</h4>
+                            <p className="text-sm text-muted-foreground">
                                 Palais Omar Bongo Ondimba<br />
                                 Libreville, Gabon
                             </p>
                         </div>
                     </div>
-                    <div className="border-t border-amber-800 mt-8 pt-8 text-center text-sm text-amber-300/70">
+                    <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
                         © {new Date().getFullYear()} Sénat de la République Gabonaise. Tous droits réservés.
                     </div>
                 </div>
