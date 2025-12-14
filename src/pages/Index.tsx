@@ -88,8 +88,7 @@ const Index = () => {
             <div className="flex items-center gap-3">
               <Landmark className="h-8 w-8 text-primary" />
               <div>
-                <h1 className="text-xl font-serif font-bold text-foreground">Gabon E-Parlement</h1>
-                <p className="text-xs text-muted-foreground">Assemblée Nationale du Gabon</p>
+                <h1 className="text-xl font-serif font-bold text-foreground">Assemblée Nationale</h1>
               </div>
             </div>
             <nav className="hidden md:flex items-center gap-4">
@@ -366,7 +365,7 @@ const Index = () => {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Landmark className="h-6 w-6 text-primary" />
-                <span className="font-serif font-bold">Gabon E-Parlement</span>
+                <span className="font-serif font-bold">Assemblée Nationale</span>
               </div>
               <p className="text-sm text-muted-foreground">
                 {t('common.copyright')}
