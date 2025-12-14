@@ -1,19 +1,11 @@
-import {
-  FileText,
-  MapPin,
-  MessageSquare,
-  Calendar,
-  ArrowLeftRight,
-  AlertTriangle,
-  Clock,
-  Users,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FileText, MapPin, MessageSquare, Calendar, ArrowLeftRight, AlertTriangle, Clock, Users } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardStatsCard } from "@/components/dashboard/DashboardStatsCard";
 import { GroupDistributionChart, LawProgressChart, AttendanceRateCard } from "@/components/dashboard/DashboardCharts";
+import { AnimatedDashboardCard } from "@/components/animations/DashboardAnimations";
 
 export const SenatorDashboardSection = () => {
   const stats = [
@@ -55,73 +47,87 @@ export const SenatorDashboardSection = () => {
 
   return (
     <div className="space-y-8">
-      <DashboardHeader
-        title="Sénateur de l'Estuaire"
-        subtitle="République Gabonaise - Représentation Territoriale"
-        avatarInitial="S"
-      />
+      <AnimatedDashboardCard delay={0}>
+        <DashboardHeader
+          title="Sénateur de l'Estuaire"
+          subtitle="République Gabonaise - Représentation Territoriale"
+          avatarInitial="S"
+        />
+      </AnimatedDashboardCard>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
-          <DashboardStatsCard key={index} {...stat} />
+          <AnimatedDashboardCard key={index} delay={0.15 + index * 0.05}>
+            <DashboardStatsCard {...stat} />
+          </AnimatedDashboardCard>
         ))}
       </div>
 
       {/* Attendance + Next Meeting */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <AttendanceRateCard rate={92} trend="up" />
-        
-        <Card className="bg-primary/5 border-primary/20">
-          <CardContent className="p-5">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Clock className="h-6 w-6 text-primary" />
+        <AnimatedDashboardCard delay={0.35}>
+          <AttendanceRateCard rate={92} trend="up" />
+        </AnimatedDashboardCard>
+
+        <AnimatedDashboardCard delay={0.4}>
+          <Card className="bg-primary/5 border-primary/20 h-full">
+            <CardContent className="p-5 h-full flex flex-col justify-center">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Clock className="h-6 w-6 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-lg text-primary">Commission des Collectivités</h4>
+                  <p className="text-sm text-muted-foreground">Prochaine réunion : Demain à 10h00</p>
+                  <p className="text-xs text-muted-foreground mt-1">Salle B12 - Examen du PL Décentralisation</p>
+                </div>
               </div>
-              <div className="flex-1">
-                <h4 className="font-semibold text-lg text-primary">Commission des Collectivités</h4>
-                <p className="text-sm text-muted-foreground">Prochaine réunion : Demain à 10h00</p>
-                <p className="text-xs text-muted-foreground mt-1">Salle B12 - Examen du PL Décentralisation</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </AnimatedDashboardCard>
       </div>
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <GroupDistributionChart title="Répartition Sénateurs par Province" data={provinceData} />
-        <LawProgressChart title="Avancement des Lois" data={textProgress} />
+        <AnimatedDashboardCard delay={0.45}>
+          <GroupDistributionChart title="Répartition Sénateurs par Province" data={provinceData} />
+        </AnimatedDashboardCard>
+        <AnimatedDashboardCard delay={0.5}>
+          <LawProgressChart title="Avancement des Lois" data={textProgress} />
+        </AnimatedDashboardCard>
       </div>
 
       {/* Urgent Texts */}
-      <Card className="border-l-4 border-l-primary">
-        <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <ArrowLeftRight className="h-5 w-5 text-primary" />
-            Navette - Textes Urgents
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {urgentTexts.map((text) => (
-            <div key={text.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <Badge variant="outline" className="text-xs">{text.reference}</Badge>
-                  <Badge 
-                    className={text.priority === 'urgent' ? 'bg-red-500/10 text-red-500 border-red-500/20' : 'bg-amber-500/10 text-amber-500 border-amber-500/20'} 
-                    variant="outline"
-                  >
-                    {text.daysLeft}j restants
-                  </Badge>
+      <AnimatedDashboardCard delay={0.55}>
+        <Card className="border-l-4 border-l-primary">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <ArrowLeftRight className="h-5 w-5 text-primary" />
+              Navette - Textes Urgents
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {urgentTexts.map((text) => (
+              <div key={text.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge variant="outline" className="text-xs">{text.reference}</Badge>
+                    <Badge
+                      className={text.priority === 'urgent' ? 'bg-red-500/10 text-red-500 border-red-500/20' : 'bg-amber-500/10 text-amber-500 border-amber-500/20'}
+                      variant="outline"
+                    >
+                      {text.daysLeft}j restants
+                    </Badge>
+                  </div>
+                  <p className="font-medium text-sm truncate">{text.title}</p>
                 </div>
-                <p className="font-medium text-sm truncate">{text.title}</p>
+                <Button size="sm" variant="secondary" className="ml-2 shrink-0">Examiner</Button>
               </div>
-              <Button size="sm" variant="secondary" className="ml-2 shrink-0">Examiner</Button>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+            ))}
+          </CardContent>
+        </Card>
+      </AnimatedDashboardCard>
     </div>
   );
 };

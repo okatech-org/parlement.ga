@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardStatsCard } from "@/components/dashboard/DashboardStatsCard";
 import { GroupDistributionChart, LawProgressChart, AttendanceRateCard } from "@/components/dashboard/DashboardCharts";
+import { AnimatedDashboardCard } from "@/components/animations/DashboardAnimations";
 
 export const QuesteurSenateDashboardSection = () => {
   const stats = [
@@ -35,59 +36,69 @@ export const QuesteurSenateDashboardSection = () => {
 
   return (
     <div className="space-y-8">
-      <DashboardHeader
-        title="Questeur du Sénat"
-        subtitle="République Gabonaise - Gestion Financière et Matérielle"
-        avatarInitial="Q"
-      />
+      <AnimatedDashboardCard delay={0}>
+        <DashboardHeader
+          title="Questeur du Sénat"
+          subtitle="République Gabonaise - Gestion Financière et Matérielle"
+          avatarInitial="Q"
+        />
+      </AnimatedDashboardCard>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => (
-          <DashboardStatsCard key={index} {...stat} />
+          <AnimatedDashboardCard key={index} delay={0.15 + index * 0.05}>
+            <DashboardStatsCard {...stat} />
+          </AnimatedDashboardCard>
         ))}
       </div>
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <GroupDistributionChart title="Répartition du Budget" data={budgetDistribution} />
-        <LawProgressChart title="Exécution Budgétaire" data={budgetProgress} />
+        <AnimatedDashboardCard delay={0.35}>
+          <GroupDistributionChart title="Répartition du Budget" data={budgetDistribution} />
+        </AnimatedDashboardCard>
+        <AnimatedDashboardCard delay={0.4}>
+          <LawProgressChart title="Exécution Budgétaire" data={budgetProgress} />
+        </AnimatedDashboardCard>
       </div>
 
       {/* Pending Requests */}
-      <Card className="border-l-4 border-l-primary">
-        <CardHeader className="pb-2">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <FileText className="h-5 w-5 text-primary" />
-            Demandes en attente
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {pendingRequests.map((request) => (
-            <div key={request.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <Badge variant="outline" className="text-xs">{request.type}</Badge>
-                  <Badge 
-                    className={
-                      request.priority === 'high' 
-                        ? 'bg-red-500/10 text-red-500 border-red-500/20' 
-                        : request.priority === 'medium'
-                        ? 'bg-amber-500/10 text-amber-500 border-amber-500/20'
-                        : 'bg-green-500/10 text-green-500 border-green-500/20'
-                    } 
-                    variant="outline"
-                  >
-                    {request.amount}
-                  </Badge>
+      <AnimatedDashboardCard delay={0.45}>
+        <Card className="border-l-4 border-l-primary">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <FileText className="h-5 w-5 text-primary" />
+              Demandes en attente
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {pendingRequests.map((request) => (
+              <div key={request.id} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Badge variant="outline" className="text-xs">{request.type}</Badge>
+                    <Badge
+                      className={
+                        request.priority === 'high'
+                          ? 'bg-red-500/10 text-red-500 border-red-500/20'
+                          : request.priority === 'medium'
+                            ? 'bg-amber-500/10 text-amber-500 border-amber-500/20'
+                            : 'bg-green-500/10 text-green-500 border-green-500/20'
+                      }
+                      variant="outline"
+                    >
+                      {request.amount}
+                    </Badge>
+                  </div>
+                  <p className="font-medium text-sm truncate">{request.title}</p>
                 </div>
-                <p className="font-medium text-sm truncate">{request.title}</p>
+                <Button size="sm" variant="secondary" className="ml-2 shrink-0">Traiter</Button>
               </div>
-              <Button size="sm" variant="secondary" className="ml-2 shrink-0">Traiter</Button>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+            ))}
+          </CardContent>
+        </Card>
+      </AnimatedDashboardCard>
     </div>
   );
 };
