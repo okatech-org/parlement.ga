@@ -235,7 +235,7 @@ export default function Login() {
             <div className={`absolute inset-0 bg-gradient-to-br ${envConfig.bg}/10 via-background to-background z-0`} />
 
             {/* Header */}
-            <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center z-10">
+            <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center z-50">
                 <Button
                     variant="ghost"
                     size="sm"
