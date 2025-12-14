@@ -4,8 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardStatsCard } from "@/components/dashboard/DashboardStatsCard";
-import { GroupDistributionChart, LawProgressChart, AttendanceRateCard } from "@/components/dashboard/DashboardCharts";
-import { AnimatedDashboardCard } from "@/components/animations/DashboardAnimations";
+import { AttendanceRateCard } from "@/components/dashboard/DashboardCharts";
+import { AnimatedDashboardCard, AnimatedProgressBar } from "@/components/animations/DashboardAnimations";
+import InteractiveDonutChart from "@/components/charts/InteractiveDonutChart";
 
 export const SenatorDashboardSection = () => {
   const stats = [
@@ -16,10 +17,10 @@ export const SenatorDashboardSection = () => {
   ];
 
   const provinceData = [
-    { name: "Estuaire", value: 28, color: "#22c55e" },
-    { name: "Woleu-Ntem", value: 18, color: "#3b82f6" },
-    { name: "Haut-Ogooué", value: 15, color: "#f59e0b" },
-    { name: "Autres", value: 39, color: "#8b5cf6" },
+    { label: "Estuaire", value: 28, color: "#22c55e" },
+    { label: "Woleu-Ntem", value: 18, color: "#3b82f6" },
+    { label: "Haut-Ogooué", value: 15, color: "#f59e0b" },
+    { label: "Autres", value: 39, color: "#8b5cf6" },
   ];
 
   const textProgress = [
@@ -89,12 +90,50 @@ export const SenatorDashboardSection = () => {
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AnimatedDashboardCard delay={0.45}>
-          <GroupDistributionChart title="Répartition Sénateurs par Province" data={provinceData} />
+          <Card className="h-full">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5 text-primary" />
+                Répartition Sénateurs
+              </CardTitle>
+              <CardDescription>Par province d'origine</CardDescription>
+            </CardHeader>
+            <CardContent className="flex justify-center">
+              <InteractiveDonutChart
+                data={provinceData}
+                size={200}
+                thickness={35}
+                centerLabel="Total"
+                centerValue="100%"
+              />
+            </CardContent>
+          </Card>
         </AnimatedDashboardCard>
+
         <AnimatedDashboardCard delay={0.5}>
-          <LawProgressChart title="Avancement des Lois" data={textProgress} />
+          <Card className="h-full">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ArrowLeftRight className="h-5 w-5 text-primary" />
+                Avancement des Lois
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {textProgress.map((item, index) => (
+                <AnimatedProgressBar
+                  key={index}
+                  label={item.name}
+                  value={item.progress}
+                  max={100}
+                  color={`bg-[${item.color}]`}
+                  delay={0.55 + index * 0.1}
+                  showValue
+                />
+              ))}
+            </CardContent>
+          </Card>
         </AnimatedDashboardCard>
       </div>
 
@@ -103,7 +142,7 @@ export const SenatorDashboardSection = () => {
         <Card className="border-l-4 border-l-primary">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-lg">
-              <ArrowLeftRight className="h-5 w-5 text-primary" />
+              <FileText className="h-5 w-5 text-primary" />
               Navette - Textes Urgents
             </CardTitle>
           </CardHeader>

@@ -4,8 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardStatsCard } from "@/components/dashboard/DashboardStatsCard";
-import { GroupDistributionChart, LawProgressChart, AttendanceRateCard } from "@/components/dashboard/DashboardCharts";
-import { AnimatedDashboardCard } from "@/components/animations/DashboardAnimations";
+import { AnimatedDashboardCard, AnimatedProgressBar } from "@/components/animations/DashboardAnimations";
+import InteractiveDonutChart from "@/components/charts/InteractiveDonutChart";
 
 export const QuesteurSenateDashboardSection = () => {
   const stats = [
@@ -16,10 +16,10 @@ export const QuesteurSenateDashboardSection = () => {
   ];
 
   const budgetDistribution = [
-    { name: "Personnel", value: 45, color: "#22c55e" },
-    { name: "Fonctionnement", value: 30, color: "#3b82f6" },
-    { name: "Investissement", value: 15, color: "#f59e0b" },
-    { name: "Réserves", value: 10, color: "#8b5cf6" },
+    { label: "Personnel", value: 45, color: "#22c55e" },
+    { label: "Fonctionnement", value: 30, color: "#3b82f6" },
+    { label: "Investissement", value: 15, color: "#f59e0b" },
+    { label: "Réserves", value: 10, color: "#8b5cf6" },
   ];
 
   const budgetProgress = [
@@ -54,17 +54,54 @@ export const QuesteurSenateDashboardSection = () => {
       </div>
 
       {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AnimatedDashboardCard delay={0.35}>
-          <GroupDistributionChart title="Répartition du Budget" data={budgetDistribution} />
+          <Card className="h-full">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-primary" />
+                Répartition du Budget
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex justify-center">
+              <InteractiveDonutChart
+                data={budgetDistribution}
+                size={200}
+                thickness={35}
+                centerLabel="Mds FCFA"
+                centerValue="12.5"
+              />
+            </CardContent>
+          </Card>
         </AnimatedDashboardCard>
+
         <AnimatedDashboardCard delay={0.4}>
-          <LawProgressChart title="Exécution Budgétaire" data={budgetProgress} />
+          <Card className="h-full">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Wallet className="h-5 w-5 text-primary" />
+                Exécution Budgétaire
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {budgetProgress.map((item, index) => (
+                <AnimatedProgressBar
+                  key={index}
+                  label={item.name}
+                  value={item.progress}
+                  max={100}
+                  color={`bg-[${item.color}]`}
+                  delay={0.45 + index * 0.1}
+                  showValue
+                />
+              ))}
+            </CardContent>
+          </Card>
         </AnimatedDashboardCard>
       </div>
 
       {/* Pending Requests */}
-      <AnimatedDashboardCard delay={0.45}>
+      <AnimatedDashboardCard delay={0.5}>
         <Card className="border-l-4 border-l-primary">
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-lg">
