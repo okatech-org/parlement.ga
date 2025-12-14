@@ -100,6 +100,149 @@ export type Database = {
         }
         Relationships: []
       }
+      cmp_messages: {
+        Row: {
+          author_id: string | null
+          author_institution: Database["public"]["Enums"]["institution_type"]
+          author_name: string
+          author_role: string | null
+          cmp_session_id: string
+          content: string
+          created_at: string | null
+          id: string
+          message_type: string | null
+          reply_to_id: string | null
+        }
+        Insert: {
+          author_id?: string | null
+          author_institution: Database["public"]["Enums"]["institution_type"]
+          author_name: string
+          author_role?: string | null
+          cmp_session_id: string
+          content: string
+          created_at?: string | null
+          id?: string
+          message_type?: string | null
+          reply_to_id?: string | null
+        }
+        Update: {
+          author_id?: string | null
+          author_institution?: Database["public"]["Enums"]["institution_type"]
+          author_name?: string
+          author_role?: string | null
+          cmp_session_id?: string
+          content?: string
+          created_at?: string | null
+          id?: string
+          message_type?: string | null
+          reply_to_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cmp_messages_cmp_session_id_fkey"
+            columns: ["cmp_session_id"]
+            isOneToOne: false
+            referencedRelation: "cmp_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cmp_messages_reply_to_id_fkey"
+            columns: ["reply_to_id"]
+            isOneToOne: false
+            referencedRelation: "cmp_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cmp_sessions: {
+        Row: {
+          agreed_text: string | null
+          assembly_members: Json
+          concluded_at: string | null
+          conclusion_vote_abstain: number | null
+          conclusion_vote_against: number | null
+          conclusion_vote_for: number | null
+          convened_at: string | null
+          created_at: string | null
+          deadline: string | null
+          documents: Json | null
+          failure_reason: string | null
+          id: string
+          legislative_text_id: string
+          president_id: string | null
+          president_name: string | null
+          rapporteur_an_id: string | null
+          rapporteur_an_name: string | null
+          rapporteur_sn_id: string | null
+          rapporteur_sn_name: string | null
+          reference: string
+          senate_members: Json
+          started_at: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          agreed_text?: string | null
+          assembly_members?: Json
+          concluded_at?: string | null
+          conclusion_vote_abstain?: number | null
+          conclusion_vote_against?: number | null
+          conclusion_vote_for?: number | null
+          convened_at?: string | null
+          created_at?: string | null
+          deadline?: string | null
+          documents?: Json | null
+          failure_reason?: string | null
+          id?: string
+          legislative_text_id: string
+          president_id?: string | null
+          president_name?: string | null
+          rapporteur_an_id?: string | null
+          rapporteur_an_name?: string | null
+          rapporteur_sn_id?: string | null
+          rapporteur_sn_name?: string | null
+          reference: string
+          senate_members?: Json
+          started_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          agreed_text?: string | null
+          assembly_members?: Json
+          concluded_at?: string | null
+          conclusion_vote_abstain?: number | null
+          conclusion_vote_against?: number | null
+          conclusion_vote_for?: number | null
+          convened_at?: string | null
+          created_at?: string | null
+          deadline?: string | null
+          documents?: Json | null
+          failure_reason?: string | null
+          id?: string
+          legislative_text_id?: string
+          president_id?: string | null
+          president_name?: string | null
+          rapporteur_an_id?: string | null
+          rapporteur_an_name?: string | null
+          rapporteur_sn_id?: string | null
+          rapporteur_sn_name?: string | null
+          reference?: string
+          senate_members?: Json
+          started_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cmp_sessions_legislative_text_id_fkey"
+            columns: ["legislative_text_id"]
+            isOneToOne: false
+            referencedRelation: "legislative_texts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conversation_messages: {
         Row: {
           content: string
@@ -372,6 +515,175 @@ export type Database = {
           },
         ]
       }
+      legislative_shuttle_history: {
+        Row: {
+          from_location: Database["public"]["Enums"]["legislative_location"]
+          id: string
+          legislative_text_id: string
+          text_version_after: number | null
+          text_version_before: number | null
+          to_location: Database["public"]["Enums"]["legislative_location"]
+          transmission_note: string | null
+          transmitted_at: string | null
+          transmitted_by: string | null
+          transmitted_by_name: string | null
+        }
+        Insert: {
+          from_location: Database["public"]["Enums"]["legislative_location"]
+          id?: string
+          legislative_text_id: string
+          text_version_after?: number | null
+          text_version_before?: number | null
+          to_location: Database["public"]["Enums"]["legislative_location"]
+          transmission_note?: string | null
+          transmitted_at?: string | null
+          transmitted_by?: string | null
+          transmitted_by_name?: string | null
+        }
+        Update: {
+          from_location?: Database["public"]["Enums"]["legislative_location"]
+          id?: string
+          legislative_text_id?: string
+          text_version_after?: number | null
+          text_version_before?: number | null
+          to_location?: Database["public"]["Enums"]["legislative_location"]
+          transmission_note?: string | null
+          transmitted_at?: string | null
+          transmitted_by?: string | null
+          transmitted_by_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legislative_shuttle_history_legislative_text_id_fkey"
+            columns: ["legislative_text_id"]
+            isOneToOne: false
+            referencedRelation: "legislative_texts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      legislative_texts: {
+        Row: {
+          adopted_at: string | null
+          author_id: string | null
+          author_name: string | null
+          co_authors: Json | null
+          comment_count: number | null
+          commission_id: string | null
+          commission_name: string | null
+          content: string | null
+          created_at: string | null
+          current_location: Database["public"]["Enums"]["legislative_location"]
+          deposited_at: string | null
+          expose_motifs: string | null
+          id: string
+          journal_officiel_date: string | null
+          journal_officiel_ref: string | null
+          keywords: string[] | null
+          origin_institution: Database["public"]["Enums"]["institution_type"]
+          parent_version_id: string | null
+          priority_level: number | null
+          promulgated_at: string | null
+          rapporteur_id: string | null
+          rapporteur_name: string | null
+          reading_number: number | null
+          reference: string
+          short_title: string | null
+          shuttle_count: number | null
+          summary: string | null
+          tags: string[] | null
+          text_type: Database["public"]["Enums"]["text_type"]
+          title: string
+          transmitted_at: string | null
+          updated_at: string | null
+          urgency: boolean | null
+          version: number | null
+          view_count: number | null
+        }
+        Insert: {
+          adopted_at?: string | null
+          author_id?: string | null
+          author_name?: string | null
+          co_authors?: Json | null
+          comment_count?: number | null
+          commission_id?: string | null
+          commission_name?: string | null
+          content?: string | null
+          created_at?: string | null
+          current_location?: Database["public"]["Enums"]["legislative_location"]
+          deposited_at?: string | null
+          expose_motifs?: string | null
+          id?: string
+          journal_officiel_date?: string | null
+          journal_officiel_ref?: string | null
+          keywords?: string[] | null
+          origin_institution?: Database["public"]["Enums"]["institution_type"]
+          parent_version_id?: string | null
+          priority_level?: number | null
+          promulgated_at?: string | null
+          rapporteur_id?: string | null
+          rapporteur_name?: string | null
+          reading_number?: number | null
+          reference: string
+          short_title?: string | null
+          shuttle_count?: number | null
+          summary?: string | null
+          tags?: string[] | null
+          text_type?: Database["public"]["Enums"]["text_type"]
+          title: string
+          transmitted_at?: string | null
+          updated_at?: string | null
+          urgency?: boolean | null
+          version?: number | null
+          view_count?: number | null
+        }
+        Update: {
+          adopted_at?: string | null
+          author_id?: string | null
+          author_name?: string | null
+          co_authors?: Json | null
+          comment_count?: number | null
+          commission_id?: string | null
+          commission_name?: string | null
+          content?: string | null
+          created_at?: string | null
+          current_location?: Database["public"]["Enums"]["legislative_location"]
+          deposited_at?: string | null
+          expose_motifs?: string | null
+          id?: string
+          journal_officiel_date?: string | null
+          journal_officiel_ref?: string | null
+          keywords?: string[] | null
+          origin_institution?: Database["public"]["Enums"]["institution_type"]
+          parent_version_id?: string | null
+          priority_level?: number | null
+          promulgated_at?: string | null
+          rapporteur_id?: string | null
+          rapporteur_name?: string | null
+          reading_number?: number | null
+          reference?: string
+          short_title?: string | null
+          shuttle_count?: number | null
+          summary?: string | null
+          tags?: string[] | null
+          text_type?: Database["public"]["Enums"]["text_type"]
+          title?: string
+          transmitted_at?: string | null
+          updated_at?: string | null
+          urgency?: boolean | null
+          version?: number | null
+          view_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "legislative_texts_parent_version_id_fkey"
+            columns: ["parent_version_id"]
+            isOneToOne: false
+            referencedRelation: "legislative_texts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       login_attempts: {
         Row: {
           created_at: string
@@ -482,6 +794,306 @@ export type Database = {
         }
         Relationships: []
       }
+      parliamentarians: {
+        Row: {
+          amendments_authored: number | null
+          attendance_rate: number | null
+          biography: string | null
+          birth_date: string | null
+          birth_place: string | null
+          career: Json | null
+          circonscription: string | null
+          commissions: Json | null
+          created_at: string | null
+          department: string | null
+          education: Json | null
+          email_pro: string | null
+          first_name: string
+          groupe_parlementaire: string | null
+          id: string
+          institution: Database["public"]["Enums"]["institution_type"]
+          is_active: boolean | null
+          last_name: string
+          mandate_end: string | null
+          mandate_start: string | null
+          office_location: string | null
+          parti_politique: string | null
+          phone_pro: string | null
+          photo_url: string | null
+          province: string | null
+          questions_asked: number | null
+          role: Database["public"]["Enums"]["parliamentary_role"]
+          texts_authored: number | null
+          title: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          amendments_authored?: number | null
+          attendance_rate?: number | null
+          biography?: string | null
+          birth_date?: string | null
+          birth_place?: string | null
+          career?: Json | null
+          circonscription?: string | null
+          commissions?: Json | null
+          created_at?: string | null
+          department?: string | null
+          education?: Json | null
+          email_pro?: string | null
+          first_name: string
+          groupe_parlementaire?: string | null
+          id: string
+          institution: Database["public"]["Enums"]["institution_type"]
+          is_active?: boolean | null
+          last_name: string
+          mandate_end?: string | null
+          mandate_start?: string | null
+          office_location?: string | null
+          parti_politique?: string | null
+          phone_pro?: string | null
+          photo_url?: string | null
+          province?: string | null
+          questions_asked?: number | null
+          role: Database["public"]["Enums"]["parliamentary_role"]
+          texts_authored?: number | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          amendments_authored?: number | null
+          attendance_rate?: number | null
+          biography?: string | null
+          birth_date?: string | null
+          birth_place?: string | null
+          career?: Json | null
+          circonscription?: string | null
+          commissions?: Json | null
+          created_at?: string | null
+          department?: string | null
+          education?: Json | null
+          email_pro?: string | null
+          first_name?: string
+          groupe_parlementaire?: string | null
+          id?: string
+          institution?: Database["public"]["Enums"]["institution_type"]
+          is_active?: boolean | null
+          last_name?: string
+          mandate_end?: string | null
+          mandate_start?: string | null
+          office_location?: string | null
+          parti_politique?: string | null
+          phone_pro?: string | null
+          photo_url?: string | null
+          province?: string | null
+          questions_asked?: number | null
+          role?: Database["public"]["Enums"]["parliamentary_role"]
+          texts_authored?: number | null
+          title?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      parliamentary_sessions: {
+        Row: {
+          actual_end: string | null
+          actual_start: string | null
+          agenda: Json | null
+          attendees: Json | null
+          created_at: string | null
+          description: string | null
+          documents: Json | null
+          id: string
+          institution: Database["public"]["Enums"]["institution_type"]
+          is_joint_session: boolean | null
+          live_stream_url: string | null
+          location: string | null
+          president_id: string | null
+          president_name: string | null
+          recording_url: string | null
+          scheduled_end: string | null
+          scheduled_start: string
+          session_type: string
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          actual_end?: string | null
+          actual_start?: string | null
+          agenda?: Json | null
+          attendees?: Json | null
+          created_at?: string | null
+          description?: string | null
+          documents?: Json | null
+          id?: string
+          institution: Database["public"]["Enums"]["institution_type"]
+          is_joint_session?: boolean | null
+          live_stream_url?: string | null
+          location?: string | null
+          president_id?: string | null
+          president_name?: string | null
+          recording_url?: string | null
+          scheduled_end?: string | null
+          scheduled_start: string
+          session_type: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          actual_end?: string | null
+          actual_start?: string | null
+          agenda?: Json | null
+          attendees?: Json | null
+          created_at?: string | null
+          description?: string | null
+          documents?: Json | null
+          id?: string
+          institution?: Database["public"]["Enums"]["institution_type"]
+          is_joint_session?: boolean | null
+          live_stream_url?: string | null
+          location?: string | null
+          president_id?: string | null
+          president_name?: string | null
+          recording_url?: string | null
+          scheduled_end?: string | null
+          scheduled_start?: string
+          session_type?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      parliamentary_votes: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          individual_votes: Json | null
+          institution: Database["public"]["Enums"]["institution_type"]
+          legislative_text_id: string | null
+          quorum_reached: boolean | null
+          quorum_required: number | null
+          result: string | null
+          session_id: string | null
+          title: string
+          vote_type: string
+          votes_absent: number | null
+          votes_abstain: number | null
+          votes_against: number | null
+          votes_for: number | null
+          voting_ended_at: string | null
+          voting_started_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          individual_votes?: Json | null
+          institution: Database["public"]["Enums"]["institution_type"]
+          legislative_text_id?: string | null
+          quorum_reached?: boolean | null
+          quorum_required?: number | null
+          result?: string | null
+          session_id?: string | null
+          title: string
+          vote_type: string
+          votes_absent?: number | null
+          votes_abstain?: number | null
+          votes_against?: number | null
+          votes_for?: number | null
+          voting_ended_at?: string | null
+          voting_started_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          individual_votes?: Json | null
+          institution?: Database["public"]["Enums"]["institution_type"]
+          legislative_text_id?: string | null
+          quorum_reached?: boolean | null
+          quorum_required?: number | null
+          result?: string | null
+          session_id?: string | null
+          title?: string
+          vote_type?: string
+          votes_absent?: number | null
+          votes_abstain?: number | null
+          votes_against?: number | null
+          votes_for?: number | null
+          voting_ended_at?: string | null
+          voting_started_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "parliamentary_votes_legislative_text_id_fkey"
+            columns: ["legislative_text_id"]
+            isOneToOne: false
+            referencedRelation: "legislative_texts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "parliamentary_votes_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "parliamentary_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      permanent_commissions: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          institution: Database["public"]["Enums"]["institution_type"]
+          members: Json | null
+          name: string
+          president_id: string | null
+          president_name: string | null
+          secretary_id: string | null
+          secretary_name: string | null
+          short_name: string | null
+          updated_at: string | null
+          vice_president_id: string | null
+          vice_president_name: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          institution: Database["public"]["Enums"]["institution_type"]
+          members?: Json | null
+          name: string
+          president_id?: string | null
+          president_name?: string | null
+          secretary_id?: string | null
+          secretary_name?: string | null
+          short_name?: string | null
+          updated_at?: string | null
+          vice_president_id?: string | null
+          vice_president_name?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          institution?: Database["public"]["Enums"]["institution_type"]
+          members?: Json | null
+          name?: string
+          president_id?: string | null
+          president_name?: string | null
+          secretary_id?: string | null
+          secretary_name?: string | null
+          short_name?: string | null
+          updated_at?: string | null
+          vice_president_id?: string | null
+          vice_president_name?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -577,12 +1189,35 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      conclude_cmp: {
+        Args: {
+          p_agreed_text?: string
+          p_cmp_id: string
+          p_failure_reason?: string
+          p_result: string
+          p_votes?: Json
+        }
+        Returns: Json
+      }
+      convene_cmp: {
+        Args: {
+          p_assembly_members: Json
+          p_deadline?: string
+          p_senate_members: Json
+          p_text_id: string
+        }
+        Returns: Json
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      transmit_legislative_text: {
+        Args: { p_note?: string; p_text_id: string }
+        Returns: Json
       }
     }
     Enums: {
@@ -598,6 +1233,64 @@ export type Database = {
         | "substitute"
         | "citizen"
         | "senator"
+      institution_type: "ASSEMBLY" | "SENATE" | "PARLIAMENT" | "JOINT"
+      legislative_location:
+        | "AN_DEPOT"
+        | "AN_BUREAU"
+        | "AN_COMMISSION"
+        | "AN_PLENIERE"
+        | "AN_VOTE"
+        | "AN_ADOPTED"
+        | "AN_REJECTED"
+        | "SN_DEPOT"
+        | "SN_BUREAU"
+        | "SN_COMMISSION"
+        | "SN_PLENIERE"
+        | "SN_VOTE"
+        | "SN_ADOPTED"
+        | "SN_REJECTED"
+        | "NAVETTE_AN_TO_SN"
+        | "NAVETTE_SN_TO_AN"
+        | "CMP_CONVENED"
+        | "CMP_IN_PROGRESS"
+        | "CMP_AGREEMENT"
+        | "CMP_FAILURE"
+        | "FINAL_AN"
+        | "FINAL_SN"
+        | "ADOPTED"
+        | "PROMULGATED"
+        | "ARCHIVED"
+      parliamentary_role:
+        | "AN_DEPUTE"
+        | "AN_DEPUTE_SUPPLEANT"
+        | "AN_PRESIDENT"
+        | "AN_VICE_PRESIDENT"
+        | "AN_QUESTEUR"
+        | "AN_SECRETAIRE"
+        | "AN_PRESIDENT_COMMISSION"
+        | "SN_SENATEUR"
+        | "SN_SENATEUR_SUPPLEANT"
+        | "SN_PRESIDENT"
+        | "SN_VICE_PRESIDENT"
+        | "SN_QUESTEUR"
+        | "SN_SECRETAIRE"
+        | "SN_PRESIDENT_COMMISSION"
+        | "PG_PRESIDENT"
+        | "PG_SECRETAIRE_GENERAL"
+        | "ADMIN_AN"
+        | "ADMIN_SN"
+        | "ADMIN_PG"
+        | "SUPER_ADMIN"
+        | "CITIZEN"
+      text_type:
+        | "PROJET_LOI"
+        | "PROPOSITION_LOI"
+        | "PROJET_LOI_FINANCES"
+        | "PROJET_LOI_CONST"
+        | "RESOLUTION"
+        | "MOTION"
+        | "QUESTION_ORALE"
+        | "QUESTION_ECRITE"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -737,6 +1430,67 @@ export const Constants = {
         "substitute",
         "citizen",
         "senator",
+      ],
+      institution_type: ["ASSEMBLY", "SENATE", "PARLIAMENT", "JOINT"],
+      legislative_location: [
+        "AN_DEPOT",
+        "AN_BUREAU",
+        "AN_COMMISSION",
+        "AN_PLENIERE",
+        "AN_VOTE",
+        "AN_ADOPTED",
+        "AN_REJECTED",
+        "SN_DEPOT",
+        "SN_BUREAU",
+        "SN_COMMISSION",
+        "SN_PLENIERE",
+        "SN_VOTE",
+        "SN_ADOPTED",
+        "SN_REJECTED",
+        "NAVETTE_AN_TO_SN",
+        "NAVETTE_SN_TO_AN",
+        "CMP_CONVENED",
+        "CMP_IN_PROGRESS",
+        "CMP_AGREEMENT",
+        "CMP_FAILURE",
+        "FINAL_AN",
+        "FINAL_SN",
+        "ADOPTED",
+        "PROMULGATED",
+        "ARCHIVED",
+      ],
+      parliamentary_role: [
+        "AN_DEPUTE",
+        "AN_DEPUTE_SUPPLEANT",
+        "AN_PRESIDENT",
+        "AN_VICE_PRESIDENT",
+        "AN_QUESTEUR",
+        "AN_SECRETAIRE",
+        "AN_PRESIDENT_COMMISSION",
+        "SN_SENATEUR",
+        "SN_SENATEUR_SUPPLEANT",
+        "SN_PRESIDENT",
+        "SN_VICE_PRESIDENT",
+        "SN_QUESTEUR",
+        "SN_SECRETAIRE",
+        "SN_PRESIDENT_COMMISSION",
+        "PG_PRESIDENT",
+        "PG_SECRETAIRE_GENERAL",
+        "ADMIN_AN",
+        "ADMIN_SN",
+        "ADMIN_PG",
+        "SUPER_ADMIN",
+        "CITIZEN",
+      ],
+      text_type: [
+        "PROJET_LOI",
+        "PROPOSITION_LOI",
+        "PROJET_LOI_FINANCES",
+        "PROJET_LOI_CONST",
+        "RESOLUTION",
+        "MOTION",
+        "QUESTION_ORALE",
+        "QUESTION_ECRITE",
       ],
     },
   },

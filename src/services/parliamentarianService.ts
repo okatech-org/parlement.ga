@@ -1,5 +1,6 @@
 /**
  * Service pour la gestion des parlementaires (députés et sénateurs)
+ * Note: Les tables parliamentarians, permanent_commissions sont créées mais pas encore dans les types générés
  */
 
 import { supabase } from '@/integrations/supabase/client';
@@ -111,6 +112,10 @@ export const roleShortLabels: Record<ParliamentaryRole, string> = {
     CITIZEN: 'Citoyen',
 };
 
+// Client typé pour les tables non générées
+const parliamentariansTable = () => supabase.from('parliamentarians' as any);
+const commissionsTable = () => supabase.from('permanent_commissions' as any);
+
 class ParliamentarianService {
     /**
      * Récupérer tous les parlementaires
@@ -122,8 +127,7 @@ class ParliamentarianService {
         commission?: string;
         limit?: number;
     }): Promise<Parliamentarian[]> {
-        let query = supabase
-            .from('parliamentarians')
+        let query = parliamentariansTable()
             .select('*')
             .order('last_name', { ascending: true });
 
@@ -147,7 +151,7 @@ class ParliamentarianService {
             throw error;
         }
 
-        return (data as Parliamentarian[]) || [];
+        return (data as unknown as Parliamentarian[]) || [];
     }
 
     /**
@@ -174,8 +178,7 @@ class ParliamentarianService {
      * Récupérer un parlementaire par ID
      */
     async getParliamentarianById(id: string): Promise<Parliamentarian | null> {
-        const { data, error } = await supabase
-            .from('parliamentarians')
+        const { data, error } = await parliamentariansTable()
             .select('*')
             .eq('id', id)
             .single();
@@ -185,15 +188,14 @@ class ParliamentarianService {
             return null;
         }
 
-        return data as Parliamentarian;
+        return data as unknown as Parliamentarian;
     }
 
     /**
      * Rechercher des parlementaires
      */
     async searchParliamentarians(query: string, institution?: InstitutionType): Promise<Parliamentarian[]> {
-        let dbQuery = supabase
-            .from('parliamentarians')
+        let dbQuery = parliamentariansTable()
             .select('*')
             .eq('is_active', true)
             .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,circonscription.ilike.%${query}%`);
@@ -209,15 +211,14 @@ class ParliamentarianService {
             throw error;
         }
 
-        return (data as Parliamentarian[]) || [];
+        return (data as unknown as Parliamentarian[]) || [];
     }
 
     /**
      * Récupérer toutes les commissions
      */
     async getCommissions(institution?: InstitutionType): Promise<Commission[]> {
-        let query = supabase
-            .from('permanent_commissions')
+        let query = commissionsTable()
             .select('*')
             .order('name', { ascending: true });
 
@@ -232,15 +233,14 @@ class ParliamentarianService {
             throw error;
         }
 
-        return (data as Commission[]) || [];
+        return (data as unknown as Commission[]) || [];
     }
 
     /**
      * Récupérer une commission par ID
      */
     async getCommissionById(id: string): Promise<Commission | null> {
-        const { data, error } = await supabase
-            .from('permanent_commissions')
+        const { data, error } = await commissionsTable()
             .select('*')
             .eq('id', id)
             .single();
@@ -250,7 +250,7 @@ class ParliamentarianService {
             return null;
         }
 
-        return data as Commission;
+        return data as unknown as Commission;
     }
 
     /**

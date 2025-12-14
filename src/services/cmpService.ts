@@ -1,5 +1,6 @@
 /**
  * Service pour la gestion des CMP (Commissions Mixtes Paritaires)
+ * Note: Les tables cmp_sessions, cmp_messages sont créées mais pas encore dans les types générés
  */
 
 import { supabase } from '@/integrations/supabase/client';
@@ -85,19 +86,18 @@ export const cmpStatusLabels: Record<string, string> = {
     FAILURE: 'Échec',
 };
 
+// Client typé pour les tables non générées
+const cmpSessionsTable = () => supabase.from('cmp_sessions' as any);
+const cmpMessagesTable = () => supabase.from('cmp_messages' as any);
+const legislativeTextsTable = () => supabase.from('legislative_texts' as any);
+
 class CMPService {
     /**
      * Récupérer toutes les CMP
      */
     async getCMPs(status?: string): Promise<CMPSession[]> {
-        let query = supabase
-            .from('cmp_sessions')
-            .select(`
-        *,
-        legislative_texts (
-          id, reference, title, current_location
-        )
-      `)
+        let query = cmpSessionsTable()
+            .select(`*, legislative_texts (id, reference, title, current_location)`)
             .order('convened_at', { ascending: false });
 
         if (status) {
@@ -111,10 +111,10 @@ class CMPService {
             throw error;
         }
 
-        return (data?.map(item => ({
+        return (data?.map((item: any) => ({
             ...item,
             legislative_text: item.legislative_texts
-        })) as unknown as CMPSession[]) || [];
+        })) as CMPSession[]) || [];
     }
 
     /**
@@ -128,14 +128,8 @@ class CMPService {
      * Récupérer une CMP par ID
      */
     async getCMPById(id: string): Promise<CMPSession | null> {
-        const { data, error } = await supabase
-            .from('cmp_sessions')
-            .select(`
-        *,
-        legislative_texts (
-          id, reference, title, current_location, content
-        )
-      `)
+        const { data, error } = await cmpSessionsTable()
+            .select(`*, legislative_texts (id, reference, title, current_location, content)`)
             .eq('id', id)
             .single();
 
@@ -145,9 +139,9 @@ class CMPService {
         }
 
         return {
-            ...data,
-            legislative_text: data.legislative_texts
-        } as unknown as CMPSession;
+            ...(data as any),
+            legislative_text: (data as any).legislative_texts
+        } as CMPSession;
     }
 
     /**
@@ -174,8 +168,7 @@ class CMPService {
      * Démarrer une CMP
      */
     async startCMP(cmpId: string): Promise<boolean> {
-        const { error } = await supabase
-            .from('cmp_sessions')
+        const { error } = await cmpSessionsTable()
             .update({
                 status: 'IN_PROGRESS',
                 started_at: new Date().toISOString()
@@ -190,8 +183,7 @@ class CMPService {
         // Mettre à jour le texte législatif
         const cmp = await this.getCMPById(cmpId);
         if (cmp) {
-            await supabase
-                .from('legislative_texts')
+            await legislativeTextsTable()
                 .update({ current_location: 'CMP_IN_PROGRESS' })
                 .eq('id', cmp.legislative_text_id);
         }
@@ -239,8 +231,7 @@ class CMPService {
      * Récupérer les messages d'une CMP
      */
     async getMessages(cmpId: string, limit: number = 100): Promise<CMPMessage[]> {
-        const { data, error } = await supabase
-            .from('cmp_messages')
+        const { data, error } = await cmpMessagesTable()
             .select('*')
             .eq('cmp_session_id', cmpId)
             .order('created_at', { ascending: true })
@@ -251,7 +242,7 @@ class CMPService {
             throw error;
         }
 
-        return (data as CMPMessage[]) || [];
+        return (data as unknown as CMPMessage[]) || [];
     }
 
     /**

@@ -1,5 +1,6 @@
 /**
  * Service pour la gestion des textes législatifs et de la navette parlementaire
+ * Note: Les tables legislative_texts, etc. sont créées mais pas encore dans les types générés
  */
 
 import { supabase } from '@/integrations/supabase/client';
@@ -115,6 +116,10 @@ export const textTypeLabels: Record<TextType, string> = {
     QUESTION_ECRITE: 'Question écrite',
 };
 
+// Client typé pour les tables non générées
+const legislativeTextsTable = () => supabase.from('legislative_texts' as any);
+const shuttleHistoryTable = () => supabase.from('legislative_shuttle_history' as any);
+
 class LegislativeService {
     /**
      * Récupérer tous les textes législatifs
@@ -126,8 +131,7 @@ class LegislativeService {
         limit?: number;
         offset?: number;
     }): Promise<LegislativeText[]> {
-        let query = supabase
-            .from('legislative_texts')
+        let query = legislativeTextsTable()
             .select('*')
             .order('created_at', { ascending: false });
 
@@ -161,10 +165,9 @@ class LegislativeService {
      * Récupérer les textes en cours (non finalisés)
      */
     async getActiveTexts(institution?: InstitutionType): Promise<LegislativeText[]> {
-        const finalLocations = ['ADOPTED', 'PROMULGATED', 'ARCHIVED', 'AN_REJECTED', 'SN_REJECTED'];
+        const finalLocations: LegislativeLocation[] = ['ADOPTED', 'PROMULGATED', 'ARCHIVED', 'AN_REJECTED', 'SN_REJECTED'];
 
-        let query = supabase
-            .from('legislative_texts')
+        let query = legislativeTextsTable()
             .select('*')
             .not('current_location', 'in', `(${finalLocations.join(',')})`)
             .order('updated_at', { ascending: false });
@@ -187,10 +190,9 @@ class LegislativeService {
      * Récupérer les textes en navette
      */
     async getTextsInShuttle(): Promise<LegislativeText[]> {
-        const shuttleLocations = ['NAVETTE_AN_TO_SN', 'NAVETTE_SN_TO_AN'];
+        const shuttleLocations: LegislativeLocation[] = ['NAVETTE_AN_TO_SN', 'NAVETTE_SN_TO_AN'];
 
-        const { data, error } = await supabase
-            .from('legislative_texts')
+        const { data, error } = await legislativeTextsTable()
             .select('*')
             .in('current_location', shuttleLocations)
             .order('transmitted_at', { ascending: false });
@@ -207,8 +209,7 @@ class LegislativeService {
      * Récupérer un texte par ID
      */
     async getTextById(id: string): Promise<LegislativeText | null> {
-        const { data, error } = await supabase
-            .from('legislative_texts')
+        const { data, error } = await legislativeTextsTable()
             .select('*')
             .eq('id', id)
             .single();
@@ -219,9 +220,8 @@ class LegislativeService {
         }
 
         // Incrémenter le compteur de vues
-        await supabase
-            .from('legislative_texts')
-            .update({ view_count: (data?.view_count || 0) + 1 })
+        await legislativeTextsTable()
+            .update({ view_count: ((data as any)?.view_count || 0) + 1 })
             .eq('id', id);
 
         return data as unknown as LegislativeText;
@@ -237,15 +237,13 @@ class LegislativeService {
             input.text_type === 'PROPOSITION_LOI' ? 'PPL' :
                 input.text_type === 'PROJET_LOI_FINANCES' ? 'PLF' : 'TXT';
 
-        const { count } = await supabase
-            .from('legislative_texts')
+        const { count } = await legislativeTextsTable()
             .select('*', { count: 'exact', head: true })
             .like('reference', `${prefix}-${year}-%`);
 
         const reference = `${prefix}-${year}-${String((count || 0) + 1).padStart(3, '0')}`;
 
-        const { data, error } = await supabase
-            .from('legislative_texts')
+        const { data, error } = await legislativeTextsTable()
             .insert({
                 ...input,
                 reference,
@@ -266,8 +264,7 @@ class LegislativeService {
      * Mettre à jour un texte
      */
     async updateText(id: string, updates: Partial<LegislativeText>): Promise<LegislativeText> {
-        const { data, error } = await supabase
-            .from('legislative_texts')
+        const { data, error } = await legislativeTextsTable()
             .update(updates)
             .eq('id', id)
             .select()
@@ -287,9 +284,6 @@ class LegislativeService {
     async transmitText(textId: string, note?: string): Promise<{ success: boolean; error?: string }> {
         const { data, error } = await supabase.functions.invoke('legislative-shuttle', {
             body: { textId, note },
-            // @ts-ignore
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
         });
 
         if (error) {
@@ -303,8 +297,7 @@ class LegislativeService {
      * Obtenir l'historique de la navette pour un texte
      */
     async getShuttleHistory(textId: string): Promise<ShuttleHistoryEntry[]> {
-        const { data, error } = await supabase
-            .from('legislative_shuttle_history')
+        const { data, error } = await shuttleHistoryTable()
             .select('*')
             .eq('legislative_text_id', textId)
             .order('transmitted_at', { ascending: false });
@@ -314,7 +307,7 @@ class LegislativeService {
             throw error;
         }
 
-        return (data as ShuttleHistoryEntry[]) || [];
+        return (data as unknown as ShuttleHistoryEntry[]) || [];
     }
 
     /**
@@ -339,7 +332,7 @@ class LegislativeService {
      * Calculer la progression d'un texte
      */
     getTextProgress(text: LegislativeText): number {
-        const progressMap: Record<LegislativeLocation, number> = {
+        const progressMap: Partial<Record<LegislativeLocation, number>> = {
             AN_DEPOT: 5,
             AN_BUREAU: 10,
             AN_COMMISSION: 20,
@@ -348,6 +341,7 @@ class LegislativeService {
             AN_ADOPTED: 40,
             AN_REJECTED: 100,
             NAVETTE_AN_TO_SN: 45,
+            SN_DEPOT: 48,
             SN_BUREAU: 50,
             SN_COMMISSION: 55,
             SN_PLENIERE: 65,
