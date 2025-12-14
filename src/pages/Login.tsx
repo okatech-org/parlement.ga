@@ -222,6 +222,13 @@ export default function Login() {
         login(phoneNumber, accountType || (userType === 'official' ? 'parlement' : 'citoyen'));
     };
 
+    const getHomePath = () => {
+        const path = location.pathname;
+        if (path.includes('/an')) return '/an';
+        if (path.includes('/senat')) return '/senat';
+        return '/';
+    };
+
     return (
         <div className="min-h-screen bg-background transition-colors duration-300 flex flex-col relative overflow-hidden" dir={dir}>
             {/* Background Pattern */}
@@ -232,7 +239,7 @@ export default function Login() {
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => navigate("/")}
+                    onClick={() => navigate(getHomePath())}
                     className="hover:bg-background/50 backdrop-blur-sm"
                 >
                     <Home className="w-4 h-4 mr-2" />
