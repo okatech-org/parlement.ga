@@ -51,7 +51,7 @@ export const AdminSpaceLayout = ({
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row transition-colors duration-300">
       {/* Desktop Sidebar */}
-      <aside className="hidden md:block w-72 bg-background border-r border-border/50 shadow-elegant z-20">
+      <aside className="hidden md:block w-64 bg-sidebar border-r border-sidebar-border z-20 flex-shrink-0">
         <SpaceSidebar
           title={title}
           userContext={userContext}
@@ -70,7 +70,7 @@ export const AdminSpaceLayout = ({
           onClick={closeSidebar}
         >
           <aside
-            className="fixed left-0 top-0 bottom-0 w-72 bg-background border-r border-border/50 z-50 shadow-elegant"
+            className="fixed left-0 top-0 bottom-0 w-64 bg-sidebar border-r border-sidebar-border z-50"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between p-6 border-b border-border/50">
