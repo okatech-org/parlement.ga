@@ -96,6 +96,11 @@ import HomeSenate from "@/pages/public/HomeSenate";
 import HomeParliament from "@/pages/public/HomeParliament";
 import ProtocolHub from "@/pages/public/demo/ProtocolHub";
 
+// Senate specific pages
+import SenateDashboard from "@/pages/senate/senator/SenateDashboard";
+import PresidentSenateSpace from "@/pages/senate/president/PresidentSenateSpace";
+import SenateDemo from "@/pages/senate/SenateDemo";
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <LanguageProvider>
@@ -214,7 +219,7 @@ const App = () => (
 
                 {/* ========================================= */}
                 {/* SÉNAT - /senat/*                         */}
-                {/* Thème OR / AMBRE                         */}
+                {/* Représentation des collectivités locales */}
                 {/* ========================================= */}
 
                 {/* Page d'accueil publique Sénat */}
@@ -222,19 +227,31 @@ const App = () => (
                 <Route path="/senat/actualites" element={<HomeSenate />} />
                 <Route path="/senat/sensibilisation" element={<HomeSenate />} />
                 <Route path="/senat/tutoriels" element={<HomeSenate />} />
-                <Route path="/senat/demo" element={<ProtocolHub />} />
+                <Route path="/senat/demo" element={<SenateDemo />} />
                 <Route path="/senat/login" element={<Login />} />
 
-                {/* Espace interne Sénat (avec layout) */}
-                <Route path="/senat/espace" element={<SenateLayout />}>
-                  <Route index element={<SenateHome />} />
-                  <Route path="palais" element={<SenateHome />} />
-                  <Route path="senateurs" element={<SenateHome />} />
-                  <Route path="travaux" element={<SenateHome />} />
-                  <Route path="agenda" element={<SenateHome />} />
-                  <Route path="commissions" element={<SenateHome />} />
-                  <Route path="collectivites" element={<SenateHome />} />
-                </Route>
+                {/* Espace Sénateur (Dashboard) */}
+                <Route path="/senat/espace" element={<SenateDashboard />} />
+                <Route path="/senat/espace/dashboard" element={<SenateDashboard />} />
+                <Route path="/senat/espace/territoires" element={<SenateDashboard />} />
+                <Route path="/senat/espace/navette" element={<SenateDashboard />} />
+                <Route path="/senat/espace/amendements" element={<SenateDashboard />} />
+                <Route path="/senat/espace/messages" element={<SenateDashboard />} />
+
+                {/* Espace Président du Sénat */}
+                <Route path="/senat/espace/president" element={<PresidentSenateSpace />} />
+                <Route path="/senat/espace/president/navette" element={<PresidentSenateSpace />} />
+                <Route path="/senat/espace/president/agenda" element={<PresidentSenateSpace />} />
+                <Route path="/senat/espace/president/cmp" element={<PresidentSenateSpace />} />
+
+                {/* Espace Questeur Sénat */}
+                <Route path="/senat/espace/questeur" element={<SenateDashboard />} />
+
+                {/* Autres pages Sénat */}
+                <Route path="/senat/senateurs" element={<HomeSenate />} />
+                <Route path="/senat/travaux" element={<HomeSenate />} />
+                <Route path="/senat/collectivites" element={<HomeSenate />} />
+                <Route path="/senat/provinces" element={<HomeSenate />} />
 
                 {/* ========================================= */}
                 {/* CONGRÈS - Alias vers Hub et espaces       */}
