@@ -515,6 +515,107 @@ export type Database = {
           },
         ]
       }
+      field_visits: {
+        Row: {
+          commune: string | null
+          created_at: string | null
+          department: string | null
+          documents: string[] | null
+          duration_hours: number | null
+          follow_up_notes: string | null
+          follow_up_required: boolean | null
+          id: string
+          observations: string | null
+          participants: string[] | null
+          photos: string[] | null
+          province: string
+          purpose: string
+          recommendations: string | null
+          senator_id: string
+          specific_location: string | null
+          suggestions: string | null
+          updated_at: string | null
+          visit_date: string
+        }
+        Insert: {
+          commune?: string | null
+          created_at?: string | null
+          department?: string | null
+          documents?: string[] | null
+          duration_hours?: number | null
+          follow_up_notes?: string | null
+          follow_up_required?: boolean | null
+          id?: string
+          observations?: string | null
+          participants?: string[] | null
+          photos?: string[] | null
+          province: string
+          purpose: string
+          recommendations?: string | null
+          senator_id: string
+          specific_location?: string | null
+          suggestions?: string | null
+          updated_at?: string | null
+          visit_date: string
+        }
+        Update: {
+          commune?: string | null
+          created_at?: string | null
+          department?: string | null
+          documents?: string[] | null
+          duration_hours?: number | null
+          follow_up_notes?: string | null
+          follow_up_required?: boolean | null
+          id?: string
+          observations?: string | null
+          participants?: string[] | null
+          photos?: string[] | null
+          province?: string
+          purpose?: string
+          recommendations?: string | null
+          senator_id?: string
+          specific_location?: string | null
+          suggestions?: string | null
+          updated_at?: string | null
+          visit_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "field_visits_senator_id_fkey"
+            columns: ["senator_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      gabon_provinces: {
+        Row: {
+          capital: string | null
+          code: string
+          id: number
+          name: string
+          population: number | null
+          surface_area: number | null
+        }
+        Insert: {
+          capital?: string | null
+          code: string
+          id?: number
+          name: string
+          population?: number | null
+          surface_area?: number | null
+        }
+        Update: {
+          capital?: string | null
+          code?: string
+          id?: number
+          name?: string
+          population?: number | null
+          surface_area?: number | null
+        }
+        Relationships: []
+      }
       legislative_shuttle_history: {
         Row: {
           from_location: Database["public"]["Enums"]["legislative_location"]
@@ -680,6 +781,77 @@ export type Database = {
             columns: ["parent_version_id"]
             isOneToOne: false
             referencedRelation: "legislative_texts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      local_grievances: {
+        Row: {
+          addressed_at: string | null
+          assigned_senator_id: string | null
+          attachments: string[] | null
+          category: string | null
+          commune: string | null
+          created_at: string | null
+          department: string | null
+          description: string
+          id: string
+          priority: number | null
+          province: string
+          response: string | null
+          source_contact: string | null
+          source_name: string | null
+          source_type: string
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          addressed_at?: string | null
+          assigned_senator_id?: string | null
+          attachments?: string[] | null
+          category?: string | null
+          commune?: string | null
+          created_at?: string | null
+          department?: string | null
+          description: string
+          id?: string
+          priority?: number | null
+          province: string
+          response?: string | null
+          source_contact?: string | null
+          source_name?: string | null
+          source_type: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          addressed_at?: string | null
+          assigned_senator_id?: string | null
+          attachments?: string[] | null
+          category?: string | null
+          commune?: string | null
+          created_at?: string | null
+          department?: string | null
+          description?: string
+          id?: string
+          priority?: number | null
+          province?: string
+          response?: string | null
+          source_contact?: string | null
+          source_name?: string | null
+          source_type?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "local_grievances_assigned_senator_id_fkey"
+            columns: ["assigned_senator_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -1163,6 +1335,141 @@ export type Database = {
         }
         Relationships: []
       }
+      senate_text_queue: {
+        Row: {
+          assigned_commission_id: string | null
+          commission_opinion: string | null
+          commission_vote_result: string | null
+          created_at: string | null
+          id: string
+          is_collectivity_related: boolean | null
+          legislative_text_id: string
+          rapporteur_id: string | null
+          received_at: string | null
+          review_deadline: string | null
+          senate_status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_commission_id?: string | null
+          commission_opinion?: string | null
+          commission_vote_result?: string | null
+          created_at?: string | null
+          id?: string
+          is_collectivity_related?: boolean | null
+          legislative_text_id: string
+          rapporteur_id?: string | null
+          received_at?: string | null
+          review_deadline?: string | null
+          senate_status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_commission_id?: string | null
+          commission_opinion?: string | null
+          commission_vote_result?: string | null
+          created_at?: string | null
+          id?: string
+          is_collectivity_related?: boolean | null
+          legislative_text_id?: string
+          rapporteur_id?: string | null
+          received_at?: string | null
+          review_deadline?: string | null
+          senate_status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "senate_text_queue_assigned_commission_id_fkey"
+            columns: ["assigned_commission_id"]
+            isOneToOne: false
+            referencedRelation: "permanent_commissions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "senate_text_queue_legislative_text_id_fkey"
+            columns: ["legislative_text_id"]
+            isOneToOne: false
+            referencedRelation: "legislative_texts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "senate_text_queue_rapporteur_id_fkey"
+            columns: ["rapporteur_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      senator_profiles: {
+        Row: {
+          amendments_proposed: number | null
+          canton: string | null
+          commune: string | null
+          created_at: string | null
+          department: string | null
+          electoral_college: string[] | null
+          field_visits: number | null
+          id: string
+          laws_examined: number | null
+          local_office_address: string | null
+          local_phone: string | null
+          mandate_end: string | null
+          mandate_start: string | null
+          political_group: string | null
+          profile_id: string
+          province: string
+          updated_at: string | null
+        }
+        Insert: {
+          amendments_proposed?: number | null
+          canton?: string | null
+          commune?: string | null
+          created_at?: string | null
+          department?: string | null
+          electoral_college?: string[] | null
+          field_visits?: number | null
+          id?: string
+          laws_examined?: number | null
+          local_office_address?: string | null
+          local_phone?: string | null
+          mandate_end?: string | null
+          mandate_start?: string | null
+          political_group?: string | null
+          profile_id: string
+          province: string
+          updated_at?: string | null
+        }
+        Update: {
+          amendments_proposed?: number | null
+          canton?: string | null
+          commune?: string | null
+          created_at?: string | null
+          department?: string | null
+          electoral_college?: string[] | null
+          field_visits?: number | null
+          id?: string
+          laws_examined?: number | null
+          local_office_address?: string | null
+          local_phone?: string | null
+          mandate_end?: string | null
+          mandate_start?: string | null
+          political_group?: string | null
+          profile_id?: string
+          province?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "senator_profiles_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -1215,6 +1522,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      senate_receive_text: { Args: { p_text_id: string }; Returns: string }
       transmit_legislative_text: {
         Args: { p_note?: string; p_text_id: string }
         Returns: Json
