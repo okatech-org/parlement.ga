@@ -1,24 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
     Landmark, Users, FileText, MapPin, ArrowLeftRight,
     Bell, Calendar, ChevronRight, AlertTriangle, Scale,
-    Crown, MessageSquare, BarChart3, Clock
+    Crown, MessageSquare, BarChart3, Clock, LayoutDashboard
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useNavigate } from "react-router-dom";
+import LocalCollectivityFeed from "@/components/senate/LocalCollectivityFeed";
 
 /**
  * Dashboard Sénateur - Espace de travail du Sénateur
- * Design cohérent avec l'AN, fonctionnalités spécifiques au Sénat
+ * Intègre la gestion territoriale et législative avec une structure à onglets
  */
 const SenateDashboard = () => {
     const navigate = useNavigate();
-    const [province] = useState("Woleu-Ntem"); // Récupérer depuis le profil
+    const [province] = useState("Woleu-Ntem"); // À dynamiser avec le service profil
+    const [activeTab, setActiveTab] = useState("overview");
 
-    // Données simulées
+    // Données simulées pour la vue synthétique
     const stats = [
         { label: "Textes à examiner", value: 8, icon: FileText, color: "text-primary" },
         { label: "Doléances locales", value: 12, icon: MessageSquare, color: "text-amber-600" },
@@ -57,30 +60,6 @@ const SenateDashboard = () => {
         },
     ];
 
-    const localGrievances = [
-        {
-            id: 1,
-            source: "Maire de Bitam",
-            title: "Réfection de la route Bitam-Minvoul",
-            category: "INFRASTRUCTURE",
-            priority: 2,
-        },
-        {
-            id: 2,
-            source: "Conseil Départemental Woleu",
-            title: "Demande de construction d'un centre de santé",
-            category: "HEALTH",
-            priority: 1,
-        },
-        {
-            id: 3,
-            source: "Préfet de Oyem",
-            title: "Électrification rurale du canton d'Essong",
-            category: "INFRASTRUCTURE",
-            priority: 1,
-        },
-    ];
-
     return (
         <div className="min-h-screen bg-background">
             {/* Header */}
@@ -115,182 +94,153 @@ const SenateDashboard = () => {
             </header>
 
             <div className="container mx-auto px-4 py-8">
-                {/* Stats rapides */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                    {stats.map((stat, index) => {
-                        const Icon = stat.icon;
-                        return (
-                            <Card key={index} className="bg-card shadow-sm hover:shadow-md transition-shadow">
-                                <CardContent className="p-4">
-                                    <div className="flex items-center justify-between">
-                                        <div>
-                                            <p className="text-2xl font-bold text-foreground">{stat.value}</p>
-                                            <p className="text-sm text-muted-foreground">{stat.label}</p>
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+                    <TabsList className="grid w-full grid-cols-3 max-w-[600px]">
+                        <TabsTrigger value="overview" className="flex items-center gap-2">
+                            <LayoutDashboard className="h-4 w-4" />
+                            Vue d'ensemble
+                        </TabsTrigger>
+                        <TabsTrigger value="territory" className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4" />
+                            Territoires
+                        </TabsTrigger>
+                        <TabsTrigger value="legislation" className="flex items-center gap-2">
+                            <ArrowLeftRight className="h-4 w-4" />
+                            Législation
+                        </TabsTrigger>
+                    </TabsList>
+
+                    {/* Onglet Vue d'ensemble */}
+                    <TabsContent value="overview" className="space-y-6">
+                        {/* Stats rapides */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {stats.map((stat, index) => {
+                                const Icon = stat.icon;
+                                return (
+                                    <Card key={index} className="bg-card shadow-sm hover:shadow-md transition-shadow">
+                                        <CardContent className="p-4">
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+                                                    <p className="text-sm text-muted-foreground">{stat.label}</p>
+                                                </div>
+                                                <Icon className={`h-8 w-8 ${stat.color} opacity-70`} />
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                );
+                            })}
+                        </div>
+
+                        <div className="grid lg:grid-cols-2 gap-6">
+                            {/* Widget Navette (Résumé) */}
+                            <Card className="border-l-4 border-l-primary h-full">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2">
+                                        <ArrowLeftRight className="h-5 w-5 text-primary" />
+                                        Navette - Urgences
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    {navetteTexts.slice(0, 2).map((text) => (
+                                        <div key={text.id} className="p-3 bg-muted/30 rounded-lg border border-transparent hover:border-border transition-colors">
+                                            <div className="flex justify-between mb-1">
+                                                <span className="text-xs font-bold text-foreground/80">{text.reference}</span>
+                                                <Badge variant={text.priority === 'urgent' ? 'destructive' : 'default'} className="h-5 text-[10px]">
+                                                    {text.daysLeft}j restants
+                                                </Badge>
+                                            </div>
+                                            <p className="font-medium text-sm line-clamp-1">{text.title}</p>
                                         </div>
-                                        <Icon className={`h-8 w-8 ${stat.color} opacity-70`} />
-                                    </div>
+                                    ))}
+                                    <Button variant="outline" className="w-full mt-2" onClick={() => setActiveTab("legislation")}>
+                                        Voir tous les textes
+                                        <ChevronRight className="ml-1 h-3 w-3" />
+                                    </Button>
                                 </CardContent>
                             </Card>
-                        );
-                    })}
-                </div>
 
-                <div className="grid lg:grid-cols-3 gap-6">
-                    {/* Widget Navette Parlementaire */}
-                    <div className="lg:col-span-2">
-                        <Card className="border-l-4 border-l-primary">
-                            <CardHeader>
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <CardTitle className="flex items-center gap-2">
-                                            <ArrowLeftRight className="h-5 w-5 text-primary" />
-                                            Navette Parlementaire
-                                        </CardTitle>
-                                        <CardDescription>
-                                            Textes en attente de deuxième lecture
-                                        </CardDescription>
-                                    </div>
-                                    <Button variant="outline" size="sm">
-                                        Voir tout
-                                        <ChevronRight className="ml-1 h-4 w-4" />
-                                    </Button>
-                                </div>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                {navetteTexts.map((text) => (
-                                    <div
-                                        key={text.id}
-                                        className="p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                                    >
-                                        <div className="flex items-start justify-between mb-2">
-                                            <div className="flex items-center gap-2">
-                                                <Badge variant="outline" className="text-xs">
-                                                    {text.reference}
-                                                </Badge>
-                                                {text.isCollectivity && (
-                                                    <Badge className="bg-amber-100 text-amber-700 text-xs">
-                                                        <Crown className="h-3 w-3 mr-1" />
-                                                        Collectivités
-                                                    </Badge>
-                                                )}
-                                            </div>
-                                            <Badge
-                                                className={
-                                                    text.priority === "urgent" ? "bg-red-500" :
-                                                        text.priority === "high" ? "bg-orange-500" : "bg-green-500"
-                                                }
-                                            >
-                                                {text.daysLeft}j restants
-                                            </Badge>
+                            {/* Widget Commission */}
+                            <Card className="bg-primary/5 border-primary/20 h-full flex flex-col justify-center">
+                                <CardContent className="p-6">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <div className="p-3 bg-primary/10 rounded-full">
+                                            <AlertTriangle className="h-8 w-8 text-primary" />
                                         </div>
-                                        <h4 className="font-medium text-foreground mb-2">{text.title}</h4>
-                                        <div className="flex items-center justify-between text-sm text-muted-foreground">
-                                            <span>Reçu le {text.receivedAt}</span>
-                                            <span className="flex items-center gap-1">
-                                                <Clock className="h-3 w-3" />
-                                                Échéance: {text.deadline}
-                                            </span>
+                                        <div>
+                                            <h4 className="font-semibold text-lg text-primary">Commission des Collectivités</h4>
+                                            <p className="text-sm text-muted-foreground">Prochaine réunion : Demain à 10h00</p>
+                                            <p className="text-xs text-muted-foreground mt-1">Salle B12 - Examen du PL Décentralisation</p>
                                         </div>
-                                        <Progress
-                                            value={100 - (text.daysLeft / 20) * 100}
-                                            className="mt-2 h-1"
-                                        />
                                     </div>
-                                ))}
-                            </CardContent>
-                        </Card>
-                    </div>
-
-                    {/* Widget Territoires */}
-                    <div className="space-y-6">
-                        {/* Doléances locales */}
-                        <Card className="border-l-4 border-l-amber-500">
-                            <CardHeader className="pb-2">
-                                <CardTitle className="flex items-center gap-2 text-lg">
-                                    <MessageSquare className="h-5 w-5 text-amber-600" />
-                                    Remontées du Terrain
-                                </CardTitle>
-                                <CardDescription>
-                                    {province} - Doléances en attente
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-3">
-                                {localGrievances.map((grievance) => (
-                                    <div
-                                        key={grievance.id}
-                                        className="p-3 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                                    >
-                                        <div className="flex items-start justify-between mb-1">
-                                            <Badge
-                                                variant="outline"
-                                                className={
-                                                    grievance.priority === 2 ? "border-red-500 text-red-600" :
-                                                        "border-amber-500 text-amber-600"
-                                                }
-                                            >
-                                                {grievance.priority === 2 ? "Urgent" : "Important"}
-                                            </Badge>
-                                            <Badge variant="secondary" className="text-xs">
-                                                {grievance.category}
-                                            </Badge>
-                                        </div>
-                                        <h5 className="font-medium text-sm text-foreground">{grievance.title}</h5>
-                                        <p className="text-xs text-muted-foreground mt-1">
-                                            De: {grievance.source}
-                                        </p>
-                                    </div>
-                                ))}
-                                <Button variant="outline" className="w-full">
-                                    Voir toutes les doléances
-                                    <ChevronRight className="ml-2 h-4 w-4" />
-                                </Button>
-                            </CardContent>
-                        </Card>
-
-                        {/* Actions rapides */}
-                        <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-lg">Actions Rapides</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-2">
-                                <Button variant="outline" className="w-full justify-start">
-                                    <FileText className="mr-2 h-4 w-4" />
-                                    Déposer un amendement
-                                </Button>
-                                <Button variant="outline" className="w-full justify-start">
-                                    <MapPin className="mr-2 h-4 w-4" />
-                                    Rapport de visite terrain
-                                </Button>
-                                <Button variant="outline" className="w-full justify-start">
-                                    <Users className="mr-2 h-4 w-4" />
-                                    Messagerie élus locaux
-                                </Button>
-                                <Button variant="outline" className="w-full justify-start">
-                                    <BarChart3 className="mr-2 h-4 w-4" />
-                                    Mes statistiques
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    </div>
-                </div>
-
-                {/* Alerte Commission des Collectivités */}
-                <Card className="mt-6 bg-primary/5 border-primary/20">
-                    <CardContent className="p-4">
-                        <div className="flex items-center gap-4">
-                            <AlertTriangle className="h-8 w-8 text-primary" />
-                            <div className="flex-1">
-                                <h4 className="font-semibold text-foreground">Commission des Collectivités Locales</h4>
-                                <p className="text-sm text-muted-foreground">
-                                    Prochaine réunion le 18 Décembre 2024 à 10h00 - Salle B12 du Palais Omar Bongo Ondimba
-                                </p>
-                            </div>
-                            <Button size="sm">
-                                Voir l'ordre du jour
-                            </Button>
+                                    <Button className="w-full">Consulter l'ordre du jour</Button>
+                                </CardContent>
+                            </Card>
                         </div>
-                    </CardContent>
-                </Card>
+                    </TabsContent>
+
+                    {/* Onglet Territoires - Intègre le nouveau composant */}
+                    <TabsContent value="territory">
+                        <LocalCollectivityFeed senatorProvince={province} />
+                    </TabsContent>
+
+                    {/* Onglet Législation (Placeholder amélioré) */}
+                    <TabsContent value="legislation">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <FileText className="h-5 w-5 text-primary" />
+                                    Textes en Navette Parlementaire
+                                </CardTitle>
+                                <CardDescription>Suivi détaillé des textes transmis par l'Assemblée Nationale</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-4">
+                                    {navetteTexts.map((text) => (
+                                        <div
+                                            key={text.id}
+                                            className="p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer border border-border/50"
+                                        >
+                                            <div className="flex items-start justify-between mb-2">
+                                                <div className="flex items-center gap-2">
+                                                    <Badge variant="outline">
+                                                        {text.reference}
+                                                    </Badge>
+                                                    {text.isCollectivity && (
+                                                        <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-200 border-amber-200">
+                                                            <Crown className="h-3 w-3 mr-1" />
+                                                            Collectivités
+                                                        </Badge>
+                                                    )}
+                                                </div>
+                                                <Badge
+                                                    className={
+                                                        text.priority === "urgent" ? "bg-red-500 hover:bg-red-600" :
+                                                            text.priority === "high" ? "bg-orange-500 hover:bg-orange-600" : "bg-green-500 hover:bg-green-600"
+                                                    }
+                                                >
+                                                    {text.daysLeft} jours restants
+                                                </Badge>
+                                            </div>
+                                            <h4 className="font-medium text-foreground mb-2 text-lg">{text.title}</h4>
+                                            <div className="flex items-center justify-between text-sm text-muted-foreground">
+                                                <span>Reçu le {text.receivedAt}</span>
+                                                <span className="flex items-center gap-1">
+                                                    <Clock className="h-3 w-3" />
+                                                    Échéance: {text.deadline}
+                                                </span>
+                                            </div>
+                                            <Progress
+                                                value={100 - (text.daysLeft / 20) * 100}
+                                                className="mt-3 h-2"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                </Tabs>
             </div>
         </div>
     );
