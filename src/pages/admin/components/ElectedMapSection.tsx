@@ -13,7 +13,8 @@ import {
     ZoomOut,
     Info,
     TrendingUp,
-    TrendingDown
+    TrendingDown,
+    Vote
 } from "lucide-react";
 import {
     Select,
@@ -27,127 +28,94 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+    PROVINCES as POLITICAL_PROVINCES,
+    SENATORS,
+    DEPUTIES,
+    ELECTORAL_STATS,
+    getSenatorsByProvince,
+    getDeputiesByProvince,
+    getPartyById
+} from "@/data/politicalData";
 
 const ElectedMapSection = () => {
     const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
     const [institutionFilter, setInstitutionFilter] = useState("all");
 
-    // Gabon Provinces Data with elected officials and population
-    const provinces = [
-        {
-            id: "estuaire",
-            name: "Estuaire",
-            capital: "Libreville",
-            path: "M 180 80 L 220 60 L 260 80 L 250 130 L 200 150 L 160 120 Z",
-            color: "#10b981",
-            deputies: 25,
-            senators: 8,
-            population: 1200000,
-            eligibleVoters: 680000,
+    // Transform POLITICAL_PROVINCES to include SVG paths for the map
+    const provinces = POLITICAL_PROVINCES.map(p => {
+        // SVG paths for Gabon provinces (stylized representation)
+        const pathMap: Record<string, string> = {
+            "estuaire": "M 180 80 L 220 60 L 260 80 L 250 130 L 200 150 L 160 120 Z",
+            "haut-ogooue": "M 280 180 L 350 160 L 380 200 L 370 260 L 310 280 L 260 240 Z",
+            "moyen-ogooue": "M 140 140 L 180 150 L 200 200 L 170 240 L 120 220 L 110 170 Z",
+            "ngounie": "M 120 240 L 170 250 L 200 300 L 180 350 L 130 340 L 100 290 Z",
+            "nyanga": "M 80 300 L 120 290 L 130 350 L 100 400 L 60 380 L 50 330 Z",
+            "ogooue-ivindo": "M 220 120 L 280 100 L 340 130 L 330 190 L 270 200 L 230 170 Z",
+            "ogooue-lolo": "M 200 210 L 260 200 L 280 250 L 260 300 L 210 290 L 190 250 Z",
+            "ogooue-maritime": "M 60 120 L 110 100 L 140 140 L 120 190 L 70 180 L 40 150 Z",
+            "woleu-ntem": "M 200 20 L 280 10 L 320 50 L 300 100 L 240 110 L 190 70 Z",
+        };
+
+        // Color map based on dominant party
+        const colorMap: Record<string, string> = {
+            "udb": "#1E40AF",   // Blue
+            "pdg": "#059669",   // Green
+            "rpm": "#DC2626",   // Red
+            "un": "#F59E0B",    // Orange
+            "psd": "#EC4899",   // Pink
+            "ind": "#6B7280",   // Gray
+        };
+
+        // Get real senators and deputies for this province
+        const provinceSenators = SENATORS.filter(s =>
+            s.province.toLowerCase().replace(/[- ]/g, '-') === p.id ||
+            s.province === p.name
+        );
+        const provinceDeputies = DEPUTIES.filter(d =>
+            d.province.toLowerCase().replace(/[- ]/g, '-') === p.id ||
+            d.province === p.name
+        );
+
+        return {
+            id: p.id,
+            name: p.name,
+            capital: p.capital,
+            path: pathMap[p.id] || "M 100 100 L 150 100 L 150 150 L 100 150 Z",
+            color: colorMap[p.dominantParty] || "#10b981",
+            deputies: p.seatsAN,
+            senators: p.seatsSenate,
+            population: p.population,
+            eligibleVoters: p.eligibleVoters,
+            registeredVoters: p.registeredVoters,
+            actualVoters: p.actualVoters,
+            participationRate: p.participationRate,
+            effectiveRepresentationRate: p.effectiveRepresentationRate,
+            dominantParty: p.dominantParty,
+            analysis: p.analysis,
             officials: [
-                { name: "Jean Ping", role: "Député", party: "PDG", photo: null },
-                { name: "Marie Ondo", role: "Sénateur", party: "RPG", photo: null },
-            ]
-        },
-        {
-            id: "haut-ogooue",
-            name: "Haut-Ogooué",
-            capital: "Franceville",
-            path: "M 280 180 L 350 160 L 380 200 L 370 260 L 310 280 L 260 240 Z",
-            color: "#f59e0b",
-            deputies: 18,
-            senators: 6,
-            population: 250000,
-            eligibleVoters: 142000,
-            officials: [
-                { name: "Paul Biyoghe", role: "Député", party: "PDG", photo: null },
-            ]
-        },
-        {
-            id: "moyen-ogooue",
-            name: "Moyen-Ogooué",
-            capital: "Lambaréné",
-            path: "M 140 140 L 180 150 L 200 200 L 170 240 L 120 220 L 110 170 Z",
-            color: "#3b82f6",
-            deputies: 12,
-            senators: 4,
-            population: 70000,
-            eligibleVoters: 40000,
-            officials: []
-        },
-        {
-            id: "ngounie",
-            name: "Ngounié",
-            capital: "Mouila",
-            path: "M 120 240 L 170 250 L 200 300 L 180 350 L 130 340 L 100 290 Z",
-            color: "#8b5cf6",
-            deputies: 14,
-            senators: 5,
-            population: 100000,
-            eligibleVoters: 57000,
-            officials: []
-        },
-        {
-            id: "nyanga",
-            name: "Nyanga",
-            capital: "Tchibanga",
-            path: "M 80 300 L 120 290 L 130 350 L 100 400 L 60 380 L 50 330 Z",
-            color: "#ec4899",
-            deputies: 8,
-            senators: 3,
-            population: 55000,
-            eligibleVoters: 31000,
-            officials: []
-        },
-        {
-            id: "ogooue-ivindo",
-            name: "Ogooué-Ivindo",
-            capital: "Makokou",
-            path: "M 220 120 L 280 100 L 340 130 L 330 190 L 270 200 L 230 170 Z",
-            color: "#14b8a6",
-            deputies: 10,
-            senators: 4,
-            population: 65000,
-            eligibleVoters: 37000,
-            officials: []
-        },
-        {
-            id: "ogooue-lolo",
-            name: "Ogooué-Lolo",
-            capital: "Koulamoutou",
-            path: "M 200 210 L 260 200 L 280 250 L 260 300 L 210 290 L 190 250 Z",
-            color: "#f97316",
-            deputies: 9,
-            senators: 3,
-            population: 68000,
-            eligibleVoters: 39000,
-            officials: []
-        },
-        {
-            id: "ogooue-maritime",
-            name: "Ogooué-Maritime",
-            capital: "Port-Gentil",
-            path: "M 60 120 L 110 100 L 140 140 L 120 190 L 70 180 L 40 150 Z",
-            color: "#06b6d4",
-            deputies: 15,
-            senators: 5,
-            population: 160000,
-            eligibleVoters: 91000,
-            officials: []
-        },
-        {
-            id: "woleu-ntem",
-            name: "Woleu-Ntem",
-            capital: "Oyem",
-            path: "M 200 20 L 280 10 L 320 50 L 300 100 L 240 110 L 190 70 Z",
-            color: "#84cc16",
-            deputies: 16,
-            senators: 6,
-            population: 155000,
-            eligibleVoters: 88000,
-            officials: []
-        },
-    ];
+                ...provinceSenators.slice(0, 3).map(s => ({
+                    name: s.name,
+                    role: s.roles.includes('president') ? 'Président du Sénat' :
+                        s.roles.includes('vp') ? 'Vice-Président Sénat' :
+                            s.roles.includes('questeur') ? 'Questeur Sénat' : 'Sénateur',
+                    party: s.party,
+                    partyId: s.partyId
+                })),
+                ...provinceDeputies.slice(0, 2).map(d => ({
+                    name: d.name,
+                    role: d.roles.includes('president') ? 'Président de l\'AN' :
+                        d.roles.includes('vp') ? 'Vice-Président AN' :
+                            d.roles.includes('questeur') ? 'Questeur AN' : 'Député',
+                    party: d.party,
+                    partyId: d.partyId
+                })),
+            ],
+            // Total real counts
+            realSenatorCount: provinceSenators.length,
+            realDeputyCount: provinceDeputies.length
+        };
+    });
 
     const totalDeputies = provinces.reduce((acc, p) => acc + p.deputies, 0);
     const totalSenators = provinces.reduce((acc, p) => acc + p.senators, 0);
@@ -341,15 +309,33 @@ const ElectedMapSection = () => {
                                     </div>
 
                                     <div className="p-4 bg-slate-50 dark:bg-slate-900/50 rounded-lg">
-                                        <p className="text-sm text-muted-foreground mb-2">Données Démographiques</p>
+                                        <p className="text-sm text-muted-foreground mb-2">Données Démographiques & Électorales (2025)</p>
                                         <div className="space-y-2">
                                             <div className="flex justify-between">
                                                 <span className="text-sm">Population totale</span>
                                                 <span className="font-medium">{province.population.toLocaleString()}</span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-sm">Électeurs inscrits</span>
+                                                <span className="text-sm">Électeurs éligibles</span>
                                                 <span className="font-medium">{province.eligibleVoters.toLocaleString()}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-sm">Inscrits</span>
+                                                <span className="font-medium">{(province as any).registeredVoters?.toLocaleString() || '-'}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-sm">Votants (1er tour)</span>
+                                                <span className="font-medium">{(province as any).actualVoters?.toLocaleString() || '-'}</span>
+                                            </div>
+                                            <div className="flex justify-between border-t pt-2">
+                                                <span className="text-sm font-medium">Taux de participation</span>
+                                                <Badge variant="outline" className={
+                                                    (province as any).participationRate > 55 ? 'bg-green-50 text-green-600' :
+                                                        (province as any).participationRate > 40 ? 'bg-amber-50 text-amber-600' :
+                                                            'bg-red-50 text-red-600'
+                                                }>
+                                                    {(province as any).participationRate || 0}%
+                                                </Badge>
                                             </div>
                                             <div className="flex justify-between">
                                                 <span className="text-sm">Électeurs / Élu</span>
@@ -358,8 +344,15 @@ const ElectedMapSection = () => {
                                         </div>
                                     </div>
 
+                                    {(province as any).analysis && (
+                                        <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-blue-500">
+                                            <p className="text-xs font-medium text-blue-700 dark:text-blue-300">Analyse</p>
+                                            <p className="text-sm text-blue-600 dark:text-blue-400">{(province as any).analysis}</p>
+                                        </div>
+                                    )}
+
                                     <div className={`p-3 rounded-lg flex items-center gap-2 ${status.label === "Sur-représentée" ? "bg-green-50" :
-                                            status.label === "Sous-représentée" ? "bg-red-50" : "bg-blue-50"
+                                        status.label === "Sous-représentée" ? "bg-red-50" : "bg-blue-50"
                                         }`}>
                                         {StatusIcon && <StatusIcon className={`h-4 w-4 ${status.color}`} />}
                                         <span className={`text-sm font-medium ${status.color}`}>{status.label}</span>

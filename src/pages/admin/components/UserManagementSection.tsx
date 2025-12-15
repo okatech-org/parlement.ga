@@ -47,7 +47,45 @@ import {
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 
-// Initial Mock Data
+import { SENATORS, DEPUTIES, POLITICAL_PARTIES, PROVINCES, getPartyById } from "@/data/politicalData";
+
+// Transform real political data to match component structure
+const transformSenatorToOfficial = (senator: typeof SENATORS[0]) => ({
+    id: senator.id,
+    name: senator.name,
+    roles: senator.roles,
+    institution: "Sénat",
+    status: senator.status,
+    phone: senator.phone || `+241 77 ${String(senator.id).padStart(2, '0')} ${String(senator.id * 11).padStart(2, '0')} ${String(senator.id * 7).padStart(2, '0')}`,
+    environment: "senat",
+    province: senator.province,
+    department: senator.department,
+    constituency: senator.constituency,
+    party: senator.party,
+    partyId: senator.partyId,
+    gender: senator.gender,
+    substitute: senator.substitute,
+    notes: senator.notes
+});
+
+const transformDeputyToOfficial = (deputy: typeof DEPUTIES[0]) => ({
+    id: deputy.id + 1000, // Offset to avoid ID collision
+    name: deputy.name,
+    roles: deputy.roles,
+    institution: "AN",
+    status: deputy.status === "minister" ? "active" : deputy.status,
+    phone: deputy.phone || `+241 66 ${String(deputy.id).padStart(2, '0')} ${String(deputy.id * 13).padStart(2, '0')} ${String(deputy.id * 3).padStart(2, '0')}`,
+    environment: "an",
+    province: deputy.province,
+    department: deputy.department,
+    constituency: deputy.constituency,
+    party: deputy.party,
+    partyId: deputy.partyId,
+    gender: deputy.gender,
+    notes: deputy.notes
+});
+
+// Initial Mock Data - NOW USING REAL POLITICAL DATA
 const INITIAL_ADMINS = [
     { id: 1, name: "Super Admin", email: "super@parlement.ga", roles: ["system_admin"], status: "active", institution: "Système", environment: "system" },
     { id: 2, name: "Admin AN", email: "admin.an@parlement.ga", roles: ["admin_an"], status: "active", institution: "Assemblée", environment: "an" },
@@ -55,15 +93,10 @@ const INITIAL_ADMINS = [
     { id: 4, name: "Admin Parlement", email: "admin.parlement@parlement.ga", roles: ["admin_parlement"], status: "active", institution: "Congrès", environment: "congres" },
 ];
 
+// 68 sénateurs réels + échantillon de députés
 const INITIAL_OFFICIALS = [
-    { id: 1, name: "Michel Régis Onanga Ndiaye", roles: ["president", "deputy"], institution: "AN", status: "active", phone: "01010101", environment: "an", province: "Estuaire" },
-    { id: 2, name: "François Ndong Obiang", roles: ["vp", "deputy"], institution: "AN", status: "active", phone: "02020202", environment: "an", province: "Estuaire" },
-    { id: 3, name: "Jean-Baptiste Bikalou", roles: ["deputy", "questeur"], institution: "AN", status: "active", phone: "06060606", environment: "an", province: "Haut-Ogooué" },
-    { id: 4, name: "Marie Thérèse Bekale", roles: ["senator"], institution: "Sénat", status: "active", phone: "07070707", environment: "senat", province: "Woleu-Ntem" },
-    { id: 5, name: "Paul Mba Abessole", roles: ["deputy"], institution: "AN", status: "suspended", phone: "08080808", environment: "an", province: "Ogooué-Maritime" },
-    { id: 6, name: "Claire Nyingone", roles: ["senator"], institution: "Sénat", status: "active", phone: "09090909", environment: "senat", province: "Ngounié" },
-    { id: 7, name: "Pierre Essono", roles: ["deputy"], institution: "AN", status: "active", phone: "10101010", environment: "an", province: "Moyen-Ogooué" },
-    { id: 8, name: "Jeanne Mintsa", roles: ["senator"], institution: "Sénat", status: "active", phone: "11111111", environment: "senat", province: "Nyanga" },
+    ...SENATORS.map(transformSenatorToOfficial),
+    ...DEPUTIES.map(transformDeputyToOfficial)
 ];
 
 const INITIAL_CITIZENS = [
@@ -242,6 +275,27 @@ const UserManagementSection = () => {
                     return <Badge key={role} variant="outline" className={c.className}>{c.label}</Badge>;
                 })}
             </div>
+        );
+    };
+
+    const getPartyBadge = (partyId: string | undefined, partyName: string | undefined) => {
+        if (!partyId && !partyName) return null;
+        const party = getPartyById(partyId || '');
+        const displayName = party?.shortName || partyName || partyId;
+        const color = party?.color || '#6B7280';
+
+        return (
+            <Badge
+                variant="outline"
+                className="font-medium"
+                style={{
+                    backgroundColor: `${color}15`,
+                    color: color,
+                    borderColor: `${color}40`
+                }}
+            >
+                {displayName}
+            </Badge>
         );
     };
 
@@ -508,7 +562,8 @@ const UserManagementSection = () => {
                                 <tr className="border-b">
                                     <th className="text-left py-3 px-4 font-medium text-sm">Élu</th>
                                     <th className="text-left py-3 px-4 font-medium text-sm">Fonction</th>
-                                    <th className="text-left py-3 px-4 font-medium text-sm">Institution</th>
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Parti</th>
+                                    <th className="text-left py-3 px-4 font-medium text-sm">Province</th>
                                     <th className="text-left py-3 px-4 font-medium text-sm">Statut</th>
                                     <th className="text-right py-3 px-4 font-medium text-sm">Actions</th>
                                 </tr>
@@ -519,18 +574,24 @@ const UserManagementSection = () => {
                                         <td className="py-3 px-4">
                                             <div>
                                                 <p className="font-medium">{official.name}</p>
-                                                <p className="text-xs text-muted-foreground">{official.phone}</p>
+                                                <p className="text-xs text-muted-foreground">{(official as any).constituency || official.phone}</p>
                                             </div>
                                         </td>
                                         <td className="py-3 px-4">{getRoleBadge(official.roles)}</td>
                                         <td className="py-3 px-4">
-                                            <Badge variant="outline" className={
-                                                official.environment === 'an' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
-                                                    'bg-amber-50 text-amber-600 border-amber-200'
-                                            }>
-                                                {official.environment === 'an' ? <Building2 className="h-3 w-3 mr-1" /> : <Landmark className="h-3 w-3 mr-1" />}
-                                                {official.institution}
-                                            </Badge>
+                                            {getPartyBadge((official as any).partyId, (official as any).party)}
+                                        </td>
+                                        <td className="py-3 px-4">
+                                            <div className="flex items-center gap-1">
+                                                <Badge variant="outline" className={
+                                                    official.environment === 'an' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
+                                                        'bg-amber-50 text-amber-600 border-amber-200'
+                                                }>
+                                                    {official.environment === 'an' ? <Building2 className="h-3 w-3 mr-1" /> : <Landmark className="h-3 w-3 mr-1" />}
+                                                    {official.institution}
+                                                </Badge>
+                                                <span className="text-xs text-muted-foreground">{official.province}</span>
+                                            </div>
                                         </td>
                                         <td className="py-3 px-4">{getStatusBadge(official.status)}</td>
                                         <td className="py-3 px-4 text-right">
