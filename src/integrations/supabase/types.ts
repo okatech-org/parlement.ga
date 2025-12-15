@@ -995,8 +995,10 @@ export type Database = {
           province: string | null
           questions_asked: number | null
           role: Database["public"]["Enums"]["parliamentary_role"]
+          substitute_active: boolean | null
           texts_authored: number | null
           title: string | null
+          titular_id: string | null
           updated_at: string | null
         }
         Insert: {
@@ -1014,7 +1016,7 @@ export type Database = {
           email_pro?: string | null
           first_name: string
           groupe_parlementaire?: string | null
-          id: string
+          id?: string
           institution: Database["public"]["Enums"]["institution_type"]
           is_active?: boolean | null
           last_name: string
@@ -1027,8 +1029,10 @@ export type Database = {
           province?: string | null
           questions_asked?: number | null
           role: Database["public"]["Enums"]["parliamentary_role"]
+          substitute_active?: boolean | null
           texts_authored?: number | null
           title?: string | null
+          titular_id?: string | null
           updated_at?: string | null
         }
         Update: {
@@ -1059,8 +1063,10 @@ export type Database = {
           province?: string | null
           questions_asked?: number | null
           role?: Database["public"]["Enums"]["parliamentary_role"]
+          substitute_active?: boolean | null
           texts_authored?: number | null
           title?: string | null
+          titular_id?: string | null
           updated_at?: string | null
         }
         Relationships: []
@@ -1493,7 +1499,15 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      v_parliamentarians_stats: {
+        Row: {
+          institution: Database["public"]["Enums"]["institution_type"] | null
+          partis: number | null
+          suppleants: number | null
+          titulaires: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       conclude_cmp: {
@@ -1514,6 +1528,10 @@ export type Database = {
           p_text_id: string
         }
         Returns: Json
+      }
+      generate_parl_email: {
+        Args: { p_institution: string; p_name: string }
+        Returns: string
       }
       has_role: {
         Args: {
