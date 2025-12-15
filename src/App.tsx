@@ -95,6 +95,9 @@ import PortalRepublic from "@/pages/public/PortalRepublic";
 import HomeAssembly from "@/pages/public/HomeAssembly";
 import HomeSenate from "@/pages/public/HomeSenate";
 import HomeParliament from "@/pages/public/HomeParliament";
+import ResultatsElectoraux from "@/pages/public/ResultatsElectoraux";
+import ProfilsElus from "@/pages/public/ProfilsElus";
+import AnalyseStatistique from "@/pages/public/AnalyseStatistique";
 import ProtocolHub from "@/pages/public/demo/ProtocolHub";
 
 // Senate specific pages
@@ -169,6 +172,15 @@ const App = () => (
                 <Route path="/an/demo" element={<ProtocolDemoPage />} />
                 <Route path="/an/processus" element={<AssemblyProcessPage />} />
                 <Route path="/an/login" element={<Login />} />
+
+                {/* ========================================= */}
+                {/* PAGES PUBLIQUES ÉLECTORALES               */}
+                {/* Accessibles depuis tous les environnements */}
+                {/* ========================================= */}
+                <Route path="/elections/resultats" element={<ResultatsElectoraux />} />
+                <Route path="/elections/profils" element={<ProfilsElus />} />
+                <Route path="/elections/statistiques" element={<AnalyseStatistique />} />
+
 
                 {/* Portail des espaces utilisateurs AN */}
                 <Route path="/an/portail" element={<ProtectedRoute><UserSpacesHub /></ProtectedRoute>} />
