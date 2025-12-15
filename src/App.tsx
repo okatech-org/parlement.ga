@@ -107,6 +107,9 @@ import SenateDemo from "@/pages/senate/SenateDemo";
 import GrievanceManagement from "@/pages/senate/GrievanceManagement";
 import FieldVisitsPage from "@/pages/senate/FieldVisitsPage";
 import SenateProcessPage from "@/pages/senate/SenateProcessPage";
+import SenateActualites from "@/pages/senate/SenateActualites";
+import SenateSensibilisation from "@/pages/senate/SenateSensibilisation";
+import SenateTutoriels from "@/pages/senate/SenateTutoriels";
 
 // Parliament/Congress specific pages
 import CongressDashboard from "@/pages/parliament/CongressDashboard";
@@ -252,9 +255,9 @@ const App = () => (
 
                 {/* Page d'accueil publique Sénat */}
                 <Route path="/senat" element={<HomeSenate />} />
-                <Route path="/senat/actualites" element={<HomeSenate />} />
-                <Route path="/senat/sensibilisation" element={<HomeSenate />} />
-                <Route path="/senat/tutoriels" element={<HomeSenate />} />
+                <Route path="/senat/actualites" element={<SenateActualites />} />
+                <Route path="/senat/sensibilisation" element={<SenateSensibilisation />} />
+                <Route path="/senat/tutoriels" element={<SenateTutoriels />} />
                 <Route path="/senat/demo" element={<SenateDemo />} />
                 <Route path="/senat/processus" element={<SenateProcessPage />} />
                 <Route path="/senat/login" element={<Login />} />
