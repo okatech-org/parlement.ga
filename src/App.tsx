@@ -98,6 +98,7 @@ import HomeParliament from "@/pages/public/HomeParliament";
 import ResultatsElectoraux from "@/pages/public/ResultatsElectoraux";
 import ProfilsElus from "@/pages/public/ProfilsElus";
 import AnalyseStatistique from "@/pages/public/AnalyseStatistique";
+import AnnuaireElus from "@/pages/public/AnnuaireElus";
 import ProtocolHub from "@/pages/public/demo/ProtocolHub";
 
 // Senate specific pages
@@ -180,6 +181,9 @@ const App = () => (
                 <Route path="/elections/resultats" element={<ResultatsElectoraux />} />
                 <Route path="/elections/profils" element={<ProfilsElus />} />
                 <Route path="/elections/statistiques" element={<AnalyseStatistique />} />
+                <Route path="/annuaire" element={<AnnuaireElus />} />
+                <Route path="/parlement/annuaire" element={<AnnuaireElus />} />
+
 
 
                 {/* Portail des espaces utilisateurs AN */}

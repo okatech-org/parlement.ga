@@ -705,3 +705,419 @@ export const getPartyDistribution = () => ({
     AN: POLITICAL_PARTIES.map(p => ({ party: p.shortName, seats: p.seatsAN, color: p.color })),
     Senate: POLITICAL_PARTIES.map(p => ({ party: p.shortName, seats: p.seatsSenate, color: p.color }))
 });
+
+// ============================================
+// COMMISSIONS PERMANENTES
+// ============================================
+
+export interface CommissionMember {
+    name: string;
+    role: 'president' | 'vp' | 'rapporteur' | 'member';
+    party: string;
+    partyId: string;
+}
+
+export interface PermanentCommission {
+    id: string;
+    name: string;
+    shortName: string;
+    institution: 'AN' | 'SENATE';
+    description: string;
+    color: string;
+    members: CommissionMember[];
+}
+
+// Commissions de l'Assemblée Nationale
+export const AN_COMMISSIONS: PermanentCommission[] = [
+    {
+        id: 'an-lois',
+        name: 'Commission des Lois Constitutionnelles, de la Législation et de l\'Administration Générale',
+        shortName: 'Lois',
+        institution: 'AN',
+        description: 'Examine les projets de loi constitutionnels, organiques et ordinaires',
+        color: '#1E40AF',
+        members: [
+            { name: 'NTOUTOUME AYI Jean Gaspard', role: 'president', party: 'UN', partyId: 'un' },
+            { name: 'MYBOTO Chantal', role: 'vp', party: 'UDB', partyId: 'udb' },
+            { name: 'OSSINGA Alban Stéphane', role: 'rapporteur', party: 'UDB', partyId: 'udb' },
+            { name: 'BARRO CHAMBRIER Alexandre', role: 'member', party: 'RPM', partyId: 'rpm' },
+            { name: 'OYIBA Jean Pierre', role: 'member', party: 'PDG', partyId: 'pdg' },
+        ]
+    },
+    {
+        id: 'an-finances',
+        name: 'Commission des Finances, du Budget et de la Comptabilité Publique',
+        shortName: 'Finances',
+        institution: 'AN',
+        description: 'Examine le budget de l\'État et les lois de finances',
+        color: '#059669',
+        members: [
+            { name: 'MOUISSI Mays Lloyd', role: 'president', party: 'UDB', partyId: 'udb' },
+            { name: 'MAYOUNOU Oswald Séverin', role: 'vp', party: 'PDG', partyId: 'pdg' },
+            { name: 'NKOMA LAWSON James David', role: 'rapporteur', party: 'IND', partyId: 'ind' },
+            { name: 'MPIRA Ismaëla Hermine', role: 'member', party: 'UDB', partyId: 'udb' },
+        ]
+    },
+    {
+        id: 'an-affaires-etrangeres',
+        name: 'Commission des Affaires Étrangères et de la Coopération',
+        shortName: 'Affaires Étrangères',
+        institution: 'AN',
+        description: 'Relations internationales, traités et accords',
+        color: '#7C3AED',
+        members: [
+            { name: 'ENGONGA ELLA Rostan Mickael', role: 'president', party: 'UDB', partyId: 'udb' },
+            { name: 'NDÉ ONDO Marie-Claire', role: 'vp', party: 'UDB', partyId: 'udb' },
+            { name: 'OBAME ONDO Jean-Marie', role: 'member', party: 'PDG', partyId: 'pdg' },
+        ]
+    },
+    {
+        id: 'an-defense',
+        name: 'Commission de la Défense Nationale et de la Sécurité',
+        shortName: 'Défense',
+        institution: 'AN',
+        description: 'Armée, sécurité intérieure, protection civile',
+        color: '#DC2626',
+        members: [
+            { name: 'LOUEMBE Blaise', role: 'president', party: 'PDG', partyId: 'pdg' },
+            { name: 'MOUROUNDZI MAYAKE Aggée', role: 'vp', party: 'SDG', partyId: 'sdg' },
+            { name: 'NZIENGUI Christianne', role: 'member', party: 'UDB', partyId: 'udb' },
+        ]
+    },
+    {
+        id: 'an-economie',
+        name: 'Commission des Affaires Économiques, de la Production et du Développement',
+        shortName: 'Économie',
+        institution: 'AN',
+        description: 'Industrie, agriculture, commerce, tourisme',
+        color: '#F59E0B',
+        members: [
+            { name: 'NTOUTOUME Aurélie', role: 'president', party: 'UDB', partyId: 'udb' },
+            { name: 'LIBALLY Marie Suzanne', role: 'vp', party: 'IND', partyId: 'ind' },
+            { name: 'BOUNDZANGA Martin', role: 'member', party: 'RPG', partyId: 'ind' },
+        ]
+    },
+    {
+        id: 'an-social',
+        name: 'Commission des Affaires Sociales, de la Santé et de la Solidarité',
+        shortName: 'Social',
+        institution: 'AN',
+        description: 'Santé, emploi, protection sociale, famille',
+        color: '#EC4899',
+        members: [
+            { name: 'KEYI Zélie', role: 'president', party: 'REAGIR', partyId: 'ind' },
+            { name: 'ODINA Solange', role: 'vp', party: 'PDG', partyId: 'pdg' },
+        ]
+    },
+    {
+        id: 'an-education',
+        name: 'Commission de l\'Éducation, de la Culture et de la Communication',
+        shortName: 'Éducation',
+        institution: 'AN',
+        description: 'Enseignement, recherche, sports, médias',
+        color: '#06B6D4',
+        members: [
+            { name: 'AKINIKOUSSOU Daisy Leance Alexie', role: 'president', party: 'UDB', partyId: 'udb' },
+        ]
+    },
+    {
+        id: 'an-environnement',
+        name: 'Commission de l\'Environnement, du Développement Durable et du Cadre de Vie',
+        shortName: 'Environnement',
+        institution: 'AN',
+        description: 'Écologie, forêts, urbanisme, habitat',
+        color: '#10B981',
+        members: [
+            { name: 'NZIGOU Jean de Dieu', role: 'president', party: 'UDB', partyId: 'udb' },
+        ]
+    }
+];
+
+// Commissions du Sénat
+export const SENATE_COMMISSIONS: PermanentCommission[] = [
+    {
+        id: 'sn-lois',
+        name: 'Commission des Lois Constitutionnelles, de la Décentralisation et des Libertés Locales',
+        shortName: 'Lois',
+        institution: 'SENATE',
+        description: 'Constitution, décentralisation, collectivités territoriales',
+        color: '#B45309',
+        members: [
+            { name: 'Jean-Boniface Assélé', role: 'president', party: 'UDB', partyId: 'udb' },
+            { name: 'Parfait Ndong Nzé', role: 'vp', party: 'UDB', partyId: 'udb' },
+            { name: 'Rose Christiane Ossouka Raponda', role: 'member', party: 'PDG', partyId: 'pdg' },
+        ]
+    },
+    {
+        id: 'sn-finances',
+        name: 'Commission des Finances, du Budget et des Comptes de la Nation',
+        shortName: 'Finances',
+        institution: 'SENATE',
+        description: 'Budget, fiscalité, finances publiques',
+        color: '#059669',
+        members: [
+            { name: 'Casimir Oyé Mba', role: 'president', party: 'UDB', partyId: 'udb' },
+            { name: 'Justin Ndoundangoye', role: 'vp', party: 'PDG', partyId: 'pdg' },
+            { name: 'Fabrice Mouandzouedi', role: 'member', party: 'UDB', partyId: 'udb' },
+        ]
+    },
+    {
+        id: 'sn-collectivites',
+        name: 'Commission des Collectivités Territoriales et du Développement Local',
+        shortName: 'Collectivités',
+        institution: 'SENATE',
+        description: 'Suivi des collectivités, aménagement du territoire',
+        color: '#7C3AED',
+        members: [
+            { name: 'Serge Maurice Mabiala', role: 'president', party: 'UDB', partyId: 'udb' },
+            { name: 'Pamphile Vessey Mihindou', role: 'vp', party: 'PSD', partyId: 'psd' },
+            { name: 'Daniel César Dibady Mayila', role: 'member', party: 'UDB', partyId: 'udb' },
+        ]
+    },
+    {
+        id: 'sn-affaires-etrangeres',
+        name: 'Commission des Affaires Étrangères, de la Défense et de la Coopération',
+        shortName: 'Affaires Étrangères',
+        institution: 'SENATE',
+        description: 'Diplomatie, traités, coopération internationale',
+        color: '#1E40AF',
+        members: [
+            { name: 'Pierre Claver Zeng Ebome', role: 'president', party: 'UDB', partyId: 'udb' },
+            { name: 'Paul Biyoghe Mba', role: 'member', party: 'PDG', partyId: 'pdg' },
+        ]
+    },
+    {
+        id: 'sn-economie',
+        name: 'Commission des Affaires Économiques, du Plan et de l\'Aménagement du Territoire',
+        shortName: 'Économie',
+        institution: 'SENATE',
+        description: 'Économie, planification, développement',
+        color: '#F59E0B',
+        members: [
+            { name: 'Roger Guy Francis Kouba', role: 'president', party: 'UDB', partyId: 'udb' },
+            { name: 'Elodie Diane Fouefoue', role: 'member', party: 'UDB', partyId: 'udb' },
+        ]
+    },
+    {
+        id: 'sn-social',
+        name: 'Commission des Affaires Culturelles, Sociales et de la Communication',
+        shortName: 'Social',
+        institution: 'SENATE',
+        description: 'Culture, éducation, santé, médias',
+        color: '#EC4899',
+        members: [
+            { name: 'Marie-Claire Ondo Mengue', role: 'president', party: 'UDB', partyId: 'udb' },
+            { name: 'Thérèse Nzeng Mengue', role: 'member', party: 'UDB', partyId: 'udb' },
+        ]
+    }
+];
+
+// ============================================
+// BUREAUX DES CHAMBRES (Organigramme)
+// ============================================
+
+export interface BureauMember {
+    id: number;
+    name: string;
+    role: 'president' | 'vp1' | 'vp2' | 'vp3' | 'questeur1' | 'questeur2' | 'secretary1' | 'secretary2' | 'secretary3';
+    roleLabel: string;
+    party: string;
+    partyId: string;
+    province: string;
+    gender: 'M' | 'F';
+    photo?: string;
+    level: number; // For org chart positioning
+}
+
+export const BUREAU_AN: BureauMember[] = [
+    {
+        id: 1,
+        name: 'Michel Régis Onanga Ndiaye',
+        role: 'president',
+        roleLabel: 'Président',
+        party: 'UDB',
+        partyId: 'udb',
+        province: 'Estuaire',
+        gender: 'M',
+        level: 1
+    },
+    {
+        id: 2,
+        name: 'François Ndong Obiang',
+        role: 'vp1',
+        roleLabel: '1er Vice-Président',
+        party: 'UDB',
+        partyId: 'udb',
+        province: 'Estuaire',
+        gender: 'M',
+        level: 2
+    },
+    {
+        id: 3,
+        name: 'NTOUTOUME AYI Jean Gaspard',
+        role: 'vp2',
+        roleLabel: '2e Vice-Président',
+        party: 'UN',
+        partyId: 'un',
+        province: 'Estuaire',
+        gender: 'M',
+        level: 2
+    },
+    {
+        id: 4,
+        name: 'MYBOTO Chantal',
+        role: 'vp3',
+        roleLabel: '3e Vice-Président',
+        party: 'UDB',
+        partyId: 'udb',
+        province: 'Estuaire',
+        gender: 'F',
+        level: 2
+    },
+    {
+        id: 5,
+        name: 'Mathieu Mboumba Nziengui',
+        role: 'questeur1',
+        roleLabel: '1er Questeur',
+        party: 'UDB',
+        partyId: 'udb',
+        province: 'Ngounié',
+        gender: 'M',
+        level: 3
+    },
+    {
+        id: 6,
+        name: 'MAYOUNOU Oswald Séverin',
+        role: 'questeur2',
+        roleLabel: '2e Questeur',
+        party: 'PDG',
+        partyId: 'pdg',
+        province: 'Haut-Ogooué',
+        gender: 'M',
+        level: 3
+    },
+    {
+        id: 7,
+        name: 'MPIRA Ismaëla Hermine',
+        role: 'secretary1',
+        roleLabel: '1er Secrétaire',
+        party: 'UDB',
+        partyId: 'udb',
+        province: 'Estuaire',
+        gender: 'F',
+        level: 4
+    },
+    {
+        id: 8,
+        name: 'LOUEMBE Blaise',
+        role: 'secretary2',
+        roleLabel: '2e Secrétaire',
+        party: 'PDG',
+        partyId: 'pdg',
+        province: 'Ogooué-Lolo',
+        gender: 'M',
+        level: 4
+    }
+];
+
+export const BUREAU_SENATE: BureauMember[] = [
+    {
+        id: 1,
+        name: 'Madeleine Sidonie Revangue',
+        role: 'president',
+        roleLabel: 'Présidente',
+        party: 'UDB',
+        partyId: 'udb',
+        province: 'Moyen-Ogooué',
+        gender: 'F',
+        level: 1
+    },
+    {
+        id: 2,
+        name: 'Jean-Boniface Assélé',
+        role: 'vp1',
+        roleLabel: '1er Vice-Président',
+        party: 'UDB',
+        partyId: 'udb',
+        province: 'Estuaire',
+        gender: 'M',
+        level: 2
+    },
+    {
+        id: 3,
+        name: 'Serge Maurice Mabiala',
+        role: 'vp2',
+        roleLabel: '2e Vice-Président',
+        party: 'UDB',
+        partyId: 'udb',
+        province: 'Ngounié',
+        gender: 'M',
+        level: 2
+    },
+    {
+        id: 4,
+        name: 'Rose Christiane Ossouka Raponda',
+        role: 'vp3',
+        roleLabel: '3e Vice-Président',
+        party: 'PDG',
+        partyId: 'pdg',
+        province: 'Estuaire',
+        gender: 'F',
+        level: 2
+    },
+    {
+        id: 5,
+        name: 'Jean-Rémy Pendy Bouyiki',
+        role: 'questeur1',
+        roleLabel: '1er Questeur',
+        party: 'UDB',
+        partyId: 'udb',
+        province: 'Estuaire',
+        gender: 'M',
+        level: 3
+    },
+    {
+        id: 6,
+        name: 'Jean-Pierre Oyiba',
+        role: 'questeur2',
+        roleLabel: '2e Questeur',
+        party: 'UDB',
+        partyId: 'udb',
+        province: 'Nyanga',
+        gender: 'M',
+        level: 3
+    },
+    {
+        id: 7,
+        name: 'Marie-Claire Ondo Mengue',
+        role: 'secretary1',
+        roleLabel: '1er Secrétaire',
+        party: 'UDB',
+        partyId: 'udb',
+        province: 'Estuaire',
+        gender: 'F',
+        level: 4
+    },
+    {
+        id: 8,
+        name: 'Casimir Oyé Mba',
+        role: 'secretary2',
+        roleLabel: '2e Secrétaire',
+        party: 'UDB',
+        partyId: 'udb',
+        province: 'Haut-Ogooué',
+        gender: 'M',
+        level: 4
+    }
+];
+
+// Helper functions for commissions
+export const getCommissionsByInstitution = (institution: 'AN' | 'SENATE'): PermanentCommission[] =>
+    institution === 'AN' ? AN_COMMISSIONS : SENATE_COMMISSIONS;
+
+export const getCommissionById = (id: string): PermanentCommission | undefined =>
+    [...AN_COMMISSIONS, ...SENATE_COMMISSIONS].find(c => c.id === id);
+
+export const getBureauByInstitution = (institution: 'AN' | 'SENATE'): BureauMember[] =>
+    institution === 'AN' ? BUREAU_AN : BUREAU_SENATE;
+
