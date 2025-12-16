@@ -381,7 +381,7 @@ flowchart TD
                                     </CardHeader>
                                     <CardContent>
                                         <div className="flex flex-wrap gap-2">
-                                            {item.examples.map((ex, i) => (
+                                            {(Array.isArray(item.examples) ? item.examples : []).map((ex, i) => (
                                                 <Badge key={i} variant="secondary" className="text-xs">{ex}</Badge>
                                             ))}
                                         </div>
