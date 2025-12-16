@@ -127,6 +127,7 @@ import LegislativeQuiz from "@/pages/public/LegislativeQuiz";
 import SystemAdminLogin from "@/pages/admin/SystemAdminLogin";
 import SystemAdminDashboard from "@/pages/admin/SystemAdminDashboard";
 import InstitutionAdminDashboard from "@/pages/admin/InstitutionAdminDashboard";
+import CongressPresidentDashboard from "@/pages/parliament/president/CongressPresidentDashboard";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -315,6 +316,9 @@ const App = () => (
                 <Route path="/congres/espace" element={<ParliamentSpace />} />
                 <Route path="/parlement/dashboard" element={<ParliamentSpace />} />
                 <Route path="/congres/dashboard" element={<ParliamentSpace />} />
+
+                {/* Espace Président du Congrès */}
+                <Route path="/congres/espace/president" element={<ProtectedRoute><CongressPresidentDashboard /></ProtectedRoute>} />
 
                 {/* CMP - War Room */}
                 <Route path="/parlement/cmp" element={<ParliamentSpace />} />

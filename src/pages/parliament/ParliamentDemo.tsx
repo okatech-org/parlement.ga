@@ -27,7 +27,7 @@ const ParliamentDemo = () => {
                 {
                     label: t('congress.demo.cards.accounts.presidentCongress'),
                     phone: '09090901',
-                    path: '/parlement/espace', // Access unified space
+                    path: '/congres/espace/president',
                     icon: Crown,
                     color: 'text-amber-500',
                     role: t('congress.demo.cards.roles.president'),
@@ -60,7 +60,7 @@ const ParliamentDemo = () => {
                 {
                     label: t('congress.demo.cards.accounts.deputyCongress'),
                     phone: '09090903',
-                    path: '/parlement/espace',
+                    path: '/an/espace/deputes',
                     icon: Users,
                     color: 'text-green-600',
                     role: t('congress.demo.cards.roles.deputy'),
@@ -73,7 +73,7 @@ const ParliamentDemo = () => {
                 {
                     label: t('congress.demo.cards.accounts.senatorCongress'),
                     phone: '09090904',
-                    path: '/parlement/espace',
+                    path: '/senat/espace',
                     icon: Users,
                     color: 'text-blue-600',
                     role: t('congress.demo.cards.roles.senator'),
@@ -93,7 +93,7 @@ const ParliamentDemo = () => {
                 {
                     label: t('congress.demo.cards.accounts.cmpMember'),
                     phone: '09090905',
-                    path: '/parlement/espace',
+                    path: '/parlement/cmp',
                     icon: ArrowLeftRight,
                     color: 'text-purple-500',
                     role: t('congress.demo.cards.roles.commissioner'),
