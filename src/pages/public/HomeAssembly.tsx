@@ -1,15 +1,16 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
     Building2, Users, FileText, Calendar, Video,
     ArrowRight, Newspaper, GraduationCap, PlayCircle,
     MapPin, ExternalLink, CheckCircle, Send, MessageSquare,
-    Gavel, Clock, ArrowLeftRight, Scale
+    Gavel, Clock, ArrowLeftRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import UnifiedNavbar from '@/components/navigation/UnifiedNavbar';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 /**
  * Page d'accueil publique de l'Assemblée Nationale
@@ -17,18 +18,19 @@ import UnifiedNavbar from '@/components/navigation/UnifiedNavbar';
  */
 const HomeAssembly: React.FC = () => {
     const navigate = useNavigate();
+    const { t } = useLanguage();
 
     const navLinks = [
-        { label: 'Actualités', href: '/an/actualites', icon: Newspaper },
-        { label: 'Sensibilisation', href: '/an/sensibilisation', icon: GraduationCap },
-        { label: 'Tutoriels', href: '/an/tutoriels', icon: PlayCircle },
-        { label: 'Démo Protocole', href: '/an/demo', icon: Building2 },
+        { label: t('assembly.nav.news'), href: '/an/actualites', icon: Newspaper },
+        { label: t('assembly.nav.sensibilisation'), href: '/an/sensibilisation', icon: GraduationCap },
+        { label: t('assembly.nav.tutorials'), href: '/an/tutoriels', icon: PlayCircle },
+        { label: t('assembly.nav.demo'), href: '/an/demo', icon: Building2 },
     ];
 
     const quickStats = [
-        { label: 'Députés', value: 143, icon: Users },
-        { label: 'Textes en cours', value: 23, icon: FileText },
-        { label: 'Sessions cette année', value: 47, icon: Calendar },
+        { label: t('assembly.home.stats.deputies'), value: 143, icon: Users },
+        { label: t('assembly.home.stats.texts'), value: 23, icon: FileText },
+        { label: t('assembly.home.stats.sessions'), value: 47, icon: Calendar },
     ];
 
     const latestNews = [
@@ -36,19 +38,19 @@ const HomeAssembly: React.FC = () => {
             id: 1,
             title: 'Adoption du projet de loi de finances 2025',
             date: '13 Déc 2024',
-            category: 'Législation',
+            category: t('news.categories.legislation'),
         },
         {
             id: 2,
             title: 'Session plénière sur la réforme de l\'éducation',
             date: '12 Déc 2024',
-            category: 'Plénière',
+            category: t('news.categories.publicSession'),
         },
         {
             id: 3,
             title: 'Installation de la nouvelle commission des lois',
             date: '10 Déc 2024',
-            category: 'Commission',
+            category: t('assembly.sections.quickAccess.commissions'),
         },
     ];
 
@@ -74,22 +76,20 @@ const HomeAssembly: React.FC = () => {
                         <div>
                             <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 mb-6">
                                 <Building2 className="h-3 w-3 mr-1" />
-                                Chambre basse du Parlement
+                                {t('assembly.home.badge')}
                             </Badge>
 
                             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-                                <span className="text-emerald-600">Assemblée</span>{' '}
-                                Nationale
+                                <span className="text-emerald-600">{t('assembly.home.title').split(' ')[0]}</span>{' '}
+                                {t('assembly.home.title').split(' ')[1]}
                             </h1>
 
                             <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
-                                du Gabon
+                                {t('assembly.home.subtitle')}
                             </p>
 
                             <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-lg">
-                                Bienvenue sur le portail officiel de l'Assemblée Nationale.
-                                Suivez les travaux législatifs, les débats en plénière et l'activité
-                                de vos 143 députés.
+                                {t('assembly.home.description')}
                             </p>
 
                             <div className="flex flex-wrap gap-4">
@@ -98,7 +98,7 @@ const HomeAssembly: React.FC = () => {
                                     className="bg-emerald-600 hover:bg-emerald-700 text-white"
                                     onClick={() => navigate('/an/travaux')}
                                 >
-                                    Travaux en cours
+                                    {t('assembly.home.buttons.works')}
                                     <ArrowRight className="ml-2 h-4 w-4" />
                                 </Button>
                                 <Button
@@ -108,14 +108,14 @@ const HomeAssembly: React.FC = () => {
                                     onClick={() => navigate('/an/deputes')}
                                 >
                                     <Users className="mr-2 h-4 w-4" />
-                                    Nos Députés
+                                    {t('assembly.home.buttons.deputies')}
                                 </Button>
                             </div>
 
                             {/* Location */}
                             <div className="flex items-center gap-2 mt-8 text-sm text-gray-500 dark:text-gray-400">
                                 <MapPin className="h-4 w-4" />
-                                <span>Palais Léon Mba, Boulevard Triomphal, Libreville</span>
+                                <span>{t('assembly.home.location')}</span>
                             </div>
                         </div>
 
@@ -127,7 +127,7 @@ const HomeAssembly: React.FC = () => {
                                 </div>
                                 <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60">
                                     <p className="text-white font-semibold">Palais Léon Mba</p>
-                                    <p className="text-white/80 text-sm">Siège de l'Assemblée Nationale</p>
+                                    <p className="text-white/80 text-sm">{t('assembly.home.badge')}</p>
                                 </div>
                             </div>
                         </div>
@@ -162,7 +162,7 @@ const HomeAssembly: React.FC = () => {
                         <div>
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                 <Newspaper className="h-6 w-6 text-emerald-600" />
-                                Actualités
+                                {t('assembly.sections.news.title')}
                             </h2>
                             <div className="space-y-4">
                                 {latestNews.map((news) => (
@@ -187,7 +187,7 @@ const HomeAssembly: React.FC = () => {
                                 ))}
                             </div>
                             <Button variant="link" className="text-emerald-600 mt-4 p-0">
-                                Voir toutes les actualités
+                                {t('assembly.sections.news.viewAll')}
                                 <ExternalLink className="ml-1 h-4 w-4" />
                             </Button>
                         </div>
@@ -196,38 +196,38 @@ const HomeAssembly: React.FC = () => {
                         <div>
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
                                 <FileText className="h-6 w-6 text-emerald-600" />
-                                Accès Rapide
+                                {t('assembly.sections.quickAccess.title')}
                             </h2>
                             <div className="grid grid-cols-2 gap-4">
                                 <Card className="cursor-pointer hover:shadow-lg hover:border-emerald-300 transition-all">
                                     <CardContent className="p-6 text-center">
                                         <Video className="h-10 w-10 mx-auto mb-3 text-emerald-600" />
-                                        <h3 className="font-semibold">Direct Plénière</h3>
-                                        <p className="text-sm text-gray-500 mt-1">Suivez les débats en direct</p>
+                                        <h3 className="font-semibold">{t('assembly.sections.quickAccess.direct')}</h3>
+                                        <p className="text-sm text-gray-500 mt-1">{t('assembly.sections.quickAccess.directDesc')}</p>
                                     </CardContent>
                                 </Card>
 
                                 <Card className="cursor-pointer hover:shadow-lg hover:border-emerald-300 transition-all">
                                     <CardContent className="p-6 text-center">
                                         <Calendar className="h-10 w-10 mx-auto mb-3 text-emerald-600" />
-                                        <h3 className="font-semibold">Agenda</h3>
-                                        <p className="text-sm text-gray-500 mt-1">Prochaines séances</p>
+                                        <h3 className="font-semibold">{t('assembly.sections.quickAccess.agenda')}</h3>
+                                        <p className="text-sm text-gray-500 mt-1">{t('assembly.sections.quickAccess.agendaDesc')}</p>
                                     </CardContent>
                                 </Card>
 
                                 <Card className="cursor-pointer hover:shadow-lg hover:border-emerald-300 transition-all">
                                     <CardContent className="p-6 text-center">
                                         <FileText className="h-10 w-10 mx-auto mb-3 text-emerald-600" />
-                                        <h3 className="font-semibold">Projets de loi</h3>
-                                        <p className="text-sm text-gray-500 mt-1">Textes en discussion</p>
+                                        <h3 className="font-semibold">{t('assembly.sections.quickAccess.bills')}</h3>
+                                        <p className="text-sm text-gray-500 mt-1">{t('assembly.sections.quickAccess.billsDesc')}</p>
                                     </CardContent>
                                 </Card>
 
                                 <Card className="cursor-pointer hover:shadow-lg hover:border-emerald-300 transition-all">
                                     <CardContent className="p-6 text-center">
                                         <Users className="h-10 w-10 mx-auto mb-3 text-emerald-600" />
-                                        <h3 className="font-semibold">Commissions</h3>
-                                        <p className="text-sm text-gray-500 mt-1">6 commissions permanentes</p>
+                                        <h3 className="font-semibold">{t('assembly.sections.quickAccess.commissions')}</h3>
+                                        <p className="text-sm text-gray-500 mt-1">{t('assembly.sections.quickAccess.commissionsDesc')}</p>
                                     </CardContent>
                                 </Card>
                             </div>
@@ -242,13 +242,13 @@ const HomeAssembly: React.FC = () => {
                     <div className="text-center mb-12">
                         <Badge className="mb-4 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
                             <Gavel className="h-3 w-3 mr-1" />
-                            Processus Législatif
+                            {t('assembly.sections.protocol.badge')}
                         </Badge>
                         <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                            Protocole Législatif de l'Assemblée
+                            {t('assembly.sections.protocol.title')}
                         </h2>
                         <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                            Du dépôt d'un projet de loi à son adoption en séance plénière
+                            {t('assembly.sections.protocol.description')}
                         </p>
                     </div>
 
@@ -259,12 +259,12 @@ const HomeAssembly: React.FC = () => {
                                 <div className="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-2">
                                     <FileText className="h-6 w-6 text-emerald-600" />
                                 </div>
-                                <CardTitle className="text-lg">Dépôt des Textes</CardTitle>
+                                <CardTitle className="text-lg">{t('assembly.sections.protocol.steps.deposit')}</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Projets de loi du Gouvernement</div>
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Propositions de loi des députés</div>
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Amendements en commission</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.depositDesc0')}</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.depositDesc1')}</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.depositDesc2')}</div>
                             </CardContent>
                         </Card>
 
@@ -273,12 +273,12 @@ const HomeAssembly: React.FC = () => {
                                 <div className="w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-2">
                                     <Users className="h-6 w-6 text-amber-600" />
                                 </div>
-                                <CardTitle className="text-lg">Travail en Commission</CardTitle>
+                                <CardTitle className="text-lg">{t('assembly.sections.protocol.steps.commission')}</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />6 commissions permanentes</div>
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Auditions des ministres</div>
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Rapport du rapporteur</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.commissionDesc0')}</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.commissionDesc1')}</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.commissionDesc2')}</div>
                             </CardContent>
                         </Card>
 
@@ -287,12 +287,12 @@ const HomeAssembly: React.FC = () => {
                                 <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-2">
                                     <ArrowLeftRight className="h-6 w-6 text-blue-600" />
                                 </div>
-                                <CardTitle className="text-lg">Navette Parlementaire</CardTitle>
+                                <CardTitle className="text-lg">{t('assembly.sections.protocol.steps.shuttle')}</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Transmission au Sénat</div>
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Commission Mixte Paritaire</div>
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />Lecture définitive</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.shuttleDesc0')}</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.shuttleDesc1')}</div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.shuttleDesc2')}</div>
                             </CardContent>
                         </Card>
                     </div>
@@ -302,17 +302,17 @@ const HomeAssembly: React.FC = () => {
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
                                 <Clock className="h-5 w-5" />
-                                Étapes d'examen d'un texte
+                                {t('assembly.sections.protocol.timeline.title')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                                 {[
-                                    { step: 1, title: "Dépôt", icon: FileText },
-                                    { step: 2, title: "Commission", icon: Users },
-                                    { step: 3, title: "Discussion", icon: MessageSquare },
-                                    { step: 4, title: "Vote", icon: CheckCircle },
-                                    { step: 5, title: "Transmission", icon: Send },
+                                    { step: 1, title: t('assembly.sections.protocol.timeline.step1'), icon: FileText },
+                                    { step: 2, title: t('assembly.sections.protocol.timeline.step2'), icon: Users },
+                                    { step: 3, title: t('assembly.sections.protocol.timeline.step3'), icon: MessageSquare },
+                                    { step: 4, title: t('assembly.sections.protocol.timeline.step4'), icon: CheckCircle },
+                                    { step: 5, title: t('assembly.sections.protocol.timeline.step5'), icon: Send },
                                 ].map((item, index) => {
                                     const Icon = item.icon;
                                     return (
@@ -340,7 +340,7 @@ const HomeAssembly: React.FC = () => {
                             onClick={() => navigate('/an/demo')}
                         >
                             <PlayCircle className="mr-2 h-5 w-5" />
-                            Essayer la démo
+                            {t('assembly.home.buttons.demo')}
                             <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                     </div>
@@ -352,10 +352,10 @@ const HomeAssembly: React.FC = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <Building2 className="h-8 w-8 mx-auto mb-4 opacity-50" />
                     <p className="text-sm opacity-80">
-                        © {new Date().getFullYear()} Assemblée Nationale du Gabon. Tous droits réservés.
+                        {t('assembly.footer.copyright')}
                     </p>
                     <p className="text-xs opacity-60 mt-2">
-                        Palais Léon Mba - Libreville, Gabon
+                        {t('assembly.footer.address')}
                     </p>
                 </div>
             </footer>

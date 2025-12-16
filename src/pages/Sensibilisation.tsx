@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
+import InstitutionSubHeader from "@/components/layout/InstitutionSubHeader";
 import awarenessCivic from "@/assets/awareness-civic.jpg";
 import awarenessYouth from "@/assets/awareness-youth.jpg";
 
@@ -28,43 +29,13 @@ const Sensibilisation = () => {
 
     return (
         <div className="min-h-screen bg-background transition-colors duration-300" dir={dir}>
-            {/* Header */}
-            <div className="bg-gradient-to-r from-amber-600/10 to-yellow-600/10 border-b border-border/50 py-12 px-4">
-                <div className="max-w-7xl mx-auto relative">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => navigate("/")}
-                        className="mb-4 hover:bg-background/50"
-                    >
-                        <Home className="w-4 h-4 mr-2" />
-                        {t('common.backToHome')}
-                    </Button>
-
-                    <div className="absolute top-0 right-0 md:top-4 md:right-4">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                            className="rounded-full"
-                        >
-                            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                            <span className="sr-only">{t('common.changeTheme')}</span>
-                        </Button>
-                    </div>
-
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="p-3 rounded-xl bg-amber-600/10 neu-inset">
-                            <Lightbulb className="w-8 h-8 text-amber-600" />
-                        </div>
-                        <h1 className="text-4xl font-bold">{t('sensibilisation.title')}</h1>
-                    </div>
-                    <p className="text-lg text-muted-foreground max-w-2xl">
-                        {t('sensibilisation.subtitle')}
-                    </p>
-                </div>
-            </div>
+            {/* Unified Header */}
+            <InstitutionSubHeader
+                institution="AN"
+                pageTitle={t('sensibilisation.title')}
+                pageSubtitle={t('sensibilisation.subtitle')}
+                pageIcon={Lightbulb}
+            />
 
             <div className="max-w-7xl mx-auto px-4 py-12">
                 <Tabs defaultValue="campaigns" className="space-y-8">
@@ -77,8 +48,8 @@ const Sensibilisation = () => {
                         <div className="grid md:grid-cols-2 gap-8">
                             <Card className="overflow-hidden border-l-4 border-l-amber-500 hover:shadow-elegant transition-all">
                                 <div className="relative h-48 overflow-hidden">
-                                    <img 
-                                        src={awarenessCivic} 
+                                    <img
+                                        src={awarenessCivic}
                                         alt="Campagne civique"
                                         className="w-full h-full object-cover"
                                     />
@@ -101,8 +72,8 @@ const Sensibilisation = () => {
 
                             <Card className="overflow-hidden border-l-4 border-l-green-500 hover:shadow-elegant transition-all">
                                 <div className="relative h-48 overflow-hidden">
-                                    <img 
-                                        src={awarenessYouth} 
+                                    <img
+                                        src={awarenessYouth}
                                         alt="Programme jeunesse"
                                         className="w-full h-full object-cover"
                                     />

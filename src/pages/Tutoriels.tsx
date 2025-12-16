@@ -7,6 +7,7 @@ import { GraduationCap, Play, BookOpen, CheckCircle, Clock, Home, Sun, Moon, Sta
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
+import InstitutionSubHeader from "@/components/layout/InstitutionSubHeader";
 import tutorialParliament from "@/assets/tutorial-parliament.jpg";
 import tutorialLaw from "@/assets/tutorial-law.jpg";
 import tutorialBudget from "@/assets/tutorial-budget.jpg";
@@ -45,43 +46,13 @@ const Tutoriels = () => {
 
     return (
         <div className="min-h-screen bg-background transition-colors duration-300" dir={dir}>
-            {/* Header */}
-            <div className="bg-gradient-to-r from-indigo-600/10 to-blue-600/10 border-b border-border/50 py-12 px-4">
-                <div className="max-w-7xl mx-auto relative">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => navigate("/")}
-                        className="mb-4 hover:bg-background/50"
-                    >
-                        <Home className="w-4 h-4 mr-2" />
-                        {t('common.backToHome')}
-                    </Button>
-
-                    <div className="absolute top-0 right-0 md:top-4 md:right-4">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                            className="rounded-full"
-                        >
-                            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                            <span className="sr-only">{t('common.changeTheme')}</span>
-                        </Button>
-                    </div>
-
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="p-3 rounded-xl bg-indigo-600/10 neu-inset">
-                            <GraduationCap className="w-8 h-8 text-indigo-600" />
-                        </div>
-                        <h1 className="text-4xl font-bold">{t('tutorials.title')}</h1>
-                    </div>
-                    <p className="text-lg text-muted-foreground max-w-2xl">
-                        {t('tutorials.subtitle')}
-                    </p>
-                </div>
-            </div>
+            {/* Unified Header */}
+            <InstitutionSubHeader
+                institution="AN"
+                pageTitle={t('tutorials.title')}
+                pageSubtitle={t('tutorials.subtitle')}
+                pageIcon={GraduationCap}
+            />
 
             <div className="max-w-7xl mx-auto px-4 py-12">
                 <div className="grid lg:grid-cols-3 gap-8">

@@ -4,8 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { AnimatedDashboardCard, AnimatedProgressBar } from "@/components/animations/DashboardAnimations";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export const ParliamentCMPSection = () => {
+  const { t } = useLanguage();
+
   const cmpSessions = [
     {
       id: 1,
@@ -35,11 +38,11 @@ export const ParliamentCMPSection = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "in_progress":
-        return <Badge className="bg-amber-500 hover:bg-amber-600">En négociation</Badge>;
+        return <Badge className="bg-amber-500 hover:bg-amber-600">{t('congress.dashboard.cmpCard.negotiation')}</Badge>;
       case "success":
-        return <Badge className="bg-green-500 hover:bg-green-600">Accord trouvé</Badge>;
+        return <Badge className="bg-green-500 hover:bg-green-600">{t('congress.common.adopted')}</Badge>;
       case "failed":
-        return <Badge variant="destructive">Échec</Badge>;
+        return <Badge variant="destructive">{t('congress.common.rejected')}</Badge>;
       default:
         return null;
     }
@@ -49,8 +52,8 @@ export const ParliamentCMPSection = () => {
     <div className="space-y-8 animate-fade-in">
       <AnimatedDashboardCard delay={0}>
         <DashboardHeader
-          title="Commissions Mixtes Paritaires"
-          subtitle="Suivi des CMP pour la résolution des désaccords entre chambres"
+          title={t('congress.home.cmp.title')}
+          subtitle={t('congress.home.cmp.subtitle')}
           avatarInitial="CMP"
         />
       </AnimatedDashboardCard>
@@ -73,20 +76,20 @@ export const ParliamentCMPSection = () => {
                       <div className="space-y-4 max-w-xl">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 p-2 rounded-md w-fit">
                           <Clock className="h-4 w-4 text-amber-500" />
-                          <span>Échéance: <span className="font-medium text-foreground">{cmp.deadline}</span> ({cmp.daysLeft} jours restants)</span>
+                          <span>{t('congress.dashboard.cmpCard.deadline')}: <span className="font-medium text-foreground">{cmp.deadline}</span> ({cmp.daysLeft} {t('congress.dashboard.cmpCard.daysLeft')})</span>
                         </div>
                         <AnimatedProgressBar
                           value={cmp.progress}
                           color="bg-amber-500"
                           showValue
                           delay={0.2 + index * 0.1}
-                          label="Progression des négociations"
+                          label={t('congress.dashboard.cmpCard.progress')}
                         />
                       </div>
                     ) : (
                       <p className="text-sm text-muted-foreground flex items-center gap-2">
                         {cmp.status === 'success' ? <span className="w-2 h-2 rounded-full bg-green-500" /> : <span className="w-2 h-2 rounded-full bg-red-500" />}
-                        Terminée le {cmp.completedAt}
+                        {t('congress.common.completed')} {cmp.completedAt}
                       </p>
                     )}
                   </div>
@@ -94,7 +97,7 @@ export const ParliamentCMPSection = () => {
                   {cmp.status === 'in_progress' && (
                     <Button className="bg-amber-600 hover:bg-amber-700 shadow-md shrink-0 self-start md:self-center">
                       <ArrowLeftRight className="h-4 w-4 mr-2" />
-                      Accéder à la War Room
+                      {t('congress.dashboard.cmpCard.btn')}
                     </Button>
                   )}
                 </div>

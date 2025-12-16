@@ -1,8 +1,8 @@
-import { 
+import {
     Building2, Users, FileText, ArrowLeftRight, Scale,
     CheckCircle, Clock, Send, MessageSquare, MapPin,
     ChevronRight, Home, Sun, Moon, PlayCircle, Gavel, BookOpen,
-    ArrowDown, Vote, Briefcase, AlertTriangle, Download
+    ArrowDown, Vote, Briefcase, AlertTriangle, Download, Workflow
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -14,6 +14,8 @@ import { motion } from "framer-motion";
 import MermaidDiagram from "@/components/MermaidDiagram";
 import AnimatedPhaseCard from "@/components/AnimatedPhaseCard";
 import { exportProcessPDF } from "@/utils/exportProcessPDF";
+import { useLanguage } from "@/contexts/LanguageContext";
+import InstitutionSubHeader from "@/components/layout/InstitutionSubHeader";
 
 /**
  * Page dédiée au Protocole Législatif de l'Assemblée Nationale
@@ -21,26 +23,27 @@ import { exportProcessPDF } from "@/utils/exportProcessPDF";
 const AssemblyProcessPage = () => {
     const navigate = useNavigate();
     const { theme, setTheme } = useTheme();
+    const { t } = useLanguage();
 
-    // Diagramme du flux législatif
+    // Diagramme du flux législatif (traduit dynamiquement)
     const legislativeFlowChart = `
 flowchart TD
-    A[📄 Dépôt du texte] --> B{Type de texte}
-    B -->|Projet de loi| C[Gouvernement]
-    B -->|Proposition| D[Député]
-    C --> E[Bureau de l'AN]
+    A[📄 ${t('assembly.process.flowchart.textDeposit')}] --> B{${t('assembly.process.flowchart.textType')}}
+    B -->|${t('assembly.process.flowchart.billType')}| C[${t('assembly.process.flowchart.government')}]
+    B -->|${t('assembly.process.flowchart.proposal')}| D[${t('assembly.process.flowchart.deputy')}]
+    C --> E[${t('assembly.process.flowchart.anBureau')}]
     D --> E
-    E --> F[Commission compétente]
-    F --> G[Examen en commission]
-    G --> H[Rapport du rapporteur]
-    H --> I[Inscription à l'ordre du jour]
-    I --> J[Discussion générale]
-    J --> K[Examen des amendements]
-    K --> L[Vote article par article]
-    L --> M{Vote final}
-    M -->|Adopté| N[Transmission au Sénat]
-    M -->|Rejeté| O[Fin de procédure]
-    N --> P{Navette parlementaire}
+    E --> F[${t('assembly.process.flowchart.competentCommission')}]
+    F --> G[${t('assembly.process.flowchart.commissionExamination')}]
+    G --> H[${t('assembly.process.flowchart.rapporteurReport')}]
+    H --> I[${t('assembly.process.flowchart.agendaRegistration')}]
+    I --> J[${t('assembly.process.flowchart.generalDiscussion')}]
+    J --> K[${t('assembly.process.flowchart.amendmentsExamination')}]
+    K --> L[${t('assembly.process.flowchart.articleByArticleVote')}]
+    L --> M{${t('assembly.process.flowchart.finalVote')}}
+    M -->|${t('assembly.process.flowchart.adopted')}| N[${t('assembly.process.flowchart.transmissionSenate')}]
+    M -->|${t('assembly.process.flowchart.rejected')}| O[${t('assembly.process.flowchart.endProcedure')}]
+    N --> P{${t('assembly.process.flowchart.parliamentaryShuttle')}}
     
     style A fill:#10b981,color:#fff
     style M fill:#f59e0b,color:#fff
@@ -48,15 +51,15 @@ flowchart TD
     style O fill:#ef4444,color:#fff
 `;
 
-    // Diagramme des commissions
+    // Diagramme des commissions (traduit dynamiquement)
     const commissionsChart = `
 flowchart LR
-    AN[Assemblée Nationale] --> C1[Commission des Lois]
-    AN --> C2[Commission des Finances]
-    AN --> C3[Commission Affaires Étrangères]
-    AN --> C4[Commission Défense]
-    AN --> C5[Commission Affaires Sociales]
-    AN --> C6[Commission Économique]
+    AN[${t('assembly.process.flowchart.nationalAssembly')}] --> C1[${t('assembly.process.flowchart.commissions.laws')}]
+    AN --> C2[${t('assembly.process.flowchart.commissions.finances')}]
+    AN --> C3[${t('assembly.process.flowchart.commissions.foreignAffairs')}]
+    AN --> C4[${t('assembly.process.flowchart.commissions.defense')}]
+    AN --> C5[${t('assembly.process.flowchart.commissions.socialAffairs')}]
+    AN --> C6[${t('assembly.process.flowchart.commissions.economic')}]
     
     style AN fill:#10b981,color:#fff
     style C1 fill:#3b82f6,color:#fff
@@ -71,86 +74,86 @@ flowchart LR
     const processSteps = [
         {
             phase: "Phase 1",
-            title: "Dépôt du texte",
-            duration: "Jour 1",
+            title: t('assembly.process.steps.phase1.title'),
+            duration: t('assembly.process.steps.phase1.duration'),
             icon: FileText,
             color: "bg-emerald-500",
-            description: "Le projet ou proposition de loi est déposé sur le bureau de l'Assemblée Nationale.",
+            description: t('assembly.process.steps.phase1.description'),
             details: [
-                "Projets de loi : déposés par le Gouvernement",
-                "Propositions de loi : initiative des députés",
-                "Enregistrement et attribution d'un numéro",
-                "Publication et diffusion aux groupes"
+                t('assembly.process.steps.phase1.details.0'),
+                t('assembly.process.steps.phase1.details.1'),
+                t('assembly.process.steps.phase1.details.2'),
+                t('assembly.process.steps.phase1.details.3')
             ]
         },
         {
             phase: "Phase 2",
-            title: "Renvoi en Commission",
-            duration: "Jour 2",
+            title: t('assembly.process.steps.phase2.title'),
+            duration: t('assembly.process.steps.phase2.duration'),
             icon: Users,
             color: "bg-blue-500",
-            description: "Le Président de l'AN saisit la commission permanente compétente.",
+            description: t('assembly.process.steps.phase2.description'),
             details: [
-                "6 commissions permanentes",
-                "Désignation d'un rapporteur",
-                "Auditions des ministres",
-                "Consultations d'experts"
+                t('assembly.process.steps.phase2.details.0'),
+                t('assembly.process.steps.phase2.details.1'),
+                t('assembly.process.steps.phase2.details.2'),
+                t('assembly.process.steps.phase2.details.3')
             ]
         },
         {
             phase: "Phase 3",
-            title: "Travail en Commission",
-            duration: "Jours 3-15",
+            title: t('assembly.process.steps.phase3.title'),
+            duration: t('assembly.process.steps.phase3.duration'),
             icon: Gavel,
             color: "bg-amber-500",
-            description: "Examen approfondi du texte et des amendements en commission.",
+            description: t('assembly.process.steps.phase3.description'),
             details: [
-                "Examen article par article",
-                "Dépôt et discussion des amendements",
-                "Vote des amendements en commission",
-                "Rédaction du rapport"
+                t('assembly.process.steps.phase3.details.0'),
+                t('assembly.process.steps.phase3.details.1'),
+                t('assembly.process.steps.phase3.details.2'),
+                t('assembly.process.steps.phase3.details.3')
             ]
         },
         {
             phase: "Phase 4",
-            title: "Discussion en Plénière",
-            duration: "Jours 16-25",
+            title: t('assembly.process.steps.phase4.title'),
+            duration: t('assembly.process.steps.phase4.duration'),
             icon: MessageSquare,
             color: "bg-purple-500",
-            description: "Débat général et examen des amendements en séance publique.",
+            description: t('assembly.process.steps.phase4.description'),
             details: [
-                "Présentation par le rapporteur",
-                "Discussion générale",
-                "Défense des amendements",
-                "Interventions des groupes"
+                t('assembly.process.steps.phase4.details.0'),
+                t('assembly.process.steps.phase4.details.1'),
+                t('assembly.process.steps.phase4.details.2'),
+                t('assembly.process.steps.phase4.details.3')
             ]
         },
         {
             phase: "Phase 5",
-            title: "Vote solennel",
-            duration: "Jour 26-30",
+            title: t('assembly.process.steps.phase5.title'),
+            duration: t('assembly.process.steps.phase5.duration'),
             icon: Vote,
             color: "bg-red-500",
-            description: "Vote final sur l'ensemble du texte amendé.",
+            description: t('assembly.process.steps.phase5.description'),
             details: [
-                "Explications de vote",
-                "Scrutin public ou à main levée",
-                "Majorité simple requise",
-                "Proclamation des résultats"
+                t('assembly.process.steps.phase5.details.0'),
+                t('assembly.process.steps.phase5.details.1'),
+                t('assembly.process.steps.phase5.details.2'),
+                t('assembly.process.steps.phase5.details.3')
             ]
         },
         {
             phase: "Phase 6",
-            title: "Transmission",
-            duration: "Après vote",
+            title: t('assembly.process.steps.phase6.title'),
+            duration: t('assembly.process.steps.phase6.duration'),
             icon: Send,
             color: "bg-indigo-500",
-            description: "Le texte adopté est transmis au Sénat pour examen.",
+            description: t('assembly.process.steps.phase6.description'),
             details: [
-                "Notification au Président du Sénat",
-                "Délai de 20 jours pour le Sénat",
-                "Début de la navette parlementaire",
-                "Suivi en temps réel"
+                t('assembly.process.steps.phase6.details.0'),
+                t('assembly.process.steps.phase6.details.1'),
+                t('assembly.process.steps.phase6.details.2'),
+                t('assembly.process.steps.phase6.details.3')
             ]
         }
     ];
@@ -270,8 +273,8 @@ flowchart TD
     // Export PDF handler
     const handleExportPDF = () => {
         exportProcessPDF({
-            title: "Protocole Législatif de l'Assemblée Nationale",
-            subtitle: "République Gabonaise",
+            title: t('assembly.process.heroTitle'),
+            subtitle: t('assembly.process.subtitle'),
             institution: 'AN',
             phases: processSteps.map(s => ({
                 phase: s.phase,
@@ -285,67 +288,45 @@ flowchart TD
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-emerald-950">
-            {/* Header */}
-            <header className="border-b border-border bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <Button variant="ghost" size="icon" onClick={() => navigate("/an")}>
-                                <Home className="h-5 w-5" />
-                            </Button>
-                            <Separator orientation="vertical" className="h-6" />
-                            <Building2 className="h-7 w-7 text-emerald-600" />
-                            <div>
-                                <h1 className="text-xl font-bold text-gray-900 dark:text-white">Processus Législatif</h1>
-                                <p className="text-xs text-gray-500">Assemblée Nationale</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm" className="border-emerald-600 text-emerald-600" onClick={() => navigate("/an/demo")}>
-                                <PlayCircle className="h-4 w-4 mr-2" />
-                                Démo
-                            </Button>
-                            <Button variant="outline" size="sm" onClick={handleExportPDF}>
-                                <Download className="h-4 w-4 mr-2" />
-                                Export PDF
-                            </Button>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                            >
-                                {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            {/* Unified Header with Export PDF action */}
+            <InstitutionSubHeader
+                institution="AN"
+                pageTitle={t('assembly.process.title')}
+                pageSubtitle={t('assembly.process.subtitle')}
+                pageIcon={Workflow}
+                extraActions={
+                    <Button variant="outline" size="sm" onClick={handleExportPDF}>
+                        <Download className="h-4 w-4 mr-2" />
+                        {t('assembly.process.exportBtn')}
+                    </Button>
+                }
+            />
 
             {/* Hero */}
             <section className="py-16 bg-gradient-to-br from-emerald-600 to-green-700 text-white">
                 <div className="container mx-auto px-4 text-center">
                     <Badge className="mb-4 bg-white/20 text-white border-white/30">
                         <BookOpen className="h-3 w-3 mr-1" />
-                        Guide Complet
+                        {t('assembly.process.heroBadge')}
                     </Badge>
                     <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                        Protocole Législatif de l'Assemblée
+                        {t('assembly.process.heroTitle')}
                     </h1>
                     <p className="text-xl opacity-90 max-w-3xl mx-auto mb-6">
-                        Du dépôt d'un projet de loi à sa transmission au Sénat, découvrez le parcours complet d'un texte à l'Assemblée Nationale.
+                        {t('assembly.process.heroDesc')}
                     </p>
                     <div className="flex justify-center gap-4 flex-wrap">
                         <Badge className="bg-white/20 text-white border-white/30 text-sm py-1.5 px-3">
                             <Users className="h-4 w-4 mr-1" />
-                            143 députés
+                            {t('assembly.process.stats.deputies')}
                         </Badge>
                         <Badge className="bg-white/20 text-white border-white/30 text-sm py-1.5 px-3">
                             <Briefcase className="h-4 w-4 mr-1" />
-                            6 commissions
+                            {t('assembly.process.stats.commissions')}
                         </Badge>
                         <Badge className="bg-white/20 text-white border-white/30 text-sm py-1.5 px-3">
                             <Clock className="h-4 w-4 mr-1" />
-                            ~30 jours
+                            {t('assembly.process.stats.days')}
                         </Badge>
                     </div>
                 </div>
@@ -355,16 +336,15 @@ flowchart TD
             <section id="flux-section" className="py-16">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Flux Législatif</h2>
+                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('assembly.process.flow.title')}</h2>
                         <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                            Visualisez le parcours complet d'un texte à l'Assemblée Nationale. 
-                            <span className="text-emerald-600 font-medium"> Cliquez sur les éléments pour naviguer.</span>
+                            {t('assembly.process.flow.desc')}
                         </p>
                     </div>
                     <div className="max-w-4xl mx-auto">
-                        <MermaidDiagram 
-                            chart={legislativeFlowChart} 
-                            title="Parcours d'un texte législatif"
+                        <MermaidDiagram
+                            chart={legislativeFlowChart}
+                            title={t('assembly.process.flow.diagramTitle')}
                             className="shadow-lg"
                             onNodeClick={handleNodeClick}
                         />
@@ -376,14 +356,14 @@ flowchart TD
             <section id="commissions-section" className="py-16 bg-gray-50 dark:bg-gray-800/50">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Les 6 Commissions Permanentes</h2>
+                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('assembly.process.commissions.title')}</h2>
                         <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                            Chaque texte est examiné par la commission compétente
+                            {t('assembly.process.commissions.desc')}
                         </p>
                     </div>
                     <div className="max-w-4xl mx-auto">
-                        <MermaidDiagram 
-                            chart={commissionsChart} 
+                        <MermaidDiagram
+                            chart={commissionsChart}
                             className="shadow-lg"
                         />
                     </div>
@@ -394,15 +374,15 @@ flowchart TD
             <section id="phases" className="py-16">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Les 6 Phases du Processus</h2>
+                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('assembly.process.phases.title')}</h2>
                         <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                            Détail de chaque étape du parcours législatif
+                            {t('assembly.process.phases.desc')}
                         </p>
                     </div>
 
                     <div className="max-w-4xl mx-auto space-y-6">
                         {processSteps.map((step, index) => (
-                            <AnimatedPhaseCard 
+                            <AnimatedPhaseCard
                                 key={index}
                                 step={step}
                                 index={index}
@@ -420,24 +400,24 @@ flowchart TD
                     <div className="text-center mb-12">
                         <Badge className="mb-4 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
                             <ArrowLeftRight className="h-3 w-3 mr-1" />
-                            Bicaméralisme
+                            {t('assembly.process.shuttle.badge')}
                         </Badge>
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">La Navette Parlementaire Complète</h2>
+                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('assembly.process.shuttle.title')}</h2>
                         <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                            Cycle complet d'adoption d'une loi : AN → Sénat → CMP → Promulgation
+                            {t('assembly.process.shuttle.desc')}
                         </p>
                     </div>
                     <div className="max-w-6xl mx-auto mb-8">
-                        <MermaidDiagram 
-                            chart={navetteCompleteChart} 
-                            title="Cycle complet de la navette parlementaire"
+                        <MermaidDiagram
+                            chart={navetteCompleteChart}
+                            title={t('assembly.process.shuttle.title')}
                             className="shadow-lg"
                             onNodeClick={handleNodeClick}
                         />
                     </div>
                     <div className="max-w-5xl mx-auto">
-                        <MermaidDiagram 
-                            chart={navetteChart} 
+                        <MermaidDiagram
+                            chart={navetteChart}
                             title="Vue simplifiée de la navette"
                             className="shadow-lg"
                         />
@@ -448,12 +428,12 @@ flowchart TD
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2 text-emerald-600">
                                     <CheckCircle className="h-5 w-5" />
-                                    Texte conforme
+                                    {t('assembly.process.shuttle.identical')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Si le Sénat adopte le texte sans modification, celui-ci est définitivement adopté et transmis pour promulgation.
+                                    {t('assembly.process.shuttle.identicalDesc')}
                                 </p>
                             </CardContent>
                         </Card>
@@ -461,12 +441,12 @@ flowchart TD
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2 text-amber-600">
                                     <AlertTriangle className="h-5 w-5" />
-                                    Texte amendé
+                                    {t('assembly.process.shuttle.amended')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Si le Sénat modifie le texte, il revient à l'AN pour une nouvelle lecture. Après 2 lectures, une CMP peut être convoquée.
+                                    {t('assembly.process.shuttle.amendedDesc')}
                                 </p>
                             </CardContent>
                         </Card>
@@ -477,18 +457,18 @@ flowchart TD
             {/* CTA */}
             <section className="py-16 bg-emerald-600 text-white">
                 <div className="container mx-auto px-4 text-center">
-                    <h2 className="text-2xl font-bold mb-4">Prêt à explorer ?</h2>
+                    <h2 className="text-2xl font-bold mb-4">{t('assembly.process.cta.title')}</h2>
                     <p className="opacity-90 mb-8">
-                        Testez les fonctionnalités de l'Assemblée Nationale en mode démonstration
+                        {t('assembly.process.cta.desc')}
                     </p>
                     <div className="flex justify-center gap-4 flex-wrap">
                         <Button size="lg" variant="secondary" onClick={() => navigate("/an/demo")}>
                             <PlayCircle className="mr-2 h-5 w-5" />
-                            Accéder à la démo
+                            {t('assembly.process.cta.demoBtn')}
                         </Button>
                         <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10" onClick={() => navigate("/an")}>
                             <Home className="mr-2 h-5 w-5" />
-                            Retour à l'accueil
+                            {t('assembly.process.cta.homeBtn')}
                         </Button>
                     </div>
                 </div>
@@ -499,10 +479,10 @@ flowchart TD
                 <div className="container mx-auto px-4 text-center">
                     <div className="flex justify-center items-center gap-2 mb-4">
                         <Building2 className="h-6 w-6" />
-                        <span className="font-bold">Assemblée Nationale du Gabon</span>
+                        <span className="font-bold">{t('assembly.layout.breadcrumbAN')}</span>
                     </div>
                     <p className="text-sm opacity-80">
-                        Palais Léon Mba - Libreville
+                        {t('assembly.footer.address')}
                     </p>
                 </div>
             </footer>

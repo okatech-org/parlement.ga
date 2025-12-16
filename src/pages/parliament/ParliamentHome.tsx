@@ -14,6 +14,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 /**
  * Page d'accueil du Congrès (Parlement réuni)
@@ -21,6 +22,7 @@ import { Badge } from '@/components/ui/badge';
  */
 const ParliamentHome: React.FC = () => {
     const navigate = useNavigate();
+    const { t } = useLanguage();
 
     // Données simulées pour la démo
     const stats = {
@@ -74,19 +76,18 @@ const ParliamentHome: React.FC = () => {
                 <div className="relative z-10">
                     <div className="flex items-center gap-3 mb-4">
                         <Badge className="bg-emerald-500/80 text-white border-emerald-400">
-                            Assemblée Nationale
+                            {t('congress.home.hero.badgeAN')}
                         </Badge>
                         <span className="text-2xl">+</span>
                         <Badge className="bg-amber-500/80 text-white border-amber-400">
-                            Sénat
+                            {t('congress.home.hero.badgeSenate')}
                         </Badge>
                     </div>
                     <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
-                        Le Congrès du Parlement
+                        {t('congress.home.hero.title')}
                     </h1>
                     <p className="text-xl text-white/90 max-w-2xl mb-6">
-                        Réunion des deux chambres pour les révisions constitutionnelles,
-                        les Commissions Mixtes Paritaires et les services communs.
+                        {t('congress.home.hero.desc')}
                     </p>
                     <div className="flex flex-wrap gap-4">
                         <Button
@@ -95,7 +96,7 @@ const ParliamentHome: React.FC = () => {
                             onClick={() => navigate('/congres/cmp')}
                         >
                             <Handshake className="mr-2 h-5 w-5" />
-                            Commissions Mixtes
+                            {t('congress.home.hero.btnCMP')}
                         </Button>
                         <Button
                             size="lg"
@@ -104,7 +105,7 @@ const ParliamentHome: React.FC = () => {
                             onClick={() => navigate('/congres/archives')}
                         >
                             <Archive className="mr-2 h-5 w-5" />
-                            Archives Législatives
+                            {t('congress.home.hero.btnArchives')}
                         </Button>
                     </div>
                 </div>
@@ -116,7 +117,7 @@ const ParliamentHome: React.FC = () => {
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-muted-foreground">Parlementaires</p>
+                                <p className="text-sm text-muted-foreground">{t('congress.home.stats.members')}</p>
                                 <p className="text-3xl font-bold text-slate-700 dark:text-slate-300">{stats.totalMembers}</p>
                                 <p className="text-xs text-muted-foreground">120 + 102</p>
                             </div>
@@ -129,7 +130,7 @@ const ParliamentHome: React.FC = () => {
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-muted-foreground">CMP actives</p>
+                                <p className="text-sm text-muted-foreground">{t('congress.home.stats.cmpActive')}</p>
                                 <p className="text-3xl font-bold text-slate-700 dark:text-slate-300">{stats.cmpActive}</p>
                             </div>
                             <Handshake className="h-10 w-10 text-slate-500/30" />
@@ -141,7 +142,7 @@ const ParliamentHome: React.FC = () => {
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-muted-foreground">Sessions conjointes</p>
+                                <p className="text-sm text-muted-foreground">{t('congress.home.stats.jointSessions')}</p>
                                 <p className="text-3xl font-bold text-slate-700 dark:text-slate-300">{stats.jointSessions}</p>
                             </div>
                             <Scale className="h-10 w-10 text-slate-500/30" />
@@ -153,7 +154,7 @@ const ParliamentHome: React.FC = () => {
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-muted-foreground">Lois archivées</p>
+                                <p className="text-sm text-muted-foreground">{t('congress.home.stats.archivedLaws')}</p>
                                 <p className="text-3xl font-bold text-slate-700 dark:text-slate-300">{stats.archivedLaws}</p>
                             </div>
                             <Archive className="h-10 w-10 text-slate-500/30" />
@@ -169,14 +170,14 @@ const ParliamentHome: React.FC = () => {
                         <div>
                             <CardTitle className="flex items-center gap-2">
                                 <Handshake className="h-5 w-5 text-slate-600" />
-                                Commissions Mixtes Paritaires Actives
+                                {t('congress.home.cmp.title')}
                             </CardTitle>
                             <CardDescription>
-                                7 Députés + 7 Sénateurs - Recherche de compromis
+                                {t('congress.home.cmp.subtitle')}
                             </CardDescription>
                         </div>
                         <Button variant="ghost" size="sm" onClick={() => navigate('/congres/cmp')}>
-                            Toutes les CMP <ArrowRight className="ml-2 h-4 w-4" />
+                            {t('congress.home.cmp.all')} <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                     </div>
                 </CardHeader>
@@ -203,16 +204,16 @@ const ParliamentHome: React.FC = () => {
                                 <div className="flex items-center gap-4">
                                     <div className="flex items-center gap-2">
                                         <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-                                        <span className="text-muted-foreground">{cmp.members.an} Députés</span>
+                                        <span className="text-muted-foreground">{cmp.members.an} {t('congress.common.deputies')}</span>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <div className="w-3 h-3 rounded-full bg-amber-500"></div>
-                                        <span className="text-muted-foreground">{cmp.members.sn} Sénateurs</span>
+                                        <span className="text-muted-foreground">{cmp.members.sn} {t('congress.common.senators')}</span>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-1 text-muted-foreground">
                                     <Clock className="h-4 w-4" />
-                                    <span>Depuis le {cmp.startDate}</span>
+                                    <span>{t('congress.home.cmp.since')} {cmp.startDate}</span>
                                 </div>
                             </div>
                         </div>
@@ -227,10 +228,10 @@ const ParliamentHome: React.FC = () => {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <GitBranch className="h-5 w-5 text-slate-600" />
-                            Navette Législative
+                            {t('congress.home.navette.title')}
                         </CardTitle>
                         <CardDescription>
-                            Parcours des textes entre les deux chambres
+                            {t('congress.home.navette.desc')}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -241,7 +242,7 @@ const ParliamentHome: React.FC = () => {
                                     <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center mb-2">
                                         <span className="text-xl font-bold text-emerald-600">AN</span>
                                     </div>
-                                    <span className="text-xs text-muted-foreground">Assemblée</span>
+                                    <span className="text-xs text-muted-foreground">{t('congress.home.navette.an')}</span>
                                 </div>
 
                                 <div className="flex-1 mx-4 relative">
@@ -250,7 +251,7 @@ const ParliamentHome: React.FC = () => {
                                     </div>
                                     <div className="relative flex justify-center">
                                         <div className="bg-slate-200 dark:bg-slate-700 px-3 py-1 rounded-full text-xs font-medium">
-                                            Navette
+                                            {t('congress.home.navette.label')}
                                         </div>
                                     </div>
                                 </div>
@@ -259,20 +260,20 @@ const ParliamentHome: React.FC = () => {
                                     <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center mb-2">
                                         <span className="text-xl font-bold text-amber-600">SN</span>
                                     </div>
-                                    <span className="text-xs text-muted-foreground">Sénat</span>
+                                    <span className="text-xs text-muted-foreground">{t('congress.home.navette.senate')}</span>
                                 </div>
                             </div>
 
                             <div className="text-center mt-4">
                                 <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-full">
                                     <AlertTriangle className="h-4 w-4 text-orange-500" />
-                                    <span className="text-sm">En cas de désaccord → CMP</span>
+                                    <span className="text-sm">{t('congress.home.navette.alert')}</span>
                                 </div>
                             </div>
                         </div>
 
                         <Button variant="outline" className="w-full mt-6" onClick={() => navigate('/congres/navette')}>
-                            Voir tous les textes en navette
+                            {t('congress.home.navette.btn')}
                             <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                     </CardContent>
@@ -283,9 +284,9 @@ const ParliamentHome: React.FC = () => {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Scale className="h-5 w-5 text-slate-600" />
-                            Décisions Conjointes Récentes
+                            {t('congress.home.decisions.title')}
                         </CardTitle>
-                        <CardDescription>Textes adoptés par le Parlement réuni</CardDescription>
+                        <CardDescription>{t('congress.home.decisions.desc')}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {recentJointDecisions.map((decision) => (
@@ -303,7 +304,7 @@ const ParliamentHome: React.FC = () => {
                         ))}
 
                         <Button variant="outline" className="w-full" onClick={() => navigate('/congres/decisions')}>
-                            Voir toutes les décisions
+                            {t('congress.home.decisions.btn')}
                             <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                     </CardContent>
@@ -318,9 +319,9 @@ const ParliamentHome: React.FC = () => {
                 >
                     <CardContent className="pt-6">
                         <Archive className="h-8 w-8 text-slate-600 mb-3" />
-                        <h3 className="font-semibold mb-1">Archives Nationales</h3>
+                        <h3 className="font-semibold mb-1">{t('congress.home.quick.archives.title')}</h3>
                         <p className="text-sm text-muted-foreground">
-                            Consultez toutes les lois promulguées depuis 1960
+                            {t('congress.home.quick.archives.desc')}
                         </p>
                     </CardContent>
                 </Card>
@@ -331,9 +332,9 @@ const ParliamentHome: React.FC = () => {
                 >
                     <CardContent className="pt-6">
                         <Users className="h-8 w-8 text-slate-600 mb-3" />
-                        <h3 className="font-semibold mb-1">Services Communs</h3>
+                        <h3 className="font-semibold mb-1">{t('congress.home.quick.services.title')}</h3>
                         <p className="text-sm text-muted-foreground">
-                            Services partagés entre les deux chambres
+                            {t('congress.home.quick.services.desc')}
                         </p>
                     </CardContent>
                 </Card>
@@ -344,9 +345,9 @@ const ParliamentHome: React.FC = () => {
                 >
                     <CardContent className="pt-6">
                         <FileText className="h-8 w-8 text-slate-600 mb-3" />
-                        <h3 className="font-semibold mb-1">Constitution</h3>
+                        <h3 className="font-semibold mb-1">{t('congress.home.quick.constitution.title')}</h3>
                         <p className="text-sm text-muted-foreground">
-                            Texte constitutionnel et révisions
+                            {t('congress.home.quick.constitution.desc')}
                         </p>
                     </CardContent>
                 </Card>

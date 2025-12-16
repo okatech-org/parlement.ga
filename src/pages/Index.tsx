@@ -88,7 +88,7 @@ const Index = () => {
             <div className="flex items-center gap-3">
               <Landmark className="h-8 w-8 text-primary" />
               <div>
-                <h1 className="text-xl font-serif font-bold text-foreground">Assemblée Nationale</h1>
+                <h1 className="text-xl font-serif font-bold text-foreground">{t('institutions.ASSEMBLY.name')}</h1>
               </div>
             </div>
             <nav className="hidden md:flex items-center gap-4">
@@ -100,7 +100,7 @@ const Index = () => {
                 className="border-slate-300 text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300"
               >
                 <Scale className="h-4 w-4 mr-1" />
-                Parlement
+                {t('assembly.layout.parliament')}
               </Button>
               <div className="w-px h-6 bg-border" />
               <Button variant="ghost" size="sm" onClick={() => navigate("/an/actualites")}>
@@ -113,10 +113,10 @@ const Index = () => {
                 {t('home.resources.tutorials.title')}
               </Button>
               <Button variant="ghost" size="sm" onClick={() => navigate("/an/processus")}>
-                Processus
+                {t('assembly.nav.process')}
               </Button>
               <Button variant="ghost" size="sm" onClick={() => navigate("/an/demo")}>
-                Démo
+                {t('assembly.nav.demo')}
               </Button>
             </nav>
             <div className="flex items-center gap-2">
@@ -368,7 +368,7 @@ const Index = () => {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Landmark className="h-6 w-6 text-primary" />
-                <span className="font-serif font-bold">Assemblée Nationale</span>
+                <span className="font-serif font-bold">{t('institutions.ASSEMBLY.name')}</span>
               </div>
               <p className="text-sm text-muted-foreground">
                 {t('common.copyright')}

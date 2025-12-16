@@ -20,6 +20,7 @@ import {
     Crown, Users, UserCheck, Mic2, FileText, Vote, Clock, Shield,
     UserCircle, Building2, MessageSquare, ArrowRight
 } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const DEMO_ROLES: ParliamentaryRole[] = [
     'PRESIDENT',
@@ -48,26 +49,30 @@ const ROLE_ICONS: Record<ParliamentaryRole, React.ReactNode> = {
     ANONYMOUS: <UserCircle className="w-5 h-5 text-muted-foreground" />
 };
 
-const ROLE_LABELS: Record<ParliamentaryRole, string> = {
-    PRESIDENT: 'Président',
-    VICE_PRESIDENT: 'Vice-Président',
-    QUESTEUR: 'Questeur',
-    SECRETARY: 'Secrétaire',
-    DEPUTY: 'Député',
-    SENATOR: 'Sénateur',
-    SUBSTITUTE: 'Suppléant',
-    STAFF: 'Staff',
-    CITIZEN: 'Citoyen',
-    ADMIN: 'Administrateur',
-    ANONYMOUS: 'Anonyme'
-};
-
 export const ProtocolDemoSection = () => {
+    const { t } = useLanguage();
     const [selectedRole, setSelectedRole] = useState<ParliamentaryRole>('DEPUTY');
     const [isFemale, setIsFemale] = useState(false);
     const [simulatedTime, setSimulatedTime] = useState<'morning' | 'afternoon' | 'evening'>('morning');
 
     const roleDefinition = PARLIAMENTARY_ROLE_DEFINITIONS[selectedRole as ParliamentaryRoleEnum];
+
+    const getRoleTranslationKey = (role: ParliamentaryRole): string => {
+        const mapping: Record<string, string> = {
+            'PRESIDENT': 'president',
+            'VICE_PRESIDENT': 'vicePresident',
+            'QUESTEUR': 'questeur',
+            'SECRETARY': 'secretary',
+            'DEPUTY': 'deputy',
+            'SENATOR': 'senator',
+            'SUBSTITUTE': 'substitute',
+            'STAFF': 'staff',
+            'CITIZEN': 'citizen',
+            'ADMIN': 'admin',
+            'ANONYMOUS': 'anonymous'
+        };
+        return mapping[role] || 'anonymous';
+    };
 
     const getSimulatedGreeting = () => {
         return SocialProtocolAdapter.generateSalutation(selectedRole);
@@ -96,10 +101,10 @@ export const ProtocolDemoSection = () => {
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Users className="w-5 h-5" />
-                        Sélectionnez un Rôle Parlementaire
+                        {t('congress.demo.protocol.sectionTitle')}
                     </CardTitle>
                     <CardDescription>
-                        Visualisez comment iAsted adapte son protocole de communication
+                        {t('congress.demo.protocol.sectionSubtitle')}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -112,7 +117,8 @@ export const ProtocolDemoSection = () => {
                                 onClick={() => setSelectedRole(role)}
                             >
                                 {ROLE_ICONS[role]}
-                                <span className="text-sm">{ROLE_LABELS[role]}</span>
+                                {/* @ts-ignore */}
+                                <span className="text-sm">{t(`congress.demo.protocol.roles.${getRoleTranslationKey(role)}`)}</span>
                             </Button>
                         ))}
                     </div>
@@ -121,20 +127,20 @@ export const ProtocolDemoSection = () => {
 
                     <div className="flex flex-wrap gap-4">
                         <div className="flex items-center gap-2">
-                            <span className="text-sm text-muted-foreground">Genre :</span>
+                            <span className="text-sm text-muted-foreground">{t('congress.demo.protocol.gender')} :</span>
                             <Button
                                 size="sm"
                                 variant={!isFemale ? 'default' : 'outline'}
                                 onClick={() => setIsFemale(false)}
                             >
-                                Masculin
+                                {t('congress.demo.protocol.male')}
                             </Button>
                             <Button
                                 size="sm"
                                 variant={isFemale ? 'default' : 'outline'}
                                 onClick={() => setIsFemale(true)}
                             >
-                                Féminin
+                                {t('congress.demo.protocol.female')}
                             </Button>
                         </div>
 
@@ -142,27 +148,27 @@ export const ProtocolDemoSection = () => {
 
                         <div className="flex items-center gap-2">
                             <Clock className="w-4 h-4 text-muted-foreground" />
-                            <span className="text-sm text-muted-foreground">Heure simulée :</span>
+                            <span className="text-sm text-muted-foreground">{t('congress.demo.protocol.time')} :</span>
                             <Button
                                 size="sm"
                                 variant={simulatedTime === 'morning' ? 'default' : 'outline'}
                                 onClick={() => setSimulatedTime('morning')}
                             >
-                                Matin
+                                {t('congress.demo.protocol.morning')}
                             </Button>
                             <Button
                                 size="sm"
                                 variant={simulatedTime === 'afternoon' ? 'default' : 'outline'}
                                 onClick={() => setSimulatedTime('afternoon')}
                             >
-                                Après-midi
+                                {t('congress.demo.protocol.afternoon')}
                             </Button>
                             <Button
                                 size="sm"
                                 variant={simulatedTime === 'evening' ? 'default' : 'outline'}
                                 onClick={() => setSimulatedTime('evening')}
                             >
-                                Soir
+                                {t('congress.demo.protocol.evening')}
                             </Button>
                         </div>
                     </div>
@@ -176,52 +182,54 @@ export const ProtocolDemoSection = () => {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             {ROLE_ICONS[selectedRole]}
-                            {ROLE_LABELS[selectedRole]}
+                            {/* @ts-ignore */}
+                            {t(`congress.demo.protocol.roles.${getRoleTranslationKey(selectedRole)}`)}
                         </CardTitle>
                         <CardDescription>
-                            Définition et permissions du rôle
+                            {t('congress.demo.protocol.definitionTitle')}
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {roleDefinition && (
                             <>
                                 <div className="space-y-2">
-                                    <h4 className="font-medium text-sm">Titre Honorifique</h4>
+                                    <h4 className="font-medium text-sm">{t('congress.demo.protocol.honorific')}</h4>
                                     <p className="text-muted-foreground bg-muted/50 p-3 rounded-lg">
-                                        {isFemale ? roleDefinition.honorificFeminin : roleDefinition.honorificMasculin}
+                                        {/* @ts-ignore */}
+                                        {isFemale ? t(`congress.demo.protocol.honorifics.${getRoleTranslationKey(selectedRole)}.f`) : t(`congress.demo.protocol.honorifics.${getRoleTranslationKey(selectedRole)}.m`)}
                                     </p>
                                 </div>
 
                                 <div className="flex flex-wrap gap-2">
                                     {isParliamentarian(selectedRole as ParliamentaryRoleEnum) && (
-                                        <Badge variant="default">Parlementaire</Badge>
+                                        <Badge variant="default">{t('congress.demo.protocol.parliamentarian')}</Badge>
                                     )}
                                     {isBureauMember(selectedRole as ParliamentaryRoleEnum) && (
-                                        <Badge variant="secondary">Membre du Bureau</Badge>
+                                        <Badge variant="secondary">{t('congress.demo.protocol.bureauMember')}</Badge>
                                     )}
                                     {canVote(selectedRole as ParliamentaryRoleEnum) && (
                                         <Badge className="bg-green-500/20 text-green-700">
                                             <Vote className="w-3 h-3 mr-1" />
-                                            Peut Voter
+                                            {t('congress.demo.protocol.canVote')}
                                         </Badge>
                                     )}
                                     {canSubmitAmendment(selectedRole as ParliamentaryRoleEnum) && (
                                         <Badge className="bg-blue-500/20 text-blue-700">
                                             <FileText className="w-3 h-3 mr-1" />
-                                            Peut Amender
+                                            {t('congress.demo.protocol.canAmend')}
                                         </Badge>
                                     )}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <h4 className="font-medium text-sm">Niveau Hiérarchique</h4>
+                                    <h4 className="font-medium text-sm">{t('congress.demo.protocol.hierarchy')}</h4>
                                     <div className="flex items-center gap-2">
                                         <div
                                             className="h-2 bg-primary rounded-full"
                                             style={{ width: `${100 - (roleDefinition.hierarchyLevel * 8)}%` }}
                                         />
                                         <span className="text-sm text-muted-foreground">
-                                            Niveau {roleDefinition.hierarchyLevel}
+                                            {t('congress.demo.protocol.level')} {roleDefinition.hierarchyLevel}
                                         </span>
                                     </div>
                                 </div>
@@ -231,21 +239,21 @@ export const ProtocolDemoSection = () => {
                         <Separator />
 
                         <div className="space-y-2">
-                            <h4 className="font-medium text-sm">Ton de Communication</h4>
+                            <h4 className="font-medium text-sm">{t('congress.demo.protocol.toneTitle')}</h4>
                             <Badge variant="outline" className="capitalize">
                                 {getTone()}
                             </Badge>
                             <p className="text-xs text-muted-foreground">
-                                {getTone() === 'formal' && 'Communication protocolaire et déférente'}
-                                {getTone() === 'warm' && 'Communication chaleureuse et accessible'}
-                                {getTone() === 'technical' && 'Communication technique et directe'}
+                                {getTone() === 'formal' && t('congress.demo.protocol.toneFormal')}
+                                {getTone() === 'warm' && t('congress.demo.protocol.toneWarm')}
+                                {getTone() === 'technical' && t('congress.demo.protocol.toneTechnical')}
                             </p>
                         </div>
 
                         <div className="space-y-2">
-                            <h4 className="font-medium text-sm">Emoticons</h4>
+                            <h4 className="font-medium text-sm">{t('congress.demo.protocol.emoticons')}</h4>
                             <Badge variant={canUseEmoticons() ? 'default' : 'secondary'}>
-                                {canUseEmoticons() ? 'Autorisés' : 'Non autorisés'}
+                                {canUseEmoticons() ? t('congress.demo.protocol.empoticonsAllowed') : t('congress.demo.protocol.empoticonsForbidden')}
                             </Badge>
                         </div>
                     </CardContent>
@@ -256,10 +264,10 @@ export const ProtocolDemoSection = () => {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <MessageSquare className="w-5 h-5" />
-                            Messages iAsted
+                            {t('congress.demo.protocol.messagesTitle')}
                         </CardTitle>
                         <CardDescription>
-                            Exemples de communication adaptée au rôle
+                            {t('congress.demo.protocol.messagesSubtitle')}
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -268,7 +276,7 @@ export const ProtocolDemoSection = () => {
                                 <div className="space-y-2">
                                     <h4 className="font-medium text-sm flex items-center gap-2">
                                         <Mic2 className="w-4 h-4 text-primary" />
-                                        Salutation
+                                        {t('congress.demo.protocol.greeting')}
                                     </h4>
                                     <div className="bg-primary/5 border border-primary/20 p-4 rounded-lg">
                                         <p className="text-sm italic">"{getSimulatedGreeting()}"</p>
@@ -278,7 +286,7 @@ export const ProtocolDemoSection = () => {
                                 <div className="space-y-2">
                                     <h4 className="font-medium text-sm flex items-center gap-2">
                                         <Users className="w-4 h-4 text-green-500" />
-                                        Message de Bienvenue Personnalisé
+                                        {t('congress.demo.protocol.welcome')}
                                     </h4>
                                     <div className="bg-green-500/5 border border-green-500/20 p-4 rounded-lg">
                                         <p className="text-sm italic">"{getWelcomeMessage()}"</p>
@@ -288,7 +296,7 @@ export const ProtocolDemoSection = () => {
                                 <div className="space-y-2">
                                     <h4 className="font-medium text-sm flex items-center gap-2">
                                         <FileText className="w-4 h-4 text-blue-500" />
-                                        Confirmation d'Action
+                                        {t('congress.demo.protocol.confirmation')}
                                     </h4>
                                     <div className="bg-blue-500/5 border border-blue-500/20 p-4 rounded-lg">
                                         <p className="text-sm italic">
@@ -304,7 +312,7 @@ export const ProtocolDemoSection = () => {
                                 <div className="space-y-2">
                                     <h4 className="font-medium text-sm flex items-center gap-2">
                                         <Shield className="w-4 h-4 text-red-500" />
-                                        Message d'Erreur
+                                        {t('congress.demo.protocol.error')}
                                     </h4>
                                     <div className="bg-red-500/5 border border-red-500/20 p-4 rounded-lg">
                                         <p className="text-sm italic">
@@ -320,7 +328,7 @@ export const ProtocolDemoSection = () => {
                                 <div className="space-y-2">
                                     <h4 className="font-medium text-sm flex items-center gap-2">
                                         <ArrowRight className="w-4 h-4 text-amber-500" />
-                                        Formule de Conclusion
+                                        {t('congress.demo.protocol.closing')}
                                     </h4>
                                     <div className="bg-amber-500/5 border border-amber-500/20 p-4 rounded-lg">
                                         <p className="text-sm italic">"{getClosing()}"</p>
@@ -331,7 +339,7 @@ export const ProtocolDemoSection = () => {
                                 <div className="space-y-2">
                                     <h4 className="font-medium text-sm flex items-center gap-2">
                                         <Building2 className="w-4 h-4 text-slate-500" />
-                                        Demande Hors Périmètre
+                                        {t('congress.demo.protocol.outOfScope')}
                                     </h4>
                                     <div className="bg-slate-500/5 border border-slate-500/20 p-4 rounded-lg">
                                         <p className="text-sm italic">

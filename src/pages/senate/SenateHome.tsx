@@ -15,6 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 /**
  * Page d'accueil du Sénat
@@ -22,6 +23,7 @@ import { Progress } from '@/components/ui/progress';
  */
 const SenateHome: React.FC = () => {
     const navigate = useNavigate();
+    const { t } = useLanguage();
 
     // Données simulées pour la démo
     const stats = {
@@ -36,7 +38,7 @@ const SenateHome: React.FC = () => {
             id: '1',
             reference: 'PL-2024-040',
             title: 'Projet de loi relatif aux collectivités territoriales',
-            status: 'En examen',
+            status: t('senate.home.statuses.inExam'),
             progress: 60,
             origin: 'AN', // Transmis par l'AN
         },
@@ -44,7 +46,7 @@ const SenateHome: React.FC = () => {
             id: '2',
             reference: 'PPL-SN-2024-005',
             title: 'Proposition de loi sur le développement rural',
-            status: 'Commission',
+            status: t('senate.home.statuses.commission'),
             progress: 35,
             origin: 'SN',
         },
@@ -56,14 +58,14 @@ const SenateHome: React.FC = () => {
             title: 'Examen du budget des collectivités',
             date: '18 Déc 2024',
             time: '10:00',
-            type: 'Commission',
+            type: t('senate.home.statuses.commission'),
         },
         {
             id: '2',
             title: 'Séance plénière - Vote projet de loi',
             date: '20 Déc 2024',
             time: '15:00',
-            type: 'Plénière',
+            type: 'Plénière', // Missing key, using string or could add key
         },
     ];
 
@@ -74,14 +76,13 @@ const SenateHome: React.FC = () => {
                 <div className="absolute inset-0 bg-[url('/images/senate-pattern.svg')] opacity-10"></div>
                 <div className="relative z-10">
                     <Badge className="bg-white/20 text-white border-white/30 mb-4">
-                        Chambre Haute du Parlement
+                        {t('senate.home.badge')}
                     </Badge>
                     <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
-                        Sénat de la République
+                        {t('senate.home.title')}
                     </h1>
                     <p className="text-xl text-white/90 max-w-2xl mb-6">
-                        Palais Omar Bongo Ondimba. Le Sénat représente les collectivités
-                        territoriales et assure la stabilité des institutions.
+                        {t('senate.home.description')}
                     </p>
                     <div className="flex flex-wrap gap-4">
                         <Button
@@ -90,7 +91,7 @@ const SenateHome: React.FC = () => {
                             onClick={() => navigate('/senat/palais')}
                         >
                             <Landmark className="mr-2 h-5 w-5" />
-                            Découvrir le Palais
+                            {t('senate.home.buttons.discoverPalace')}
                         </Button>
                         <Button
                             size="lg"
@@ -99,7 +100,7 @@ const SenateHome: React.FC = () => {
                             onClick={() => navigate('/senat/travaux')}
                         >
                             <FileText className="mr-2 h-5 w-5" />
-                            Travaux Sénatoriaux
+                            {t('senate.home.buttons.senatorialWork')}
                         </Button>
                     </div>
                 </div>
@@ -111,7 +112,7 @@ const SenateHome: React.FC = () => {
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-muted-foreground">Sénateurs</p>
+                                <p className="text-sm text-muted-foreground">{t('senate.home.stats.senators')}</p>
                                 <p className="text-3xl font-bold text-amber-600">{stats.senators}</p>
                             </div>
                             <Users className="h-10 w-10 text-amber-500/30" />
@@ -123,7 +124,7 @@ const SenateHome: React.FC = () => {
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-muted-foreground">Sessions actives</p>
+                                <p className="text-sm text-muted-foreground">{t('senate.home.stats.activeSessions')}</p>
                                 <p className="text-3xl font-bold text-amber-600">{stats.activeSessions}</p>
                             </div>
                             <Calendar className="h-10 w-10 text-amber-500/30" />
@@ -135,7 +136,7 @@ const SenateHome: React.FC = () => {
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-muted-foreground">Textes en navette</p>
+                                <p className="text-sm text-muted-foreground">{t('senate.home.stats.textsInShuttle')}</p>
                                 <p className="text-3xl font-bold text-amber-600">{stats.pendingLaws}</p>
                             </div>
                             <FileText className="h-10 w-10 text-amber-500/30" />
@@ -147,7 +148,7 @@ const SenateHome: React.FC = () => {
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-sm text-muted-foreground">Collectivités</p>
+                                <p className="text-sm text-muted-foreground">{t('senate.home.stats.collectivities')}</p>
                                 <p className="text-3xl font-bold text-amber-600">{stats.collectivities}</p>
                             </div>
                             <MapPin className="h-10 w-10 text-amber-500/30" />
@@ -165,14 +166,14 @@ const SenateHome: React.FC = () => {
                             <div>
                                 <CardTitle className="flex items-center gap-2">
                                     <FileText className="h-5 w-5 text-amber-600" />
-                                    Textes en Examen
+                                    {t('senate.home.cards.textsTitle')}
                                 </CardTitle>
                                 <CardDescription>
-                                    Textes transmis par l'Assemblée et initiatives sénatoriales
+                                    {t('senate.home.cards.textsDesc')}
                                 </CardDescription>
                             </div>
                             <Button variant="ghost" size="sm" onClick={() => navigate('/senat/travaux')}>
-                                Voir tout <ArrowRight className="ml-2 h-4 w-4" />
+                                {t('senate.home.cards.viewAll')} <ArrowRight className="ml-2 h-4 w-4" />
                             </Button>
                         </div>
                     </CardHeader>
@@ -191,7 +192,7 @@ const SenateHome: React.FC = () => {
                                             </Badge>
                                             {text.origin === 'AN' && (
                                                 <Badge className="bg-emerald-100 text-emerald-700 text-xs">
-                                                    Transmis par l'AN
+                                                    {t('senate.home.cards.transmittedByAN')}
                                                 </Badge>
                                             )}
                                         </div>
@@ -215,9 +216,9 @@ const SenateHome: React.FC = () => {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Clock className="h-5 w-5 text-amber-600" />
-                            Prochaines Séances
+                            {t('senate.home.cards.nextSessions')}
                         </CardTitle>
-                        <CardDescription>Agenda sénatorial</CardDescription>
+                        <CardDescription>{t('senate.home.cards.senateAgenda')}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {upcomingSessions.map((session) => (
@@ -238,7 +239,7 @@ const SenateHome: React.FC = () => {
                         ))}
 
                         <Button variant="outline" className="w-full border-amber-300 text-amber-600" onClick={() => navigate('/senat/agenda')}>
-                            Voir l'agenda complet
+                            {t('senate.home.cards.viewFullAgenda')}
                             <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                     </CardContent>
@@ -253,9 +254,9 @@ const SenateHome: React.FC = () => {
                 >
                     <CardContent className="pt-6">
                         <Users className="h-8 w-8 text-amber-600 mb-3" />
-                        <h3 className="font-semibold mb-1">Les Sénateurs</h3>
+                        <h3 className="font-semibold mb-1">{t('senate.home.cards.senatorsTitle')}</h3>
                         <p className="text-sm text-muted-foreground">
-                            Découvrez les 102 sénateurs représentant les collectivités
+                            {t('senate.home.cards.senatorsDesc')}
                         </p>
                     </CardContent>
                 </Card>
@@ -266,9 +267,9 @@ const SenateHome: React.FC = () => {
                 >
                     <CardContent className="pt-6">
                         <Building className="h-8 w-8 text-amber-600 mb-3" />
-                        <h3 className="font-semibold mb-1">Commissions Sénatoriales</h3>
+                        <h3 className="font-semibold mb-1">{t('senate.home.cards.commissionsTitle')}</h3>
                         <p className="text-sm text-muted-foreground">
-                            Travaux des commissions permanentes du Sénat
+                            {t('senate.home.cards.commissionsDesc')}
                         </p>
                     </CardContent>
                 </Card>
@@ -279,9 +280,9 @@ const SenateHome: React.FC = () => {
                 >
                     <CardContent className="pt-6">
                         <MapPin className="h-8 w-8 text-amber-600 mb-3" />
-                        <h3 className="font-semibold mb-1">Collectivités Territoriales</h3>
+                        <h3 className="font-semibold mb-1">{t('senate.home.cards.collectivitiesTitle')}</h3>
                         <p className="text-sm text-muted-foreground">
-                            Carte des collectivités et leurs représentants
+                            {t('senate.home.cards.collectivitiesDesc')}
                         </p>
                     </CardContent>
                 </Card>

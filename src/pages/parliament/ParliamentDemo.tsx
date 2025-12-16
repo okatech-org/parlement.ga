@@ -10,79 +10,102 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from 'next-themes';
 import { toast } from 'sonner';
 import { ProtocolDemoSection } from '@/components/iasted/ProtocolDemoSection';
-
-const PARLIAMENT_DEMO_CARDS = {
-    bureau: {
-        title: "Bureau du Congrès",
-        icon: Crown,
-        color: "text-amber-500",
-        accounts: [
-            {
-                label: 'Président du Congrès',
-                phone: '09090901',
-                path: '/parlement/espace', // Access unified space
-                icon: Crown,
-                color: 'text-amber-500',
-                role: 'Président',
-                features: ['Convocations Sessions', 'Supervision CMP', 'Ordre du jour Congrès']
-            },
-            {
-                label: 'Secrétaire de Séance',
-                phone: '09090902',
-                path: '/parlement/espace',
-                icon: FileText,
-                color: 'text-blue-500',
-                role: 'Secrétariat',
-                features: ['Procès-verbaux', 'Vérification Quorum', 'Dépouillement Votes']
-            },
-        ]
-    },
-    parlementaires: {
-        title: "Membres du Congrès",
-        icon: Users,
-        color: "text-primary",
-        accounts: [
-            {
-                label: 'Député (Congrès)',
-                phone: '09090903',
-                path: '/parlement/espace',
-                icon: Users,
-                color: 'text-green-600',
-                role: 'Député',
-                features: ['Vote Révision Const.', 'Débats CMP', 'Questions']
-            },
-            {
-                label: 'Sénateur (Congrès)',
-                phone: '09090904',
-                path: '/parlement/espace',
-                icon: Users,
-                color: 'text-blue-600',
-                role: 'Sénateur',
-                features: ['Vote Révision Const.', 'Débats CMP', 'Questions']
-            },
-        ]
-    },
-    cmp: {
-        title: "Commission Mixte (CMP)",
-        icon: ArrowLeftRight,
-        color: "text-purple-500",
-        accounts: [
-            {
-                label: 'Membre CMP',
-                phone: '09090905',
-                path: '/parlement/espace',
-                icon: ArrowLeftRight,
-                color: 'text-purple-500',
-                role: 'Commissaire',
-                features: ['Négociation Textes', 'Amendements CMP', 'Vote Compromis']
-            }
-        ]
-    }
-};
+import { useLanguage } from '@/contexts/LanguageContext';
+import InstitutionSubHeader from '@/components/layout/InstitutionSubHeader';
 
 const ParliamentDemo = () => {
     const navigate = useNavigate();
     const { theme, setTheme } = useTheme();
+    const { t } = useLanguage();
+
+    const PARLIAMENT_DEMO_CARDS = {
+        bureau: {
+            title: t('congress.demo.cards.bureau'),
+            icon: Crown,
+            color: "text-amber-500",
+            accounts: [
+                {
+                    label: t('congress.demo.cards.accounts.presidentCongress'),
+                    phone: '09090901',
+                    path: '/parlement/espace', // Access unified space
+                    icon: Crown,
+                    color: 'text-amber-500',
+                    role: t('congress.demo.cards.roles.president'),
+                    features: [
+                        t('congress.demo.cards.featuresList.sessionConvocations'),
+                        t('congress.demo.cards.featuresList.cmpSupervision'),
+                        t('congress.demo.cards.featuresList.congressAgenda')
+                    ]
+                },
+                {
+                    label: t('congress.demo.cards.accounts.sessionSecretary'),
+                    phone: '09090902',
+                    path: '/parlement/espace',
+                    icon: FileText,
+                    color: 'text-blue-500',
+                    role: t('congress.demo.cards.roles.secretary'),
+                    features: [
+                        t('congress.demo.cards.featuresList.minutes'),
+                        t('congress.demo.cards.featuresList.quorumCheck'),
+                        t('congress.demo.cards.featuresList.votesCounting')
+                    ]
+                },
+            ]
+        },
+        parlementaires: {
+            title: t('congress.demo.cards.members'),
+            icon: Users,
+            color: "text-primary",
+            accounts: [
+                {
+                    label: t('congress.demo.cards.accounts.deputyCongress'),
+                    phone: '09090903',
+                    path: '/parlement/espace',
+                    icon: Users,
+                    color: 'text-green-600',
+                    role: t('congress.demo.cards.roles.deputy'),
+                    features: [
+                        t('congress.demo.cards.featuresList.constRevisionVote'),
+                        t('congress.demo.cards.featuresList.cmpDebates'),
+                        t('congress.demo.cards.featuresList.questions')
+                    ]
+                },
+                {
+                    label: t('congress.demo.cards.accounts.senatorCongress'),
+                    phone: '09090904',
+                    path: '/parlement/espace',
+                    icon: Users,
+                    color: 'text-blue-600',
+                    role: t('congress.demo.cards.roles.senator'),
+                    features: [
+                        t('congress.demo.cards.featuresList.constRevisionVote'),
+                        t('congress.demo.cards.featuresList.cmpDebates'),
+                        t('congress.demo.cards.featuresList.questions')
+                    ]
+                },
+            ]
+        },
+        cmp: {
+            title: t('congress.demo.cards.cmp'),
+            icon: ArrowLeftRight,
+            color: "text-purple-500",
+            accounts: [
+                {
+                    label: t('congress.demo.cards.accounts.cmpMember'),
+                    phone: '09090905',
+                    path: '/parlement/espace',
+                    icon: ArrowLeftRight,
+                    color: 'text-purple-500',
+                    role: t('congress.demo.cards.roles.commissioner'),
+                    features: [
+                        t('congress.demo.cards.featuresList.textsNegotiation'),
+                        t('congress.demo.cards.featuresList.cmpAmendments'),
+                        t('congress.demo.cards.featuresList.compromiseVote')
+                    ]
+                }
+            ]
+        }
+    };
 
     const handleDemoLogin = (phone: string | null, redirectPath: string) => {
         if (!phone) {
@@ -110,57 +133,36 @@ const ParliamentDemo = () => {
         sessionStorage.setItem('current_role', userData.roles[0]);
         sessionStorage.setItem('is_demo', 'true');
 
-        toast.success('Connexion démo Congrès réussie !');
+        toast.success(t('congress.demo.loginSuccess'));
         navigate(redirectPath);
     };
 
     return (
         <div className="min-h-screen bg-background">
-            {/* Header */}
-            <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
-                                <Home className="h-5 w-5" />
-                            </Button>
-                            <Separator orientation="vertical" className="h-6" />
-                            <Landmark className="h-7 w-7 text-primary" />
-                            <div>
-                                <h1 className="text-xl font-serif font-bold text-foreground">Démo Congrès / Parlement</h1>
-                                <p className="text-xs text-muted-foreground">Espace de réunion des deux chambres</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Badge variant="outline">Parlement</Badge>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                            >
-                                {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            {/* Unified Header */}
+            <InstitutionSubHeader
+                institution="PARLIAMENT"
+                pageTitle={t('congress.demo.header.title')}
+                pageSubtitle={t('congress.demo.header.subtitle')}
+                pageIcon={PlayCircle}
+            />
 
             {/* Hero compact */}
             <section className="py-12 bg-gradient-to-br from-primary/5 to-primary/10">
                 <div className="container mx-auto px-4 text-center">
                     <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
                         <PlayCircle className="h-3 w-3 mr-1" />
-                        Mode Démonstration
+                        {t('congress.demo.hero.mode')}
                     </Badge>
                     <h1 className="text-3xl md:text-4xl font-serif font-bold mb-3">
-                        Espace Congrès & CMP
+                        {t('congress.demo.hero.title')}
                     </h1>
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
-                        Explorez les fonctionnalités liées à la réunion des chambres et aux Commissions Mixtes Paritaires.
+                        {t('congress.demo.hero.desc')}
                     </p>
                     <Button variant="outline" onClick={() => navigate("/parlement/espace")}>
                         <Monitor className="mr-2 h-4 w-4" />
-                        Accès direct au Dashboard
+                        {t('congress.demo.hero.accessBtn')}
                     </Button>
                 </div>
             </section>
@@ -171,10 +173,10 @@ const ParliamentDemo = () => {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <LogIn className="w-5 h-5 text-primary" />
-                            Accès aux Sessions
+                            {t('congress.demo.cards.access')}
                         </CardTitle>
                         <CardDescription>
-                            Simulation des profils pour les sessions conjointes et CMP.
+                            {t('congress.demo.cards.accessDesc')}
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-8">
@@ -236,9 +238,9 @@ const ParliamentDemo = () => {
             {/* Protocol Demo Section */}
             <section className="container mx-auto px-4 pb-12">
                 <div className="mb-8 text-center">
-                    <Badge variant="outline" className="mb-2">Intelligence Artificielle</Badge>
-                    <h2 className="text-2xl font-bold font-serif mb-2">Protocole iAsted - Congrès</h2>
-                    <p className="text-muted-foreground">Simulation du protocole pour les sessions conjointes</p>
+                    <Badge variant="outline" className="mb-2">{t('congress.demo.protocol.badge')}</Badge>
+                    <h2 className="text-2xl font-bold font-serif mb-2">{t('congress.demo.protocol.title')}</h2>
+                    <p className="text-muted-foreground">{t('congress.demo.protocol.desc')}</p>
                 </div>
                 <ProtocolDemoSection />
             </section>
@@ -248,10 +250,10 @@ const ParliamentDemo = () => {
                 <div className="container mx-auto px-4 text-center">
                     <div className="flex justify-center items-center gap-2 mb-4">
                         <Landmark className="h-6 w-6 text-primary" />
-                        <span className="font-serif font-bold">Parlement du Gabon</span>
+                        <span className="font-serif font-bold">{t('common.parliamentOfGabon')}</span>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                        Sénat + Assemblée Nationale • Libreville
+                        {t('congress.common.senate')} + {t('congress.common.an')} • Libreville
                     </p>
                 </div>
             </footer>

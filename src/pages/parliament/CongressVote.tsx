@@ -19,6 +19,7 @@ import {
     DialogFooter,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CongressVoteProps {
     sessionId?: string;
@@ -29,6 +30,7 @@ interface CongressVoteProps {
  * Pour les révisions constitutionnelles avec majorité qualifiée
  */
 const CongressVote = ({ sessionId }: CongressVoteProps) => {
+    const { t } = useLanguage();
     const [hasVoted, setHasVoted] = useState(false);
     const [userVote, setUserVote] = useState<"for" | "against" | "abstain" | null>(null);
     const [pinDialogOpen, setPinDialogOpen] = useState(false);
@@ -143,7 +145,7 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                             </Badge>
                             <div className="flex items-center gap-2 text-sm text-blue-200">
                                 <Clock className="h-4 w-4" />
-                                <span>Vote en cours</span>
+                                <span>{t('congress.vote.header.current')}</span>
                             </div>
                         </div>
                     </div>
@@ -161,10 +163,10 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                             <CardHeader className="bg-gradient-to-r from-blue-900 to-slate-800 border-b border-slate-700">
                                 <CardTitle className="text-white flex items-center gap-2">
                                     <Scale className="h-5 w-5" />
-                                    Progression vers l'adoption
+                                    {t('congress.vote.progress.title')}
                                 </CardTitle>
                                 <CardDescription className="text-blue-200">
-                                    Seuil requis : {session.majorityLabel} des suffrages exprimés
+                                    {t('congress.vote.progress.threshold')} : {session.majorityLabel} {t('congress.dashboard.session.majorityDesc')}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="p-6">
@@ -200,17 +202,17 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                                     <div className="p-4 bg-green-900/30 rounded-lg border border-green-800">
                                         <CheckCircle className="h-6 w-6 mx-auto text-green-400 mb-2" />
                                         <p className="text-3xl font-bold text-green-400">{results.votesFor}</p>
-                                        <p className="text-sm text-green-300">Pour</p>
+                                        <p className="text-sm text-green-300">{t('congress.common.for')}</p>
                                     </div>
                                     <div className="p-4 bg-red-900/30 rounded-lg border border-red-800">
                                         <XCircle className="h-6 w-6 mx-auto text-red-400 mb-2" />
                                         <p className="text-3xl font-bold text-red-400">{results.votesAgainst}</p>
-                                        <p className="text-sm text-red-300">Contre</p>
+                                        <p className="text-sm text-red-300">{t('congress.common.against')}</p>
                                     </div>
                                     <div className="p-4 bg-slate-700/50 rounded-lg border border-slate-600">
                                         <Minus className="h-6 w-6 mx-auto text-slate-400 mb-2" />
                                         <p className="text-3xl font-bold text-slate-400">{results.votesAbstain}</p>
-                                        <p className="text-sm text-slate-300">Abstentions</p>
+                                        <p className="text-sm text-slate-300">{t('congress.common.abstain')}</p>
                                     </div>
                                 </div>
 
@@ -224,12 +226,12 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                                     {isAdopted ? (
                                         <p className="font-bold text-green-300 flex items-center justify-center gap-2">
                                             <CheckCircle className="h-5 w-5" />
-                                            Majorité atteinte - Révision adoptée
+                                            {t('congress.vote.result.adopted')}
                                         </p>
                                     ) : (
                                         <p className="text-amber-300">
                                             <AlertTriangle className="h-4 w-4 inline mr-2" />
-                                            Il manque <strong>{remainingForAdoption}</strong> voix pour atteindre le seuil
+                                            {t('congress.vote.result.missing')} <strong>{remainingForAdoption}</strong> {t('congress.vote.result.missingVotes')}
                                         </p>
                                     )}
                                 </div>
@@ -241,10 +243,10 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                             <CardHeader>
                                 <CardTitle className="text-white flex items-center gap-2">
                                     <Landmark className="h-5 w-5" />
-                                    Hémicycle Unifié
+                                    {t('congress.vote.hemicycle.title')}
                                 </CardTitle>
                                 <CardDescription className="text-slate-400">
-                                    143 Députés + 102 Sénateurs
+                                    {t('congress.vote.hemicycle.desc')}
                                 </CardDescription>
                             </CardHeader>
                             <CardContent>
@@ -261,22 +263,22 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                                                 seat.chamber === "ASSEMBLY" && "ring-1 ring-primary/30",
                                                 seat.chamber === "SENATE" && "ring-1 ring-red-500/30"
                                             )}
-                                            title={`${seat.chamber === "ASSEMBLY" ? "Député" : "Sénateur"} - ${seat.status}`}
+                                            title={`${seat.chamber === "ASSEMBLY" ? t('common.deputy') : t('common.senator')} - ${seat.status}`}
                                         />
                                     ))}
                                 </div>
                                 <div className="flex justify-center gap-6 mt-4 text-xs">
                                     <span className="flex items-center gap-1">
-                                        <span className="w-3 h-3 rounded-full bg-green-500" /> Pour
+                                        <span className="w-3 h-3 rounded-full bg-green-500" /> {t('congress.common.for')}
                                     </span>
                                     <span className="flex items-center gap-1">
-                                        <span className="w-3 h-3 rounded-full bg-red-500" /> Contre
+                                        <span className="w-3 h-3 rounded-full bg-red-500" /> {t('congress.common.against')}
                                     </span>
                                     <span className="flex items-center gap-1">
-                                        <span className="w-3 h-3 rounded-full bg-slate-500" /> Abstention
+                                        <span className="w-3 h-3 rounded-full bg-slate-500" /> {t('congress.common.abstain')}
                                     </span>
                                     <span className="flex items-center gap-1">
-                                        <span className="w-3 h-3 rounded-full bg-slate-700 border border-slate-600" /> Absent
+                                        <span className="w-3 h-3 rounded-full bg-slate-700 border border-slate-600" /> {t('congress.common.absent')}
                                     </span>
                                 </div>
                             </CardContent>
@@ -297,12 +299,12 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                                     {hasVoted ? (
                                         <>
                                             <CheckCircle className="h-5 w-5 text-green-400" />
-                                            Vote enregistré
+                                            {t('congress.vote.panel.titleVoted')}
                                         </>
                                     ) : (
                                         <>
                                             <Vote className="h-5 w-5" />
-                                            Votre vote
+                                            {t('congress.vote.panel.titleVote')}
                                         </>
                                     )}
                                 </CardTitle>
@@ -317,13 +319,13 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                                             userVote === "against" && "bg-red-500",
                                             userVote === "abstain" && "bg-slate-500"
                                         )}>
-                                            {userVote === "for" && "✓ Pour"}
-                                            {userVote === "against" && "✗ Contre"}
-                                            {userVote === "abstain" && "○ Abstention"}
+                                            {userVote === "for" && `✓ ${t('congress.common.for')}`}
+                                            {userVote === "against" && `✗ ${t('congress.common.against')}`}
+                                            {userVote === "abstain" && `○ ${t('congress.common.abstain')}`}
                                         </Badge>
                                         <p className="text-xs text-slate-400 mt-4">
                                             <Lock className="h-3 w-3 inline mr-1" />
-                                            Vote enregistré de manière sécurisée
+                                            {t('congress.vote.panel.secure')}
                                         </p>
                                     </div>
                                 ) : (
@@ -333,14 +335,14 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                                             onClick={() => initiateVote("for")}
                                         >
                                             <CheckCircle className="h-6 w-6 mr-2" />
-                                            Voter POUR
+                                            {t('congress.vote.panel.btnFor')}
                                         </Button>
                                         <Button
                                             className="w-full h-16 text-lg bg-red-600 hover:bg-red-700"
                                             onClick={() => initiateVote("against")}
                                         >
                                             <XCircle className="h-6 w-6 mr-2" />
-                                            Voter CONTRE
+                                            {t('congress.vote.panel.btnAgainst')}
                                         </Button>
                                         <Button
                                             variant="outline"
@@ -348,7 +350,7 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                                             onClick={() => initiateVote("abstain")}
                                         >
                                             <Minus className="h-5 w-5 mr-2" />
-                                            S'abstenir
+                                            {t('congress.vote.panel.btnAbstain')}
                                         </Button>
                                     </>
                                 )}
@@ -363,22 +365,22 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                             <CardContent className="space-y-4">
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-primary">Assemblée Nationale</span>
-                                        <span>{results.deputiesPresent}/{143} présents</span>
+                                        <span className="text-primary">{t('congress.common.an')}</span>
+                                        <span>{results.deputiesPresent}/{143} {t('congress.vote.stats.present')}</span>
                                     </div>
                                     <div className="flex gap-2 text-xs">
-                                        <Badge className="bg-green-600">{results.deputiesFor} Pour</Badge>
-                                        <Badge className="bg-red-600">{results.deputiesAgainst} Contre</Badge>
+                                        <Badge className="bg-green-600">{results.deputiesFor} {t('congress.common.for')}</Badge>
+                                        <Badge className="bg-red-600">{results.deputiesAgainst} {t('congress.common.against')}</Badge>
                                     </div>
                                 </div>
                                 <div className="border-t border-slate-700 pt-4 space-y-2">
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-red-400">Sénat</span>
-                                        <span>{results.senatorsPresent}/{102} présents</span>
+                                        <span className="text-red-400">{t('congress.common.senate')}</span>
+                                        <span>{results.senatorsPresent}/{102} {t('congress.vote.stats.present')}</span>
                                     </div>
                                     <div className="flex gap-2 text-xs">
-                                        <Badge className="bg-green-600">{results.senatorsFor} Pour</Badge>
-                                        <Badge className="bg-red-600">{results.senatorsAgainst} Contre</Badge>
+                                        <Badge className="bg-green-600">{results.senatorsFor} {t('congress.common.for')}</Badge>
+                                        <Badge className="bg-red-600">{results.senatorsAgainst} {t('congress.common.against')}</Badge>
                                     </div>
                                 </div>
                             </CardContent>
@@ -389,9 +391,9 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                             <CardContent className="p-4 flex items-center gap-3">
                                 <Shield className="h-8 w-8 text-amber-500" />
                                 <div>
-                                    <p className="font-bold text-amber-200">Vote Sécurisé</p>
+                                    <p className="font-bold text-amber-200">{t('congress.vote.security.title')}</p>
                                     <p className="text-xs text-amber-300/70">
-                                        Double validation PIN + Session
+                                        {t('congress.vote.security.desc')}
                                     </p>
                                 </div>
                             </CardContent>
@@ -406,10 +408,10 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
                             <Fingerprint className="h-5 w-5 text-blue-400" />
-                            Confirmation de vote
+                            {t('congress.vote.dialog.title')}
                         </DialogTitle>
                         <DialogDescription className="text-slate-400">
-                            Entrez votre code PIN Congrès pour confirmer votre vote.
+                            {t('congress.vote.dialog.desc')}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="py-6">
@@ -420,13 +422,13 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                                 pendingVote === "against" && "bg-red-500",
                                 pendingVote === "abstain" && "bg-slate-500"
                             )}>
-                                {pendingVote === "for" && "Voter POUR"}
-                                {pendingVote === "against" && "Voter CONTRE"}
-                                {pendingVote === "abstain" && "S'abstenir"}
+                                {pendingVote === "for" && t('congress.vote.panel.btnFor')}
+                                {pendingVote === "against" && t('congress.vote.panel.btnAgainst')}
+                                {pendingVote === "abstain" && t('congress.vote.panel.btnAbstain')}
                             </Badge>
                         </div>
                         <div className="space-y-2">
-                            <Label>Code PIN (6 chiffres)</Label>
+                            <Label>{t('congress.vote.dialog.pinLabel')}</Label>
                             <Input
                                 type="password"
                                 maxLength={6}
@@ -443,7 +445,7 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                             className="border-slate-600"
                             onClick={() => setPinDialogOpen(false)}
                         >
-                            Annuler
+                            {t('congress.vote.dialog.cancel')}
                         </Button>
                         <Button
                             className="bg-blue-600 hover:bg-blue-700"
@@ -451,7 +453,7 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                             disabled={pin.length !== 6}
                         >
                             <Lock className="h-4 w-4 mr-2" />
-                            Confirmer le vote
+                            {t('congress.vote.dialog.confirm')}
                         </Button>
                     </DialogFooter>
                 </DialogContent>

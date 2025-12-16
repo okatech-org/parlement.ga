@@ -1,418 +1,299 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
-    Landmark, ArrowLeft, Newspaper, Calendar, Clock, Search, Filter,
-    ChevronRight, MapPin, Users, FileText, Scale, Globe, Bookmark,
-    Share2, ThumbsUp, MessageSquare, Eye, Tag, ArrowUpRight
+    Landmark, ArrowLeft, Users, Newspaper, Calendar,
+    ArrowRight, Search, Crown, FileText, MapPin, Filter
 } from "lucide-react";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { SENATORS, PROVINCES, ELECTORAL_STATS } from "@/data/politicalData";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { toast } from "sonner";
+import InstitutionSubHeader from "@/components/layout/InstitutionSubHeader";
+
+// Import news images (same as main Actualites)
+import newsEnvironment from "@/assets/news-environment.jpg";
+import newsLegislation from "@/assets/news-legislation.jpg";
+import newsFinance from "@/assets/news-finance.jpg";
 
 /**
  * Page Actualités du Sénat
- * Design cohérent avec l'environnement Sénat (ton ambre/doré)
+ * Actualités et événements liés au Sénat de la République Gabonaise
  */
 const SenateActualites = () => {
     const navigate = useNavigate();
+    const { t, dir } = useLanguage();
     const [searchQuery, setSearchQuery] = useState("");
-    const [categoryFilter, setCategoryFilter] = useState("all");
+    const [selectedCategory, setSelectedCategory] = useState("all");
 
-    // Actualités du Sénat (données réalistes Ve République)
-    const actualites = [
+    // Categories with translation keys
+    const CATEGORIES = [
+        { key: "all", label: t('senate.news.categories.all') },
+        { key: "collectivities", label: t('senate.news.categories.collectivities') },
+        { key: "legislation", label: t('senate.news.categories.legislation') },
+        { key: "provinces", label: t('senate.news.categories.provinces') },
+        { key: "commissions", label: t('senate.news.categories.commissions') },
+        { key: "events", label: t('senate.news.categories.events') }
+    ];
+
+    // Senate-specific news data (would come from CMS in production)
+    const NEWS_DATA = [
         {
-            id: 1,
-            title: "Élection de Madeleine Sidonie Revangue à la présidence du Sénat",
-            excerpt: "Le nouveau bureau du Sénat a été installé avec l'élection de la sénatrice du Moyen-Ogooué à la présidence de la chambre haute.",
-            category: "Institutionnel",
-            date: "2025-11-20",
-            image: "/images/senate-president.jpg",
-            author: "Bureau du Sénat",
-            province: "Moyen-Ogooué",
-            views: 15420,
-            featured: true,
-            tags: ["Présidence", "Bureau", "Ve République"]
+            title: "Le Sénat adopte la réforme de la décentralisation",
+            excerpt: "Après des débats approfondis, le Sénat a adopté à une large majorité le projet de loi renforçant les compétences des collectivités territoriales. Cette réforme historique accorde plus d'autonomie aux provinces et départements.",
+            date: "5 Déc 2025",
+            category: "collectivities",
+            categoryLabel: t('senate.news.categories.collectivities'),
+            categoryColor: "bg-amber-600",
+            image: newsLegislation,
+            featured: true
         },
         {
-            id: 2,
-            title: "Examen du projet de loi sur la décentralisation territoriale",
-            excerpt: "Le Sénat entame l'examen en commission du texte visant à renforcer les compétences des collectivités locales.",
-            category: "Législation",
-            date: "2025-12-10",
-            image: "/images/senate-commission.jpg",
-            author: "Commission des Lois",
-            province: null,
-            views: 8230,
-            featured: true,
-            tags: ["Décentralisation", "Collectivités", "Réforme"]
+            title: "Mission sénatoriale dans le Haut-Ogooué",
+            excerpt: "Une délégation de 5 sénateurs s'est rendue dans la province du Haut-Ogooué pour rencontrer les élus locaux et les maires. L'objectif : évaluer les besoins en infrastructures et les problèmes de gouvernance locale.",
+            date: "2 Déc 2025",
+            category: "provinces",
+            categoryLabel: t('senate.news.categories.provinces'),
+            categoryColor: "bg-green-600",
+            image: newsEnvironment
         },
         {
-            id: 3,
-            title: "Visite du Sénat au Haut-Ogooué : rencontre avec les élus locaux",
-            excerpt: "Une délégation sénatoriale s'est rendue à Franceville pour recueillir les doléances des maires et conseillers départementaux.",
-            category: "Territoire",
-            date: "2025-12-08",
-            image: "/images/senate-visit.jpg",
-            author: "Délégation sénatoriale",
-            province: "Haut-Ogooué",
-            views: 5640,
-            featured: false,
-            tags: ["Territoire", "Haut-Ogooué", "Doléances"]
+            title: "Examen du budget des collectivités territoriales",
+            excerpt: "La commission des finances du Sénat a entamé l'examen du budget 2026 alloué aux collectivités territoriales. Les sénateurs souhaitent augmenter la part des ressources fiscales transférées aux provinces.",
+            date: "30 Nov 2025",
+            category: "commissions",
+            categoryLabel: t('senate.news.categories.commissions'),
+            categoryColor: "bg-blue-600",
+            image: newsFinance
         },
         {
-            id: 4,
-            title: "Session plénière : adoption du budget 2026",
-            excerpt: "Le Sénat a adopté à l'unanimité le projet de loi de finances pour l'exercice 2026, après amendements sur les dotations aux collectivités.",
-            category: "Plénière",
-            date: "2025-12-05",
-            image: "/images/senate-pleniere.jpg",
-            author: "Présidence",
-            province: null,
-            views: 12100,
-            featured: true,
-            tags: ["Budget", "Loi de finances", "2026"]
+            title: "Forum des élus locaux au Palais Omar Bongo",
+            excerpt: "Le Sénat a organisé le premier Forum des élus locaux réunissant maires, conseillers départementaux et sénateurs. Une plateforme d'échange pour améliorer la coordination entre le Parlement et les territoires.",
+            date: "28 Nov 2025",
+            category: "events",
+            categoryLabel: t('senate.news.categories.events'),
+            categoryColor: "bg-purple-600",
+            image: newsLegislation
         },
         {
-            id: 5,
-            title: "Installation de la Commission des Affaires Économiques",
-            excerpt: "Le sénateur Casimir Oyé Mba a été élu président de la commission chargée des questions économiques et budgétaires.",
-            category: "Commission",
-            date: "2025-12-01",
-            image: "/images/senate-eco.jpg",
-            author: "Bureau du Sénat",
-            province: "Haut-Ogooué",
-            views: 4320,
-            featured: false,
-            tags: ["Commission", "Économie", "Installation"]
+            title: "Nouvelle loi sur le statut des maires",
+            excerpt: "Le Sénat a transmis à l'Assemblée Nationale sa proposition de loi visant à renforcer le statut et les moyens des maires. Le texte prévoit notamment une revalorisation des indemnités et une meilleure protection juridique.",
+            date: "25 Nov 2025",
+            category: "legislation",
+            categoryLabel: t('senate.news.categories.legislation'),
+            categoryColor: "bg-indigo-600",
+            image: newsLegislation
         },
         {
-            id: 6,
-            title: "Navette parlementaire : le Sénat suspend son examen du texte sur les mines",
-            excerpt: "Conformément à la Constitution, le Sénat a transmis ses observations sur le projet de loi minière à l'Assemblée Nationale.",
-            category: "Navette",
-            date: "2025-11-28",
-            image: "/images/senate-navette.jpg",
-            author: "Secrétariat Général",
-            province: null,
-            views: 6780,
-            featured: false,
-            tags: ["Navette", "Mines", "AN"]
-        },
-        {
-            id: 7,
-            title: "Journée portes ouvertes au Palais Omar Bongo Ondimba",
-            excerpt: "Le Sénat a accueilli plus de 500 citoyens lors de la journée de sensibilisation sur le rôle de la chambre haute.",
-            category: "Événement",
-            date: "2025-11-25",
-            image: "/images/senate-portes.jpg",
-            author: "Communication",
-            province: "Estuaire",
-            views: 8900,
-            featured: false,
-            tags: ["Portes ouvertes", "Sensibilisation", "Citoyens"]
-        },
-        {
-            id: 8,
-            title: "Signature d'un accord avec le Sénat français",
-            excerpt: "Partenariat technique pour la modernisation des outils numériques et le renforcement des capacités du personnel.",
-            category: "International",
-            date: "2025-11-22",
-            image: "/images/senate-france.jpg",
-            author: "Présidence",
-            province: null,
-            views: 7430,
-            featured: false,
-            tags: ["Coopération", "France", "Numérique"]
+            title: "Coopération avec les sénats africains",
+            excerpt: "Le Sénat du Gabon a signé un accord de coopération avec les chambres hautes du Cameroun et du Congo. Cet accord prévoit des échanges d'expériences sur la représentation territoriale.",
+            date: "22 Nov 2025",
+            category: "events",
+            categoryLabel: t('senate.news.categories.events'),
+            categoryColor: "bg-rose-600",
+            image: newsEnvironment
         }
     ];
 
-    const categories = [
-        { value: "all", label: "Toutes les catégories" },
-        { value: "Institutionnel", label: "Institutionnel" },
-        { value: "Législation", label: "Législation" },
-        { value: "Territoire", label: "Territoire" },
-        { value: "Plénière", label: "Séance Plénière" },
-        { value: "Commission", label: "Commissions" },
-        { value: "Navette", label: "Navette Parlementaire" },
-        { value: "Événement", label: "Événements" },
-        { value: "International", label: "International" },
-    ];
-
-    const filteredActualites = actualites.filter(actu => {
-        const matchSearch = actu.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            actu.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchCategory = categoryFilter === "all" || actu.category === categoryFilter;
-        return matchSearch && matchCategory;
+    const filteredNews = NEWS_DATA.filter(news => {
+        const matchesSearch = news.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            news.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesCategory = selectedCategory === "all" || news.category === selectedCategory;
+        return matchesSearch && matchesCategory;
     });
 
-    const featuredNews = filteredActualites.filter(a => a.featured);
-    const regularNews = filteredActualites.filter(a => !a.featured);
+    const featuredNews = filteredNews.find(n => n.featured) || filteredNews[0];
+    const otherNews = filteredNews.filter(n => n !== featuredNews);
 
-    const formatDate = (dateStr: string) => {
-        return new Date(dateStr).toLocaleDateString('fr-FR', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        });
-    };
-
-    const getCategoryColor = (category: string) => {
-        const colors: Record<string, string> = {
-            "Institutionnel": "bg-amber-100 text-amber-700 border-amber-200",
-            "Législation": "bg-blue-100 text-blue-700 border-blue-200",
-            "Territoire": "bg-green-100 text-green-700 border-green-200",
-            "Plénière": "bg-purple-100 text-purple-700 border-purple-200",
-            "Commission": "bg-indigo-100 text-indigo-700 border-indigo-200",
-            "Navette": "bg-orange-100 text-orange-700 border-orange-200",
-            "Événement": "bg-pink-100 text-pink-700 border-pink-200",
-            "International": "bg-cyan-100 text-cyan-700 border-cyan-200",
-        };
-        return colors[category] || "bg-gray-100 text-gray-700";
+    const handleReadMore = (title: string) => {
+        toast.info(`Lecture de : ${title}`);
     };
 
     return (
-        <div className="min-h-screen bg-background">
-            {/* Header */}
-            <header className="border-b border-border bg-gradient-to-r from-amber-600 to-amber-700 text-white sticky top-0 z-50">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => navigate("/senat")}
-                                className="text-white hover:bg-white/20"
-                            >
-                                <ArrowLeft className="h-5 w-5" />
-                            </Button>
-                            <div className="flex items-center gap-3">
-                                <Landmark className="h-8 w-8" />
-                                <div>
-                                    <h1 className="text-xl font-serif font-bold">Actualités du Sénat</h1>
-                                    <p className="text-amber-100 text-sm">Ve République Gabonaise</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Button variant="secondary" size="sm" onClick={() => navigate("/senat/login")}>
-                                Espace sénateur
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+        <div className="min-h-screen bg-background" dir={dir}>
+            {/* Unified Header */}
+            <InstitutionSubHeader
+                institution="SENATE"
+                pageTitle={t('senate.news.header.title')}
+                pageSubtitle={t('senate.news.header.subtitle')}
+                pageIcon={Newspaper}
+            />
 
             {/* Hero Section */}
             <section className="bg-gradient-to-b from-amber-50 to-background dark:from-amber-950/20 dark:to-background py-12">
                 <div className="container mx-auto px-4">
                     <div className="max-w-4xl mx-auto text-center">
                         <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200" variant="outline">
-                            <Newspaper className="h-3 w-3 mr-1" />
-                            {filteredActualites.length} articles disponibles
+                            <Crown className="h-3 w-3 mr-1" />
+                            {t('senate.news.hero.badge')}
                         </Badge>
-                        <h2 className="text-4xl font-serif font-bold mb-4">
-                            Toute l'actualité du Sénat
+                        <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
+                            {t('senate.news.hero.title')}
                         </h2>
-                        <p className="text-xl text-muted-foreground mb-8">
-                            Suivez les travaux législatifs, les visites territoriales et les événements de la chambre haute
+                        <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
+                            {t('senate.news.hero.description')}
                         </p>
+                    </div>
+                </div>
+            </section>
 
-                        {/* Search & Filter */}
-                        <div className="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto">
-                            <div className="relative flex-1">
-                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                                <Input
-                                    placeholder="Rechercher une actualité..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="pl-10"
-                                />
+            <div className="container mx-auto px-4 py-8">
+                {/* Filters */}
+                <div className="flex flex-col md:flex-row gap-6 mb-10 items-center justify-between bg-card/50 backdrop-blur-sm p-4 rounded-xl border border-border/50 shadow-sm">
+                    <div className="relative w-full md:w-96">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                        <Input
+                            placeholder={t('senate.news.search.placeholder')}
+                            className="pl-10 bg-background/50"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+                    <div className="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
+                        {CATEGORIES.map((cat) => (
+                            <Badge
+                                key={cat.key}
+                                variant={selectedCategory === cat.key ? "default" : "outline"}
+                                className={`cursor-pointer whitespace-nowrap px-4 py-2 text-sm transition-colors ${selectedCategory === cat.key
+                                    ? "bg-amber-600 hover:bg-amber-700"
+                                    : "hover:bg-amber-100 hover:text-amber-700"
+                                    }`}
+                                onClick={() => setSelectedCategory(cat.key)}
+                            >
+                                {cat.label}
+                            </Badge>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Featured Article */}
+                {featuredNews && (
+                    <div className="mb-12">
+                        <Card
+                            className="overflow-hidden border-none shadow-elegant hover:shadow-xl transition-all duration-500 group cursor-pointer relative h-[350px]"
+                            onClick={() => handleReadMore(featuredNews.title)}
+                        >
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10" />
+                            <img
+                                src={featuredNews.image}
+                                alt={featuredNews.title}
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                            <div className="absolute bottom-0 left-0 p-8 z-20 max-w-3xl">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <Badge className="bg-amber-600 text-white border-none">
+                                        <Landmark className="w-3 h-3 mr-1" />
+                                        {t('senate.news.featured.badge')}
+                                    </Badge>
+                                    <Badge variant="outline" className="text-white border-white/50">
+                                        {featuredNews.categoryLabel}
+                                    </Badge>
+                                </div>
+                                <h2 className="text-2xl md:text-3xl font-serif font-bold text-white mb-4 leading-tight group-hover:text-amber-100 transition-colors">
+                                    {featuredNews.title}
+                                </h2>
+                                <p className="text-gray-200 text-base mb-4 line-clamp-2">
+                                    {featuredNews.excerpt}
+                                </p>
+                                <div className="flex items-center gap-4">
+                                    <span className="text-amber-200 text-sm flex items-center gap-1">
+                                        <Calendar className="w-4 h-4" />
+                                        {featuredNews.date}
+                                    </span>
+                                    <Button size="sm" className="rounded-full bg-white text-black hover:bg-gray-100 border-none">
+                                        {t('senate.news.featured.readArticle')} <ArrowRight className="ml-2 w-4 h-4" />
+                                    </Button>
+                                </div>
                             </div>
-                            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                                <SelectTrigger className="w-full md:w-[200px]">
-                                    <Filter className="h-4 w-4 mr-2" />
-                                    <SelectValue placeholder="Catégorie" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {categories.map(cat => (
-                                        <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
+                        </Card>
                     </div>
-                </div>
-            </section>
+                )}
 
-            {/* Featured News */}
-            {featuredNews.length > 0 && (
-                <section className="py-12 container mx-auto px-4">
-                    <h3 className="text-2xl font-serif font-bold mb-6 flex items-center gap-2">
-                        <Bookmark className="h-6 w-6 text-amber-500" />
-                        À la une
-                    </h3>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {featuredNews.map((article, index) => (
-                            <Card
-                                key={article.id}
-                                className={`overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group ${index === 0 ? "md:col-span-2 lg:col-span-2" : ""}`}
-                            >
-                                <div className={`relative ${index === 0 ? "h-64" : "h-48"} bg-gradient-to-br from-amber-200 to-amber-300 dark:from-amber-800 dark:to-amber-900`}>
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <Landmark className="h-16 w-16 text-amber-600/30 dark:text-amber-400/30" />
-                                    </div>
-                                    <div className="absolute top-4 left-4">
-                                        <Badge className={getCategoryColor(article.category)}>
-                                            {article.category}
-                                        </Badge>
-                                    </div>
-                                    <div className="absolute top-4 right-4">
-                                        <Badge className="bg-amber-500 text-white">À la une</Badge>
-                                    </div>
+                {/* News Grid */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {otherNews.map((news, index) => (
+                        <Card
+                            key={index}
+                            className="group flex flex-col overflow-hidden hover:shadow-lg transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm cursor-pointer"
+                            onClick={() => handleReadMore(news.title)}
+                        >
+                            <div className="relative h-44 overflow-hidden">
+                                <img
+                                    src={news.image}
+                                    alt={news.title}
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                                <Badge className={`absolute top-3 left-3 ${news.categoryColor} text-white border-none`}>
+                                    {news.categoryLabel}
+                                </Badge>
+                                <span className="absolute top-3 right-3 text-xs text-white flex items-center gap-1 bg-black/40 backdrop-blur-sm px-2 py-1 rounded-md">
+                                    <Calendar className="w-3 h-3" />
+                                    {news.date}
+                                </span>
+                            </div>
+                            <div className="p-5 flex-1 flex flex-col">
+                                <h3 className="text-lg font-bold mb-2 group-hover:text-amber-600 transition-colors line-clamp-2">
+                                    {news.title}
+                                </h3>
+                                <p className="text-sm text-muted-foreground mb-4 line-clamp-3 flex-1 leading-relaxed">
+                                    {news.excerpt}
+                                </p>
+                                <div className="pt-3 border-t border-border/50 flex justify-end mt-auto">
+                                    <Button variant="ghost" size="sm" className="text-amber-600 group-hover:translate-x-1 transition-transform p-0 hover:bg-transparent">
+                                        {t('senate.news.article.readMore')} <ArrowRight className="w-4 h-4 ml-1" />
+                                    </Button>
                                 </div>
-                                <CardHeader>
-                                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                                        <Calendar className="h-4 w-4" />
-                                        {formatDate(article.date)}
-                                        {article.province && (
-                                            <>
-                                                <span>•</span>
-                                                <MapPin className="h-4 w-4" />
-                                                {article.province}
-                                            </>
-                                        )}
-                                    </div>
-                                    <CardTitle className="group-hover:text-amber-600 transition-colors line-clamp-2">
-                                        {article.title}
-                                    </CardTitle>
-                                    <CardDescription className="line-clamp-3">
-                                        {article.excerpt}
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                            <span className="flex items-center gap-1">
-                                                <Eye className="h-4 w-4" />
-                                                {article.views.toLocaleString()}
-                                            </span>
-                                        </div>
-                                        <Button variant="ghost" size="sm" className="group-hover:text-amber-600">
-                                            Lire <ChevronRight className="h-4 w-4 ml-1" />
-                                        </Button>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
-                </section>
-            )}
-
-            {/* Regular News Grid */}
-            <section className="py-12 bg-muted/30">
-                <div className="container mx-auto px-4">
-                    <h3 className="text-2xl font-serif font-bold mb-6 flex items-center gap-2">
-                        <FileText className="h-6 w-6 text-amber-500" />
-                        Dernières actualités
-                    </h3>
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {regularNews.map((article) => (
-                            <Card
-                                key={article.id}
-                                className="overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer group"
-                            >
-                                <div className="relative h-40 bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800">
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <Newspaper className="h-10 w-10 text-slate-400" />
-                                    </div>
-                                    <div className="absolute top-3 left-3">
-                                        <Badge variant="outline" className={getCategoryColor(article.category)}>
-                                            {article.category}
-                                        </Badge>
-                                    </div>
-                                </div>
-                                <CardHeader className="pb-2">
-                                    <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
-                                        <Clock className="h-3 w-3" />
-                                        {formatDate(article.date)}
-                                    </div>
-                                    <CardTitle className="text-base group-hover:text-amber-600 transition-colors line-clamp-2">
-                                        {article.title}
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-                                        {article.excerpt}
-                                    </p>
-                                    <div className="flex flex-wrap gap-1">
-                                        {article.tags.slice(0, 2).map(tag => (
-                                            <Badge key={tag} variant="outline" className="text-xs">
-                                                <Tag className="h-2 w-2 mr-1" />
-                                                {tag}
-                                            </Badge>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
+                            </div>
+                        </Card>
+                    ))}
                 </div>
-            </section>
 
-            {/* Stats Section */}
-            <section className="py-16 bg-gradient-to-br from-amber-600 to-amber-700 text-white">
-                <div className="container mx-auto px-4">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                        <div>
-                            <div className="text-4xl font-bold mb-2">{SENATORS.length}</div>
-                            <div className="text-amber-100">Sénateurs</div>
+                {filteredNews.length === 0 && (
+                    <div className="text-center py-20">
+                        <div className="inline-flex p-4 rounded-full bg-amber-100 dark:bg-amber-900/30 mb-4">
+                            <Search className="w-8 h-8 text-amber-600" />
                         </div>
-                        <div>
-                            <div className="text-4xl font-bold mb-2">{PROVINCES.length}</div>
-                            <div className="text-amber-100">Provinces</div>
-                        </div>
-                        <div>
-                            <div className="text-4xl font-bold mb-2">45+</div>
-                            <div className="text-amber-100">Textes examinés</div>
-                        </div>
-                        <div>
-                            <div className="text-4xl font-bold mb-2">20</div>
-                            <div className="text-amber-100">Jours de délai légal</div>
-                        </div>
+                        <h3 className="text-xl font-bold mb-2">{t('senate.news.search.noResults')}</h3>
+                        <p className="text-muted-foreground mb-6">
+                            {t('senate.news.search.noResultsDesc')}
+                        </p>
+                        <Button
+                            variant="outline"
+                            onClick={() => {
+                                setSearchQuery("");
+                                setSelectedCategory("all");
+                            }}
+                            className="border-amber-600 text-amber-600 hover:bg-amber-50"
+                        >
+                            {t('senate.news.search.resetFilters')}
+                        </Button>
                     </div>
-                </div>
-            </section>
+                )}
+            </div>
 
             {/* Footer */}
-            <footer className="bg-card border-t py-8">
+            <footer className="bg-card border-t py-8 mt-12">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         <div className="flex items-center gap-2">
                             <Landmark className="h-5 w-5 text-amber-500" />
-                            <span className="font-serif font-semibold">Sénat de la République Gabonaise</span>
+                            <span className="font-serif font-semibold">{t('senate.news.footer.title')}</span>
                         </div>
                         <div className="flex items-center gap-4">
                             <Button variant="ghost" size="sm" onClick={() => navigate("/senat")}>
-                                Accueil
+                                {t('senate.news.footer.home')}
                             </Button>
                             <Button variant="ghost" size="sm" onClick={() => navigate("/senat/sensibilisation")}>
-                                Sensibilisation
+                                {t('senate.news.footer.sensibilisation')}
                             </Button>
                             <Button variant="ghost" size="sm" onClick={() => navigate("/senat/tutoriels")}>
-                                Tutoriels
+                                {t('senate.news.footer.tutorials')}
                             </Button>
                         </div>
                         <p className="text-sm text-muted-foreground">
-                            © {new Date().getFullYear()} Tous droits réservés
+                            © {new Date().getFullYear()} {t('senate.news.footer.copyright')}
                         </p>
                     </div>
                 </div>

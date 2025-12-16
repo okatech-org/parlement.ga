@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useInstitution, InstitutionType, INSTITUTIONS } from '@/contexts/InstitutionContext';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 // Langues supportées
 const LANGUAGES = [
@@ -49,6 +50,7 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
 }) => {
     const navigate = useNavigate();
     const { currentInstitution, institutionConfig, setCurrentInstitution } = useInstitution();
+    const { t } = useLanguage();
     const [isOpen, setIsOpen] = useState(false);
     const [isDark, setIsDark] = useState(() => {
         if (typeof window !== 'undefined') {
@@ -120,7 +122,7 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
                                 >
                                     <InstitutionIcon className="h-5 w-5" />
                                     <span className="font-semibold hidden sm:inline">
-                                        {institutionConfig.shortCode}
+                                        {t(`institutions.${institutionConfig.id}.short`)}
                                     </span>
                                     <ChevronDown className="h-4 w-4" />
                                 </Button>
@@ -166,7 +168,7 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
                                 "text-lg font-bold",
                                 transparent ? "text-white" : "text-gray-900 dark:text-white"
                             )}>
-                                {institutionConfig.name}
+                                {t(`institutions.${institutionConfig.id}.name`)}
                             </span>
                         </Link>
                     </div>
@@ -183,7 +185,7 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
                                     className="border-slate-300 text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 mr-2"
                                 >
                                     <Scale className="h-4 w-4 mr-1" />
-                                    Parlement
+                                    {t('assembly.layout.parliament')}
                                 </Button>
                                 <div className="w-px h-6 bg-gray-200 dark:bg-gray-700 mr-2" />
                             </>
@@ -269,7 +271,7 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
                                 )}
                             >
                                 <LogIn className="h-4 w-4" />
-                                Connexion
+                                {t('common.login')}
                             </Button>
                         )}
 
@@ -314,7 +316,7 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
                                 className={cn("w-full mt-4", theme.bgClass, "text-white")}
                             >
                                 <LogIn className="h-4 w-4 mr-2" />
-                                Connexion
+                                {t('common.login')}
                             </Button>
                         )}
                     </div>

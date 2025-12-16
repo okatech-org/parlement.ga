@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import InstitutionSubHeader from "@/components/layout/InstitutionSubHeader";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
  * Page Tutoriels du Sénat
@@ -29,14 +31,15 @@ const SenateTutoriels = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [categoryFilter, setCategoryFilter] = useState("all");
     const [levelFilter, setLevelFilter] = useState("all");
+    const { t } = useLanguage();
 
     const tutorials = [
         {
             id: 1,
-            title: "Se connecter à l'espace sénateur",
-            description: "Apprenez à vous authentifier de manière sécurisée sur la plateforme avec l'authentification à deux facteurs.",
-            category: "Authentification",
-            level: "Débutant",
+            title: t('senate.tutorials.items.login.title'),
+            description: t('senate.tutorials.items.login.description'),
+            category: t('senate.tutorials.categories.authentication'),
+            level: t('senate.tutorials.levels.beginner'),
             duration: "5 min",
             icon: Lock,
             color: "red",
@@ -47,10 +50,10 @@ const SenateTutoriels = () => {
         },
         {
             id: 2,
-            title: "Consulter les textes en navette",
-            description: "Découvrez comment accéder aux projets de loi transmis par l'Assemblée Nationale et suivre leur état d'avancement.",
-            category: "Navette",
-            level: "Débutant",
+            title: t('senate.tutorials.items.consultTexts.title'),
+            description: t('senate.tutorials.items.consultTexts.description'),
+            category: t('senate.tutorials.categories.shuttle'),
+            level: t('senate.tutorials.levels.beginner'),
             duration: "8 min",
             icon: FileText,
             color: "blue",
@@ -61,10 +64,10 @@ const SenateTutoriels = () => {
         },
         {
             id: 3,
-            title: "Proposer un amendement",
-            description: "Guide complet pour rédiger, soumettre et suivre un amendement sur un texte en discussion.",
-            category: "Législation",
-            level: "Intermédiaire",
+            title: t('senate.tutorials.items.proposeAmendment.title'),
+            description: t('senate.tutorials.items.proposeAmendment.description'),
+            category: t('senate.tutorials.categories.legislation'),
+            level: t('senate.tutorials.levels.intermediate'),
             duration: "15 min",
             icon: FileText,
             color: "purple",
@@ -75,10 +78,10 @@ const SenateTutoriels = () => {
         },
         {
             id: 4,
-            title: "Gérer son agenda parlementaire",
-            description: "Paramétrez votre calendrier, synchronisez-le avec vos appareils et recevez des rappels.",
-            category: "Agenda",
-            level: "Débutant",
+            title: t('senate.tutorials.items.manageAgenda.title'),
+            description: t('senate.tutorials.items.manageAgenda.description'),
+            category: t('senate.tutorials.categories.agenda'),
+            level: t('senate.tutorials.levels.beginner'),
             duration: "7 min",
             icon: Calendar,
             color: "green",
@@ -89,10 +92,10 @@ const SenateTutoriels = () => {
         },
         {
             id: 5,
-            title: "Voter en séance plénière",
-            description: "Maîtrisez le système de vote électronique : vote pour, contre, abstention et délégation.",
-            category: "Vote",
-            level: "Intermédiaire",
+            title: t('senate.tutorials.items.voteInPlenary.title'),
+            description: t('senate.tutorials.items.voteInPlenary.description'),
+            category: t('senate.tutorials.categories.vote'),
+            level: t('senate.tutorials.levels.intermediate'),
             duration: "10 min",
             icon: Vote,
             color: "amber",
@@ -103,10 +106,10 @@ const SenateTutoriels = () => {
         },
         {
             id: 6,
-            title: "Utiliser la messagerie sécurisée",
-            description: "Communiquez en toute confidentialité avec vos collègues et les services du Sénat.",
-            category: "Communication",
-            level: "Débutant",
+            title: t('senate.tutorials.items.secureMessaging.title'),
+            description: t('senate.tutorials.items.secureMessaging.description'),
+            category: t('senate.tutorials.categories.communication'),
+            level: t('senate.tutorials.levels.beginner'),
             duration: "6 min",
             icon: Mail,
             color: "cyan",
@@ -117,10 +120,10 @@ const SenateTutoriels = () => {
         },
         {
             id: 7,
-            title: "Accéder aux statistiques de travail",
-            description: "Consultez vos indicateurs de performance : présence, votes, interventions, amendements.",
-            category: "Statistiques",
-            level: "Intermédiaire",
+            title: t('senate.tutorials.items.accessStats.title'),
+            description: t('senate.tutorials.items.accessStats.description'),
+            category: t('senate.tutorials.categories.statistics'),
+            level: t('senate.tutorials.levels.intermediate'),
             duration: "8 min",
             icon: BarChart3,
             color: "indigo",
@@ -131,10 +134,10 @@ const SenateTutoriels = () => {
         },
         {
             id: 8,
-            title: "Gérer les doléances territoriales",
-            description: "Recevez et traitez les demandes des élus locaux et citoyens de votre circonscription.",
-            category: "Territoire",
-            level: "Avancé",
+            title: t('senate.tutorials.items.manageGrievances.title'),
+            description: t('senate.tutorials.items.manageGrievances.description'),
+            category: t('senate.tutorials.categories.territory'),
+            level: t('senate.tutorials.levels.advanced'),
             duration: "20 min",
             icon: Map,
             color: "emerald",
@@ -145,10 +148,10 @@ const SenateTutoriels = () => {
         },
         {
             id: 9,
-            title: "Paramétrer les notifications",
-            description: "Configurez vos alertes pour les textes urgents, les convocations et les votes.",
-            category: "Paramètres",
-            level: "Débutant",
+            title: t('senate.tutorials.items.configureNotifications.title'),
+            description: t('senate.tutorials.items.configureNotifications.description'),
+            category: t('senate.tutorials.categories.settings'),
+            level: t('senate.tutorials.levels.beginner'),
             duration: "4 min",
             icon: Bell,
             color: "orange",
@@ -159,10 +162,10 @@ const SenateTutoriels = () => {
         },
         {
             id: 10,
-            title: "Participer à une CMP virtuelle",
-            description: "Rejoignez une Commission Mixte Paritaire en visioconférence et collaborez sur un texte commun.",
-            category: "CMP",
-            level: "Avancé",
+            title: t('senate.tutorials.items.virtualCMP.title'),
+            description: t('senate.tutorials.items.virtualCMP.description'),
+            category: t('senate.tutorials.categories.cmp'),
+            level: t('senate.tutorials.levels.advanced'),
             duration: "25 min",
             icon: Users,
             color: "rose",
@@ -173,10 +176,10 @@ const SenateTutoriels = () => {
         },
         {
             id: 11,
-            title: "Utiliser iAsted, l'assistant IA",
-            description: "Découvrez comment l'assistant intelligent peut vous aider dans vos travaux législatifs.",
-            category: "IA",
-            level: "Intermédiaire",
+            title: t('senate.tutorials.items.useAI.title'),
+            description: t('senate.tutorials.items.useAI.description'),
+            category: t('senate.tutorials.categories.ai'),
+            level: t('senate.tutorials.levels.intermediate'),
             duration: "12 min",
             icon: MessageSquare,
             color: "violet",
@@ -187,10 +190,10 @@ const SenateTutoriels = () => {
         },
         {
             id: 12,
-            title: "Accéder à la plateforme mobile",
-            description: "Installez l'application mobile et accédez à vos outils depuis votre smartphone ou tablette.",
-            category: "Mobile",
-            level: "Débutant",
+            title: t('senate.tutorials.items.mobilePlatform.title'),
+            description: t('senate.tutorials.items.mobilePlatform.description'),
+            category: t('senate.tutorials.categories.mobile'),
+            level: t('senate.tutorials.levels.beginner'),
             duration: "5 min",
             icon: Smartphone,
             color: "slate",
@@ -202,26 +205,26 @@ const SenateTutoriels = () => {
     ];
 
     const categories = [
-        { value: "all", label: "Toutes les catégories" },
-        { value: "Authentification", label: "Authentification" },
-        { value: "Navette", label: "Navette Parlementaire" },
-        { value: "Législation", label: "Législation" },
-        { value: "Agenda", label: "Agenda" },
-        { value: "Vote", label: "Vote" },
-        { value: "Communication", label: "Communication" },
-        { value: "Statistiques", label: "Statistiques" },
-        { value: "Territoire", label: "Territoire" },
-        { value: "Paramètres", label: "Paramètres" },
-        { value: "CMP", label: "CMP" },
-        { value: "IA", label: "Intelligence Artificielle" },
-        { value: "Mobile", label: "Application Mobile" },
+        { value: "all", label: t('senate.tutorials.hero.allCategories') },
+        { value: t('senate.tutorials.categories.authentication'), label: t('senate.tutorials.categories.authentication') },
+        { value: t('senate.tutorials.categories.shuttle'), label: t('senate.tutorials.categories.shuttle') },
+        { value: t('senate.tutorials.categories.legislation'), label: t('senate.tutorials.categories.legislation') },
+        { value: t('senate.tutorials.categories.agenda'), label: t('senate.tutorials.categories.agenda') },
+        { value: t('senate.tutorials.categories.vote'), label: t('senate.tutorials.categories.vote') },
+        { value: t('senate.tutorials.categories.communication'), label: t('senate.tutorials.categories.communication') },
+        { value: t('senate.tutorials.categories.statistics'), label: t('senate.tutorials.categories.statistics') },
+        { value: t('senate.tutorials.categories.territory'), label: t('senate.tutorials.categories.territory') },
+        { value: t('senate.tutorials.categories.settings'), label: t('senate.tutorials.categories.settings') },
+        { value: t('senate.tutorials.categories.cmp'), label: t('senate.tutorials.categories.cmp') },
+        { value: t('senate.tutorials.categories.ai'), label: t('senate.tutorials.categories.ai') },
+        { value: t('senate.tutorials.categories.mobile'), label: t('senate.tutorials.categories.mobile') },
     ];
 
     const levels = [
-        { value: "all", label: "Tous les niveaux" },
-        { value: "Débutant", label: "Débutant" },
-        { value: "Intermédiaire", label: "Intermédiaire" },
-        { value: "Avancé", label: "Avancé" },
+        { value: "all", label: t('senate.tutorials.hero.allLevels') },
+        { value: t('senate.tutorials.levels.beginner'), label: t('senate.tutorials.levels.beginner') },
+        { value: t('senate.tutorials.levels.intermediate'), label: t('senate.tutorials.levels.intermediate') },
+        { value: t('senate.tutorials.levels.advanced'), label: t('senate.tutorials.levels.advanced') },
     ];
 
     const filteredTutorials = tutorials.filter(tuto => {
@@ -235,12 +238,14 @@ const SenateTutoriels = () => {
     const featuredTutorials = filteredTutorials.filter(t => t.featured);
 
     const getLevelColor = (level: string) => {
-        switch (level) {
-            case "Débutant": return "bg-green-100 text-green-700 border-green-200";
-            case "Intermédiaire": return "bg-amber-100 text-amber-700 border-amber-200";
-            case "Avancé": return "bg-red-100 text-red-700 border-red-200";
-            default: return "bg-gray-100 text-gray-700";
-        }
+        const beginner = t('senate.tutorials.levels.beginner');
+        const intermediate = t('senate.tutorials.levels.intermediate');
+        const advanced = t('senate.tutorials.levels.advanced');
+
+        if (level === beginner) return "bg-green-100 text-green-700 border-green-200";
+        if (level === intermediate) return "bg-amber-100 text-amber-700 border-amber-200";
+        if (level === advanced) return "bg-red-100 text-red-700 border-red-200";
+        return "bg-gray-100 text-gray-700";
     };
 
     // Stats
@@ -250,35 +255,13 @@ const SenateTutoriels = () => {
 
     return (
         <div className="min-h-screen bg-background">
-            {/* Header */}
-            <header className="border-b border-border bg-gradient-to-r from-amber-600 to-amber-700 text-white sticky top-0 z-50">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => navigate("/senat")}
-                                className="text-white hover:bg-white/20"
-                            >
-                                <ArrowLeft className="h-5 w-5" />
-                            </Button>
-                            <div className="flex items-center gap-3">
-                                <GraduationCap className="h-8 w-8" />
-                                <div>
-                                    <h1 className="text-xl font-serif font-bold">Tutoriels</h1>
-                                    <p className="text-amber-100 text-sm">Guides pratiques</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Button variant="secondary" size="sm" onClick={() => navigate("/senat/login")}>
-                                Espace sénateur
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            {/* Unified Header */}
+            <InstitutionSubHeader
+                institution="SENATE"
+                pageTitle={t('senate.tutorials.header.title')}
+                pageSubtitle={t('senate.tutorials.header.subtitle')}
+                pageIcon={GraduationCap}
+            />
 
             {/* Hero Section */}
             <section className="bg-gradient-to-b from-amber-50 to-background dark:from-amber-950/20 dark:to-background py-12">
@@ -286,13 +269,13 @@ const SenateTutoriels = () => {
                     <div className="max-w-4xl mx-auto text-center">
                         <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200" variant="outline">
                             <BookOpen className="h-3 w-3 mr-1" />
-                            {totalTutorials} tutoriels disponibles
+                            {totalTutorials} {t('senate.tutorials.hero.badge')}
                         </Badge>
                         <h2 className="text-4xl font-serif font-bold mb-4">
-                            Maîtrisez la plateforme du Sénat
+                            {t('senate.tutorials.hero.title')}
                         </h2>
                         <p className="text-xl text-muted-foreground mb-8">
-                            Des guides pas-à-pas pour exploiter toutes les fonctionnalités de votre espace numérique
+                            {t('senate.tutorials.hero.description')}
                         </p>
 
                         {/* Search & Filters */}
@@ -300,7 +283,7 @@ const SenateTutoriels = () => {
                             <div className="relative flex-1">
                                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                                 <Input
-                                    placeholder="Rechercher un tutoriel..."
+                                    placeholder={t('senate.tutorials.hero.searchPlaceholder')}
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     className="pl-10"
@@ -309,7 +292,7 @@ const SenateTutoriels = () => {
                             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                                 <SelectTrigger className="w-full md:w-[180px]">
                                     <Filter className="h-4 w-4 mr-2" />
-                                    <SelectValue placeholder="Catégorie" />
+                                    <SelectValue placeholder={t('senate.tutorials.hero.allCategories')} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {categories.map(cat => (
@@ -319,7 +302,7 @@ const SenateTutoriels = () => {
                             </Select>
                             <Select value={levelFilter} onValueChange={setLevelFilter}>
                                 <SelectTrigger className="w-full md:w-[150px]">
-                                    <SelectValue placeholder="Niveau" />
+                                    <SelectValue placeholder={t('senate.tutorials.hero.allLevels')} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {levels.map(level => (
@@ -335,17 +318,17 @@ const SenateTutoriels = () => {
                         <Card className="text-center p-4 bg-white/80 dark:bg-card">
                             <Video className="h-6 w-6 mx-auto text-amber-500 mb-2" />
                             <div className="text-2xl font-bold">{totalTutorials}</div>
-                            <div className="text-xs text-muted-foreground">Tutoriels</div>
+                            <div className="text-xs text-muted-foreground">{t('senate.tutorials.stats.tutorials')}</div>
                         </Card>
                         <Card className="text-center p-4 bg-white/80 dark:bg-card">
                             <Clock className="h-6 w-6 mx-auto text-blue-500 mb-2" />
                             <div className="text-2xl font-bold">{totalDuration}</div>
-                            <div className="text-xs text-muted-foreground">Minutes de contenu</div>
+                            <div className="text-xs text-muted-foreground">{t('senate.tutorials.stats.minutesContent')}</div>
                         </Card>
                         <Card className="text-center p-4 bg-white/80 dark:bg-card">
                             <Star className="h-6 w-6 mx-auto text-yellow-500 mb-2" />
                             <div className="text-2xl font-bold">{(totalViews / 1000).toFixed(1)}k</div>
-                            <div className="text-xs text-muted-foreground">Vues totales</div>
+                            <div className="text-xs text-muted-foreground">{t('senate.tutorials.stats.totalViews')}</div>
                         </Card>
                     </div>
                 </div>
@@ -356,7 +339,7 @@ const SenateTutoriels = () => {
                 <section className="py-12 container mx-auto px-4">
                     <h3 className="text-2xl font-serif font-bold mb-6 flex items-center gap-2">
                         <Star className="h-6 w-6 text-amber-500" />
-                        Tutoriels recommandés
+                        {t('senate.tutorials.sections.recommended')}
                     </h3>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {featuredTutorials.map((tutorial) => {
@@ -396,11 +379,11 @@ const SenateTutoriels = () => {
                                         <div className="flex items-center justify-between text-sm text-muted-foreground">
                                             <span className="flex items-center gap-1">
                                                 <CheckCircle className="h-4 w-4" />
-                                                {tutorial.steps} étapes
+                                                {tutorial.steps} {t('senate.tutorials.sections.steps')}
                                             </span>
                                             <span className="flex items-center gap-1">
                                                 <Star className="h-4 w-4 text-yellow-500" />
-                                                {tutorial.views.toLocaleString()} vues
+                                                {tutorial.views.toLocaleString()} {t('senate.tutorials.sections.views')}
                                             </span>
                                         </div>
                                     </CardContent>
@@ -416,18 +399,18 @@ const SenateTutoriels = () => {
                 <div className="container mx-auto px-4">
                     <h3 className="text-2xl font-serif font-bold mb-6 flex items-center gap-2">
                         <BookOpen className="h-6 w-6 text-amber-500" />
-                        Tous les tutoriels ({filteredTutorials.length})
+                        {t('senate.tutorials.sections.all')} ({filteredTutorials.length})
                     </h3>
 
                     <Tabs defaultValue="all" className="w-full">
                         <TabsList className="mb-6">
-                            <TabsTrigger value="all">Tous</TabsTrigger>
-                            <TabsTrigger value="Débutant">Débutant</TabsTrigger>
-                            <TabsTrigger value="Intermédiaire">Intermédiaire</TabsTrigger>
-                            <TabsTrigger value="Avancé">Avancé</TabsTrigger>
+                            <TabsTrigger value="all">{t('senate.tutorials.hero.allLevels')}</TabsTrigger>
+                            <TabsTrigger value={t('senate.tutorials.levels.beginner')}>{t('senate.tutorials.levels.beginner')}</TabsTrigger>
+                            <TabsTrigger value={t('senate.tutorials.levels.intermediate')}>{t('senate.tutorials.levels.intermediate')}</TabsTrigger>
+                            <TabsTrigger value={t('senate.tutorials.levels.advanced')}>{t('senate.tutorials.levels.advanced')}</TabsTrigger>
                         </TabsList>
 
-                        {["all", "Débutant", "Intermédiaire", "Avancé"].map(level => (
+                        {["all", t('senate.tutorials.levels.beginner'), t('senate.tutorials.levels.intermediate'), t('senate.tutorials.levels.advanced')].map(level => (
                             <TabsContent key={level} value={level}>
                                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                                     {filteredTutorials
@@ -463,7 +446,7 @@ const SenateTutoriels = () => {
                                                             </span>
                                                             <span className="flex items-center gap-1">
                                                                 <CheckCircle className="h-3 w-3" />
-                                                                {tutorial.steps} étapes
+                                                                {tutorial.steps} {t('senate.tutorials.sections.steps')}
                                                             </span>
                                                         </div>
                                                     </CardContent>
@@ -483,31 +466,31 @@ const SenateTutoriels = () => {
                     <div className="text-center mb-12">
                         <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200" variant="outline">
                             <GraduationCap className="h-3 w-3 mr-1" />
-                            Parcours d'apprentissage
+                            {t('senate.tutorials.learningPath.badge')}
                         </Badge>
-                        <h3 className="text-3xl font-serif font-bold mb-4">Démarrez votre formation</h3>
+                        <h3 className="text-3xl font-serif font-bold mb-4">{t('senate.tutorials.learningPath.title')}</h3>
                         <p className="text-muted-foreground max-w-2xl mx-auto">
-                            Suivez notre parcours recommandé pour maîtriser tous les outils
+                            {t('senate.tutorials.learningPath.description')}
                         </p>
                     </div>
 
                     <div className="max-w-4xl mx-auto">
                         <div className="space-y-4">
                             {[
-                                { title: "1. Les bases", tutorials: ["Se connecter", "Naviguer dans l'interface"], progress: 100 },
-                                { title: "2. Travail législatif", tutorials: ["Consulter les textes", "Proposer un amendement"], progress: 60 },
-                                { title: "3. Communication", tutorials: ["Messagerie", "Notifications"], progress: 30 },
-                                { title: "4. Fonctionnalités avancées", tutorials: ["Vote électronique", "CMP virtuelle"], progress: 0 },
+                                { title: t('senate.tutorials.learningPath.paths.basics.title'), tutorials: t('senate.tutorials.learningPath.paths.basics.tutorials'), progress: 100 },
+                                { title: t('senate.tutorials.learningPath.paths.legislative.title'), tutorials: t('senate.tutorials.learningPath.paths.legislative.tutorials'), progress: 60 },
+                                { title: t('senate.tutorials.learningPath.paths.communication.title'), tutorials: t('senate.tutorials.learningPath.paths.communication.tutorials'), progress: 30 },
+                                { title: t('senate.tutorials.learningPath.paths.advanced.title'), tutorials: t('senate.tutorials.learningPath.paths.advanced.tutorials'), progress: 0 },
                             ].map((path, index) => (
                                 <Card key={index} className="p-4">
                                     <div className="flex items-center justify-between mb-3">
                                         <div>
                                             <h4 className="font-semibold">{path.title}</h4>
-                                            <p className="text-sm text-muted-foreground">{path.tutorials.join(" • ")}</p>
+                                            <p className="text-sm text-muted-foreground">{path.tutorials}</p>
                                         </div>
                                         <Badge variant={path.progress === 100 ? "default" : "outline"}>
                                             {path.progress === 100 ? (
-                                                <><CheckCircle className="h-3 w-3 mr-1" /> Terminé</>
+                                                <><CheckCircle className="h-3 w-3 mr-1" /> {t('senate.tutorials.learningPath.completed')}</>
                                             ) : (
                                                 `${path.progress}%`
                                             )}
@@ -524,18 +507,18 @@ const SenateTutoriels = () => {
             {/* CTA Section */}
             <section className="py-16 bg-gradient-to-r from-amber-600 to-amber-700 text-white">
                 <div className="container mx-auto px-4 text-center">
-                    <h3 className="text-3xl font-serif font-bold mb-4">Besoin d'aide supplémentaire ?</h3>
+                    <h3 className="text-3xl font-serif font-bold mb-4">{t('senate.tutorials.cta.title')}</h3>
                     <p className="text-amber-100 mb-8 max-w-2xl mx-auto">
-                        Notre équipe de support est disponible pour vous accompagner dans l'utilisation de la plateforme.
+                        {t('senate.tutorials.cta.description')}
                     </p>
                     <div className="flex gap-4 justify-center">
                         <Button size="lg" variant="secondary">
                             <MessageSquare className="mr-2 h-5 w-5" />
-                            Contacter le support
+                            {t('senate.tutorials.cta.contactSupport')}
                         </Button>
                         <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/20">
                             <Download className="mr-2 h-5 w-5" />
-                            Télécharger le guide PDF
+                            {t('senate.tutorials.cta.downloadGuide')}
                         </Button>
                     </div>
                 </div>
@@ -547,21 +530,21 @@ const SenateTutoriels = () => {
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         <div className="flex items-center gap-2">
                             <Landmark className="h-5 w-5 text-amber-500" />
-                            <span className="font-serif font-semibold">Sénat de la République Gabonaise</span>
+                            <span className="font-serif font-semibold">{t('senate.tutorials.footer.title')}</span>
                         </div>
                         <div className="flex items-center gap-4">
                             <Button variant="ghost" size="sm" onClick={() => navigate("/senat")}>
-                                Accueil
+                                {t('senate.tutorials.footer.home')}
                             </Button>
                             <Button variant="ghost" size="sm" onClick={() => navigate("/senat/actualites")}>
-                                Actualités
+                                {t('senate.tutorials.footer.news')}
                             </Button>
                             <Button variant="ghost" size="sm" onClick={() => navigate("/senat/sensibilisation")}>
-                                Sensibilisation
+                                {t('senate.tutorials.footer.sensibilisation')}
                             </Button>
                         </div>
                         <p className="text-sm text-muted-foreground">
-                            © {new Date().getFullYear()} Tous droits réservés
+                            © {new Date().getFullYear()} {t('senate.tutorials.footer.copyright')}
                         </p>
                     </div>
                 </div>

@@ -27,8 +27,8 @@ const HomeParliament = () => {
     const institutions = [
         {
             icon: Building2,
-            title: "Assemblée Nationale",
-            description: "143 députés élus au suffrage universel direct. Vote des lois et contrôle du gouvernement.",
+            title: t('landing.institutions.an.title'),
+            description: t('landing.institutions.an.desc'),
             color: "emerald",
             path: "/an",
             bgClass: "bg-emerald-100 dark:bg-emerald-900/30",
@@ -37,8 +37,8 @@ const HomeParliament = () => {
         },
         {
             icon: Landmark,
-            title: "Sénat",
-            description: "102 sénateurs représentant les collectivités territoriales. Sagesse et réflexion législative.",
+            title: t('landing.institutions.senate.title'),
+            description: t('landing.institutions.senate.desc'),
             color: "amber",
             path: "/senat",
             bgClass: "bg-amber-100 dark:bg-amber-900/30",
@@ -50,39 +50,39 @@ const HomeParliament = () => {
     const features = [
         {
             icon: ArrowLeftRight,
-            title: "Commission Mixte Paritaire",
-            description: "7 députés + 7 sénateurs négocient les textes en désaccord.",
+            title: t('landing.features.cmp.title'),
+            description: t('landing.features.cmp.desc'),
             color: "slate",
             path: "/congres/espace/cmp"
         },
         {
             icon: Scale,
-            title: "Congrès du Parlement",
-            description: "Réunion solennelle pour les révisions constitutionnelles.",
+            title: t('landing.features.congress.title'),
+            description: t('landing.features.congress.desc'),
             color: "slate",
             path: "/congres/sessions"
         },
         {
             icon: BookOpen,
-            title: "Journal Officiel",
-            description: "Toutes les lois promulguées de la République.",
+            title: t('landing.features.jo.title'),
+            description: t('landing.features.jo.desc'),
             color: "slate",
             path: "/archives"
         },
         {
             icon: BarChart3,
-            title: "Navette Législative",
-            description: "Suivi des textes entre les deux chambres.",
+            title: t('landing.features.shuttle.title'),
+            description: t('landing.features.shuttle.desc'),
             color: "slate",
             path: "/congres/espace/navette"
         }
     ];
 
     const stats = [
-        { value: "245", label: "Parlementaires" },
-        { value: "2", label: "Chambres" },
-        { value: "150+", label: "Lois votées" },
-        { value: "100%", label: "Numérique" }
+        { value: "245", label: t('landing.stats.members') },
+        { value: "2", label: t('landing.stats.chambers') },
+        { value: "150+", label: t('landing.stats.laws') },
+        { value: "100%", label: t('landing.stats.digital') }
     ];
 
     return (
@@ -94,7 +94,7 @@ const HomeParliament = () => {
                         <div className="flex items-center gap-3">
                             <Scale className="h-8 w-8 text-slate-700 dark:text-slate-300" />
                             <div>
-                                <h1 className="text-xl font-serif font-bold text-foreground">Parlement</h1>
+                                <h1 className="text-xl font-serif font-bold text-foreground">{t('landing.header.title')}</h1>
                             </div>
                         </div>
                         <nav className="hidden md:flex items-center gap-4">
@@ -106,7 +106,7 @@ const HomeParliament = () => {
                                 className="text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950"
                             >
                                 <Building2 className="h-4 w-4 mr-1" />
-                                Assemblée
+                                {t('landing.header.assembly')}
                             </Button>
                             <Button
                                 variant="ghost"
@@ -115,17 +115,17 @@ const HomeParliament = () => {
                                 className="text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950"
                             >
                                 <Landmark className="h-4 w-4 mr-1" />
-                                Sénat
+                                {t('landing.header.senate')}
                             </Button>
                             <div className="w-px h-6 bg-slate-200 dark:bg-slate-700" />
                             <Button variant="ghost" size="sm" className="text-slate-600 hover:bg-slate-100 dark:text-slate-400" onClick={() => navigate("/archives")}>
-                                Archives
+                                {t('landing.header.archives')}
                             </Button>
                             <Button variant="ghost" size="sm" className="text-slate-600 hover:bg-slate-100 dark:text-slate-400" onClick={() => navigate("/processus-comparaison")}>
-                                Processus
+                                {t('landing.header.process')}
                             </Button>
                             <Button variant="ghost" size="sm" className="text-slate-600 hover:bg-slate-100 dark:text-slate-400" onClick={() => navigate("/parlement/demo")}>
-                                Démo
+                                {t('landing.header.demo')}
                             </Button>
                         </nav>
                         <div className="flex items-center gap-2">
@@ -170,7 +170,7 @@ const HomeParliament = () => {
 
                             {/* Login Button */}
                             <Button variant="outline" size="sm" className="border-slate-400 text-slate-600 hover:bg-slate-50" onClick={() => navigate("/parlement/login")}>
-                                Connexion
+                                {t('landing.header.login')}
                             </Button>
                         </div>
                     </div>
@@ -184,24 +184,23 @@ const HomeParliament = () => {
                     <div className="max-w-4xl mx-auto text-center">
                         <Badge className="mb-4 bg-white/20 text-white border-white/30" variant="outline">
                             <Shield className="h-3 w-3 mr-1" />
-                            Pouvoir Législatif de la République
+                            {t('landing.hero.badge')}
                         </Badge>
                         <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 animate-fade-in text-white">
-                            L'union des deux chambres
+                            {t('landing.hero.title')}
                         </h1>
                         <p className="text-xl text-white/70 mb-8 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: "0.1s" }}>
-                            Le Parlement réunit l'Assemblée Nationale et le Sénat pour les révisions
-                            constitutionnelles, les sessions conjointes et les Commissions Mixtes Paritaires.
+                            {t('landing.hero.desc')}
                         </p>
                         <div className="flex gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.2s" }}>
                             <Button size="lg" className="shadow-lg bg-white text-slate-800 hover:bg-gray-100" onClick={() => navigate("/cmp")}>
                                 <ArrowLeftRight className="mr-2 h-5 w-5" />
-                                CMP en cours
+                                {t('landing.hero.btnCMP')}
                                 <ChevronRight className="ml-2 h-5 w-5" />
                             </Button>
                             <Button size="lg" variant="outline" className="border-white/50 text-white hover:bg-white/10" onClick={() => navigate("/archives")}>
                                 <BookOpen className="mr-2 h-5 w-5" />
-                                Archives
+                                {t('landing.hero.btnArchives')}
                             </Button>
                         </div>
                     </div>
@@ -226,9 +225,9 @@ const HomeParliament = () => {
             <section className="py-20 bg-slate-50 dark:bg-slate-950/30">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h2 className="text-4xl font-serif font-bold mb-4 text-slate-900 dark:text-slate-100">Les Chambres du Parlement</h2>
+                        <h2 className="text-4xl font-serif font-bold mb-4 text-slate-900 dark:text-slate-100">{t('landing.institutions.title')}</h2>
                         <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-                            Accédez aux travaux de chaque institution
+                            {t('landing.institutions.subtitle')}
                         </p>
                     </div>
 
@@ -263,7 +262,7 @@ const HomeParliament = () => {
                                             {inst.description}
                                         </p>
                                         <Button className={`w-full ${inst.buttonClass} text-white`}>
-                                            Accéder
+                                            {t('landing.institutions.access')}
                                             <ChevronRight className="ml-2 h-4 w-4" />
                                         </Button>
                                     </div>
@@ -278,9 +277,9 @@ const HomeParliament = () => {
             <section className="py-20 bg-white dark:bg-background">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h2 className="text-4xl font-serif font-bold mb-4 text-slate-900 dark:text-slate-100">Fonctionnalités</h2>
+                        <h2 className="text-4xl font-serif font-bold mb-4 text-slate-900 dark:text-slate-100">{t('landing.features.title')}</h2>
                         <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-                            Outils et processus inter-chambres
+                            {t('landing.features.subtitle')}
                         </p>
                     </div>
 
@@ -316,22 +315,22 @@ const HomeParliament = () => {
                         <div className="flex items-center gap-3">
                             <Shield className="h-8 w-8 text-slate-600" />
                             <div>
-                                <div className="font-semibold text-slate-900 dark:text-slate-100">Sécurité maximale</div>
-                                <div className="text-sm text-slate-600 dark:text-slate-400">Chiffrement bout-en-bout</div>
+                                <div className="font-semibold text-slate-900 dark:text-slate-100">{t('landing.security.maxSecurity')}</div>
+                                <div className="text-sm text-slate-600 dark:text-slate-400">{t('landing.security.encryption')}</div>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
                             <Users className="h-8 w-8 text-slate-600" />
                             <div>
-                                <div className="font-semibold text-slate-900 dark:text-slate-100">Authentification 2FA</div>
-                                <div className="text-sm text-slate-600 dark:text-slate-400">Accès sécurisé</div>
+                                <div className="font-semibold text-slate-900 dark:text-slate-100">{t('landing.security.auth2fa')}</div>
+                                <div className="text-sm text-slate-600 dark:text-slate-400">{t('landing.security.secureAccess')}</div>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
                             <Scale className="h-8 w-8 text-slate-600" />
                             <div>
-                                <div className="font-semibold text-slate-900 dark:text-slate-100">Souveraineté</div>
-                                <div className="text-sm text-slate-600 dark:text-slate-400">Données localisées</div>
+                                <div className="font-semibold text-slate-900 dark:text-slate-100">{t('landing.security.sovereignty')}</div>
+                                <div className="text-sm text-slate-600 dark:text-slate-400">{t('landing.security.dataLoc')}</div>
                             </div>
                         </div>
                     </div>
@@ -345,21 +344,21 @@ const HomeParliament = () => {
                         <div>
                             <div className="flex items-center gap-2 mb-4">
                                 <Scale className="h-6 w-6 text-slate-400" />
-                                <span className="font-serif font-bold">Parlement</span>
+                                <span className="font-serif font-bold">{t('landing.footer.parliament')}</span>
                             </div>
                             <p className="text-sm text-slate-400">
-                                © {new Date().getFullYear()} Parlement de la République Gabonaise
+                                © {new Date().getFullYear()} {t('landing.footer.copyright')}
                             </p>
                         </div>
                         <div>
-                            <h4 className="font-semibold mb-4 text-slate-200">Les Chambres</h4>
+                            <h4 className="font-semibold mb-4 text-slate-200">{t('landing.footer.chambers')}</h4>
                             <ul className="space-y-2 text-sm text-slate-400">
-                                <li><a href="/an" className="hover:text-slate-200 transition-colors flex items-center gap-2"><Building2 className="h-4 w-4" /> Assemblée Nationale</a></li>
-                                <li><a href="/senat" className="hover:text-slate-200 transition-colors flex items-center gap-2"><Landmark className="h-4 w-4" /> Sénat</a></li>
+                                <li><a href="/an" className="hover:text-slate-200 transition-colors flex items-center gap-2"><Building2 className="h-4 w-4" /> {t('landing.institutions.an.title')}</a></li>
+                                <li><a href="/senat" className="hover:text-slate-200 transition-colors flex items-center gap-2"><Landmark className="h-4 w-4" /> {t('landing.institutions.senate.title')}</a></li>
                             </ul>
                         </div>
                         <div>
-                            <h4 className="font-semibold mb-4 text-slate-200">Contact</h4>
+                            <h4 className="font-semibold mb-4 text-slate-200">{t('landing.footer.contact')}</h4>
                             <p className="text-sm text-slate-400">
                                 Libreville, Gabon<br />
                                 contact@parlement.ga
@@ -373,7 +372,7 @@ const HomeParliament = () => {
                             <Landmark className="h-5 w-5 text-slate-500" />
                         </div>
                         <p className="text-sm text-slate-400">
-                            "Union - Travail - Justice"
+                            {t('landing.footer.motto')}
                         </p>
                     </div>
                 </div>

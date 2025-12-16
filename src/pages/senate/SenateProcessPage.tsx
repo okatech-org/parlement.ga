@@ -1,8 +1,8 @@
-import { 
+import {
     Landmark, Users, FileText, ArrowLeftRight, Scale, Crown,
     CheckCircle, Clock, Send, MessageSquare, MapPin, AlertTriangle,
     ChevronRight, Home, Sun, Moon, PlayCircle, Gavel, BookOpen,
-    ArrowDown, Building, Vote, Download
+    ArrowDown, Building, Vote, Download, Workflow
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -14,6 +14,8 @@ import { motion } from "framer-motion";
 import MermaidDiagram from "@/components/MermaidDiagram";
 import AnimatedPhaseCard from "@/components/AnimatedPhaseCard";
 import { exportProcessPDF } from "@/utils/exportProcessPDF";
+import InstitutionSubHeader from "@/components/layout/InstitutionSubHeader";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
  * Page dédiée au Protocole Législatif du Sénat
@@ -22,124 +24,95 @@ import { exportProcessPDF } from "@/utils/exportProcessPDF";
 const SenateProcessPage = () => {
     const navigate = useNavigate();
     const { theme, setTheme } = useTheme();
+    const { t } = useLanguage();
 
     // Étapes détaillées du processus
     const processSteps = [
         {
-            phase: "Phase 1",
-            title: "Réception du texte",
-            duration: "Jour 1",
+            phase: t('senate.process.phases.phase1.phase'),
+            title: t('senate.process.phases.phase1.title'),
+            duration: t('senate.process.phases.phase1.duration'),
             icon: FileText,
             color: "bg-blue-500",
-            description: "Le texte voté par l'Assemblée Nationale est transmis au Sénat par le Président de l'AN.",
-            details: [
-                "Enregistrement au Bureau du Sénat",
-                "Attribution d'un numéro de référence",
-                "Notification aux groupes parlementaires",
-                "Déclenchement du délai de 20 jours"
-            ]
+            description: t('senate.process.phases.phase1.description'),
+            details: t('senate.process.phases.phase1.details') as unknown as string[]
         },
         {
-            phase: "Phase 2",
-            title: "Affectation en Commission",
-            duration: "Jour 2",
+            phase: t('senate.process.phases.phase2.phase'),
+            title: t('senate.process.phases.phase2.title'),
+            duration: t('senate.process.phases.phase2.duration'),
             icon: Users,
             color: "bg-amber-500",
-            description: "Le Président du Sénat saisit la commission permanente compétente.",
-            details: [
-                "Désignation de la commission compétente",
-                "Nomination d'un rapporteur",
-                "Transmission du dossier complet",
-                "Priorité si texte relatif aux collectivités"
-            ]
+            description: t('senate.process.phases.phase2.description'),
+            details: t('senate.process.phases.phase2.details') as unknown as string[]
         },
         {
-            phase: "Phase 3",
-            title: "Examen en Commission",
-            duration: "Jours 3-12",
+            phase: t('senate.process.phases.phase3.phase'),
+            title: t('senate.process.phases.phase3.title'),
+            duration: t('senate.process.phases.phase3.duration'),
             icon: Gavel,
             color: "bg-purple-500",
-            description: "La commission étudie le texte article par article et propose des amendements.",
-            details: [
-                "Audition des ministres concernés",
-                "Examen article par article",
-                "Dépôt et discussion des amendements",
-                "Adoption du rapport de la commission"
-            ]
+            description: t('senate.process.phases.phase3.description'),
+            details: t('senate.process.phases.phase3.details') as unknown as string[]
         },
         {
-            phase: "Phase 4",
-            title: "Discussion en Plénière",
-            duration: "Jours 13-17",
+            phase: t('senate.process.phases.phase4.phase'),
+            title: t('senate.process.phases.phase4.title'),
+            duration: t('senate.process.phases.phase4.duration'),
             icon: MessageSquare,
             color: "bg-green-500",
-            description: "Débat général et examen des amendements en séance publique.",
-            details: [
-                "Présentation par le rapporteur",
-                "Discussion générale",
-                "Examen des amendements",
-                "Explications de vote"
-            ]
+            description: t('senate.process.phases.phase4.description'),
+            details: t('senate.process.phases.phase4.details') as unknown as string[]
         },
         {
-            phase: "Phase 5",
-            title: "Vote solennel",
-            duration: "Jours 18-20",
+            phase: t('senate.process.phases.phase5.phase'),
+            title: t('senate.process.phases.phase5.title'),
+            duration: t('senate.process.phases.phase5.duration'),
             icon: Vote,
             color: "bg-red-500",
-            description: "Vote final sur l'ensemble du texte (conforme ou amendé).",
-            details: [
-                "Scrutin public ou à main levée",
-                "Majorité simple requise",
-                "Proclamation des résultats",
-                "Rédaction du PV de séance"
-            ]
+            description: t('senate.process.phases.phase5.description'),
+            details: t('senate.process.phases.phase5.details') as unknown as string[]
         },
         {
-            phase: "Phase 6",
-            title: "Transmission",
-            duration: "Après vote",
+            phase: t('senate.process.phases.phase6.phase'),
+            title: t('senate.process.phases.phase6.title'),
+            duration: t('senate.process.phases.phase6.duration'),
             icon: Send,
             color: "bg-indigo-500",
-            description: "Le texte est transmis selon le résultat du vote.",
-            details: [
-                "Si conforme : envoi pour promulgation",
-                "Si amendé : retour à l'Assemblée Nationale",
-                "Si rejeté : procédure CMP possible",
-                "Archivage au Journal Officiel"
-            ]
+            description: t('senate.process.phases.phase6.description'),
+            details: t('senate.process.phases.phase6.details') as unknown as string[]
         }
     ];
 
     // Spécificités du Sénat
     const senateSpecificities = [
         {
-            title: "Représentation territoriale",
+            title: t('senate.process.specificities.territorial.title'),
             icon: MapPin,
-            description: "Le Sénat représente les collectivités locales. Les textes les concernant bénéficient d'un traitement prioritaire.",
-            examples: ["Décentralisation", "Finances locales", "Organisation territoriale"]
+            description: t('senate.process.specificities.territorial.description'),
+            examples: t('senate.process.specificities.territorial.examples') as unknown as string[]
         },
         {
-            title: "Doléances des élus locaux",
+            title: t('senate.process.specificities.grievances.title'),
             icon: AlertTriangle,
-            description: "Les sénateurs recueillent les préoccupations des maires et conseillers départementaux.",
-            examples: ["Infrastructure", "Éducation", "Santé", "Développement"]
+            description: t('senate.process.specificities.grievances.description'),
+            examples: t('senate.process.specificities.grievances.examples') as unknown as string[]
         },
         {
-            title: "Visites de terrain",
+            title: t('senate.process.specificities.fieldVisits.title'),
             icon: Building,
-            description: "Les sénateurs effectuent des missions dans leurs provinces pour évaluer les besoins.",
-            examples: ["Rapports de visite", "Recommandations", "Suivi des projets"]
+            description: t('senate.process.specificities.fieldVisits.description'),
+            examples: t('senate.process.specificities.fieldVisits.examples') as unknown as string[]
         }
     ];
 
     // CMP
     const cmpProcess = [
-        { step: 1, title: "Convocation", description: "En cas de désaccord après 2 lectures" },
-        { step: 2, title: "Composition", description: "7 députés + 7 sénateurs" },
-        { step: 3, title: "Négociation", description: "Élaboration d'un texte commun" },
-        { step: 4, title: "Vote CMP", description: "Adoption du compromis ou échec" },
-        { step: 5, title: "Lecture finale", description: "Examen par les deux chambres" },
+        { step: 1, title: t('senate.process.cmp.steps.convocation.title'), description: t('senate.process.cmp.steps.convocation.description') },
+        { step: 2, title: t('senate.process.cmp.steps.composition.title'), description: t('senate.process.cmp.steps.composition.description') },
+        { step: 3, title: t('senate.process.cmp.steps.negotiation.title'), description: t('senate.process.cmp.steps.negotiation.description') },
+        { step: 4, title: t('senate.process.cmp.steps.vote.title'), description: t('senate.process.cmp.steps.vote.description') },
+        { step: 5, title: t('senate.process.cmp.steps.finalReading.title'), description: t('senate.process.cmp.steps.finalReading.description') },
     ];
 
     // Diagramme de la navette complète
@@ -231,7 +204,7 @@ flowchart TD
     // Export PDF handler
     const handleExportPDF = () => {
         exportProcessPDF({
-            title: "Protocole Législatif du Sénat",
+            title: t('senate.process.heroTitle'),
             subtitle: "République Gabonaise",
             institution: 'SN',
             phases: processSteps.map(s => ({
@@ -248,68 +221,45 @@ flowchart TD
 
     return (
         <div className="min-h-screen bg-background">
-            {/* Header */}
-            <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <Button variant="ghost" size="icon" onClick={() => navigate("/senat")}>
-                                <Home className="h-5 w-5" />
-                            </Button>
-                            <Separator orientation="vertical" className="h-6" />
-                            <Landmark className="h-7 w-7 text-primary" />
-                            <div>
-                                <h1 className="text-xl font-serif font-bold text-foreground">Processus Législatif</h1>
-                                <p className="text-xs text-muted-foreground">Fonctionnement du Sénat</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm" onClick={() => navigate("/senat/demo")}>
-                                <PlayCircle className="h-4 w-4 mr-2" />
-                                Démo
-                            </Button>
-                            <Button variant="outline" size="sm" onClick={handleExportPDF}>
-                                <Download className="h-4 w-4 mr-2" />
-                                Export PDF
-                            </Button>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                            >
-                                {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            {/* Unified Header with Export PDF action */}
+            <InstitutionSubHeader
+                institution="SENATE"
+                pageTitle={t('senate.process.title')}
+                pageSubtitle={t('senate.process.subtitle')}
+                pageIcon={Workflow}
+                extraActions={
+                    <Button variant="outline" size="sm" onClick={handleExportPDF}>
+                        <Download className="h-4 w-4 mr-2" />
+                        {t('senate.process.exportBtn')}
+                    </Button>
+                }
+            />
 
             {/* Hero */}
             <section className="py-16 bg-gradient-to-br from-primary/5 to-primary/10">
                 <div className="container mx-auto px-4 text-center">
                     <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
                         <BookOpen className="h-3 w-3 mr-1" />
-                        Guide Complet
+                        {t('senate.process.heroBadge')}
                     </Badge>
                     <h1 className="text-4xl md:text-5xl font-serif font-bold mb-4">
-                        Protocole Législatif du Sénat
+                        {t('senate.process.heroTitle')}
                     </h1>
                     <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-6">
-                        Découvrez en détail le fonctionnement de la chambre haute du Parlement gabonais,
-                        de la réception des textes à leur adoption.
+                        {t('senate.process.heroDesc')}
                     </p>
                     <div className="flex justify-center gap-4 flex-wrap">
                         <Badge variant="outline" className="text-sm py-1.5 px-3">
                             <Clock className="h-4 w-4 mr-1" />
-                            Délai de 20 jours
+                            {t('senate.process.stats.delay')}
                         </Badge>
                         <Badge variant="outline" className="text-sm py-1.5 px-3">
                             <Users className="h-4 w-4 mr-1" />
-                            102 sénateurs
+                            {t('senate.process.stats.senators')}
                         </Badge>
                         <Badge variant="outline" className="text-sm py-1.5 px-3">
                             <MapPin className="h-4 w-4 mr-1" />
-                            9 provinces
+                            {t('senate.process.stats.provinces')}
                         </Badge>
                     </div>
                 </div>
@@ -321,18 +271,18 @@ flowchart TD
                     <div className="text-center mb-12">
                         <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
                             <ArrowLeftRight className="h-3 w-3 mr-1" />
-                            Cycle Complet
+                            {t('senate.process.navette.badge')}
                         </Badge>
-                        <h2 className="text-3xl font-serif font-bold mb-4">Navette Parlementaire Complète</h2>
+                        <h2 className="text-3xl font-serif font-bold mb-4">{t('senate.process.navette.title')}</h2>
                         <p className="text-muted-foreground max-w-2xl mx-auto">
-                            Visualisez le cycle complet d'adoption d'une loi : AN → Sénat → CMP → Promulgation.
-                            <span className="text-primary font-medium"> Cliquez sur les éléments pour naviguer.</span>
+                            {t('senate.process.navette.desc')}
+                            <span className="text-primary font-medium"> {t('senate.process.navette.clickToNavigate')}</span>
                         </p>
                     </div>
                     <div className="max-w-6xl mx-auto">
-                        <MermaidDiagram 
-                            chart={navetteCompleteChart} 
-                            title="Cycle complet de la navette parlementaire"
+                        <MermaidDiagram
+                            chart={navetteCompleteChart}
+                            title={t('senate.process.navette.title')}
                             className="shadow-lg"
                             onNodeClick={handleNodeClick}
                         />
@@ -344,13 +294,13 @@ flowchart TD
             <section id="flux-senat" className="py-16">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h2 className="text-3xl font-serif font-bold mb-4">Flux Législatif au Sénat</h2>
+                        <h2 className="text-3xl font-serif font-bold mb-4">{t('senate.process.flow.title')}</h2>
                         <p className="text-muted-foreground max-w-2xl mx-auto">
-                            Visualisez le parcours complet d'un texte reçu de l'Assemblée Nationale
+                            {t('senate.process.flow.desc')}
                         </p>
                     </div>
                     <div className="max-w-4xl mx-auto">
-                        <MermaidDiagram 
+                        <MermaidDiagram
                             chart={`
 flowchart TD
     A[📨 Réception du texte AN] --> B[Bureau du Sénat]
@@ -374,8 +324,8 @@ flowchart TD
     style N fill:#22c55e,color:#fff
     style O fill:#f59e0b,color:#fff
     style P fill:#ef4444,color:#fff
-`} 
-                            title="Parcours d'un texte au Sénat"
+`}
+                            title={t('senate.process.flow.title')}
                             className="shadow-lg"
                             onNodeClick={handleNodeClick}
                         />
@@ -387,15 +337,15 @@ flowchart TD
             <section id="phases" className="py-16 bg-muted/30">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h2 className="text-3xl font-serif font-bold mb-4">Les 6 Phases du Processus</h2>
+                        <h2 className="text-3xl font-serif font-bold mb-4">{t('senate.process.phases.title')}</h2>
                         <p className="text-muted-foreground max-w-2xl mx-auto">
-                            Chaque texte reçu de l'Assemblée Nationale suit un parcours rigoureux
+                            {t('senate.process.phases.desc')}
                         </p>
                     </div>
 
                     <div className="max-w-4xl mx-auto space-y-6">
                         {processSteps.map((step, index) => (
-                            <AnimatedPhaseCard 
+                            <AnimatedPhaseCard
                                 key={index}
                                 step={step}
                                 index={index}
@@ -411,9 +361,9 @@ flowchart TD
             <section id="specificites" className="py-16">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h2 className="text-3xl font-serif font-bold mb-4">Spécificités du Sénat</h2>
+                        <h2 className="text-3xl font-serif font-bold mb-4">{t('senate.process.specificities.title')}</h2>
                         <p className="text-muted-foreground max-w-2xl mx-auto">
-                            Le Sénat se distingue par son rôle de représentation des collectivités territoriales
+                            {t('senate.process.specificities.desc')}
                         </p>
                     </div>
 
@@ -449,11 +399,11 @@ flowchart TD
                     <div className="text-center mb-12">
                         <Badge className="mb-4 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
                             <Scale className="h-3 w-3 mr-1" />
-                            Procédure spéciale
+                            {t('senate.process.cmp.badge')}
                         </Badge>
-                        <h2 className="text-3xl font-serif font-bold mb-4">Commission Mixte Paritaire (CMP)</h2>
+                        <h2 className="text-3xl font-serif font-bold mb-4">{t('senate.process.cmp.title')}</h2>
                         <p className="text-muted-foreground max-w-2xl mx-auto">
-                            En cas de désaccord persistant entre les deux chambres, une CMP est convoquée
+                            {t('senate.process.cmp.desc')}
                         </p>
                     </div>
 
@@ -480,21 +430,19 @@ flowchart TD
                                 <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
                                     <h4 className="font-semibold text-green-700 dark:text-green-400 mb-2 flex items-center gap-2">
                                         <CheckCircle className="h-5 w-5" />
-                                        Si accord
+                                        {t('senate.process.cmp.ifAgreement')}
                                     </h4>
                                     <p className="text-sm text-muted-foreground">
-                                        Le texte commun est soumis aux deux assemblées pour adoption.
-                                        Si adopté, il est transmis pour promulgation.
+                                        {t('senate.process.cmp.agreementDesc')}
                                     </p>
                                 </div>
                                 <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
                                     <h4 className="font-semibold text-red-700 dark:text-red-400 mb-2 flex items-center gap-2">
                                         <AlertTriangle className="h-5 w-5" />
-                                        Si échec
+                                        {t('senate.process.cmp.ifFailure')}
                                     </h4>
                                     <p className="text-sm text-muted-foreground">
-                                        L'Assemblée Nationale peut statuer définitivement après une nouvelle lecture.
-                                        Le Sénat peut demander une nouvelle délibération.
+                                        {t('senate.process.cmp.failureDesc')}
                                     </p>
                                 </div>
                             </div>
@@ -506,18 +454,18 @@ flowchart TD
             {/* CTA */}
             <section className="py-16 bg-primary/5">
                 <div className="container mx-auto px-4 text-center">
-                    <h2 className="text-2xl font-serif font-bold mb-4">Prêt à explorer ?</h2>
+                    <h2 className="text-2xl font-serif font-bold mb-4">{t('senate.process.cta.title')}</h2>
                     <p className="text-muted-foreground mb-8">
-                        Testez les fonctionnalités du Sénat en mode démonstration
+                        {t('senate.process.cta.desc')}
                     </p>
                     <div className="flex justify-center gap-4 flex-wrap">
                         <Button size="lg" onClick={() => navigate("/senat/demo")}>
                             <PlayCircle className="mr-2 h-5 w-5" />
-                            Accéder à la démo
+                            {t('senate.process.cta.accessDemo')}
                         </Button>
                         <Button size="lg" variant="outline" onClick={() => navigate("/senat")}>
                             <Home className="mr-2 h-5 w-5" />
-                            Retour à l'accueil
+                            {t('senate.process.cta.backHome')}
                         </Button>
                     </div>
                 </div>
@@ -528,10 +476,10 @@ flowchart TD
                 <div className="container mx-auto px-4 text-center">
                     <div className="flex justify-center items-center gap-2 mb-4">
                         <Landmark className="h-6 w-6 text-primary" />
-                        <span className="font-serif font-bold">Sénat du Gabon</span>
+                        <span className="font-serif font-bold">{t('senate.process.footer.title')}</span>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                        Palais Omar Bongo Ondimba - Libreville
+                        {t('senate.process.footer.address')}
                     </p>
                 </div>
             </footer>

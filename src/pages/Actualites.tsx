@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { useLanguage } from "@/contexts/LanguageContext";
+import InstitutionSubHeader from "@/components/layout/InstitutionSubHeader";
 import newsHeroImage from "@/assets/news-parliament-hero.jpg";
 import newsEnvironment from "@/assets/news-environment.jpg";
 import newsLegislation from "@/assets/news-legislation.jpg";
@@ -21,16 +22,25 @@ const Actualites = () => {
     const { theme, setTheme } = useTheme();
     const { t, dir } = useLanguage();
     const [searchQuery, setSearchQuery] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("Tous");
+    const CATEGORIES = [
+        t('news.categories.all'),
+        t('news.categories.finance'),
+        t('news.categories.environment'),
+        t('news.categories.legislation'),
+        t('news.categories.publicSession'),
+        t('news.categories.international'),
+        t('news.categories.innovation'),
+        t('news.categories.democracy')
+    ];
 
-    const CATEGORIES = ["Tous", "Finances", "Environnement", "Législation", "Séance Publique", "International", "Innovation", "Démocratie"];
+    const [selectedCategory, setSelectedCategory] = useState(t('news.categories.all'));
 
     const NEWS_DATA = [
         {
             title: t('news.items.commission.title'),
             excerpt: t('news.items.commission.excerpt'),
             date: "30 Nov 2025",
-            category: "Environnement",
+            category: t('news.categories.environment'),
             categoryColor: "bg-green-600",
             image: newsEnvironment
         },
@@ -38,7 +48,7 @@ const Actualites = () => {
             title: t('news.items.reform.title'),
             excerpt: t('news.items.reform.excerpt'),
             date: "28 Nov 2025",
-            category: "Législation",
+            category: t('news.categories.legislation'),
             categoryColor: "bg-blue-600",
             image: newsLegislation
         },
@@ -46,7 +56,7 @@ const Actualites = () => {
             title: t('news.items.budget.title'),
             excerpt: t('news.items.budget.excerpt'),
             date: "25 Nov 2025",
-            category: "Finances",
+            category: t('news.categories.finance'),
             categoryColor: "bg-amber-600",
             image: newsFinance
         },
@@ -54,7 +64,7 @@ const Actualites = () => {
             title: t('news.items.digital.title'),
             excerpt: t('news.items.digital.excerpt'),
             date: "22 Nov 2025",
-            category: "Innovation",
+            category: t('news.categories.innovation'),
             categoryColor: "bg-purple-600",
             image: newsInnovation
         },
@@ -62,7 +72,7 @@ const Actualites = () => {
             title: t('news.items.diplomacy.title'),
             excerpt: t('news.items.diplomacy.excerpt'),
             date: "20 Nov 2025",
-            category: "International",
+            category: t('news.categories.international'),
             categoryColor: "bg-indigo-600",
             image: newsInternational
         },
@@ -70,7 +80,7 @@ const Actualites = () => {
             title: t('news.items.youth.title'),
             excerpt: t('news.items.youth.excerpt'),
             date: "18 Nov 2025",
-            category: "Démocratie",
+            category: t('news.categories.democracy'),
             categoryColor: "bg-rose-600",
             image: newsDemocracy
         }
@@ -79,7 +89,7 @@ const Actualites = () => {
     const filteredNews = NEWS_DATA.filter(news => {
         const matchesSearch = news.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
             news.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesCategory = selectedCategory === "Tous" || news.category === selectedCategory;
+        const matchesCategory = selectedCategory === t('news.categories.all') || news.category === selectedCategory;
         return matchesSearch && matchesCategory;
     });
 
@@ -89,43 +99,13 @@ const Actualites = () => {
 
     return (
         <div className="min-h-screen bg-background transition-colors duration-300" dir={dir}>
-            {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600/10 to-indigo-600/10 border-b border-border/50 py-12 px-4">
-                <div className="max-w-7xl mx-auto relative">
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => navigate("/")}
-                        className="mb-4 hover:bg-background/50"
-                    >
-                        <Home className="w-4 h-4 mr-2" />
-                        {t('common.backToHome')}
-                    </Button>
-
-                    <div className="absolute top-0 right-0 md:top-4 md:right-4">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                            className="rounded-full"
-                        >
-                            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                            <span className="sr-only">{t('common.changeTheme')}</span>
-                        </Button>
-                    </div>
-
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="p-3 rounded-xl bg-blue-600/10 neu-inset">
-                            <Newspaper className="w-8 h-8 text-blue-600" />
-                        </div>
-                        <h1 className="text-4xl font-bold">{t('news.title')}</h1>
-                    </div>
-                    <p className="text-lg text-muted-foreground max-w-2xl">
-                        {t('news.subtitle')}
-                    </p>
-                </div>
-            </div>
+            {/* Unified Header */}
+            <InstitutionSubHeader
+                institution="AN"
+                pageTitle={t('news.title')}
+                pageSubtitle={t('news.subtitle')}
+                pageIcon={Newspaper}
+            />
 
             <div className="max-w-7xl mx-auto px-4 py-12">
                 {/* Featured Article */}
@@ -188,8 +168,8 @@ const Actualites = () => {
                             onClick={() => handleReadMore(news.title)}
                         >
                             <div className="relative h-48 overflow-hidden">
-                                <img 
-                                    src={news.image} 
+                                <img
+                                    src={news.image}
                                     alt={news.title}
                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                 />
@@ -234,7 +214,7 @@ const Actualites = () => {
                             variant="outline"
                             onClick={() => {
                                 setSearchQuery("");
-                                setSelectedCategory("Tous");
+                                setSelectedCategory(t('news.categories.all'));
                             }}
                         >
                             {t('news.resetFilters')}

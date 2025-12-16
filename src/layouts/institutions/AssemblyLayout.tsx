@@ -1,6 +1,7 @@
 import React, { ReactNode, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useInstitution, INSTITUTIONS } from '@/contexts/InstitutionContext';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
 import {
     Building2,
@@ -26,6 +27,7 @@ const AssemblyLayout: React.FC<AssemblyLayoutProps> = ({ children }) => {
     const { setCurrentInstitution, institutionConfig } = useInstitution();
     const location = useLocation();
     const navigate = useNavigate();
+    const { t } = useLanguage();
 
     // Force l'institution à ASSEMBLY quand ce layout est actif
     useEffect(() => {
@@ -36,11 +38,11 @@ const AssemblyLayout: React.FC<AssemblyLayoutProps> = ({ children }) => {
 
     // Navigation principale de l'Assemblée
     const mainNavItems = [
-        { icon: Home, label: 'Accueil AN', path: '/an' },
-        { icon: Building2, label: 'Hémicycle', path: '/an/hemicycle' },
-        { icon: Users, label: 'Députés', path: '/an/deputes' },
-        { icon: FileText, label: 'Travaux', path: '/an/travaux' },
-        { icon: Calendar, label: 'Agenda', path: '/an/agenda' },
+        { icon: Home, label: t('assembly.layout.home'), path: '/an' },
+        { icon: Building2, label: t('assembly.layout.hemicycle'), path: '/an/hemicycle' },
+        { icon: Users, label: t('assembly.layout.deputies'), path: '/an/deputes' },
+        { icon: FileText, label: t('assembly.layout.works'), path: '/an/travaux' },
+        { icon: Calendar, label: t('assembly.layout.agenda'), path: '/an/agenda' },
     ];
 
     return (
@@ -63,7 +65,7 @@ const AssemblyLayout: React.FC<AssemblyLayoutProps> = ({ children }) => {
                                 className="text-white/80 hover:text-white hover:bg-white/10"
                                 onClick={() => navigate('/senat')}
                             >
-                                Sénat →
+                                {t('assembly.layout.senateLink')} →
                             </Button>
                             <Button
                                 variant="ghost"
@@ -71,7 +73,7 @@ const AssemblyLayout: React.FC<AssemblyLayoutProps> = ({ children }) => {
                                 className="text-white/80 hover:text-white hover:bg-white/10"
                                 onClick={() => navigate('/congres')}
                             >
-                                Congrès →
+                                {t('assembly.layout.congressLink')} →
                             </Button>
                         </nav>
                     </div>
@@ -101,6 +103,7 @@ const AssemblyLayout: React.FC<AssemblyLayoutProps> = ({ children }) => {
                             onClick={() => navigate('/portail')}
                         >
                             <Settings className="w-5 h-5" />
+                            <span className="sr-only">{t('assembly.layout.settings')}</span>
                         </Button>
                     </nav>
                 </div>
@@ -109,10 +112,10 @@ const AssemblyLayout: React.FC<AssemblyLayoutProps> = ({ children }) => {
             {/* Breadcrumb */}
             <div className="container mx-auto px-4 py-3 flex items-center gap-2 text-sm text-muted-foreground">
                 <Button variant="link" className="p-0 h-auto text-emerald-600" onClick={() => navigate('/')}>
-                    Parlement.ga
+                    {t('assembly.layout.breadcrumbHome')}
                 </Button>
                 <ChevronRight className="w-4 h-4" />
-                <span className="text-emerald-700 font-medium">Assemblée Nationale</span>
+                <span className="text-emerald-700 font-medium">{t('assembly.layout.breadcrumbAN')}</span>
                 {location.pathname !== '/an' && (
                     <>
                         <ChevronRight className="w-4 h-4" />
@@ -144,7 +147,7 @@ const AssemblyLayout: React.FC<AssemblyLayoutProps> = ({ children }) => {
                             </div>
                         </div>
                         <p className="text-xs text-muted-foreground">
-                            © 2024 Parlement.ga - Plateforme citoyenne unifiée
+                            {t('common.copyright')} - {t('assembly.layout.footerDesc')}
                         </p>
                     </div>
                 </div>

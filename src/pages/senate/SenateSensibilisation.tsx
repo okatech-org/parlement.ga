@@ -10,6 +10,8 @@ import {
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SENATORS, PROVINCES, POLITICAL_PARTIES, ELECTORAL_STATS } from "@/data/politicalData";
+import InstitutionSubHeader from "@/components/layout/InstitutionSubHeader";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 /**
  * Page Sensibilisation du Sénat
@@ -18,6 +20,7 @@ import { SENATORS, PROVINCES, POLITICAL_PARTIES, ELECTORAL_STATS } from "@/data/
 const SenateSensibilisation = () => {
     const navigate = useNavigate();
     const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+    const { t } = useLanguage();
 
     // Données statistiques réelles
     const senatorsCount = SENATORS.length;
@@ -27,38 +30,38 @@ const SenateSensibilisation = () => {
     const senateRoles = [
         {
             icon: Crown,
-            title: "Représentation Territoriale",
-            description: "Le Sénat représente les collectivités territoriales de la République. Chaque province du Gabon y est représentée.",
+            title: t('senate.sensibilisation.roles.territorial.title'),
+            description: t('senate.sensibilisation.roles.territorial.description'),
             color: "amber"
         },
         {
             icon: FileText,
-            title: "Examen des Lois",
-            description: "Le Sénat examine en seconde lecture les textes votés par l'Assemblée Nationale dans un délai de 20 jours.",
+            title: t('senate.sensibilisation.roles.lawsExam.title'),
+            description: t('senate.sensibilisation.roles.lawsExam.description'),
             color: "blue"
         },
         {
             icon: Scale,
-            title: "Équilibre Institutionnel",
-            description: "En cas de désaccord avec l'AN, le Sénat peut proposer des amendements ou demander une Commission Mixte Paritaire.",
+            title: t('senate.sensibilisation.roles.balance.title'),
+            description: t('senate.sensibilisation.roles.balance.description'),
             color: "purple"
         },
         {
             icon: MapPin,
-            title: "Lien avec les Territoires",
-            description: "Les sénateurs maintiennent un lien permanent avec les élus locaux (maires, conseillers) de leur circonscription.",
+            title: t('senate.sensibilisation.roles.link.title'),
+            description: t('senate.sensibilisation.roles.link.description'),
             color: "green"
         },
         {
             icon: Shield,
-            title: "Gardien de la Constitution",
-            description: "Le Sénat peut saisir la Cour Constitutionnelle pour vérifier la conformité des lois à la Constitution.",
+            title: t('senate.sensibilisation.roles.guardian.title'),
+            description: t('senate.sensibilisation.roles.guardian.description'),
             color: "red"
         },
         {
             icon: Globe,
-            title: "Diplomatie Parlementaire",
-            description: "Le Sénat entretient des relations avec les chambres hautes d'autres pays pour les échanges d'expériences.",
+            title: t('senate.sensibilisation.roles.diplomacy.title'),
+            description: t('senate.sensibilisation.roles.diplomacy.description'),
             color: "cyan"
         }
     ];
@@ -66,107 +69,85 @@ const SenateSensibilisation = () => {
     const legislativeProcess = [
         {
             step: 1,
-            title: "Réception du texte",
-            description: "Le texte voté par l'Assemblée Nationale est transmis au Sénat.",
+            title: t('senate.sensibilisation.process.steps.reception.title'),
+            description: t('senate.sensibilisation.process.steps.reception.description'),
             icon: FileText,
-            duration: "Jour 1"
+            duration: t('senate.sensibilisation.process.steps.reception.duration')
         },
         {
             step: 2,
-            title: "Examen en commission",
-            description: "La commission compétente étudie le texte et propose des amendements.",
+            title: t('senate.sensibilisation.process.steps.commission.title'),
+            description: t('senate.sensibilisation.process.steps.commission.description'),
             icon: Users,
-            duration: "Jours 2-10"
+            duration: t('senate.sensibilisation.process.steps.commission.duration')
         },
         {
             step: 3,
-            title: "Débat en plénière",
-            description: "L'ensemble des sénateurs débattent du texte et des amendements.",
+            title: t('senate.sensibilisation.process.steps.plenary.title'),
+            description: t('senate.sensibilisation.process.steps.plenary.description'),
             icon: Gavel,
-            duration: "Jours 11-15"
+            duration: t('senate.sensibilisation.process.steps.plenary.duration')
         },
         {
             step: 4,
-            title: "Vote",
-            description: "Les sénateurs votent le texte, éventuellement modifié.",
+            title: t('senate.sensibilisation.process.steps.vote.title'),
+            description: t('senate.sensibilisation.process.steps.vote.description'),
             icon: Vote,
-            duration: "Jours 16-20"
+            duration: t('senate.sensibilisation.process.steps.vote.duration')
         },
         {
             step: 5,
-            title: "Navette ou promulgation",
-            description: "Retour à l'AN si modifié, ou transmission pour promulgation si identique.",
+            title: t('senate.sensibilisation.process.steps.shuttle.title'),
+            description: t('senate.sensibilisation.process.steps.shuttle.description'),
             icon: ArrowLeftRight,
-            duration: "Après vote"
+            duration: t('senate.sensibilisation.process.steps.shuttle.duration')
         }
     ];
 
     const faqs = [
         {
-            question: "Quelle est la différence entre un député et un sénateur ?",
-            answer: "Le député est élu au suffrage universel direct par les citoyens et représente la Nation. Le sénateur est élu au suffrage universel indirect par les conseillers municipaux et départementaux, et représente les collectivités territoriales."
+            question: t('senate.sensibilisation.faq.questions.q1.question'),
+            answer: t('senate.sensibilisation.faq.questions.q1.answer')
         },
         {
-            question: "Combien y a-t-il de sénateurs au Gabon ?",
-            answer: `Le Sénat de la Ve République compte ${senatorsCount} sénateurs, élus pour représenter les ${provincesCount} provinces du Gabon et assurer la voix des territoires au Parlement.`
+            question: t('senate.sensibilisation.faq.questions.q2.question'),
+            answer: t('senate.sensibilisation.faq.questions.q2.answer')
         },
         {
-            question: "Comment devient-on sénateur ?",
-            answer: "Pour être élu sénateur, il faut être Gabonais, avoir au moins 40 ans, jouir de ses droits civiques et politiques, et être élu par un collège électoral composé des conseillers municipaux et départementaux."
+            question: t('senate.sensibilisation.faq.questions.q3.question'),
+            answer: t('senate.sensibilisation.faq.questions.q3.answer')
         },
         {
-            question: "Quel est le délai d'examen d'un texte par le Sénat ?",
-            answer: "La Constitution accorde au Sénat un délai de 20 jours pour examiner les textes transmis par l'Assemblée Nationale. Pour les textes relatifs aux collectivités territoriales, ce délai peut être prolongé."
+            question: t('senate.sensibilisation.faq.questions.q4.question'),
+            answer: t('senate.sensibilisation.faq.questions.q4.answer')
         },
         {
-            question: "Qu'est-ce que la navette parlementaire ?",
-            answer: "La navette est le va-et-vient d'un texte de loi entre l'Assemblée Nationale et le Sénat jusqu'à adoption d'un texte identique. En cas de désaccord persistant, une Commission Mixte Paritaire (CMP) composée de 7 députés et 7 sénateurs peut être convoquée."
+            question: t('senate.sensibilisation.faq.questions.q5.question'),
+            answer: t('senate.sensibilisation.faq.questions.q5.answer')
         },
         {
-            question: "Le Sénat peut-il bloquer une loi ?",
-            answer: "Non, le Sénat ne peut pas bloquer définitivement une loi. Si le désaccord persiste après la CMP, c'est l'Assemblée Nationale qui a le dernier mot. Cependant, pour les textes concernant les collectivités territoriales, l'avis du Sénat a un poids particulier."
+            question: t('senate.sensibilisation.faq.questions.q6.question'),
+            answer: t('senate.sensibilisation.faq.questions.q6.answer')
         },
         {
-            question: "Qui préside le Sénat ?",
-            answer: `La présidente actuelle du Sénat est ${SENATORS.find(s => s.roles.includes('president'))?.name || 'Madeleine Sidonie Revangue'}, élue en novembre 2025. Le/La président(e) du Sénat est la deuxième personnalité de l'État après le Président de la République.`
+            question: t('senate.sensibilisation.faq.questions.q7.question'),
+            answer: t('senate.sensibilisation.faq.questions.q7.answer')
         },
         {
-            question: "Où se trouve le Sénat ?",
-            answer: "Le Sénat siège au Palais Omar Bongo Ondimba à Libreville, dans la province de l'Estuaire."
+            question: t('senate.sensibilisation.faq.questions.q8.question'),
+            answer: t('senate.sensibilisation.faq.questions.q8.answer')
         }
     ];
 
     return (
         <div className="min-h-screen bg-background">
-            {/* Header */}
-            <header className="border-b border-border bg-gradient-to-r from-amber-600 to-amber-700 text-white sticky top-0 z-50">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => navigate("/senat")}
-                                className="text-white hover:bg-white/20"
-                            >
-                                <ArrowLeft className="h-5 w-5" />
-                            </Button>
-                            <div className="flex items-center gap-3">
-                                <BookOpen className="h-8 w-8" />
-                                <div>
-                                    <h1 className="text-xl font-serif font-bold">Sensibilisation</h1>
-                                    <p className="text-amber-100 text-sm">Comprendre le Sénat</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Button variant="secondary" size="sm" onClick={() => navigate("/senat/tutoriels")}>
-                                Tutoriels
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            </header>
+            {/* Unified Header */}
+            <InstitutionSubHeader
+                institution="SENATE"
+                pageTitle={t('senate.sensibilisation.header.title')}
+                pageSubtitle={t('senate.sensibilisation.header.subtitle')}
+                pageIcon={BookOpen}
+            />
 
             {/* Hero Section */}
             <section className="bg-gradient-to-b from-amber-50 to-background dark:from-amber-950/20 dark:to-background py-16">
@@ -174,23 +155,22 @@ const SenateSensibilisation = () => {
                     <div className="max-w-4xl mx-auto text-center">
                         <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200" variant="outline">
                             <Lightbulb className="h-3 w-3 mr-1" />
-                            Éducation civique
+                            {t('senate.sensibilisation.hero.badge')}
                         </Badge>
                         <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6">
-                            Comprendre le rôle du Sénat
+                            {t('senate.sensibilisation.hero.title')}
                         </h2>
                         <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                            Le Sénat est la chambre haute du Parlement. Découvrez son fonctionnement,
-                            ses missions et son importance dans l'équilibre des pouvoirs.
+                            {t('senate.sensibilisation.hero.description')}
                         </p>
                         <div className="flex gap-4 justify-center">
                             <Button size="lg" className="bg-amber-600 hover:bg-amber-700">
                                 <Target className="mr-2 h-5 w-5" />
-                                Les missions du Sénat
+                                {t('senate.sensibilisation.hero.btnMissions')}
                             </Button>
                             <Button size="lg" variant="outline">
                                 <HelpCircle className="mr-2 h-5 w-5" />
-                                FAQ
+                                {t('senate.sensibilisation.hero.btnFaq')}
                             </Button>
                         </div>
                     </div>
@@ -203,19 +183,19 @@ const SenateSensibilisation = () => {
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
                         <Card className="text-center p-6 bg-amber-50 dark:bg-amber-900/20 border-amber-200">
                             <div className="text-4xl font-bold text-amber-600 mb-2">{senatorsCount}</div>
-                            <div className="text-sm text-muted-foreground">Sénateurs</div>
+                            <div className="text-sm text-muted-foreground">{t('senate.sensibilisation.stats.senators')}</div>
                         </Card>
                         <Card className="text-center p-6 bg-blue-50 dark:bg-blue-900/20 border-blue-200">
                             <div className="text-4xl font-bold text-blue-600 mb-2">{provincesCount}</div>
-                            <div className="text-sm text-muted-foreground">Provinces</div>
+                            <div className="text-sm text-muted-foreground">{t('senate.sensibilisation.stats.provinces')}</div>
                         </Card>
                         <Card className="text-center p-6 bg-green-50 dark:bg-green-900/20 border-green-200">
                             <div className="text-4xl font-bold text-green-600 mb-2">20</div>
-                            <div className="text-sm text-muted-foreground">Jours (délai légal)</div>
+                            <div className="text-sm text-muted-foreground">{t('senate.sensibilisation.stats.legalDelay')}</div>
                         </Card>
                         <Card className="text-center p-6 bg-purple-50 dark:bg-purple-900/20 border-purple-200">
                             <div className="text-4xl font-bold text-purple-600 mb-2">2e</div>
-                            <div className="text-sm text-muted-foreground">Personnalité de l'État</div>
+                            <div className="text-sm text-muted-foreground">{t('senate.sensibilisation.stats.stateRank')}</div>
                         </Card>
                     </div>
                 </div>
@@ -225,9 +205,9 @@ const SenateSensibilisation = () => {
             <section className="py-16">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h3 className="text-3xl font-serif font-bold mb-4">Les missions du Sénat</h3>
+                        <h3 className="text-3xl font-serif font-bold mb-4">{t('senate.sensibilisation.roles.title')}</h3>
                         <p className="text-muted-foreground max-w-2xl mx-auto">
-                            Le Sénat joue un rôle essentiel dans le fonctionnement de la démocratie gabonaise
+                            {t('senate.sensibilisation.roles.description')}
                         </p>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -257,11 +237,11 @@ const SenateSensibilisation = () => {
                     <div className="text-center mb-12">
                         <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200" variant="outline">
                             <ArrowLeftRight className="h-3 w-3 mr-1" />
-                            Processus Législatif
+                            {t('senate.sensibilisation.process.badge')}
                         </Badge>
-                        <h3 className="text-3xl font-serif font-bold mb-4">Comment le Sénat examine une loi</h3>
+                        <h3 className="text-3xl font-serif font-bold mb-4">{t('senate.sensibilisation.process.title')}</h3>
                         <p className="text-muted-foreground max-w-2xl mx-auto">
-                            Du dépôt du texte à sa transmission : les 5 étapes clés
+                            {t('senate.sensibilisation.process.description')}
                         </p>
                     </div>
                     <div className="max-w-5xl mx-auto">
@@ -296,8 +276,8 @@ const SenateSensibilisation = () => {
             <section className="py-16">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <h3 className="text-3xl font-serif font-bold mb-4">Composition politique du Sénat</h3>
-                        <p className="text-muted-foreground">Répartition des {senatorsCount} sièges par formation politique (2025)</p>
+                        <h3 className="text-3xl font-serif font-bold mb-4">{t('senate.sensibilisation.composition.title')}</h3>
+                        <p className="text-muted-foreground">{t('senate.sensibilisation.composition.description')}</p>
                     </div>
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
                         {partyDistribution.sort((a, b) => b.seatsSenate - a.seatsSenate).map((party) => (
@@ -312,7 +292,7 @@ const SenateSensibilisation = () => {
                                 <div className="text-3xl font-bold mb-1" style={{ color: party.color }}>
                                     {party.seatsSenate}
                                 </div>
-                                <div className="text-sm text-muted-foreground">sièges</div>
+                                <div className="text-sm text-muted-foreground">{t('senate.sensibilisation.composition.seats')}</div>
                                 <div className="mt-2 h-2 bg-muted rounded-full overflow-hidden">
                                     <div
                                         className="h-full rounded-full"
@@ -334,9 +314,9 @@ const SenateSensibilisation = () => {
                     <div className="text-center mb-12">
                         <Badge className="mb-4" variant="outline">
                             <HelpCircle className="h-3 w-3 mr-1" />
-                            Questions fréquentes
+                            {t('senate.sensibilisation.faq.badge')}
                         </Badge>
-                        <h3 className="text-3xl font-serif font-bold mb-4">FAQ sur le Sénat</h3>
+                        <h3 className="text-3xl font-serif font-bold mb-4">{t('senate.sensibilisation.faq.title')}</h3>
                     </div>
                     <div className="max-w-3xl mx-auto space-y-4">
                         {faqs.map((faq, index) => (
@@ -370,19 +350,18 @@ const SenateSensibilisation = () => {
             {/* CTA Section */}
             <section className="py-16 bg-gradient-to-r from-amber-600 to-amber-700 text-white">
                 <div className="container mx-auto px-4 text-center">
-                    <h3 className="text-3xl font-serif font-bold mb-4">Visitez le Sénat</h3>
+                    <h3 className="text-3xl font-serif font-bold mb-4">{t('senate.sensibilisation.cta.title')}</h3>
                     <p className="text-amber-100 mb-8 max-w-2xl mx-auto">
-                        Le Sénat organise régulièrement des journées portes ouvertes pour permettre aux citoyens
-                        de découvrir l'institution et son fonctionnement.
+                        {t('senate.sensibilisation.cta.description')}
                     </p>
                     <div className="flex gap-4 justify-center">
                         <Button size="lg" variant="secondary">
                             <Building2 className="mr-2 h-5 w-5" />
-                            Réserver une visite
+                            {t('senate.sensibilisation.cta.bookVisit')}
                         </Button>
                         <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/20">
                             <Users className="mr-2 h-5 w-5" />
-                            Contacter un sénateur
+                            {t('senate.sensibilisation.cta.contactSenator')}
                         </Button>
                     </div>
                 </div>
@@ -394,21 +373,21 @@ const SenateSensibilisation = () => {
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         <div className="flex items-center gap-2">
                             <Landmark className="h-5 w-5 text-amber-500" />
-                            <span className="font-serif font-semibold">Sénat de la République Gabonaise</span>
+                            <span className="font-serif font-semibold">{t('senate.sensibilisation.footer.title')}</span>
                         </div>
                         <div className="flex items-center gap-4">
                             <Button variant="ghost" size="sm" onClick={() => navigate("/senat")}>
-                                Accueil
+                                {t('senate.sensibilisation.footer.home')}
                             </Button>
                             <Button variant="ghost" size="sm" onClick={() => navigate("/senat/actualites")}>
-                                Actualités
+                                {t('senate.sensibilisation.footer.news')}
                             </Button>
                             <Button variant="ghost" size="sm" onClick={() => navigate("/senat/tutoriels")}>
-                                Tutoriels
+                                {t('senate.sensibilisation.footer.tutorials')}
                             </Button>
                         </div>
                         <p className="text-sm text-muted-foreground">
-                            © {new Date().getFullYear()} Tous droits réservés
+                            © {new Date().getFullYear()} {t('senate.sensibilisation.footer.copyright')}
                         </p>
                     </div>
                 </div>

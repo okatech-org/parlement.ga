@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CMPWorkspaceProps {
     cmpId?: string;
@@ -40,6 +41,7 @@ interface ChatMessage {
  * Interface en 3 colonnes + chat sécurisé
  */
 const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
+    const { t } = useLanguage();
     const [currentArticle, setCurrentArticle] = useState(0);
     const [chatMessage, setChatMessage] = useState("");
     const chatEndRef = useRef<HTMLDivElement>(null);
@@ -94,7 +96,7 @@ const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
             id: "1",
             sender: "Système",
             senderChamber: "ASSEMBLY",
-            message: "Bienvenue dans la War Room de la CMP-2024-007. Les échanges sont strictement confidentiels.",
+            message: `${t('congress.cmpWorkspace.chat.systemWelcome')} ${cmpInfo.reference}.`,
             timestamp: "10:00",
             isSystem: true,
         },
@@ -190,7 +192,7 @@ const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
                                 <div className="flex items-center gap-2">
                                     <Badge className="bg-white/20">{cmpInfo.reference}</Badge>
                                     <Badge variant="outline" className="border-white/50 text-white">
-                                        🔒 Confidentiel
+                                        🔒 {t('congress.cmpWorkspace.header.confidential')}
                                     </Badge>
                                 </div>
                                 <h1 className="font-bold">{cmpInfo.title}</h1>
@@ -198,12 +200,12 @@ const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="text-right text-sm">
-                                <p className="text-amber-100">Échéance: {cmpInfo.deadline}</p>
-                                <p className="font-bold">{cmpInfo.daysLeft} jours restants</p>
+                                <p className="text-amber-100">{t('congress.cmpWorkspace.header.deadline')}: {cmpInfo.deadline}</p>
+                                <p className="font-bold">{cmpInfo.daysLeft} {t('congress.cmpWorkspace.header.daysLeft')}</p>
                             </div>
                             <div className="text-center px-4 border-l border-amber-400">
                                 <p className="text-2xl font-bold">{cmpInfo.progress}%</p>
-                                <p className="text-xs text-amber-100">Complété</p>
+                                <p className="text-xs text-amber-100">{t('congress.cmpWorkspace.header.completed')}</p>
                             </div>
                         </div>
                     </div>
@@ -213,7 +215,7 @@ const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
             {/* Barre de progression des articles */}
             <div className="bg-white dark:bg-slate-800 border-b px-4 py-2">
                 <div className="container mx-auto flex items-center gap-4">
-                    <span className="text-sm font-medium">Articles:</span>
+                    <span className="text-sm font-medium">{t('congress.cmpWorkspace.header.articles')}:</span>
                     <div className="flex gap-1 flex-1">
                         {articles.map((art, idx) => (
                             <button
@@ -266,8 +268,8 @@ const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
                                             <CardTitle>Article {article.number}</CardTitle>
                                             <CardDescription>
                                                 {article.hasDiff
-                                                    ? "⚠️ Divergences détectées"
-                                                    : "✓ Textes identiques"}
+                                                    ? t('congress.cmpWorkspace.status.divergence')
+                                                    : t('congress.cmpWorkspace.status.identical')}
                                             </CardDescription>
                                         </div>
                                         <Button
@@ -287,10 +289,10 @@ const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
                                             article.status === "pending" && "bg-slate-500"
                                         )}
                                     >
-                                        {article.status === "adopted" && "Adopté"}
-                                        {article.status === "rejected" && "Rejeté"}
-                                        {article.status === "reserved" && "Réservé"}
-                                        {article.status === "pending" && "En discussion"}
+                                        {article.status === "adopted" && t('congress.cmpWorkspace.status.adopted')}
+                                        {article.status === "rejected" && t('congress.cmpWorkspace.status.rejected')}
+                                        {article.status === "reserved" && t('congress.cmpWorkspace.status.reserved')}
+                                        {article.status === "pending" && t('congress.cmpWorkspace.status.pending')}
                                     </Badge>
                                 </div>
                             </CardHeader>
@@ -300,7 +302,7 @@ const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
                                     {/* Colonne Assemblée */}
                                     <div className="bg-primary/5">
                                         <div className="bg-primary text-white p-3 text-center font-bold">
-                                            🟢 Texte Assemblée Nationale
+                                            🟢 {t('congress.cmpWorkspace.columns.assembly')}
                                         </div>
                                         <ScrollArea className="h-[400px] p-4">
                                             <div className="text-sm whitespace-pre-wrap font-mono leading-relaxed">
@@ -322,12 +324,12 @@ const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
                                     {/* Colonne Compromis (Éditable) */}
                                     <div className="bg-blue-50/50 dark:bg-blue-950/20">
                                         <div className="bg-blue-900 text-white p-3 text-center font-bold">
-                                            ✍️ Texte de Compromis
+                                            ✍️ {t('congress.cmpWorkspace.columns.compromise')}
                                         </div>
                                         <div className="p-4">
                                             <Textarea
                                                 className="min-h-[380px] font-mono text-sm resize-none border-blue-200 focus:border-blue-500"
-                                                placeholder="Rédigez le texte de compromis ici..."
+                                                placeholder={t('congress.cmpWorkspace.columns.compromisePlaceholder')}
                                                 value={articles[currentArticle].compromiseText}
                                                 onChange={(e) => {
                                                     const newArticles = [...articles];
@@ -342,7 +344,7 @@ const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
                                     {/* Colonne Sénat */}
                                     <div className="bg-red-50/50 dark:bg-red-950/10">
                                         <div className="bg-red-800 text-white p-3 text-center font-bold">
-                                            🔴 Texte Sénat
+                                            🔴 {t('congress.cmpWorkspace.columns.senate')}
                                         </div>
                                         <ScrollArea className="h-[400px] p-4">
                                             <div className="text-sm whitespace-pre-wrap font-mono leading-relaxed">
@@ -366,7 +368,7 @@ const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
                                 {article.status === "pending" && (
                                     <div className="p-4 bg-slate-100 dark:bg-slate-800 border-t flex items-center justify-between">
                                         <p className="text-sm text-muted-foreground">
-                                            Décision collective (majorité 8/14 requise)
+                                            {t('congress.cmpWorkspace.actions.decision')}
                                         </p>
                                         <div className="flex gap-2">
                                             <Button
@@ -374,14 +376,14 @@ const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
                                                 onClick={() => voteOnArticle("reserve")}
                                             >
                                                 <Bookmark className="h-4 w-4 mr-2" />
-                                                Mettre en réserve
+                                                {t('congress.cmpWorkspace.actions.reserve')}
                                             </Button>
                                             <Button
                                                 variant="destructive"
                                                 onClick={() => voteOnArticle("reject")}
                                             >
                                                 <XCircle className="h-4 w-4 mr-2" />
-                                                Rejeter
+                                                {t('congress.cmpWorkspace.actions.reject')}
                                             </Button>
                                             <Button
                                                 className="bg-green-600 hover:bg-green-700"
@@ -389,7 +391,7 @@ const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
                                                 disabled={!articles[currentArticle].compromiseText.trim()}
                                             >
                                                 <CheckCircle className="h-4 w-4 mr-2" />
-                                                Adopter le compromis
+                                                {t('congress.cmpWorkspace.actions.adopt')}
                                             </Button>
                                         </div>
                                     </div>
@@ -404,9 +406,9 @@ const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
                             <CardHeader className="bg-slate-800 text-white py-3">
                                 <CardTitle className="text-sm flex items-center gap-2">
                                     <MessageSquare className="h-4 w-4" />
-                                    Chat CMP Sécurisé
+                                    {t('congress.cmpWorkspace.chat.title')}
                                     <Badge variant="outline" className="ml-auto border-white/30 text-white text-[10px]">
-                                        14 membres
+                                        14 {t('congress.cmpWorkspace.chat.members')}
                                     </Badge>
                                 </CardTitle>
                             </CardHeader>
@@ -437,7 +439,7 @@ const CMPWorkspace = ({ cmpId }: CMPWorkspaceProps) => {
                             <div className="p-3 border-t">
                                 <div className="flex gap-2">
                                     <Textarea
-                                        placeholder="Votre message..."
+                                        placeholder={t('congress.cmpWorkspace.chat.placeholder')}
                                         className="min-h-[60px] resize-none text-sm"
                                         value={chatMessage}
                                         onChange={(e) => setChatMessage(e.target.value)}

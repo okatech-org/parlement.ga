@@ -10,97 +10,99 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from 'next-themes';
 import { toast } from 'sonner';
 import { ProtocolDemoSection } from '@/components/iasted/ProtocolDemoSection';
-
-const AN_DEMO_CARDS = {
-  bureau: {
-    title: "Bureau de l'Assemblée",
-    icon: Crown,
-    color: "text-amber-500",
-    accounts: [
-      {
-        label: 'Président de l\'AN',
-        phone: '01010101',
-        path: '/an/espace/president',
-        icon: Crown,
-        color: 'text-amber-500',
-        role: 'Présidence',
-        features: ['Validation de lois', 'Ordre du jour', 'Diplomatie parlementaire', 'Supervision']
-      },
-      {
-        label: '1er Vice-Président',
-        phone: '02020202',
-        path: '/an/espace/vp',
-        icon: Crown,
-        color: 'text-amber-400',
-        role: 'Vice-présidence',
-        features: ['Suppléance présidence', 'Gestion commissions', 'Représentation']
-      },
-      {
-        label: 'Questeur',
-        phone: '04040401',
-        path: '/an/espace/questeurs',
-        icon: Shield,
-        color: 'text-blue-500',
-        role: 'Questure',
-        features: ['Budget Assemblée', 'Gestion personnel', 'Logistique', 'Indemnités']
-      },
-    ]
-  },
-  parlementaires: {
-    title: "Députés et Élus",
-    icon: Users,
-    color: "text-primary",
-    accounts: [
-      {
-        label: 'Député',
-        phone: '00000000',
-        path: '/an/espace/deputes',
-        icon: UserCheck,
-        color: 'text-primary',
-        role: 'Député',
-        features: ['Travaux législatifs', 'Amendements', 'Questions Gvt', 'Vote solennel']
-      },
-      {
-        label: 'Secrétaire',
-        phone: '05050505',
-        path: '/an/espace/secretaires',
-        icon: FileText,
-        color: 'text-green-500',
-        role: 'Secrétariat',
-        features: ['Procès-verbaux', 'Contrôle présence', 'Dépouillement', 'Archives']
-      },
-      {
-        label: 'Suppléant',
-        phone: '03030303',
-        path: '/an/espace/suppleants',
-        icon: Users,
-        color: 'text-slate-500',
-        role: 'Suppléance',
-        features: ['Suivi dossier', 'Remplacement', 'Doléances', 'Veille']
-      },
-    ]
-  },
-  public: {
-    title: "Accès Public",
-    icon: UserCircle,
-    color: "text-green-500",
-    accounts: [
-      {
-        label: 'Portail Citoyen',
-        phone: null,
-        path: '/parlement/citoyen',
-        icon: UserCircle,
-        color: 'text-green-500',
-        role: 'Public',
-        features: ['Suivi lois', 'Contact élus', 'Pétitions', 'Actualités']
-      },
-    ]
-  }
-};
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const ProtocolDemoPage = () => {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
+  const { t } = useLanguage();
+
+  const AN_DEMO_CARDS = {
+    bureau: {
+      title: t('assembly.demo.roles.bureau'),
+      icon: Crown,
+      color: "text-amber-500",
+      accounts: [
+        {
+          label: t('assembly.demo.roles.president'),
+          phone: '01010101',
+          path: '/an/espace/president',
+          icon: Crown,
+          color: 'text-amber-500',
+          role: 'Présidence',
+          features: ['Validation de lois', 'Ordre du jour', 'Diplomatie parlementaire', 'Supervision']
+        },
+        {
+          label: t('assembly.demo.roles.vp'),
+          phone: '02020202',
+          path: '/an/espace/vp',
+          icon: Crown,
+          color: 'text-amber-400',
+          role: 'Vice-présidence',
+          features: ['Suppléance présidence', 'Gestion commissions', 'Représentation']
+        },
+        {
+          label: t('assembly.demo.roles.questeur'),
+          phone: '04040401',
+          path: '/an/espace/questeurs',
+          icon: Shield,
+          color: 'text-blue-500',
+          role: 'Questure',
+          features: ['Budget Assemblée', 'Gestion personnel', 'Logistique', 'Indemnités']
+        },
+      ]
+    },
+    parlementaires: {
+      title: t('assembly.demo.roles.deputies'),
+      icon: Users,
+      color: "text-primary",
+      accounts: [
+        {
+          label: t('assembly.demo.roles.deputy'),
+          phone: '00000000',
+          path: '/an/espace/deputes',
+          icon: UserCheck,
+          color: 'text-primary',
+          role: 'Député',
+          features: ['Travaux législatifs', 'Amendements', 'Questions Gvt', 'Vote solennel']
+        },
+        {
+          label: t('assembly.demo.roles.secretary'),
+          phone: '05050505',
+          path: '/an/espace/secretaires',
+          icon: FileText,
+          color: 'text-green-500',
+          role: 'Secrétariat',
+          features: ['Procès-verbaux', 'Contrôle présence', 'Dépouillement', 'Archives']
+        },
+        {
+          label: t('assembly.demo.roles.substitute'),
+          phone: '03030303',
+          path: '/an/espace/suppleants',
+          icon: Users,
+          color: 'text-slate-500',
+          role: 'Suppléance',
+          features: ['Suivi dossier', 'Remplacement', 'Doléances', 'Veille']
+        },
+      ]
+    },
+    public: {
+      title: t('assembly.demo.roles.public'),
+      icon: UserCircle,
+      color: "text-green-500",
+      accounts: [
+        {
+          label: t('assembly.demo.roles.citizen'),
+          phone: null,
+          path: '/parlement/citoyen',
+          icon: UserCircle,
+          color: 'text-green-500',
+          role: 'Public',
+          features: ['Suivi lois', 'Contact élus', 'Pétitions', 'Actualités']
+        },
+      ]
+    }
+  };
 
   const handleDemoLogin = (phone: string | null, redirectPath: string) => {
     if (!phone) {
@@ -146,12 +148,12 @@ const ProtocolDemoPage = () => {
               <Separator orientation="vertical" className="h-6" />
               <Landmark className="h-7 w-7 text-primary" />
               <div>
-                <h1 className="text-xl font-serif font-bold text-foreground">Démo Assemblée Nationale</h1>
-                <p className="text-xs text-muted-foreground">Accès aux espaces parlementaires</p>
+                <h1 className="text-xl font-serif font-bold text-foreground">{t('assembly.demo.headerTitle')}</h1>
+                <p className="text-xs text-muted-foreground">{t('assembly.demo.headerDesc')}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant="outline">Assemblée Nationale</Badge>
+              <Badge variant="outline">{t('assembly.layout.breadcrumbAN')}</Badge>
               <Button
                 variant="ghost"
                 size="icon"
@@ -169,17 +171,17 @@ const ProtocolDemoPage = () => {
         <div className="container mx-auto px-4 text-center">
           <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
             <PlayCircle className="h-3 w-3 mr-1" />
-            Mode Démonstration
+            {t('assembly.demo.badge')}
           </Badge>
           <h1 className="text-3xl md:text-4xl font-serif font-bold mb-3">
-            Espaces Parlementaires
+            {t('assembly.demo.heroTitle')}
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
-            Explorez les fonctionnalités selon votre rôle. Cliquez sur une carte pour accéder à l'espace.
+            {t('assembly.demo.heroDesc')}
           </p>
           <Button variant="outline" onClick={() => navigate("/an/espace/deputes")}>
             <Monitor className="mr-2 h-4 w-4" />
-            Accès direct au Dashboard
+            {t('assembly.demo.directAccess')}
           </Button>
         </div>
       </section>
@@ -190,10 +192,10 @@ const ProtocolDemoPage = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <LogIn className="w-5 h-5 text-primary" />
-              Accès aux Espaces
+              {t('assembly.demo.cardsTitle')}
             </CardTitle>
             <CardDescription>
-              Chaque carte affiche le rôle et ses fonctionnalités. Les comptes démo connectent automatiquement.
+              {t('assembly.demo.cardsDesc')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-8">
@@ -256,8 +258,8 @@ const ProtocolDemoPage = () => {
       <section className="container mx-auto px-4 pb-12">
         <div className="mb-8 text-center">
           <Badge variant="outline" className="mb-2">Intelligence Artificielle</Badge>
-          <h2 className="text-2xl font-bold font-serif mb-2">Protocole iAsted</h2>
-          <p className="text-muted-foreground">Configuration et test du protocole de communication parlementaire</p>
+          <h2 className="text-2xl font-bold font-serif mb-2">{t('assembly.demo.protocolTitle')}</h2>
+          <p className="text-muted-foreground">{t('assembly.demo.protocolDesc')}</p>
         </div>
         <ProtocolDemoSection />
       </section>
@@ -267,10 +269,10 @@ const ProtocolDemoPage = () => {
         <div className="container mx-auto px-4 text-center">
           <div className="flex justify-center items-center gap-2 mb-4">
             <Landmark className="h-6 w-6 text-primary" />
-            <span className="font-serif font-bold">Assemblée Nationale</span>
+            <span className="font-serif font-bold">{t('assembly.layout.breadcrumbAN')}</span>
           </div>
           <p className="text-sm text-muted-foreground">
-            Palais Léon Mba - Libreville
+            {t('assembly.footer.address')}
           </p>
         </div>
       </footer>
