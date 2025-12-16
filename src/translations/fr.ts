@@ -1501,54 +1501,65 @@ export const fr = {
             login: "Connexion"
         },
         hero: {
-            badge: "Pouvoir Législatif de la République",
-            title: "L'union des deux chambres",
-            desc: "Le Parlement réunit l'Assemblée Nationale et le Sénat pour les révisions constitutionnelles, les sessions conjointes et les Commissions Mixtes Paritaires.",
-            btnCMP: "CMP en cours",
-            btnArchives: "Archives"
+            badge: "République Gabonaise",
+            title: "Parlement de la République",
+            desc: "Le cœur de la démocratie gabonaise. Une institution bicamérale au service du peuple, garantissant la représentation nationale et le vote de la loi.",
+            btnCMP: "Commission Mixte Paritaire",
+            btnArchives: "Consulter les Archives"
+        },
+        stats: {
+            members: "Parlementaires",
+            chambers: "Chambres",
+            laws: "Lois votées",
+            digital: "Numérisation"
         },
         institutions: {
-            features: {
-                title: "Fonctionnalités",
-                subtitle: "Outils et processus inter-chambres",
-                cmp: {
-                    title: "Commission Mixte Paritaire",
-                    desc: "7 députés + 7 sénateurs négocient les textes en désaccord."
-                },
-                congress: {
-                    title: "Congrès du Parlement",
-                    desc: "Réunion solennelle pour les révisions constitutionnelles."
-                },
-                jo: {
-                    title: "Journal Officiel",
-                    desc: "Toutes les lois promulguées de la République."
-                },
-                shuttle: {
-                    title: "Navette Législative",
-                    desc: "Suivi des textes entre les deux chambres."
-                }
+            title: "Nos Institutions",
+            subtitle: "Le pouvoir législatif est exercé par deux chambres",
+            an: {
+                title: "Assemblée Nationale",
+                desc: "Représente le peuple gabonais. Elle vote la loi, consent l'impôt et contrôle l'action du gouvernement."
             },
-            security: {
-                maxSecurity: "Sécurité maximale",
-                encryption: "Chiffrement bout-en-bout",
-                auth2fa: "Authentification 2FA",
-                secureAccess: "Accès sécurisé",
-                sovereignty: "Souveraineté",
-                dataLoc: "Données localisées"
+            senate: {
+                title: "Sénat",
+                desc: "Représente les collectivités locales. Il assure la représentation des territoires de la République."
             },
-            footer: {
-                parliament: "Parlement",
-                copyright: "Parlement de la République Gabonaise",
-                chambers: "Les Chambres",
-                contact: "Contact",
-                motto: "\"Union - Travail - Justice\""
+            access: "Accéder à l'espace"
+        },
+        features: {
+            title: "Fonctionnalités Clés",
+            subtitle: "Des outils modernes pour la transparence législative",
+            cmp: {
+                title: "Commission Mixte Paritaire",
+                desc: "Suivez les travaux de conciliation entre les deux chambres."
             },
-            stats: {
-                members: "Parlementaires",
-                chambers: "Chambres",
-                laws: "Lois votées",
-                digital: "Numérique"
+            congress: {
+                title: "Congrès du Parlement",
+                desc: "Réunion des deux chambres pour les révisions constitutionnelles."
+            },
+            jo: {
+                title: "Journal Officiel",
+                desc: "Accès aux textes de loi promulgués et débats parlementaires."
+            },
+            shuttle: {
+                title: "Navette Parlementaire",
+                desc: "Visualisez le parcours législatif des textes entre l'AN et le Sénat."
             }
+        },
+        security: {
+            maxSecurity: "Sécurité Maximale",
+            encryption: "Chiffrement de bout en bout",
+            auth2fa: "Authentification Forte",
+            secureAccess: "Accès sécurisé par 2FA/Biométrie",
+            sovereignty: "Souveraineté Numérique",
+            dataLoc: "Données hébergées au Gabon"
+        },
+        footer: {
+            parliament: "Parlement",
+            chambers: "Chambres",
+            contact: "Contact",
+            copyright: "Tous droits réservés",
+            motto: "\"L'Union - Le Travail - La Justice\""
         }
     }
 };

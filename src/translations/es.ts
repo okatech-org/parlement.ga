@@ -1200,64 +1200,65 @@ export const es = {
             login: "Entrar"
         },
         hero: {
-            badge: "Poder Legislativo de la República",
-            title: "Unión de Dos Cámaras",
-            desc: "El Parlamento une a la Asamblea Nacional y el Senado para revisiones constitucionales, sesiones conjuntas y Comisiones Mixtas.",
-            btnCMP: "CMP Activas",
-            btnArchives: "Archivos"
-        },
-        institutions: {
-            title: "Las Cámaras del Parlamento",
-            subtitle: "Acceda al trabajo de cada institución",
-            an: {
-                title: "Asamblea Nacional",
-                desc: "143 diputados elegidos por sufragio universal directo. Votación de leyes y control gubernamental."
-            },
-            senate: {
-                title: "Senado",
-                desc: "102 senadores representando autoridades locales. Sabiduría y reflexión legislativa."
-            }
-        },
-        features: {
-            title: "Características",
-            subtitle: "Herramientas y procesos intercámaras",
-            cmp: {
-                title: "Comisión Mixta",
-                desc: "7 diputados + 7 senadores negocian textos en desacuerdo."
-            },
-            congress: {
-                title: "Congreso del Parlamento",
-                desc: "Reunión solemne para revisiones constitucionales."
-            },
-            jo: {
-                title: "Diario Oficial",
-                desc: "Todas las leyes promulgadas por la República."
-            },
-            shuttle: {
-                title: "Trámite Legislativo",
-                desc: "Seguimiento de textos entre ambas cámaras."
-            }
-        },
-        security: {
-            maxSecurity: "Máxima Seguridad",
-            encryption: "Cifrado Extremo a Extremo",
-            auth2fa: "Autenticación 2FA",
-            secureAccess: "Acceso Seguro",
-            sovereignty: "Soberanía",
-            dataLoc: "Datos Localizados"
-        },
-        footer: {
-            parliament: "Parlamento",
-            copyright: "Parlamento de la República Gabonesa",
-            chambers: "Las Cámaras",
-            contact: "Contacto",
-            motto: "\"Unión - Trabajo - Justicia\""
+            badge: "República Gabonesa",
+            title: "Parlamento de la República",
+            desc: "El corazón de la democracia gabonesa. Una institución bicameral al servicio del pueblo, garantizando la representación nacional y el voto de la ley.",
+            btnCMP: "Comisión Mixta Paritaria",
+            btnArchives: "Consultar Archivos"
         },
         stats: {
             members: "Parlamentarios",
             chambers: "Cámaras",
             laws: "Leyes Votadas",
-            digital: "Digital"
+            digital: "Digitalización"
+        },
+        institutions: {
+            title: "Nuestras Instituciones",
+            subtitle: "El poder legislativo es ejercido por dos cámaras",
+            an: {
+                title: "Asamblea Nacional",
+                desc: "Representa al pueblo gabonés. Vota la ley, consiente el impuesto y controla la acción del gobierno."
+            },
+            senate: {
+                title: "Senado",
+                desc: "Representa a las colectividades locales. Asegura la representación de los territorios de la República."
+            },
+            access: "Acceder al espacio"
+        },
+        features: {
+            title: "Funcionalidades Clave",
+            subtitle: "Herramientas modernas para la transparencia legislativa",
+            cmp: {
+                title: "Comisión Mixta Paritaria",
+                desc: "Siga los trabajos de conciliación entre las dos cámaras."
+            },
+            congress: {
+                title: "Congreso del Parlamento",
+                desc: "Reunión de ambas cámaras para revisiones constitucionales."
+            },
+            jo: {
+                title: "Diario Oficial",
+                desc: "Acceso a leyes promulgadas y debates parlamentarios."
+            },
+            shuttle: {
+                title: "Trámite Parlamentario",
+                desc: "Visualice el recorrido legislativo de los textos entre la AN y el Senado."
+            }
+        },
+        security: {
+            maxSecurity: "Seguridad Máxima",
+            encryption: "Cifrado de extremo a extremo",
+            auth2fa: "Autenticación Fuerte",
+            secureAccess: "Acceso seguro por 2FA/Biometría",
+            sovereignty: "Soberanía Digital",
+            dataLoc: "Datos alojados en Gabón"
+        },
+        footer: {
+            parliament: "Parlamento",
+            chambers: "Cámaras",
+            contact: "Contacto",
+            copyright: "Todos los derechos reservados",
+            motto: "\"Unión - Trabajo - Justicia\""
         }
     }
 };

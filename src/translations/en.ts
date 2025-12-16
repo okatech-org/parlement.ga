@@ -1200,64 +1200,65 @@ export const en = {
             login: "Login"
         },
         hero: {
-            badge: "Legislative Power of the Republic",
-            title: "Union of Two Chambers",
-            desc: "Parliament unites the National Assembly and the Senate for constitutional revisions, joint sessions, and Joint Committees.",
-            btnCMP: "Active CMPs",
-            btnArchives: "Archives"
-        },
-        institutions: {
-            title: "The Houses of Parliament",
-            subtitle: "Access the work of each institution",
-            an: {
-                title: "National Assembly",
-                desc: "143 deputies elected by direct universal suffrage. Law voting and government oversight."
-            },
-            senate: {
-                title: "Senate",
-                desc: "102 senators representing local authorities. Wisdom and legislative reflection."
-            }
-        },
-        features: {
-            title: "Features",
-            subtitle: "Inter-chamber tools and processes",
-            cmp: {
-                title: "Joint Committee",
-                desc: "7 deputies + 7 senators negotiate texts in disagreement."
-            },
-            congress: {
-                title: "Parliament Congress",
-                desc: "Solemn meeting for constitutional revisions."
-            },
-            jo: {
-                title: "Official Journal",
-                desc: "All laws promulgated by the Republic."
-            },
-            shuttle: {
-                title: "Legislative Shuttle",
-                desc: "Tracking of texts between both chambers."
-            }
-        },
-        security: {
-            maxSecurity: "Maximum Security",
-            encryption: "End-to-end Encryption",
-            auth2fa: "2FA Authentication",
-            secureAccess: "Secure Access",
-            sovereignty: "Sovereignty",
-            dataLoc: "Localized Data"
-        },
-        footer: {
-            parliament: "Parliament",
-            copyright: "Parliament of the Gabonese Republic",
-            chambers: "The Chambers",
-            contact: "Contact",
-            motto: "\"Union - Labor - Justice\""
+            badge: "Gabonese Republic",
+            title: "Parliament of the Republic",
+            desc: "The heart of Gabonese democracy. A bicameral institution serving the people, ensuring national representation and passing laws.",
+            btnCMP: "Joint Committee",
+            btnArchives: "Consult Archives"
         },
         stats: {
             members: "Parliamentarians",
             chambers: "Chambers",
-            laws: "Voted Laws",
-            digital: "Digital"
+            laws: "Laws Passed",
+            digital: "Digitization"
+        },
+        institutions: {
+            title: "Our Institutions",
+            subtitle: "Legislative power is exercised by two chambers",
+            an: {
+                title: "National Assembly",
+                desc: "Represents the Gabonese people. It votes on laws, consents to taxes, and oversees government action."
+            },
+            senate: {
+                title: "Senate",
+                desc: "Represents local communities. It ensures the representation of the territories of the Republic."
+            },
+            access: "Access Space"
+        },
+        features: {
+            title: "Key Features",
+            subtitle: "Modern tools for legislative transparency",
+            cmp: {
+                title: "Joint Committee",
+                desc: "Follow the conciliation work between the two chambers."
+            },
+            congress: {
+                title: "Parliament Congress",
+                desc: "Meeting of both chambers for constitutional revisions."
+            },
+            jo: {
+                title: "Official Journal",
+                desc: "Access to promulgated laws and parliamentary debates."
+            },
+            shuttle: {
+                title: "Parliamentary Shuttle",
+                desc: "Visualize the legislative path of texts between the Assembly and Senate."
+            }
+        },
+        security: {
+            maxSecurity: "Maximum Security",
+            encryption: "End-to-End Encryption",
+            auth2fa: "Strong Authentication",
+            secureAccess: "Secure Access via 2FA/Biometrics",
+            sovereignty: "Digital Sovereignty",
+            dataLoc: "Data Hosted in Gabon"
+        },
+        footer: {
+            parliament: "Parliament",
+            chambers: "Chambers",
+            contact: "Contact",
+            copyright: "All rights reserved",
+            motto: "\"Union - Work - Justice\""
         }
     }
 };

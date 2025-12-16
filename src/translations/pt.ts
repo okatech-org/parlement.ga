@@ -1200,64 +1200,65 @@ export const pt = {
             login: "Entrar"
         },
         hero: {
-            badge: "Poder Legislativo da República",
-            title: "União de Duas Câmaras",
-            desc: "O Parlamento une a Assembleia Nacional e o Senado para revisões constitucionais, sessões conjuntas e Comissões Mistas.",
-            btnCMP: "CMP Ativas",
-            btnArchives: "Arquivos"
+            badge: "República Gabonesa",
+            title: "Parlamento da República",
+            desc: "O coração da democracia gabonesa. Uma instituição bicameral a serviço do povo, garantindo a representação nacional e a votação da lei.",
+            btnCMP: "Comissão Mista Paritária",
+            btnArchives: "Consultar Arquivos"
+        },
+        stats: {
+            members: "Parlamentares",
+            chambers: "Câmaras",
+            laws: "Leis Votadas",
+            digital: "Digitalização"
         },
         institutions: {
-            title: "As Câmaras do Parlamento",
-            subtitle: "Acesse o trabalho de cada instituição",
+            title: "Nossas Instituições",
+            subtitle: "O poder legislativo é exercido por duas câmaras",
             an: {
                 title: "Assembleia Nacional",
-                desc: "143 deputados eleitos por sufrágio universal direto. Votação de leis e controle governamental."
+                desc: "Representa o povo gabonês. Vota a lei, consente o imposto e controla a ação do governo."
             },
             senate: {
                 title: "Senado",
-                desc: "102 senadores representando autoridades locais. Sabedoria e reflexão legislativa."
-            }
+                desc: "Representa as comunidades locais. Garante a representação dos territórios da República."
+            },
+            access: "Aceder ao Espaço"
         },
         features: {
-            title: "Funcionalidades",
-            subtitle: "Ferramentas e processos intercâmaras",
+            title: "Funcionalidades Principais",
+            subtitle: "Ferramentas modernas para a transparência legislativa",
             cmp: {
-                title: "Comissão Mista",
-                desc: "7 deputados + 7 senadores negociam textos em desacordo."
+                title: "Comissão Mista Paritária",
+                desc: "Acompanhe os trabalhos de conciliação entre as duas câmaras."
             },
             congress: {
                 title: "Congresso do Parlamento",
-                desc: "Reunião solene para revisões constitucionais."
+                desc: "Reunião de ambas as câmaras para revisões constitucionais."
             },
             jo: {
-                title: "Diario Oficial",
-                desc: "Todas as leis promulgadas pela República."
+                title: "Diário Oficial",
+                desc: "Acesso às leis promulgadas e debates parlamentares."
             },
             shuttle: {
-                title: "Trâmite Legislativo",
-                desc: "Acompanhamento de textos entre ambas as câmaras."
+                title: "Trâmite Parlamentar",
+                desc: "Visualize o percurso legislativo dos textos entre a AN e o Senado."
             }
         },
         security: {
             maxSecurity: "Segurança Máxima",
-            encryption: "Criptografia Ponta a Ponta",
-            auth2fa: "Autenticação 2FA",
-            secureAccess: "Acesso Seguro",
-            sovereignty: "Soberania",
-            dataLoc: "Dados Localizados"
+            encryption: "Criptografia de ponta a ponta",
+            auth2fa: "Autenticação Forte",
+            secureAccess: "Acesso seguro via 2FA/Biometria",
+            sovereignty: "Soberania Digital",
+            dataLoc: "Dados alojados no Gabão"
         },
         footer: {
             parliament: "Parlamento",
-            copyright: "Parlamento da República Gabonesa",
-            chambers: "As Câmaras",
+            chambers: "Câmaras",
             contact: "Contato",
+            copyright: "Todos os direitos reservados",
             motto: "\"União - Trabalho - Justiça\""
-        },
-        stats: {
-            members: "Parlamentares",
-            chambers: "Cámaras",
-            laws: "Leis Votadas",
-            digital: "Digital"
         }
     }
 };
