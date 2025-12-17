@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { Scale, Users, FileText, Map, Building2, Landmark, Shield, ChevronRight, BarChart3, ArrowLeftRight, BookOpen } from "lucide-react";
+import { Scale, Users, FileText, Map, Building2, Landmark, Shield, ChevronRight, BarChart3, ArrowLeftRight, BookOpen, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 /**
  * Page d'accueil du Parlement (Hub central)
@@ -18,6 +19,7 @@ const HomeParliament = () => {
     const { theme, setTheme } = useTheme();
     const { t, language, setLanguage, dir } = useLanguage();
     const [mounted, setMounted] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         setMounted(true);
@@ -85,20 +87,29 @@ const HomeParliament = () => {
         { value: "100%", label: t('landing.stats.digital') }
     ];
 
+    const mobileNavItems = [
+        { label: t('landing.header.assembly'), path: "/an", icon: Building2 },
+        { label: t('landing.header.senate'), path: "/senat", icon: Landmark },
+        { label: t('landing.header.archives'), path: "/archives" },
+        { label: t('landing.header.process'), path: "/processus-comparaison" },
+        { label: t('landing.header.demo'), path: "/parlement/demo" },
+    ];
+
     return (
         <div className="min-h-screen bg-background" dir={dir}>
             {/* Header */}
             <header className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/50 backdrop-blur-sm sticky top-0 z-50">
-                <div className="container mx-auto px-4 py-4">
+                <div className="container mx-auto px-4 py-3 sm:py-4">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <Scale className="h-8 w-8 text-slate-700 dark:text-slate-300" />
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <Scale className="h-6 w-6 sm:h-8 sm:w-8 text-slate-700 dark:text-slate-300" />
                             <div>
-                                <h1 className="text-xl font-serif font-bold text-foreground">{t('landing.header.title')}</h1>
+                                <h1 className="text-base sm:text-xl font-serif font-bold text-foreground">{t('landing.header.title')}</h1>
                             </div>
                         </div>
-                        <nav className="hidden md:flex items-center gap-4">
-                            {/* Liens vers les chambres */}
+                        
+                        {/* Desktop Navigation */}
+                        <nav className="hidden lg:flex items-center gap-4">
                             <Button
                                 variant="ghost"
                                 size="sm"
@@ -128,18 +139,19 @@ const HomeParliament = () => {
                                 {t('landing.header.demo')}
                             </Button>
                         </nav>
+                        
                         <div className="flex items-center gap-2">
-                            {/* Language Selector */}
+                            {/* Language Selector - Compact on mobile */}
                             <select
-                                className="text-sm border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 bg-background cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+                                className="hidden sm:block text-sm border border-slate-200 dark:border-slate-700 rounded-md px-2 py-1 bg-background cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
                                 value={language}
                                 onChange={(e) => setLanguage(e.target.value as any)}
                             >
-                                <option value="fr">🇫🇷 Français</option>
-                                <option value="en">🇬🇧 English</option>
-                                <option value="es">🇪🇸 Español</option>
-                                <option value="ar">🇸🇦 العربية</option>
-                                <option value="pt">🇵🇹 Português</option>
+                                <option value="fr">🇫🇷 FR</option>
+                                <option value="en">🇬🇧 EN</option>
+                                <option value="es">🇪🇸 ES</option>
+                                <option value="ar">🇸🇦 AR</option>
+                                <option value="pt">🇵🇹 PT</option>
                             </select>
 
                             {/* Theme Toggle */}
@@ -168,10 +180,54 @@ const HomeParliament = () => {
                                 )}
                             </Button>
 
-                            {/* Login Button */}
-                            <Button variant="outline" size="sm" className="border-slate-400 text-slate-600 hover:bg-slate-50" onClick={() => navigate("/parlement/login")}>
+                            {/* Login Button - Hidden on mobile */}
+                            <Button variant="outline" size="sm" className="hidden sm:flex border-slate-400 text-slate-600 hover:bg-slate-50" onClick={() => navigate("/parlement/login")}>
                                 {t('landing.header.login')}
                             </Button>
+
+                            {/* Mobile Menu */}
+                            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                                <SheetTrigger asChild className="lg:hidden">
+                                    <Button variant="ghost" size="sm">
+                                        <Menu className="h-5 w-5" />
+                                    </Button>
+                                </SheetTrigger>
+                                <SheetContent side="right" className="w-[280px] sm:w-[350px]">
+                                    <div className="flex flex-col gap-4 mt-8">
+                                        {mobileNavItems.map((item) => (
+                                            <Button
+                                                key={item.path}
+                                                variant="ghost"
+                                                className="w-full justify-start"
+                                                onClick={() => { navigate(item.path); setMobileMenuOpen(false); }}
+                                            >
+                                                {item.icon && <item.icon className="h-4 w-4 mr-2" />}
+                                                {item.label}
+                                            </Button>
+                                        ))}
+                                        <div className="border-t pt-4">
+                                            <Button
+                                                className="w-full"
+                                                onClick={() => { navigate("/parlement/login"); setMobileMenuOpen(false); }}
+                                            >
+                                                {t('landing.header.login')}
+                                            </Button>
+                                        </div>
+                                        {/* Mobile Language Selector */}
+                                        <select
+                                            className="sm:hidden text-sm border border-border rounded-md px-3 py-2 bg-background"
+                                            value={language}
+                                            onChange={(e) => setLanguage(e.target.value as any)}
+                                        >
+                                            <option value="fr">🇫🇷 Français</option>
+                                            <option value="en">🇬🇧 English</option>
+                                            <option value="es">🇪🇸 Español</option>
+                                            <option value="ar">🇸🇦 العربية</option>
+                                            <option value="pt">🇵🇹 Português</option>
+                                        </select>
+                                    </div>
+                                </SheetContent>
+                            </Sheet>
                         </div>
                     </div>
                 </div>
@@ -180,25 +236,25 @@ const HomeParliament = () => {
             {/* Hero Section */}
             <section className="relative overflow-hidden bg-gradient-to-br from-slate-800 via-gray-800 to-slate-900">
                 <div className="absolute inset-0 opacity-10 bg-[url('/images/parliament-pattern.svg')] bg-repeat"></div>
-                <div className="container mx-auto px-4 py-20 relative">
+                <div className="container mx-auto px-4 py-12 sm:py-20 relative">
                     <div className="max-w-4xl mx-auto text-center">
                         <Badge className="mb-4 bg-white/20 text-white border-white/30" variant="outline">
                             <Shield className="h-3 w-3 mr-1" />
                             {t('landing.hero.badge')}
                         </Badge>
-                        <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 animate-fade-in text-white">
+                        <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif font-bold mb-4 sm:mb-6 animate-fade-in text-white">
                             {t('landing.hero.title')}
                         </h1>
-                        <p className="text-xl text-white/70 mb-8 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: "0.1s" }}>
+                        <p className="text-base sm:text-xl text-white/70 mb-6 sm:mb-8 max-w-2xl mx-auto animate-fade-in px-4" style={{ animationDelay: "0.1s" }}>
                             {t('landing.hero.desc')}
                         </p>
-                        <div className="flex gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.2s" }}>
-                            <Button size="lg" className="shadow-lg bg-white text-slate-800 hover:bg-gray-100" onClick={() => navigate("/cmp")}>
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fade-in px-4" style={{ animationDelay: "0.2s" }}>
+                            <Button size="lg" className="shadow-lg bg-white text-slate-800 hover:bg-gray-100 w-full sm:w-auto" onClick={() => navigate("/cmp")}>
                                 <ArrowLeftRight className="mr-2 h-5 w-5" />
                                 {t('landing.hero.btnCMP')}
                                 <ChevronRight className="ml-2 h-5 w-5" />
                             </Button>
-                            <Button size="lg" variant="outline" className="border-white/50 text-white hover:bg-white/10" onClick={() => navigate("/archives")}>
+                            <Button size="lg" variant="outline" className="border-white/50 text-white hover:bg-white/10 w-full sm:w-auto" onClick={() => navigate("/archives")}>
                                 <BookOpen className="mr-2 h-5 w-5" />
                                 {t('landing.hero.btnArchives')}
                             </Button>
@@ -206,15 +262,15 @@ const HomeParliament = () => {
                     </div>
 
                     {/* Stats */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-4xl mx-auto">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 mt-12 sm:mt-16 max-w-4xl mx-auto">
                         {stats.map((stat, index) => (
                             <Card
                                 key={index}
-                                className="p-6 text-center bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 animate-fade-in"
+                                className="p-4 sm:p-6 text-center bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 animate-fade-in"
                                 style={{ animationDelay: `${0.3 + index * 0.1}s` }}
                             >
-                                <div className="text-3xl font-serif font-bold text-white mb-2">{stat.value}</div>
-                                <div className="text-sm text-white/70">{stat.label}</div>
+                                <div className="text-2xl sm:text-3xl font-serif font-bold text-white mb-1 sm:mb-2">{stat.value}</div>
+                                <div className="text-xs sm:text-sm text-white/70">{stat.label}</div>
                             </Card>
                         ))}
                     </div>
@@ -222,16 +278,16 @@ const HomeParliament = () => {
             </section>
 
             {/* Institutions Navigation Hub */}
-            <section className="py-20 bg-slate-50 dark:bg-slate-950/30">
+            <section className="py-12 sm:py-20 bg-slate-50 dark:bg-slate-950/30">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-12">
-                        <h2 className="text-4xl font-serif font-bold mb-4 text-slate-900 dark:text-slate-100">{t('landing.institutions.title')}</h2>
-                        <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                    <div className="text-center mb-8 sm:mb-12">
+                        <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-3 sm:mb-4 text-slate-900 dark:text-slate-100">{t('landing.institutions.title')}</h2>
+                        <p className="text-base sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
                             {t('landing.institutions.subtitle')}
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    <div className="grid sm:grid-cols-2 gap-4 sm:gap-8 max-w-5xl mx-auto">
                         {institutions.map((inst, index) => {
                             const Icon = inst.icon;
                             return (
@@ -242,23 +298,23 @@ const HomeParliament = () => {
                                     onClick={() => navigate(inst.path)}
                                 >
                                     {/* Colored Header */}
-                                    <div className={`${inst.buttonClass} p-6 text-white`}>
+                                    <div className={`${inst.buttonClass} p-4 sm:p-6 text-white`}>
                                         <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center">
-                                                    <Icon className="h-7 w-7" />
+                                            <div className="flex items-center gap-3 sm:gap-4">
+                                                <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white/20 flex items-center justify-center">
+                                                    <Icon className="h-5 w-5 sm:h-7 sm:w-7" />
                                                 </div>
                                                 <div>
-                                                    <h3 className="text-xl font-bold">{inst.title}</h3>
+                                                    <h3 className="text-lg sm:text-xl font-bold">{inst.title}</h3>
                                                 </div>
                                             </div>
-                                            <ChevronRight className="h-6 w-6 opacity-60" />
+                                            <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6 opacity-60" />
                                         </div>
                                     </div>
 
                                     {/* Content */}
-                                    <div className="p-6 bg-white dark:bg-slate-900">
-                                        <p className="text-slate-600 dark:text-slate-400 text-sm mb-4">
+                                    <div className="p-4 sm:p-6 bg-white dark:bg-slate-900">
+                                        <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mb-3 sm:mb-4">
                                             {inst.description}
                                         </p>
                                         <Button className={`w-full ${inst.buttonClass} text-white`}>
@@ -274,33 +330,33 @@ const HomeParliament = () => {
             </section>
 
             {/* Features */}
-            <section className="py-20 bg-white dark:bg-background">
+            <section className="py-12 sm:py-20 bg-white dark:bg-background">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-12">
-                        <h2 className="text-4xl font-serif font-bold mb-4 text-slate-900 dark:text-slate-100">{t('landing.features.title')}</h2>
-                        <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                    <div className="text-center mb-8 sm:mb-12">
+                        <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-3 sm:mb-4 text-slate-900 dark:text-slate-100">{t('landing.features.title')}</h2>
+                        <p className="text-base sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
                             {t('landing.features.subtitle')}
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 max-w-7xl mx-auto">
                         {features.map((feature, index) => {
                             const Icon = feature.icon;
                             return (
                                 <Card
                                     key={index}
-                                    className="p-6 bg-white dark:bg-slate-950/20 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-slate-200/50 dark:border-slate-800/50 animate-slide-in-right"
+                                    className="p-4 sm:p-6 bg-white dark:bg-slate-950/20 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-slate-200/50 dark:border-slate-800/50 animate-slide-in-right"
                                     style={{ animationDelay: `${index * 0.1}s` }}
                                     onMouseEnter={() => setHoveredCard(index)}
                                     onMouseLeave={() => setHoveredCard(null)}
                                     onClick={() => navigate(feature.path)}
                                 >
-                                    <div className={`w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4 transition-transform duration-300 ${hoveredCard === index ? 'scale-110' : ''}`}>
-                                        <Icon className="h-6 w-6 text-slate-600 dark:text-slate-400" />
+                                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-3 sm:mb-4 transition-transform duration-300 ${hoveredCard === index ? 'scale-110' : ''}`}>
+                                        <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-slate-600 dark:text-slate-400" />
                                     </div>
-                                    <h3 className="text-lg font-serif font-semibold mb-2 text-slate-900 dark:text-slate-100">{feature.title}</h3>
-                                    <p className="text-sm text-slate-600 dark:text-slate-400">{feature.description}</p>
-                                    <ChevronRight className={`h-5 w-5 text-slate-400 mt-4 transition-transform duration-300 ${hoveredCard === index ? 'translate-x-2' : ''}`} />
+                                    <h3 className="text-sm sm:text-lg font-serif font-semibold mb-1 sm:mb-2 text-slate-900 dark:text-slate-100">{feature.title}</h3>
+                                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 line-clamp-2 sm:line-clamp-none">{feature.description}</p>
+                                    <ChevronRight className={`h-4 w-4 sm:h-5 sm:w-5 text-slate-400 mt-2 sm:mt-4 transition-transform duration-300 ${hoveredCard === index ? 'translate-x-2' : ''}`} />
                                 </Card>
                             );
                         })}

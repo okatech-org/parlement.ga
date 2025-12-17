@@ -64,38 +64,38 @@ const HomeAssembly: React.FC = () => {
             />
 
             {/* Hero Section */}
-            <section className="relative pt-24 pb-16 overflow-hidden">
+            <section className="relative pt-20 sm:pt-24 pb-12 sm:pb-16 overflow-hidden">
                 {/* Background Pattern */}
                 <div className="absolute inset-0 opacity-5">
                     <div className="absolute inset-0 bg-[url('/images/assembly-pattern.svg')] bg-repeat" />
                 </div>
 
                 <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                         {/* Text Content */}
-                        <div>
-                            <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 mb-6">
+                        <div className="text-center lg:text-left">
+                            <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300 mb-4 sm:mb-6">
                                 <Building2 className="h-3 w-3 mr-1" />
                                 {t('assembly.home.badge')}
                             </Badge>
 
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+                            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6">
                                 <span className="text-emerald-600">{t('assembly.home.title').split(' ')[0]}</span>{' '}
                                 {t('assembly.home.title').split(' ')[1]}
                             </h1>
 
-                            <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
+                            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-3 sm:mb-4">
                                 {t('assembly.home.subtitle')}
                             </p>
 
-                            <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-lg">
+                            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-6 sm:mb-8 max-w-lg mx-auto lg:mx-0">
                                 {t('assembly.home.description')}
                             </p>
 
-                            <div className="flex flex-wrap gap-4">
+                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
                                 <Button
                                     size="lg"
-                                    className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                                    className="bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
                                     onClick={() => navigate('/an/travaux')}
                                 >
                                     {t('assembly.home.buttons.works')}
@@ -104,7 +104,7 @@ const HomeAssembly: React.FC = () => {
                                 <Button
                                     size="lg"
                                     variant="outline"
-                                    className="border-emerald-600 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950"
+                                    className="border-emerald-600 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950 w-full sm:w-auto"
                                     onClick={() => navigate('/an/deputes')}
                                 >
                                     <Users className="mr-2 h-4 w-4" />
@@ -113,14 +113,14 @@ const HomeAssembly: React.FC = () => {
                             </div>
 
                             {/* Location */}
-                            <div className="flex items-center gap-2 mt-8 text-sm text-gray-500 dark:text-gray-400">
+                            <div className="flex items-center justify-center lg:justify-start gap-2 mt-6 sm:mt-8 text-sm text-gray-500 dark:text-gray-400">
                                 <MapPin className="h-4 w-4" />
                                 <span>{t('assembly.home.location')}</span>
                             </div>
                         </div>
 
                         {/* Hero Image */}
-                        <div className="relative">
+                        <div className="relative hidden lg:block">
                             <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl shadow-emerald-500/20">
                                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/90 to-green-700/90 flex items-center justify-center">
                                     <Building2 className="h-32 w-32 text-white/30" />
@@ -136,16 +136,16 @@ const HomeAssembly: React.FC = () => {
             </section>
 
             {/* Quick Stats */}
-            <section className="py-12 bg-emerald-600 dark:bg-emerald-800">
+            <section className="py-8 sm:py-12 bg-emerald-600 dark:bg-emerald-800">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-3 gap-8">
+                    <div className="grid grid-cols-3 gap-4 sm:gap-8">
                         {quickStats.map((stat, index) => {
                             const Icon = stat.icon;
                             return (
                                 <div key={index} className="text-center text-white">
-                                    <Icon className="h-8 w-8 mx-auto mb-2 opacity-80" />
-                                    <p className="text-3xl font-bold">{stat.value}</p>
-                                    <p className="text-sm opacity-80">{stat.label}</p>
+                                    <Icon className="h-6 w-6 sm:h-8 sm:w-8 mx-auto mb-1 sm:mb-2 opacity-80" />
+                                    <p className="text-xl sm:text-3xl font-bold">{stat.value}</p>
+                                    <p className="text-xs sm:text-sm opacity-80">{stat.label}</p>
                                 </div>
                             );
                         })}
@@ -154,33 +154,33 @@ const HomeAssembly: React.FC = () => {
             </section>
 
             {/* Latest News & Quick Access */}
-            <section className="py-16">
+            <section className="py-12 sm:py-16">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid lg:grid-cols-2 gap-12">
+                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
 
                         {/* Latest News */}
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                                <Newspaper className="h-6 w-6 text-emerald-600" />
+                            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 flex items-center gap-2">
+                                <Newspaper className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
                                 {t('assembly.sections.news.title')}
                             </h2>
-                            <div className="space-y-4">
+                            <div className="space-y-3 sm:space-y-4">
                                 {latestNews.map((news) => (
                                     <Card key={news.id} className="hover:shadow-lg transition-shadow border-l-4 border-l-emerald-500">
-                                        <CardContent className="p-4">
+                                        <CardContent className="p-3 sm:p-4">
                                             <div className="flex items-start justify-between">
-                                                <div>
+                                                <div className="flex-1 min-w-0">
                                                     <Badge variant="outline" className="mb-2 text-xs">
                                                         {news.category}
                                                     </Badge>
-                                                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                                                    <h3 className="font-semibold text-sm sm:text-base text-gray-900 dark:text-white line-clamp-2">
                                                         {news.title}
                                                     </h3>
-                                                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                                                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
                                                         {news.date}
                                                     </p>
                                                 </div>
-                                                <ArrowRight className="h-5 w-5 text-gray-400" />
+                                                <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 flex-shrink-0 ml-2" />
                                             </div>
                                         </CardContent>
                                     </Card>
@@ -194,40 +194,40 @@ const HomeAssembly: React.FC = () => {
 
                         {/* Quick Access */}
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-                                <FileText className="h-6 w-6 text-emerald-600" />
+                            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-4 sm:mb-6 flex items-center gap-2">
+                                <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
                                 {t('assembly.sections.quickAccess.title')}
                             </h2>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-3 sm:gap-4">
                                 <Card className="cursor-pointer hover:shadow-lg hover:border-emerald-300 transition-all">
-                                    <CardContent className="p-6 text-center">
-                                        <Video className="h-10 w-10 mx-auto mb-3 text-emerald-600" />
-                                        <h3 className="font-semibold">{t('assembly.sections.quickAccess.direct')}</h3>
-                                        <p className="text-sm text-gray-500 mt-1">{t('assembly.sections.quickAccess.directDesc')}</p>
+                                    <CardContent className="p-4 sm:p-6 text-center">
+                                        <Video className="h-8 w-8 sm:h-10 sm:w-10 mx-auto mb-2 sm:mb-3 text-emerald-600" />
+                                        <h3 className="font-semibold text-sm sm:text-base">{t('assembly.sections.quickAccess.direct')}</h3>
+                                        <p className="text-xs sm:text-sm text-gray-500 mt-1 hidden sm:block">{t('assembly.sections.quickAccess.directDesc')}</p>
                                     </CardContent>
                                 </Card>
 
                                 <Card className="cursor-pointer hover:shadow-lg hover:border-emerald-300 transition-all">
-                                    <CardContent className="p-6 text-center">
-                                        <Calendar className="h-10 w-10 mx-auto mb-3 text-emerald-600" />
-                                        <h3 className="font-semibold">{t('assembly.sections.quickAccess.agenda')}</h3>
-                                        <p className="text-sm text-gray-500 mt-1">{t('assembly.sections.quickAccess.agendaDesc')}</p>
+                                    <CardContent className="p-4 sm:p-6 text-center">
+                                        <Calendar className="h-8 w-8 sm:h-10 sm:w-10 mx-auto mb-2 sm:mb-3 text-emerald-600" />
+                                        <h3 className="font-semibold text-sm sm:text-base">{t('assembly.sections.quickAccess.agenda')}</h3>
+                                        <p className="text-xs sm:text-sm text-gray-500 mt-1 hidden sm:block">{t('assembly.sections.quickAccess.agendaDesc')}</p>
                                     </CardContent>
                                 </Card>
 
                                 <Card className="cursor-pointer hover:shadow-lg hover:border-emerald-300 transition-all">
-                                    <CardContent className="p-6 text-center">
-                                        <FileText className="h-10 w-10 mx-auto mb-3 text-emerald-600" />
-                                        <h3 className="font-semibold">{t('assembly.sections.quickAccess.bills')}</h3>
-                                        <p className="text-sm text-gray-500 mt-1">{t('assembly.sections.quickAccess.billsDesc')}</p>
+                                    <CardContent className="p-4 sm:p-6 text-center">
+                                        <FileText className="h-8 w-8 sm:h-10 sm:w-10 mx-auto mb-2 sm:mb-3 text-emerald-600" />
+                                        <h3 className="font-semibold text-sm sm:text-base">{t('assembly.sections.quickAccess.bills')}</h3>
+                                        <p className="text-xs sm:text-sm text-gray-500 mt-1 hidden sm:block">{t('assembly.sections.quickAccess.billsDesc')}</p>
                                     </CardContent>
                                 </Card>
 
                                 <Card className="cursor-pointer hover:shadow-lg hover:border-emerald-300 transition-all">
-                                    <CardContent className="p-6 text-center">
-                                        <Users className="h-10 w-10 mx-auto mb-3 text-emerald-600" />
-                                        <h3 className="font-semibold">{t('assembly.sections.quickAccess.commissions')}</h3>
-                                        <p className="text-sm text-gray-500 mt-1">{t('assembly.sections.quickAccess.commissionsDesc')}</p>
+                                    <CardContent className="p-4 sm:p-6 text-center">
+                                        <Users className="h-8 w-8 sm:h-10 sm:w-10 mx-auto mb-2 sm:mb-3 text-emerald-600" />
+                                        <h3 className="font-semibold text-sm sm:text-base">{t('assembly.sections.quickAccess.commissions')}</h3>
+                                        <p className="text-xs sm:text-sm text-gray-500 mt-1 hidden sm:block">{t('assembly.sections.quickAccess.commissionsDesc')}</p>
                                     </CardContent>
                                 </Card>
                             </div>
@@ -237,62 +237,62 @@ const HomeAssembly: React.FC = () => {
             </section>
 
             {/* Protocole Législatif */}
-            <section className="py-20 bg-gradient-to-br from-emerald-50 to-green-100 dark:from-emerald-950/50 dark:to-gray-900">
+            <section className="py-12 sm:py-20 bg-gradient-to-br from-emerald-50 to-green-100 dark:from-emerald-950/50 dark:to-gray-900">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-12">
-                        <Badge className="mb-4 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+                    <div className="text-center mb-8 sm:mb-12">
+                        <Badge className="mb-3 sm:mb-4 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
                             <Gavel className="h-3 w-3 mr-1" />
                             {t('assembly.sections.protocol.badge')}
                         </Badge>
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
                             {t('assembly.sections.protocol.title')}
                         </h2>
-                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                             {t('assembly.sections.protocol.description')}
                         </p>
                     </div>
 
                     {/* Fonctionnalités clés */}
-                    <div className="grid md:grid-cols-3 gap-6 mb-12">
+                    <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
                         <Card className="border-t-4 border-t-emerald-500">
-                            <CardHeader>
-                                <div className="w-12 h-12 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-2">
-                                    <FileText className="h-6 w-6 text-emerald-600" />
+                            <CardHeader className="pb-2 sm:pb-4">
+                                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-2">
+                                    <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-emerald-600" />
                                 </div>
-                                <CardTitle className="text-lg">{t('assembly.sections.protocol.steps.deposit')}</CardTitle>
+                                <CardTitle className="text-base sm:text-lg">{t('assembly.sections.protocol.steps.deposit')}</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.depositDesc0')}</div>
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.depositDesc1')}</div>
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.depositDesc2')}</div>
+                            <CardContent className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                                <div className="flex items-center gap-2"><CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-500 flex-shrink-0" /><span className="line-clamp-1">{t('assembly.sections.protocol.steps.depositDesc0')}</span></div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-500 flex-shrink-0" /><span className="line-clamp-1">{t('assembly.sections.protocol.steps.depositDesc1')}</span></div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-500 flex-shrink-0" /><span className="line-clamp-1">{t('assembly.sections.protocol.steps.depositDesc2')}</span></div>
                             </CardContent>
                         </Card>
 
                         <Card className="border-t-4 border-t-amber-500">
-                            <CardHeader>
-                                <div className="w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-2">
-                                    <Users className="h-6 w-6 text-amber-600" />
+                            <CardHeader className="pb-2 sm:pb-4">
+                                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-2">
+                                    <Users className="h-5 w-5 sm:h-6 sm:w-6 text-amber-600" />
                                 </div>
-                                <CardTitle className="text-lg">{t('assembly.sections.protocol.steps.commission')}</CardTitle>
+                                <CardTitle className="text-base sm:text-lg">{t('assembly.sections.protocol.steps.commission')}</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.commissionDesc0')}</div>
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.commissionDesc1')}</div>
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.commissionDesc2')}</div>
+                            <CardContent className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                                <div className="flex items-center gap-2"><CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-500 flex-shrink-0" /><span className="line-clamp-1">{t('assembly.sections.protocol.steps.commissionDesc0')}</span></div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-500 flex-shrink-0" /><span className="line-clamp-1">{t('assembly.sections.protocol.steps.commissionDesc1')}</span></div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-500 flex-shrink-0" /><span className="line-clamp-1">{t('assembly.sections.protocol.steps.commissionDesc2')}</span></div>
                             </CardContent>
                         </Card>
 
-                        <Card className="border-t-4 border-t-blue-500">
-                            <CardHeader>
-                                <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-2">
-                                    <ArrowLeftRight className="h-6 w-6 text-blue-600" />
+                        <Card className="border-t-4 border-t-blue-500 sm:col-span-2 md:col-span-1">
+                            <CardHeader className="pb-2 sm:pb-4">
+                                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-2">
+                                    <ArrowLeftRight className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                                 </div>
-                                <CardTitle className="text-lg">{t('assembly.sections.protocol.steps.shuttle')}</CardTitle>
+                                <CardTitle className="text-base sm:text-lg">{t('assembly.sections.protocol.steps.shuttle')}</CardTitle>
                             </CardHeader>
-                            <CardContent className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.shuttleDesc0')}</div>
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.shuttleDesc1')}</div>
-                                <div className="flex items-center gap-2"><CheckCircle className="h-4 w-4 text-emerald-500" />{t('assembly.sections.protocol.steps.shuttleDesc2')}</div>
+                            <CardContent className="space-y-1 sm:space-y-2 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                                <div className="flex items-center gap-2"><CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-500 flex-shrink-0" /><span className="line-clamp-1">{t('assembly.sections.protocol.steps.shuttleDesc0')}</span></div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-500 flex-shrink-0" /><span className="line-clamp-1">{t('assembly.sections.protocol.steps.shuttleDesc1')}</span></div>
+                                <div className="flex items-center gap-2"><CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 text-emerald-500 flex-shrink-0" /><span className="line-clamp-1">{t('assembly.sections.protocol.steps.shuttleDesc2')}</span></div>
                             </CardContent>
                         </Card>
                     </div>

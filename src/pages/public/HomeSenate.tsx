@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
     Landmark, Users, FileText, Map, Crown, Shield, ChevronRight, BarChart3, Scale,
-    ArrowLeftRight, MapPin, MessageSquare, CheckCircle, Send, Clock, PlayCircle
+    ArrowLeftRight, MapPin, MessageSquare, CheckCircle, Send, Clock, PlayCircle, Menu, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 /**
  * Page d'accueil du Sénat
@@ -20,6 +21,7 @@ const HomeSenate = () => {
     const { theme, setTheme } = useTheme();
     const { t, language, setLanguage, dir } = useLanguage();
     const [mounted, setMounted] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         setMounted(true);
@@ -63,6 +65,14 @@ const HomeSenate = () => {
         { value: "100%", label: "Numérique" }
     ];
 
+    const mobileNavItems = [
+        { label: "Actualités", path: "/senat/actualites" },
+        { label: "Sensibilisation", path: "/senat/sensibilisation" },
+        { label: "Tutoriels", path: "/senat/tutoriels" },
+        { label: "Processus", path: "/senat/processus" },
+        { label: "Démo", path: "/senat/demo" },
+    ];
+
     return (
         <div className="min-h-screen bg-background" dir={dir}>
             {/* Header - Mêmes couleurs que AN */}
@@ -70,13 +80,14 @@ const HomeSenate = () => {
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <Landmark className="h-8 w-8 text-primary" />
+                            <Landmark className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
                             <div>
-                                <h1 className="text-xl font-serif font-bold text-foreground">Sénat</h1>
+                                <h1 className="text-lg sm:text-xl font-serif font-bold text-foreground">Sénat</h1>
                             </div>
                         </div>
-                        <nav className="hidden md:flex items-center gap-4">
-                            {/* Lien retour vers Parlement (hub central) */}
+                        
+                        {/* Desktop Navigation */}
+                        <nav className="hidden lg:flex items-center gap-4">
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -103,18 +114,19 @@ const HomeSenate = () => {
                                 Démo
                             </Button>
                         </nav>
+
                         <div className="flex items-center gap-2">
-                            {/* Language Selector */}
+                            {/* Language Selector - Hidden on very small screens */}
                             <select
-                                className="text-sm border border-border rounded-md px-2 py-1 bg-background cursor-pointer hover:bg-muted transition-colors"
+                                className="hidden sm:block text-sm border border-border rounded-md px-2 py-1 bg-background cursor-pointer hover:bg-muted transition-colors"
                                 value={language}
                                 onChange={(e) => setLanguage(e.target.value as any)}
                             >
-                                <option value="fr">🇫🇷 Français</option>
-                                <option value="en">🇬🇧 English</option>
-                                <option value="es">🇪🇸 Español</option>
-                                <option value="ar">🇸🇦 العربية</option>
-                                <option value="pt">🇵🇹 Português</option>
+                                <option value="fr">🇫🇷 FR</option>
+                                <option value="en">🇬🇧 EN</option>
+                                <option value="es">🇪🇸 ES</option>
+                                <option value="ar">🇸🇦 AR</option>
+                                <option value="pt">🇵🇹 PT</option>
                             </select>
 
                             {/* Theme Toggle */}
@@ -143,10 +155,63 @@ const HomeSenate = () => {
                                 )}
                             </Button>
 
-                            {/* Login Button */}
-                            <Button variant="outline" size="sm" onClick={() => navigate("/senat/login")}>
+                            {/* Login Button - Hidden on mobile */}
+                            <Button variant="outline" size="sm" className="hidden sm:flex" onClick={() => navigate("/senat/login")}>
                                 Connexion
                             </Button>
+
+                            {/* Mobile Menu */}
+                            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                                <SheetTrigger asChild className="lg:hidden">
+                                    <Button variant="ghost" size="sm">
+                                        <Menu className="h-5 w-5" />
+                                    </Button>
+                                </SheetTrigger>
+                                <SheetContent side="right" className="w-[280px] sm:w-[350px]">
+                                    <div className="flex flex-col gap-4 mt-8">
+                                        <Button
+                                            variant="outline"
+                                            className="w-full justify-start"
+                                            onClick={() => { navigate("/"); setMobileMenuOpen(false); }}
+                                        >
+                                            <Scale className="h-4 w-4 mr-2" />
+                                            Parlement
+                                        </Button>
+                                        <div className="border-t pt-4">
+                                            {mobileNavItems.map((item) => (
+                                                <Button
+                                                    key={item.path}
+                                                    variant="ghost"
+                                                    className="w-full justify-start mb-2"
+                                                    onClick={() => { navigate(item.path); setMobileMenuOpen(false); }}
+                                                >
+                                                    {item.label}
+                                                </Button>
+                                            ))}
+                                        </div>
+                                        <div className="border-t pt-4">
+                                            <Button
+                                                className="w-full"
+                                                onClick={() => { navigate("/senat/login"); setMobileMenuOpen(false); }}
+                                            >
+                                                Connexion
+                                            </Button>
+                                        </div>
+                                        {/* Mobile Language Selector */}
+                                        <select
+                                            className="sm:hidden text-sm border border-border rounded-md px-3 py-2 bg-background"
+                                            value={language}
+                                            onChange={(e) => setLanguage(e.target.value as any)}
+                                        >
+                                            <option value="fr">🇫🇷 Français</option>
+                                            <option value="en">🇬🇧 English</option>
+                                            <option value="es">🇪🇸 Español</option>
+                                            <option value="ar">🇸🇦 العربية</option>
+                                            <option value="pt">🇵🇹 Português</option>
+                                        </select>
+                                    </div>
+                                </SheetContent>
+                            </Sheet>
                         </div>
                     </div>
                 </div>
@@ -155,26 +220,26 @@ const HomeSenate = () => {
             {/* Hero Section - Mêmes couleurs que AN */}
             <section className="relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-hero opacity-10"></div>
-                <div className="container mx-auto px-4 py-20 relative">
+                <div className="container mx-auto px-4 py-12 sm:py-20 relative">
                     <div className="max-w-4xl mx-auto text-center">
                         <Badge className="mb-4 bg-primary/10 text-primary border-primary/20" variant="outline">
                             <Crown className="h-3 w-3 mr-1" />
                             Chambre haute du Parlement
                         </Badge>
-                        <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 animate-fade-in">
+                        <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif font-bold mb-4 sm:mb-6 animate-fade-in">
                             La voix des territoires
                         </h1>
-                        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: "0.1s" }}>
+                        <p className="text-base sm:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto animate-fade-in px-4" style={{ animationDelay: "0.1s" }}>
                             Le Sénat représente les collectivités territoriales de la République.
                             Nos 102 sénateurs œuvrent pour l'équilibre institutionnel.
                         </p>
-                        <div className="flex gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.2s" }}>
-                            <Button size="lg" className="shadow-elegant" onClick={() => navigate("/senat/travaux")}>
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fade-in px-4" style={{ animationDelay: "0.2s" }}>
+                            <Button size="lg" className="shadow-elegant w-full sm:w-auto" onClick={() => navigate("/senat/travaux")}>
                                 <FileText className="mr-2 h-5 w-5" />
                                 Travaux en cours
                                 <ChevronRight className="ml-2 h-5 w-5" />
                             </Button>
-                            <Button size="lg" variant="outline" onClick={() => navigate("/senat/senateurs")}>
+                            <Button size="lg" variant="outline" className="w-full sm:w-auto" onClick={() => navigate("/senat/senateurs")}>
                                 <Users className="mr-2 h-5 w-5" />
                                 Nos Sénateurs
                             </Button>
@@ -182,15 +247,15 @@ const HomeSenate = () => {
                     </div>
 
                     {/* Stats */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-4xl mx-auto">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mt-12 sm:mt-16 max-w-4xl mx-auto">
                         {stats.map((stat, index) => (
                             <Card
                                 key={index}
-                                className="p-6 text-center bg-card shadow-card-custom border-border/50 hover:shadow-elegant transition-all duration-300 animate-fade-in"
+                                className="p-4 sm:p-6 text-center bg-card shadow-card-custom border-border/50 hover:shadow-elegant transition-all duration-300 animate-fade-in"
                                 style={{ animationDelay: `${0.3 + index * 0.1}s` }}
                             >
-                                <div className="text-3xl font-serif font-bold text-primary mb-2">{stat.value}</div>
-                                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                                <div className="text-2xl sm:text-3xl font-serif font-bold text-primary mb-1 sm:mb-2">{stat.value}</div>
+                                <div className="text-xs sm:text-sm text-muted-foreground">{stat.label}</div>
                             </Card>
                         ))}
                     </div>
@@ -207,16 +272,16 @@ const HomeSenate = () => {
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto">
                         <Card
-                            className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-red-600/20 animate-fade-in"
+                            className="p-6 sm:p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-red-600/20 animate-fade-in"
                             onClick={() => navigate("/senat/actualites")}
                         >
-                            <div className="w-16 h-16 rounded-full bg-red-600/10 flex items-center justify-center mb-4 mx-auto">
-                                <FileText className="h-8 w-8 text-red-600" />
+                            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-red-600/10 flex items-center justify-center mb-3 sm:mb-4 mx-auto">
+                                <FileText className="h-6 w-6 sm:h-8 sm:w-8 text-red-600" />
                             </div>
-                            <h3 className="text-xl font-serif font-semibold mb-3 text-center">Actualités</h3>
-                            <p className="text-sm text-muted-foreground text-center mb-4">
+                            <h3 className="text-lg sm:text-xl font-serif font-semibold mb-2 sm:mb-3 text-center">Actualités</h3>
+                            <p className="text-xs sm:text-sm text-muted-foreground text-center mb-3 sm:mb-4">
                                 Les dernières nouvelles et décisions du Sénat
                             </p>
                             <Button className="w-full shadow-elegant bg-red-600 hover:bg-red-700">
@@ -226,15 +291,15 @@ const HomeSenate = () => {
                         </Card>
 
                         <Card
-                            className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-amber-600/20 animate-fade-in"
+                            className="p-6 sm:p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-amber-600/20 animate-fade-in"
                             style={{ animationDelay: "0.1s" }}
                             onClick={() => navigate("/senat/sensibilisation")}
                         >
-                            <div className="w-16 h-16 rounded-full bg-amber-600/10 flex items-center justify-center mb-4 mx-auto">
-                                <Users className="h-8 w-8 text-amber-600" />
+                            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-amber-600/10 flex items-center justify-center mb-3 sm:mb-4 mx-auto">
+                                <Users className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600" />
                             </div>
-                            <h3 className="text-xl font-serif font-semibold mb-3 text-center">Sensibilisation</h3>
-                            <p className="text-sm text-muted-foreground text-center mb-4">
+                            <h3 className="text-lg sm:text-xl font-serif font-semibold mb-2 sm:mb-3 text-center">Sensibilisation</h3>
+                            <p className="text-xs sm:text-sm text-muted-foreground text-center mb-3 sm:mb-4">
                                 Comprendre le rôle du Sénat et des sénateurs
                             </p>
                             <Button className="w-full shadow-elegant bg-amber-600 hover:bg-amber-700">
@@ -244,15 +309,15 @@ const HomeSenate = () => {
                         </Card>
 
                         <Card
-                            className="p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-indigo-600/20 animate-fade-in"
+                            className="p-6 sm:p-8 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-indigo-600/20 animate-fade-in sm:col-span-2 lg:col-span-1"
                             style={{ animationDelay: "0.2s" }}
                             onClick={() => navigate("/senat/tutoriels")}
                         >
-                            <div className="w-16 h-16 rounded-full bg-indigo-600/10 flex items-center justify-center mb-4 mx-auto">
-                                <BarChart3 className="h-8 w-8 text-indigo-600" />
+                            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-indigo-600/10 flex items-center justify-center mb-3 sm:mb-4 mx-auto">
+                                <BarChart3 className="h-6 w-6 sm:h-8 sm:w-8 text-indigo-600" />
                             </div>
-                            <h3 className="text-xl font-serif font-semibold mb-3 text-center">Tutoriels</h3>
-                            <p className="text-sm text-muted-foreground text-center mb-4">
+                            <h3 className="text-lg sm:text-xl font-serif font-semibold mb-2 sm:mb-3 text-center">Tutoriels</h3>
+                            <p className="text-xs sm:text-sm text-muted-foreground text-center mb-3 sm:mb-4">
                                 Guides pratiques pour utiliser la plateforme
                             </p>
                             <Button variant="outline" className="w-full shadow-elegant border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white">
@@ -265,33 +330,33 @@ const HomeSenate = () => {
             </section>
 
             {/* Features */}
-            <section className="py-20 bg-muted/30">
+            <section className="py-12 sm:py-20 bg-muted/30">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-12">
-                        <h2 className="text-4xl font-serif font-bold mb-4">Fonctionnalités</h2>
-                        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                    <div className="text-center mb-8 sm:mb-12">
+                        <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-3 sm:mb-4">Fonctionnalités</h2>
+                        <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto">
                             Explorez les outils numériques du Sénat
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 max-w-7xl mx-auto">
                         {features.map((feature, index) => {
                             const Icon = feature.icon;
                             return (
                                 <Card
                                     key={index}
-                                    className="p-6 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-border/50 animate-slide-in-right"
+                                    className="p-4 sm:p-6 bg-card shadow-card-custom hover:shadow-elegant transition-all duration-300 cursor-pointer border-border/50 animate-slide-in-right"
                                     style={{ animationDelay: `${index * 0.1}s` }}
                                     onMouseEnter={() => setHoveredCard(index)}
                                     onMouseLeave={() => setHoveredCard(null)}
                                     onClick={() => navigate(feature.path)}
                                 >
-                                    <div className={`w-12 h-12 rounded-lg bg-${feature.color}/10 flex items-center justify-center mb-4 transition-transform duration-300 ${hoveredCard === index ? 'scale-110' : ''}`}>
-                                        <Icon className={`h-6 w-6 text-${feature.color}`} />
+                                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-${feature.color}/10 flex items-center justify-center mb-3 sm:mb-4 transition-transform duration-300 ${hoveredCard === index ? 'scale-110' : ''}`}>
+                                        <Icon className={`h-5 w-5 sm:h-6 sm:w-6 text-${feature.color}`} />
                                     </div>
-                                    <h3 className="text-lg font-serif font-semibold mb-2">{feature.title}</h3>
-                                    <p className="text-sm text-muted-foreground">{feature.description}</p>
-                                    <ChevronRight className={`h-5 w-5 text-muted-foreground mt-4 transition-transform duration-300 ${hoveredCard === index ? 'translate-x-2' : ''}`} />
+                                    <h3 className="text-sm sm:text-lg font-serif font-semibold mb-1 sm:mb-2">{feature.title}</h3>
+                                    <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 sm:line-clamp-none">{feature.description}</p>
+                                    <ChevronRight className={`h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground mt-2 sm:mt-4 transition-transform duration-300 ${hoveredCard === index ? 'translate-x-2' : ''}`} />
                                 </Card>
                             );
                         })}
