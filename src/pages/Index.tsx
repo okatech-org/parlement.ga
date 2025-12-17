@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Landmark, Users, FileText, Map, Vote, Shield, ChevronRight, BarChart3, Scale } from "lucide-react";
+import { Landmark, Users, FileText, Map, Vote, Shield, ChevronRight, BarChart3, Scale, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +19,7 @@ const Index = () => {
   const [mounted, setMounted] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [selectedAmendmentId, setSelectedAmendmentId] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const {
     notifications,
@@ -86,9 +87,9 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Landmark className="h-8 w-8 text-primary" />
+              <Landmark className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
               <div>
-                <h1 className="text-xl font-serif font-bold text-foreground">{t('institutions.ASSEMBLY.name')}</h1>
+                <h1 className="text-base sm:text-xl font-serif font-bold text-foreground">{t('institutions.ASSEMBLY.name')}</h1>
               </div>
             </div>
             <nav className="hidden md:flex items-center gap-4">
@@ -172,8 +173,18 @@ const Index = () => {
               </Button>
 
               {/* Login Button */}
-              <Button variant="outline" size="sm" onClick={() => navigate("/an/login")}>
+              <Button variant="outline" size="sm" onClick={() => navigate("/an/login")} className="hidden sm:flex">
                 {t('common.login')}
+              </Button>
+
+              {/* Mobile Menu Toggle */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden h-9 w-9"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
             </div>
 
@@ -184,24 +195,89 @@ const Index = () => {
               onOpenChange={(open) => !open && setSelectedAmendmentId(null)}
             />
           </div>
+
+          {/* Mobile Navigation */}
+          {mobileMenuOpen && (
+            <div className="md:hidden border-t border-border py-3 space-y-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => { navigate("/"); setMobileMenuOpen(false); }}
+                className="w-full justify-start"
+              >
+                <Scale className="h-4 w-4 mr-2" />
+                {t('assembly.layout.parliament')}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => { navigate("/an/actualites"); setMobileMenuOpen(false); }}
+                className="w-full justify-start"
+              >
+                {t('home.resources.news.title')}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => { navigate("/an/sensibilisation"); setMobileMenuOpen(false); }}
+                className="w-full justify-start"
+              >
+                {t('home.resources.awareness.title')}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => { navigate("/an/tutoriels"); setMobileMenuOpen(false); }}
+                className="w-full justify-start"
+              >
+                {t('home.resources.tutorials.title')}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => { navigate("/an/processus"); setMobileMenuOpen(false); }}
+                className="w-full justify-start"
+              >
+                {t('assembly.nav.process')}
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => { navigate("/an/demo"); setMobileMenuOpen(false); }}
+                className="w-full justify-start"
+              >
+                {t('assembly.nav.demo')}
+              </Button>
+              <div className="border-t border-border pt-2 mt-2">
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => { navigate("/an/login"); setMobileMenuOpen(false); }}
+                  className="w-full"
+                >
+                  {t('common.login')}
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-hero opacity-10"></div>
-        <div className="container mx-auto px-4 py-20 relative">
+        <div className="container mx-auto px-4 py-12 sm:py-20 relative">
           <div className="max-w-4xl mx-auto text-center">
             <Badge className="mb-4 bg-primary/10 text-primary border-primary/20" variant="outline">
               {t('home.badge')}
             </Badge>
-            <h1 className="text-5xl md:text-6xl font-serif font-bold mb-6 animate-fade-in">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif font-bold mb-4 sm:mb-6 animate-fade-in">
               {t('home.title')}
             </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: "0.1s" }}>
+            <p className="text-base sm:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: "0.1s" }}>
               {t('home.subtitle')}
             </p>
-            <div className="flex gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.2s" }}>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.2s" }}>
               <Button size="lg" className="shadow-elegant" onClick={() => navigate("/legislation")}>
                 <FileText className="mr-2 h-5 w-5" />
                 {t('home.followLaws')}
@@ -215,15 +291,15 @@ const Index = () => {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mt-10 sm:mt-16 max-w-4xl mx-auto">
             {stats.map((stat, index) => (
               <Card
                 key={index}
-                className="p-6 text-center bg-card shadow-card-custom border-border/50 hover:shadow-elegant transition-all duration-300 animate-fade-in"
+                className="p-4 sm:p-6 text-center bg-card shadow-card-custom border-border/50 hover:shadow-elegant transition-all duration-300 animate-fade-in"
                 style={{ animationDelay: `${0.3 + index * 0.1}s` }}
               >
-                <div className="text-3xl font-serif font-bold text-primary mb-2">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className="text-2xl sm:text-3xl font-serif font-bold text-primary mb-1 sm:mb-2">{stat.value}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">{stat.label}</div>
               </Card>
             ))}
           </div>
@@ -231,11 +307,11 @@ const Index = () => {
       </section>
 
       {/* Resources Section */}
-      <section className="py-20 bg-gradient-subtle">
+      <section className="py-12 sm:py-20 bg-gradient-subtle">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-serif font-bold mb-4">{t('home.resources.title')}</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-3 sm:mb-4">{t('home.resources.title')}</h2>
+            <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto">
               {t('home.resources.subtitle')}
             </p>
           </div>
@@ -298,11 +374,11 @@ const Index = () => {
       </section>
 
       {/* Features */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-12 sm:py-20 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-serif font-bold mb-4">{t('home.features.title')}</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-4xl font-serif font-bold mb-3 sm:mb-4">{t('home.features.title')}</h2>
+            <p className="text-base sm:text-xl text-muted-foreground max-w-2xl mx-auto">
               {t('home.features.subtitle')}
             </p>
           </div>
@@ -333,28 +409,28 @@ const Index = () => {
       </section>
 
       {/* Security Banner */}
-      <section className="py-16 bg-primary/5 border-y border-primary/10">
+      <section className="py-10 sm:py-16 bg-primary/5 border-y border-primary/10">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-center gap-8 flex-wrap">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8">
             <div className="flex items-center gap-3">
-              <Shield className="h-8 w-8 text-primary" />
+              <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
               <div>
-                <div className="font-semibold">{t('home.security.maxSecurity')}</div>
-                <div className="text-sm text-muted-foreground">{t('home.security.encryption')}</div>
+                <div className="font-semibold text-sm sm:text-base">{t('home.security.maxSecurity')}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">{t('home.security.encryption')}</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Users className="h-8 w-8 text-secondary" />
+              <Users className="h-6 w-6 sm:h-8 sm:w-8 text-secondary" />
               <div>
-                <div className="font-semibold">{t('home.security.auth2fa')}</div>
-                <div className="text-sm text-muted-foreground">{t('home.security.secureAccess')}</div>
+                <div className="font-semibold text-sm sm:text-base">{t('home.security.auth2fa')}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">{t('home.security.secureAccess')}</div>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Landmark className="h-8 w-8 text-accent" />
+              <Landmark className="h-6 w-6 sm:h-8 sm:w-8 text-accent" />
               <div>
-                <div className="font-semibold">{t('home.security.sovereignty')}</div>
-                <div className="text-sm text-muted-foreground">{t('home.security.dataLoc')}</div>
+                <div className="font-semibold text-sm sm:text-base">{t('home.security.sovereignty')}</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">{t('home.security.dataLoc')}</div>
               </div>
             </div>
           </div>
@@ -362,9 +438,9 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-card border-t border-border py-12">
+      <footer className="bg-card border-t border-border py-8 sm:py-12">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Landmark className="h-6 w-6 text-primary" />
@@ -390,7 +466,7 @@ const Index = () => {
               </p>
             </div>
           </div>
-          <div className="border-t border-border mt-8 pt-8 text-center text-sm text-muted-foreground">
+          <div className="border-t border-border mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-sm text-muted-foreground">
             {t('common.copyright')}
           </div>
         </div>
