@@ -104,27 +104,25 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
                 ? "bg-transparent"
                 : "bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-md"
         )}>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-16">
+            <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-14 sm:h-16">
 
                     {/* Left: Logo & Institution Name */}
-                    <div className="flex items-center gap-3">
-                        {/* Institution Selector */}
+                    <div className="flex items-center gap-1 sm:gap-3 min-w-0 flex-shrink-0">
+                        {/* Institution Selector - Hidden on mobile for space */}
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
                                     variant="ghost"
+                                    size="sm"
                                     className={cn(
-                                        "flex items-center gap-2 px-3 py-2 rounded-lg transition-colors",
+                                        "flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg transition-colors",
                                         theme.bgClass.replace('bg-', 'hover:bg-').replace(/(\d+)/, '100'),
                                         theme.textClass
                                     )}
                                 >
-                                    <InstitutionIcon className="h-5 w-5" />
-                                    <span className="font-semibold hidden sm:inline">
-                                        {t(`institutions.${institutionConfig.id}.short`)}
-                                    </span>
-                                    <ChevronDown className="h-4 w-4" />
+                                    <InstitutionIcon className="h-4 w-4 sm:h-5 sm:w-5" />
+                                    <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4 hidden sm:block" />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start" className="w-64">
@@ -162,10 +160,10 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
                         {/* Institution Name */}
                         <Link
                             to={institutionConfig.basePath}
-                            className="flex items-center gap-2"
+                            className="flex items-center gap-2 min-w-0"
                         >
                             <span className={cn(
-                                "text-lg font-bold",
+                                "text-sm sm:text-lg font-bold truncate max-w-[120px] sm:max-w-none",
                                 transparent ? "text-white" : "text-gray-900 dark:text-white"
                             )}>
                                 {t(`institutions.${institutionConfig.id}.name`)}
@@ -173,8 +171,8 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
                         </Link>
                     </div>
 
-                    {/* Center: Navigation Links (Desktop) */}
-                    <div className="hidden md:flex items-center gap-1">
+                    {/* Center: Navigation Links (Desktop only - lg breakpoint) */}
+                    <div className="hidden lg:flex items-center gap-1">
                         {/* Bouton de retour vers Parlement (hub central) - visible uniquement sur AN ou Sénat */}
                         {currentInstitution !== 'PARLIAMENT' && (
                             <>
@@ -197,7 +195,7 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
                                 to={link.href}
                                 target={link.external ? "_blank" : undefined}
                                 className={cn(
-                                    "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+                                    "px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                                     transparent
                                         ? "text-white/80 hover:text-white hover:bg-white/10"
                                         : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -212,21 +210,21 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
                     </div>
 
                     {/* Right: Tools & Login */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 sm:gap-2">
 
-                        {/* Language Selector */}
+                        {/* Language Selector - Icon only on mobile */}
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
                                     variant="ghost"
-                                    size="sm"
+                                    size="icon"
                                     className={cn(
-                                        "flex items-center gap-1",
+                                        "h-8 w-8 sm:h-9 sm:w-auto sm:px-3",
                                         transparent ? "text-white/80 hover:text-white" : ""
                                     )}
                                 >
-                                    <span className="text-lg">{currentLangData.flag}</span>
-                                    <Globe className="h-4 w-4 ml-1" />
+                                    <span className="text-base sm:text-lg">{currentLangData.flag}</span>
+                                    <span className="hidden sm:inline ml-1 text-sm">{currentLangData.code.toUpperCase()}</span>
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
@@ -251,21 +249,25 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
                             variant="ghost"
                             size="icon"
                             onClick={toggleDarkMode}
-                            className={transparent ? "text-white/80 hover:text-white" : ""}
+                            className={cn(
+                                "h-8 w-8 sm:h-9 sm:w-9",
+                                transparent ? "text-white/80 hover:text-white" : ""
+                            )}
                         >
                             {isDark ? (
-                                <Sun className="h-5 w-5" />
+                                <Sun className="h-4 w-4 sm:h-5 sm:w-5" />
                             ) : (
-                                <Moon className="h-5 w-5" />
+                                <Moon className="h-4 w-4 sm:h-5 sm:w-5" />
                             )}
                         </Button>
 
-                        {/* Login Button */}
+                        {/* Login Button - Hidden on mobile, show in mobile menu */}
                         {showLogin && (
                             <Button
                                 onClick={() => navigate(effectiveLoginPath)}
+                                size="sm"
                                 className={cn(
-                                    "hidden sm:flex items-center gap-2",
+                                    "hidden lg:flex items-center gap-2",
                                     theme.bgClass,
                                     "hover:opacity-90 text-white"
                                 )}
@@ -275,17 +277,17 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
                             </Button>
                         )}
 
-                        {/* Mobile Menu Toggle */}
+                        {/* Mobile Menu Toggle - Always visible on mobile/tablet */}
                         <Button
                             variant="ghost"
                             size="icon"
                             className={cn(
-                                "md:hidden",
+                                "lg:hidden h-8 w-8 sm:h-9 sm:w-9",
                                 transparent ? "text-white" : ""
                             )}
                             onClick={() => setIsOpen(!isOpen)}
                         >
-                            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                         </Button>
                     </div>
                 </div>
@@ -293,13 +295,29 @@ const UnifiedNavbar: React.FC<UnifiedNavbarProps> = ({
 
             {/* Mobile Menu */}
             {isOpen && (
-                <div className="md:hidden bg-white dark:bg-gray-900 border-t dark:border-gray-800">
+                <div className="lg:hidden bg-white dark:bg-gray-900 border-t dark:border-gray-800 max-h-[70vh] overflow-y-auto">
                     <div className="px-4 py-4 space-y-2">
+                        {/* Parliament link for mobile */}
+                        {currentInstitution !== 'PARLIAMENT' && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                    navigate('/');
+                                    setIsOpen(false);
+                                }}
+                                className="w-full justify-start border-slate-300 text-slate-600 dark:border-slate-600 dark:text-slate-300 mb-3"
+                            >
+                                <Scale className="h-4 w-4 mr-2" />
+                                {t('assembly.layout.parliament')}
+                            </Button>
+                        )}
+
                         {links.map((link, index) => (
                             <Link
                                 key={index}
                                 to={link.href}
-                                className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-[0.98]"
                                 onClick={() => setIsOpen(false)}
                             >
                                 {link.icon && <link.icon className="h-5 w-5" />}
