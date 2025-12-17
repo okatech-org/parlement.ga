@@ -107,50 +107,50 @@ const Actualites = () => {
                 pageIcon={Newspaper}
             />
 
-            <div className="max-w-7xl mx-auto px-4 py-12">
+            <div className="max-w-7xl mx-auto px-4 py-6 sm:py-12">
                 {/* Featured Article */}
-                <div className="mb-16 animate-fade-in">
-                    <Card className="overflow-hidden border-none shadow-elegant hover:shadow-xl transition-all duration-500 group cursor-pointer relative h-[400px]">
+                <div className="mb-8 sm:mb-16 animate-fade-in">
+                    <Card className="overflow-hidden border-none shadow-elegant hover:shadow-xl transition-all duration-500 group cursor-pointer relative h-[280px] sm:h-[350px] md:h-[400px]">
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent z-10" />
                         <img
                             src={newsHeroImage}
                             alt="Featured"
                             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
-                        <div className="absolute bottom-0 left-0 p-8 z-20 max-w-3xl">
-                            <Badge className="mb-4 bg-primary text-primary-foreground hover:bg-primary/90 border-none">
+                        <div className="absolute bottom-0 left-0 p-4 sm:p-6 md:p-8 z-20 max-w-3xl">
+                            <Badge className="mb-2 sm:mb-4 bg-primary text-primary-foreground hover:bg-primary/90 border-none text-xs sm:text-sm">
                                 {t('news.featured')}
                             </Badge>
-                            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 leading-tight group-hover:text-primary-foreground/90 transition-colors">
+                            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2 sm:mb-4 leading-tight group-hover:text-primary-foreground/90 transition-colors line-clamp-2">
                                 {t('news.featuredTitle')}
                             </h2>
-                            <p className="text-gray-200 text-lg mb-6 line-clamp-2">
+                            <p className="text-gray-200 text-sm sm:text-base md:text-lg mb-4 sm:mb-6 line-clamp-2 hidden sm:block">
                                 {t('news.featuredDesc')}
                             </p>
-                            <Button size="lg" className="rounded-full bg-white text-black hover:bg-gray-100 border-none">
-                                {t('common.readArticle')} <ArrowRight className="ml-2 w-4 h-4" />
+                            <Button size="sm" className="rounded-full bg-white text-black hover:bg-gray-100 border-none sm:h-10 sm:px-4">
+                                {t('common.readArticle')} <ArrowRight className="ml-2 w-3 h-3 sm:w-4 sm:h-4" />
                             </Button>
                         </div>
                     </Card>
                 </div>
 
                 {/* Filters */}
-                <div className="flex flex-col md:flex-row gap-6 mb-12 items-center justify-between sticky top-4 z-30 bg-background/80 backdrop-blur-md p-4 rounded-2xl border border-border/50 shadow-sm">
-                    <div className="relative w-full md:w-96">
+                <div className="flex flex-col gap-4 sm:gap-6 mb-8 sm:mb-12 sticky top-16 z-30 bg-background/80 backdrop-blur-md p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-border/50 shadow-sm">
+                    <div className="relative w-full">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
                         <Input
                             placeholder={t('news.searchPlaceholder')}
-                            className="pl-10 bg-background/50"
+                            className="pl-10 bg-background/50 text-sm"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                         />
                     </div>
-                    <div className="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 no-scrollbar">
+                    <div className="flex gap-2 overflow-x-auto w-full pb-1 no-scrollbar -mx-1 px-1">
                         {CATEGORIES.map((cat) => (
                             <Badge
                                 key={cat}
                                 variant={selectedCategory === cat ? "default" : "outline"}
-                                className="cursor-pointer whitespace-nowrap px-4 py-2 text-sm hover:bg-primary/10 hover:text-primary transition-colors"
+                                className="cursor-pointer whitespace-nowrap px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-primary/10 hover:text-primary transition-colors flex-shrink-0"
                                 onClick={() => setSelectedCategory(cat)}
                             >
                                 {cat}
@@ -160,40 +160,40 @@ const Actualites = () => {
                 </div>
 
                 {/* News Grid */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                     {filteredNews.map((news, index) => (
                         <Card
                             key={index}
-                            className="group flex flex-col overflow-hidden hover:shadow-elegant transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm cursor-pointer"
+                            className="group flex flex-col overflow-hidden hover:shadow-elegant transition-all duration-300 border-border/50 bg-card/50 backdrop-blur-sm cursor-pointer active:scale-[0.98]"
                             onClick={() => handleReadMore(news.title)}
                         >
-                            <div className="relative h-48 overflow-hidden">
+                            <div className="relative h-40 sm:h-48 overflow-hidden">
                                 <img
                                     src={news.image}
                                     alt={news.title}
                                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                                <Badge className={`absolute top-3 left-3 ${news.categoryColor} text-white border-none`}>
+                                <Badge className={`absolute top-2 sm:top-3 left-2 sm:left-3 ${news.categoryColor} text-white border-none text-xs`}>
                                     {news.category}
                                 </Badge>
-                                <span className="absolute top-3 right-3 text-xs text-white flex items-center gap-1 bg-black/40 backdrop-blur-sm px-2 py-1 rounded-md">
-                                    <Calendar className="w-3 h-3" />
+                                <span className="absolute top-2 sm:top-3 right-2 sm:right-3 text-[10px] sm:text-xs text-white flex items-center gap-1 bg-black/40 backdrop-blur-sm px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md">
+                                    <Calendar className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                                     {news.date}
                                 </span>
                             </div>
-                            <div className="p-6 flex-1 flex flex-col">
-                                <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2">
+                            <div className="p-4 sm:p-6 flex-1 flex flex-col">
+                                <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-3 group-hover:text-primary transition-colors line-clamp-2">
                                     {news.title}
                                 </h3>
 
-                                <p className="text-sm text-muted-foreground mb-6 line-clamp-3 flex-1 leading-relaxed">
+                                <p className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6 line-clamp-2 sm:line-clamp-3 flex-1 leading-relaxed">
                                     {news.excerpt}
                                 </p>
 
-                                <div className="pt-4 border-t border-border/50 flex justify-end mt-auto">
-                                    <Button variant="ghost" size="sm" className="text-primary group-hover:translate-x-1 transition-transform p-0 hover:bg-transparent">
-                                        {t('common.readArticle')} <ArrowRight className="w-4 h-4 ml-1" />
+                                <div className="pt-3 sm:pt-4 border-t border-border/50 flex justify-end mt-auto">
+                                    <Button variant="ghost" size="sm" className="text-primary group-hover:translate-x-1 transition-transform p-0 hover:bg-transparent text-xs sm:text-sm">
+                                        {t('common.readArticle')} <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
                                     </Button>
                                 </div>
                             </div>
