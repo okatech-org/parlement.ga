@@ -1,20 +1,19 @@
 import React from 'react';
 import {
-  Landmark, Users, Crown, PlayCircle, Monitor, CheckCircle, LogIn, Sun, Moon, Home, Briefcase, UserCircle, AlertTriangle, FileText, UserCheck, Shield
+  Landmark, Users, Crown, PlayCircle, Monitor, CheckCircle, LogIn, UserCircle, FileText, UserCheck, Shield
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useNavigate } from 'react-router-dom';
-import { useTheme } from 'next-themes';
 import { toast } from 'sonner';
 import { ProtocolDemoSection } from '@/components/iasted/ProtocolDemoSection';
 import { useLanguage } from '@/contexts/LanguageContext';
+import InstitutionSubHeader from '@/components/layout/InstitutionSubHeader';
 
 const ProtocolDemoPage = () => {
   const navigate = useNavigate();
-  const { theme, setTheme } = useTheme();
   const { t } = useLanguage();
 
   const AN_DEMO_CARDS = {
@@ -137,49 +136,28 @@ const ProtocolDemoPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
-                <Home className="h-5 w-5" />
-              </Button>
-              <Separator orientation="vertical" className="h-6" />
-              <Landmark className="h-7 w-7 text-primary" />
-              <div>
-                <h1 className="text-xl font-serif font-bold text-foreground">{t('assembly.demo.headerTitle')}</h1>
-                <p className="text-xs text-muted-foreground">{t('assembly.demo.headerDesc')}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="outline">{t('assembly.layout.breadcrumbAN')}</Badge>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              >
-                {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Unified Header with mobile navigation */}
+      <InstitutionSubHeader
+        institution="AN"
+        pageTitle={t('assembly.demo.headerTitle')}
+        pageSubtitle={t('assembly.demo.headerDesc')}
+        pageIcon={PlayCircle}
+      />
 
       {/* Hero compact */}
-      <section className="py-12 bg-gradient-to-br from-primary/5 to-primary/10">
+      <section className="py-8 sm:py-12 bg-gradient-to-br from-primary/5 to-primary/10">
         <div className="container mx-auto px-4 text-center">
-          <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
+          <Badge className="mb-3 sm:mb-4 bg-primary/10 text-primary border-primary/20 text-xs sm:text-sm">
             <PlayCircle className="h-3 w-3 mr-1" />
             {t('assembly.demo.badge')}
           </Badge>
-          <h1 className="text-3xl md:text-4xl font-serif font-bold mb-3">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold mb-2 sm:mb-3">
             {t('assembly.demo.heroTitle')}
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
+          <p className="text-sm sm:text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto mb-4 sm:mb-6 px-2">
             {t('assembly.demo.heroDesc')}
           </p>
-          <Button variant="outline" onClick={() => navigate("/an/espace/deputes")}>
+          <Button variant="outline" size="sm" className="sm:h-10 sm:px-4" onClick={() => navigate("/an/espace/deputes")}>
             <Monitor className="mr-2 h-4 w-4" />
             {t('assembly.demo.directAccess')}
           </Button>
@@ -187,45 +165,45 @@ const ProtocolDemoPage = () => {
       </section>
 
       {/* Cartes d'accès */}
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-8 sm:py-12">
         <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <LogIn className="w-5 h-5 text-primary" />
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <LogIn className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
               {t('assembly.demo.cardsTitle')}
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-xs sm:text-sm">
               {t('assembly.demo.cardsDesc')}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-8">
+          <CardContent className="space-y-6 sm:space-y-8 p-4 sm:p-6">
             {Object.entries(AN_DEMO_CARDS).map(([key, category]) => {
               const CategoryIcon = category.icon;
               return (
-                <div key={key} className="space-y-4">
-                  <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
-                    <CategoryIcon className={`w-4 h-4 ${category.color}`} />
+                <div key={key} className="space-y-3 sm:space-y-4">
+                  <h4 className="text-xs sm:text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
+                    <CategoryIcon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${category.color}`} />
                     {category.title}
                   </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                     {category.accounts.map((account) => {
                       const Icon = account.icon;
                       return (
                         <Card
                           key={account.label}
-                          className="cursor-pointer hover:shadow-lg hover:border-primary/50 transition-all duration-200"
+                          className="cursor-pointer hover:shadow-lg hover:border-primary/50 transition-all duration-200 active:scale-[0.98]"
                           onClick={() => handleDemoLogin(account.phone, account.path)}
                         >
-                          <CardContent className="p-4 space-y-3">
+                          <CardContent className="p-3 sm:p-4 space-y-2 sm:space-y-3">
                             {/* En-tête avec icône et label */}
                             <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <div className={`w-10 h-10 rounded-lg bg-muted flex items-center justify-center`}>
-                                  <Icon className={`w-5 h-5 ${account.color}`} />
+                              <div className="flex items-center gap-2 sm:gap-3">
+                                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-muted flex items-center justify-center`}>
+                                  <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${account.color}`} />
                                 </div>
                                 <div>
-                                  <h5 className="font-medium text-sm">{account.label}</h5>
-                                  <Badge variant="secondary" className="text-xs mt-0.5">
+                                  <h5 className="font-medium text-xs sm:text-sm">{account.label}</h5>
+                                  <Badge variant="secondary" className="text-[10px] sm:text-xs mt-0.5">
                                     {account.role}
                                   </Badge>
                                 </div>
@@ -233,10 +211,10 @@ const ProtocolDemoPage = () => {
                             </div>
 
                             {/* Fonctionnalités */}
-                            <div className="grid grid-cols-2 gap-1.5">
+                            <div className="grid grid-cols-2 gap-1 sm:gap-1.5">
                               {account.features.map((feature, idx) => (
-                                <div key={idx} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                  <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
+                                <div key={idx} className="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs text-muted-foreground">
+                                  <CheckCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-green-500 flex-shrink-0" />
                                   <span className="truncate">{feature}</span>
                                 </div>
                               ))}
@@ -255,23 +233,23 @@ const ProtocolDemoPage = () => {
       </div>
 
       {/* Protocol Demo Section */}
-      <section className="container mx-auto px-4 pb-12">
-        <div className="mb-8 text-center">
-          <Badge variant="outline" className="mb-2">Intelligence Artificielle</Badge>
-          <h2 className="text-2xl font-bold font-serif mb-2">{t('assembly.demo.protocolTitle')}</h2>
-          <p className="text-muted-foreground">{t('assembly.demo.protocolDesc')}</p>
+      <section className="container mx-auto px-4 pb-8 sm:pb-12">
+        <div className="mb-6 sm:mb-8 text-center">
+          <Badge variant="outline" className="mb-2 text-xs sm:text-sm">Intelligence Artificielle</Badge>
+          <h2 className="text-xl sm:text-2xl font-bold font-serif mb-2">{t('assembly.demo.protocolTitle')}</h2>
+          <p className="text-xs sm:text-sm text-muted-foreground px-2">{t('assembly.demo.protocolDesc')}</p>
         </div>
         <ProtocolDemoSection />
       </section>
 
       {/* Footer */}
-      <footer className="bg-card border-t border-border py-8">
+      <footer className="bg-card border-t border-border py-6 sm:py-8">
         <div className="container mx-auto px-4 text-center">
-          <div className="flex justify-center items-center gap-2 mb-4">
-            <Landmark className="h-6 w-6 text-primary" />
-            <span className="font-serif font-bold">{t('assembly.layout.breadcrumbAN')}</span>
+          <div className="flex justify-center items-center gap-2 mb-3 sm:mb-4">
+            <Landmark className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+            <span className="font-serif font-bold text-sm sm:text-base">{t('assembly.layout.breadcrumbAN')}</span>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             {t('assembly.footer.address')}
           </p>
         </div>

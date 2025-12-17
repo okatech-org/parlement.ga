@@ -54,20 +54,20 @@ const Tutoriels = () => {
                 pageIcon={GraduationCap}
             />
 
-            <div className="max-w-7xl mx-auto px-4 py-12">
-                <div className="grid lg:grid-cols-3 gap-8">
+            <div className="max-w-7xl mx-auto px-4 py-6 sm:py-12">
+                <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
                     {/* Main Content */}
-                    <div className="lg:col-span-2 space-y-8">
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-2xl font-bold">{t('tutorials.myLearning')}</h2>
-                            <Button variant="outline">{t('tutorials.catalog')}</Button>
+                    <div className="lg:col-span-2 space-y-6 sm:space-y-8">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <h2 className="text-xl sm:text-2xl font-bold">{t('tutorials.myLearning')}</h2>
+                            <Button variant="outline" size="sm" className="w-fit">{t('tutorials.catalog')}</Button>
                         </div>
 
-                        <div className="grid gap-6">
+                        <div className="grid gap-4 sm:gap-6">
                             {tutorials.map((tutorial) => (
-                                <Card key={tutorial.id} className="p-4 hover:shadow-elegant transition-all group cursor-pointer border-border/50">
-                                    <div className="flex gap-4">
-                                        <div className="relative w-40 h-24 rounded-lg overflow-hidden flex-shrink-0">
+                                <Card key={tutorial.id} className="p-3 sm:p-4 hover:shadow-elegant transition-all group cursor-pointer border-border/50 active:scale-[0.99]">
+                                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                                        <div className="relative w-full sm:w-40 h-32 sm:h-24 rounded-lg overflow-hidden flex-shrink-0">
                                             <img
                                                 src={tutorial.image}
                                                 alt={tutorial.title}
@@ -77,26 +77,26 @@ const Tutoriels = () => {
                                                 <Play className="w-8 h-8 text-white fill-current" />
                                             </div>
                                         </div>
-                                        <div className="flex-1 flex flex-col justify-between">
+                                        <div className="flex-1 flex flex-col justify-between min-w-0">
                                             <div>
-                                                <div className="flex justify-between items-start mb-2">
-                                                    <h3 className="font-bold group-hover:text-primary transition-colors line-clamp-1">
+                                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 sm:gap-2 mb-2">
+                                                    <h3 className="font-bold text-sm sm:text-base group-hover:text-primary transition-colors line-clamp-2 sm:line-clamp-1">
                                                         {tutorial.title}
                                                     </h3>
-                                                    <Badge variant="secondary" className="text-xs">
+                                                    <Badge variant="secondary" className="text-[10px] sm:text-xs w-fit flex-shrink-0">
                                                         {tutorial.level}
                                                     </Badge>
                                                 </div>
-                                                <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
-                                                    <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> {tutorial.duration}</span>
-                                                    <span className="flex items-center gap-1"><Star className="w-3 h-3 text-yellow-500" /> 4.8</span>
+                                                <div className="flex items-center gap-3 sm:gap-4 text-[10px] sm:text-xs text-muted-foreground mb-2 sm:mb-3">
+                                                    <span className="flex items-center gap-1"><Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> {tutorial.duration}</span>
+                                                    <span className="flex items-center gap-1"><Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-yellow-500" /> 4.8</span>
                                                 </div>
                                             </div>
-                                            <div className="space-y-2">
-                                                <div className="flex justify-between text-xs">
+                                            <div className="space-y-1.5 sm:space-y-2">
+                                                <div className="flex justify-between text-[10px] sm:text-xs">
                                                     <span>{tutorial.progress}% {t('common.completed')}</span>
                                                 </div>
-                                                <Progress value={tutorial.progress} className="h-1.5" />
+                                                <Progress value={tutorial.progress} className="h-1 sm:h-1.5" />
                                             </div>
                                         </div>
                                     </div>
@@ -104,53 +104,53 @@ const Tutoriels = () => {
                             ))}
                         </div>
 
-                        <div className="bg-card rounded-2xl p-8 border border-border/50 mt-8">
-                            <h3 className="text-xl font-bold mb-4">{t('tutorials.recommended.title')}</h3>
-                            <div className="grid md:grid-cols-2 gap-4">
-                                <div className="p-4 rounded-xl bg-background border border-border/50 hover:border-primary/50 transition-colors cursor-pointer">
-                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-3">
-                                        <BookOpen className="w-5 h-5 text-primary" />
+                        <div className="bg-card rounded-xl sm:rounded-2xl p-4 sm:p-8 border border-border/50 mt-6 sm:mt-8">
+                            <h3 className="text-base sm:text-xl font-bold mb-3 sm:mb-4">{t('tutorials.recommended.title')}</h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                <div className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-background border border-border/50 hover:border-primary/50 transition-colors cursor-pointer active:scale-[0.98]">
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary/10 flex items-center justify-center mb-2 sm:mb-3">
+                                        <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                                     </div>
-                                    <h4 className="font-bold mb-1">{t('tutorials.recommended.constitution')}</h4>
-                                    <p className="text-sm text-muted-foreground">{t('tutorials.recommended.constitutionDesc')}</p>
+                                    <h4 className="font-bold mb-1 text-sm sm:text-base">{t('tutorials.recommended.constitution')}</h4>
+                                    <p className="text-xs sm:text-sm text-muted-foreground">{t('tutorials.recommended.constitutionDesc')}</p>
                                 </div>
-                                <div className="p-4 rounded-xl bg-background border border-border/50 hover:border-primary/50 transition-colors cursor-pointer">
-                                    <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mb-3">
-                                        <CheckCircle className="w-5 h-5 text-secondary" />
+                                <div className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-background border border-border/50 hover:border-primary/50 transition-colors cursor-pointer active:scale-[0.98]">
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-secondary/10 flex items-center justify-center mb-2 sm:mb-3">
+                                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-secondary" />
                                     </div>
-                                    <h4 className="font-bold mb-1">{t('tutorials.recommended.voting')}</h4>
-                                    <p className="text-sm text-muted-foreground">{t('tutorials.recommended.votingDesc')}</p>
+                                    <h4 className="font-bold mb-1 text-sm sm:text-base">{t('tutorials.recommended.voting')}</h4>
+                                    <p className="text-xs sm:text-sm text-muted-foreground">{t('tutorials.recommended.votingDesc')}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Sidebar */}
-                    <div className="space-y-6">
-                        <Card className="p-6 bg-gradient-to-br from-indigo-600 to-violet-600 text-white border-none">
-                            <h3 className="text-xl font-bold mb-2">{t('tutorials.pro.title')}</h3>
-                            <p className="text-indigo-100 mb-6 text-sm">
+                    {/* Sidebar - Shows above content on mobile */}
+                    <div className="space-y-4 sm:space-y-6 order-first lg:order-last">
+                        <Card className="p-4 sm:p-6 bg-gradient-to-br from-indigo-600 to-violet-600 text-white border-none">
+                            <h3 className="text-base sm:text-xl font-bold mb-1.5 sm:mb-2">{t('tutorials.pro.title')}</h3>
+                            <p className="text-indigo-100 mb-4 sm:mb-6 text-xs sm:text-sm">
                                 {t('tutorials.pro.desc')}
                             </p>
-                            <Button variant="secondary" className="w-full bg-white text-indigo-600 hover:bg-indigo-50">
+                            <Button variant="secondary" size="sm" className="w-full bg-white text-indigo-600 hover:bg-indigo-50 sm:h-10">
                                 {t('tutorials.pro.button')}
                             </Button>
                         </Card>
 
-                        <Card className="p-6">
-                            <h3 className="font-bold mb-4">{t('tutorials.stats.title')}</h3>
-                            <div className="space-y-4">
-                                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                                    <span className="text-sm text-muted-foreground">{t('tutorials.stats.hours')}</span>
-                                    <span className="font-bold">12h 30m</span>
+                        <Card className="p-4 sm:p-6">
+                            <h3 className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">{t('tutorials.stats.title')}</h3>
+                            <div className="space-y-2 sm:space-y-4">
+                                <div className="flex items-center justify-between p-2 sm:p-3 rounded-lg bg-muted/50">
+                                    <span className="text-xs sm:text-sm text-muted-foreground">{t('tutorials.stats.hours')}</span>
+                                    <span className="font-bold text-sm sm:text-base">12h 30m</span>
                                 </div>
-                                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                                    <span className="text-sm text-muted-foreground">{t('tutorials.stats.completed')}</span>
-                                    <span className="font-bold">8</span>
+                                <div className="flex items-center justify-between p-2 sm:p-3 rounded-lg bg-muted/50">
+                                    <span className="text-xs sm:text-sm text-muted-foreground">{t('tutorials.stats.completed')}</span>
+                                    <span className="font-bold text-sm sm:text-base">8</span>
                                 </div>
-                                <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                                    <span className="text-sm text-muted-foreground">{t('tutorials.stats.certificates')}</span>
-                                    <span className="font-bold">2</span>
+                                <div className="flex items-center justify-between p-2 sm:p-3 rounded-lg bg-muted/50">
+                                    <span className="text-xs sm:text-sm text-muted-foreground">{t('tutorials.stats.certificates')}</span>
+                                    <span className="font-bold text-sm sm:text-base">2</span>
                                 </div>
                             </div>
                         </Card>
