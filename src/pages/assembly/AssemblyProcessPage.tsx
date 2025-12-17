@@ -303,29 +303,29 @@ flowchart TD
             />
 
             {/* Hero */}
-            <section className="py-16 bg-gradient-to-br from-emerald-600 to-green-700 text-white">
+            <section className="py-10 sm:py-16 bg-gradient-to-br from-emerald-600 to-green-700 text-white">
                 <div className="container mx-auto px-4 text-center">
-                    <Badge className="mb-4 bg-white/20 text-white border-white/30">
+                    <Badge className="mb-3 sm:mb-4 bg-white/20 text-white border-white/30">
                         <BookOpen className="h-3 w-3 mr-1" />
                         {t('assembly.process.heroBadge')}
                     </Badge>
-                    <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                    <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4">
                         {t('assembly.process.heroTitle')}
                     </h1>
-                    <p className="text-xl opacity-90 max-w-3xl mx-auto mb-6">
+                    <p className="text-base sm:text-xl opacity-90 max-w-3xl mx-auto mb-4 sm:mb-6 px-2">
                         {t('assembly.process.heroDesc')}
                     </p>
-                    <div className="flex justify-center gap-4 flex-wrap">
-                        <Badge className="bg-white/20 text-white border-white/30 text-sm py-1.5 px-3">
-                            <Users className="h-4 w-4 mr-1" />
+                    <div className="flex justify-center gap-2 sm:gap-4 flex-wrap">
+                        <Badge className="bg-white/20 text-white border-white/30 text-xs sm:text-sm py-1 sm:py-1.5 px-2 sm:px-3">
+                            <Users className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                             {t('assembly.process.stats.deputies')}
                         </Badge>
-                        <Badge className="bg-white/20 text-white border-white/30 text-sm py-1.5 px-3">
-                            <Briefcase className="h-4 w-4 mr-1" />
+                        <Badge className="bg-white/20 text-white border-white/30 text-xs sm:text-sm py-1 sm:py-1.5 px-2 sm:px-3">
+                            <Briefcase className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                             {t('assembly.process.stats.commissions')}
                         </Badge>
-                        <Badge className="bg-white/20 text-white border-white/30 text-sm py-1.5 px-3">
-                            <Clock className="h-4 w-4 mr-1" />
+                        <Badge className="bg-white/20 text-white border-white/30 text-xs sm:text-sm py-1 sm:py-1.5 px-2 sm:px-3">
+                            <Clock className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                             {t('assembly.process.stats.days')}
                         </Badge>
                     </div>
@@ -333,19 +333,19 @@ flowchart TD
             </section>
 
             {/* Diagramme principal */}
-            <section id="flux-section" className="py-16">
+            <section id="flux-section" className="py-10 sm:py-16">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('assembly.process.flow.title')}</h2>
-                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                    <div className="text-center mb-8 sm:mb-12">
+                        <h2 className="text-xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">{t('assembly.process.flow.title')}</h2>
+                        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                             {t('assembly.process.flow.desc')}
                         </p>
                     </div>
-                    <div className="max-w-4xl mx-auto">
+                    <div className="max-w-4xl mx-auto overflow-x-auto">
                         <MermaidDiagram
                             chart={legislativeFlowChart}
                             title={t('assembly.process.flow.diagramTitle')}
-                            className="shadow-lg"
+                            className="shadow-lg min-w-[600px] sm:min-w-0"
                             onNodeClick={handleNodeClick}
                         />
                     </div>
@@ -353,34 +353,34 @@ flowchart TD
             </section>
 
             {/* Commissions */}
-            <section id="commissions-section" className="py-16 bg-gray-50 dark:bg-gray-800/50">
+            <section id="commissions-section" className="py-10 sm:py-16 bg-gray-50 dark:bg-gray-800/50">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('assembly.process.commissions.title')}</h2>
-                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                    <div className="text-center mb-8 sm:mb-12">
+                        <h2 className="text-xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">{t('assembly.process.commissions.title')}</h2>
+                        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                             {t('assembly.process.commissions.desc')}
                         </p>
                     </div>
-                    <div className="max-w-4xl mx-auto">
+                    <div className="max-w-4xl mx-auto overflow-x-auto">
                         <MermaidDiagram
                             chart={commissionsChart}
-                            className="shadow-lg"
+                            className="shadow-lg min-w-[500px] sm:min-w-0"
                         />
                     </div>
                 </div>
             </section>
 
             {/* Processus détaillé */}
-            <section id="phases" className="py-16">
+            <section id="phases" className="py-10 sm:py-16">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('assembly.process.phases.title')}</h2>
-                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                    <div className="text-center mb-8 sm:mb-12">
+                        <h2 className="text-xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">{t('assembly.process.phases.title')}</h2>
+                        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                             {t('assembly.process.phases.desc')}
                         </p>
                     </div>
 
-                    <div className="max-w-4xl mx-auto space-y-6">
+                    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
                         {processSteps.map((step, index) => (
                             <AnimatedPhaseCard
                                 key={index}
@@ -395,57 +395,57 @@ flowchart TD
             </section>
 
             {/* Navette parlementaire */}
-            <section id="navette-section" className="py-16 bg-emerald-50 dark:bg-emerald-950/30">
+            <section id="navette-section" className="py-10 sm:py-16 bg-emerald-50 dark:bg-emerald-950/30">
                 <div className="container mx-auto px-4">
-                    <div className="text-center mb-12">
-                        <Badge className="mb-4 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+                    <div className="text-center mb-8 sm:mb-12">
+                        <Badge className="mb-3 sm:mb-4 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
                             <ArrowLeftRight className="h-3 w-3 mr-1" />
                             {t('assembly.process.shuttle.badge')}
                         </Badge>
-                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('assembly.process.shuttle.title')}</h2>
-                        <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                        <h2 className="text-xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">{t('assembly.process.shuttle.title')}</h2>
+                        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                             {t('assembly.process.shuttle.desc')}
                         </p>
                     </div>
-                    <div className="max-w-6xl mx-auto mb-8">
+                    <div className="max-w-6xl mx-auto mb-6 sm:mb-8 overflow-x-auto">
                         <MermaidDiagram
                             chart={navetteCompleteChart}
                             title={t('assembly.process.shuttle.title')}
-                            className="shadow-lg"
+                            className="shadow-lg min-w-[700px] sm:min-w-0"
                             onNodeClick={handleNodeClick}
                         />
                     </div>
-                    <div className="max-w-5xl mx-auto">
+                    <div className="max-w-5xl mx-auto overflow-x-auto">
                         <MermaidDiagram
                             chart={navetteChart}
                             title="Vue simplifiée de la navette"
-                            className="shadow-lg"
+                            className="shadow-lg min-w-[500px] sm:min-w-0"
                         />
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mt-8">
+                    <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto mt-6 sm:mt-8">
                         <Card className="bg-white dark:bg-gray-800">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-emerald-600">
-                                    <CheckCircle className="h-5 w-5" />
+                            <CardHeader className="pb-2 sm:pb-4">
+                                <CardTitle className="flex items-center gap-2 text-emerald-600 text-base sm:text-lg">
+                                    <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5" />
                                     {t('assembly.process.shuttle.identical')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                                     {t('assembly.process.shuttle.identicalDesc')}
                                 </p>
                             </CardContent>
                         </Card>
                         <Card className="bg-white dark:bg-gray-800">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-amber-600">
-                                    <AlertTriangle className="h-5 w-5" />
+                            <CardHeader className="pb-2 sm:pb-4">
+                                <CardTitle className="flex items-center gap-2 text-amber-600 text-base sm:text-lg">
+                                    <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5" />
                                     {t('assembly.process.shuttle.amended')}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                                     {t('assembly.process.shuttle.amendedDesc')}
                                 </p>
                             </CardContent>
@@ -455,18 +455,18 @@ flowchart TD
             </section>
 
             {/* CTA */}
-            <section className="py-16 bg-emerald-600 text-white">
+            <section className="py-10 sm:py-16 bg-emerald-600 text-white">
                 <div className="container mx-auto px-4 text-center">
-                    <h2 className="text-2xl font-bold mb-4">{t('assembly.process.cta.title')}</h2>
-                    <p className="opacity-90 mb-8">
+                    <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4">{t('assembly.process.cta.title')}</h2>
+                    <p className="opacity-90 mb-6 sm:mb-8 text-sm sm:text-base">
                         {t('assembly.process.cta.desc')}
                     </p>
-                    <div className="flex justify-center gap-4 flex-wrap">
-                        <Button size="lg" variant="secondary" onClick={() => navigate("/an/demo")}>
+                    <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+                        <Button size="lg" variant="secondary" onClick={() => navigate("/an/demo")} className="w-full sm:w-auto">
                             <PlayCircle className="mr-2 h-5 w-5" />
                             {t('assembly.process.cta.demoBtn')}
                         </Button>
-                        <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10" onClick={() => navigate("/an")}>
+                        <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 w-full sm:w-auto" onClick={() => navigate("/an")}>
                             <Home className="mr-2 h-5 w-5" />
                             {t('assembly.process.cta.homeBtn')}
                         </Button>
@@ -475,13 +475,13 @@ flowchart TD
             </section>
 
             {/* Footer */}
-            <footer className="bg-emerald-900 text-white py-8">
+            <footer className="bg-emerald-900 text-white py-6 sm:py-8">
                 <div className="container mx-auto px-4 text-center">
-                    <div className="flex justify-center items-center gap-2 mb-4">
-                        <Building2 className="h-6 w-6" />
-                        <span className="font-bold">{t('assembly.layout.breadcrumbAN')}</span>
+                    <div className="flex justify-center items-center gap-2 mb-3 sm:mb-4">
+                        <Building2 className="h-5 w-5 sm:h-6 sm:w-6" />
+                        <span className="font-bold text-sm sm:text-base">{t('assembly.layout.breadcrumbAN')}</span>
                     </div>
-                    <p className="text-sm opacity-80">
+                    <p className="text-xs sm:text-sm opacity-80">
                         {t('assembly.footer.address')}
                     </p>
                 </div>
