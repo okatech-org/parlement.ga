@@ -96,24 +96,24 @@ const Sensibilisation = () => {
 
                         <div className="bg-card rounded-xl sm:rounded-2xl p-4 sm:p-8 border border-border/50">
                             <h3 className="text-base sm:text-xl font-bold mb-4 sm:mb-6 flex items-center gap-2">
-                                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                                <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[#3A87FD]" />
                                 {t('sensibilisation.impact.title')}
                             </h3>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
                                 <div className="text-center p-3 sm:p-4 bg-background rounded-lg sm:rounded-xl">
-                                    <div className="text-xl sm:text-3xl font-bold text-primary mb-0.5 sm:mb-1">15k+</div>
+                                    <div className="text-xl sm:text-3xl font-bold text-[#3A87FD] mb-0.5 sm:mb-1">15k+</div>
                                     <div className="text-xs sm:text-sm text-muted-foreground">{t('sensibilisation.impact.citizens')}</div>
                                 </div>
                                 <div className="text-center p-3 sm:p-4 bg-background rounded-lg sm:rounded-xl">
-                                    <div className="text-xl sm:text-3xl font-bold text-primary mb-0.5 sm:mb-1">50+</div>
+                                    <div className="text-xl sm:text-3xl font-bold text-[#3A87FD] mb-0.5 sm:mb-1">50+</div>
                                     <div className="text-xs sm:text-sm text-muted-foreground">{t('sensibilisation.impact.workshops')}</div>
                                 </div>
                                 <div className="text-center p-3 sm:p-4 bg-background rounded-lg sm:rounded-xl">
-                                    <div className="text-xl sm:text-3xl font-bold text-primary mb-0.5 sm:mb-1">12</div>
+                                    <div className="text-xl sm:text-3xl font-bold text-[#3A87FD] mb-0.5 sm:mb-1">12</div>
                                     <div className="text-xs sm:text-sm text-muted-foreground">{t('sensibilisation.impact.regions')}</div>
                                 </div>
                                 <div className="text-center p-3 sm:p-4 bg-background rounded-lg sm:rounded-xl">
-                                    <div className="text-xl sm:text-3xl font-bold text-primary mb-0.5 sm:mb-1">98%</div>
+                                    <div className="text-xl sm:text-3xl font-bold text-[#3A87FD] mb-0.5 sm:mb-1">98%</div>
                                     <div className="text-xs sm:text-sm text-muted-foreground">{t('sensibilisation.impact.satisfaction')}</div>
                                 </div>
                             </div>
@@ -124,8 +124,8 @@ const Sensibilisation = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                             {[1, 2, 3].map((i) => (
                                 <Card key={i} className="p-4 sm:p-6 hover:shadow-md transition-all group">
-                                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
-                                        <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[#3A87FD]/10 rounded-lg flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+                                        <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-[#3A87FD]" />
                                     </div>
                                     <h3 className="font-bold mb-1.5 sm:mb-2 text-sm sm:text-base">{t('sensibilisation.guides.guideTitle')} {i}</h3>
                                     <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
@@ -134,7 +134,7 @@ const Sensibilisation = () => {
                                     <Button
                                         variant="ghost"
                                         size="sm"
-                                        className="w-full justify-between group-hover:bg-primary/5 text-xs sm:text-sm"
+                                        className="w-full justify-between group-hover:bg-[#3A87FD]/5 text-xs sm:text-sm"
                                         onClick={() => handleDownload(`Guide_Citoyen_Vol${i}.pdf`)}
                                         disabled={downloading === `Guide_Citoyen_Vol${i}.pdf`}
                                     >

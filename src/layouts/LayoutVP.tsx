@@ -57,8 +57,8 @@ const LayoutVP = ({ children }: { children: React.ReactNode }) => {
                                 VP
                             </div>
                             <div>
-                                <h3 className="font-bold text-sm">{user?.name || "François Ndong Obiang"}</h3>
-                                <p className="text-xs text-muted-foreground">1er Vice-Président</p>
+                                <h3 className="font-bold text-sm">{user?.name || "Vice-Président"}</h3>
+                                <p className="text-xs text-muted-foreground">{user?.bureauLabel || "Vice-Président"}</p>
                             </div>
                         </div>
                         <RoleSwitcher />
@@ -138,7 +138,7 @@ const LayoutVP = ({ children }: { children: React.ReactNode }) => {
                     <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
                         {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </Button>
-                    <h1 className="font-bold">Espace Vice-Président</h1>
+                    <h1 className="font-bold">Espace {user?.bureauLabel || "Vice-Président"}</h1>
                     <div className="w-10" /> {/* Spacer */}
                 </div>
 

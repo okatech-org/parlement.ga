@@ -22,14 +22,14 @@ const ParliamentDemo = () => {
         bureau: {
             title: t('congress.demo.cards.bureau'),
             icon: Crown,
-            color: "text-amber-500",
+            color: "text-[#D19C00]",
             accounts: [
                 {
                     label: t('congress.demo.cards.accounts.presidentCongress'),
                     phone: '09090901',
                     path: '/congres/espace/president',
                     icon: Crown,
-                    color: 'text-amber-500',
+                    color: 'text-[#D19C00]',
                     role: t('congress.demo.cards.roles.president'),
                     features: [
                         t('congress.demo.cards.featuresList.sessionConvocations'),
@@ -42,7 +42,7 @@ const ParliamentDemo = () => {
                     phone: '09090902',
                     path: '/parlement/espace',
                     icon: FileText,
-                    color: 'text-blue-500',
+                    color: 'text-[#3A87FD]',
                     role: t('congress.demo.cards.roles.secretary'),
                     features: [
                         t('congress.demo.cards.featuresList.minutes'),
@@ -55,14 +55,14 @@ const ParliamentDemo = () => {
         parlementaires: {
             title: t('congress.demo.cards.members'),
             icon: Users,
-            color: "text-primary",
+            color: "text-[#77BA41]",
             accounts: [
                 {
                     label: t('congress.demo.cards.accounts.deputyCongress'),
                     phone: '09090903',
                     path: '/an/espace/deputes',
                     icon: Users,
-                    color: 'text-green-600',
+                    color: 'text-[#3A87FD]',
                     role: t('congress.demo.cards.roles.deputy'),
                     features: [
                         t('congress.demo.cards.featuresList.constRevisionVote'),
@@ -75,7 +75,7 @@ const ParliamentDemo = () => {
                     phone: '09090904',
                     path: '/senat/espace',
                     icon: Users,
-                    color: 'text-blue-600',
+                    color: 'text-[#D19C00]',
                     role: t('congress.demo.cards.roles.senator'),
                     features: [
                         t('congress.demo.cards.featuresList.constRevisionVote'),
@@ -134,7 +134,8 @@ const ParliamentDemo = () => {
         sessionStorage.setItem('is_demo', 'true');
 
         toast.success(t('congress.demo.loginSuccess'));
-        navigate(redirectPath);
+        // Use window.location.href to force full page reload so UserContext reads sessionStorage
+        window.location.href = redirectPath;
     };
 
     return (
@@ -148,9 +149,9 @@ const ParliamentDemo = () => {
             />
 
             {/* Hero compact */}
-            <section className="py-12 bg-gradient-to-br from-primary/5 to-primary/10">
+            <section className="py-12 bg-gradient-to-br from-[#77BA41]/5 to-[#77BA41]/10">
                 <div className="container mx-auto px-4 text-center">
-                    <Badge className="mb-4 bg-primary/10 text-primary border-primary/20">
+                    <Badge className="mb-4 bg-[#77BA41]/10 text-[#77BA41] border-[#77BA41]/20">
                         <PlayCircle className="h-3 w-3 mr-1" />
                         {t('congress.demo.hero.mode')}
                     </Badge>
@@ -169,10 +170,10 @@ const ParliamentDemo = () => {
 
             {/* Cartes d'accès */}
             <div className="container mx-auto px-4 py-12">
-                <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+                <Card className="border-[#77BA41]/20 bg-gradient-to-br from-[#77BA41]/5 to-transparent">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                            <LogIn className="w-5 h-5 text-primary" />
+                            <LogIn className="w-5 h-5 text-[#77BA41]" />
                             {t('congress.demo.cards.access')}
                         </CardTitle>
                         <CardDescription>
@@ -194,7 +195,7 @@ const ParliamentDemo = () => {
                                             return (
                                                 <Card
                                                     key={account.label}
-                                                    className="cursor-pointer hover:shadow-lg hover:border-primary/50 transition-all duration-200"
+                                                    className="cursor-pointer hover:shadow-lg hover:border-[#77BA41]/50 transition-all duration-200"
                                                     onClick={() => handleDemoLogin(account.phone, account.path)}
                                                 >
                                                     <CardContent className="p-4 space-y-3">
@@ -249,7 +250,7 @@ const ParliamentDemo = () => {
             <footer className="bg-card border-t border-border py-8">
                 <div className="container mx-auto px-4 text-center">
                     <div className="flex justify-center items-center gap-2 mb-4">
-                        <Landmark className="h-6 w-6 text-primary" />
+                        <Landmark className="h-6 w-6 text-[#77BA41]" />
                         <span className="font-serif font-bold">{t('common.parliamentOfGabon')}</span>
                     </div>
                     <p className="text-sm text-muted-foreground">

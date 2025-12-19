@@ -59,7 +59,7 @@ const LayoutSecretary = ({ children }: { children: React.ReactNode }) => {
                             </div>
                             <div>
                                 <h3 className="font-bold text-sm">{user?.name || "Secrétaire"}</h3>
-                                <p className="text-xs text-muted-foreground">Service du Greffe</p>
+                                <p className="text-xs text-muted-foreground">{user?.bureauLabel || "Secrétaire du Bureau"}</p>
                             </div>
                         </div>
                         <RoleSwitcher />
@@ -161,7 +161,7 @@ const LayoutSecretary = ({ children }: { children: React.ReactNode }) => {
                     <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
                         {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </Button>
-                    <h1 className="font-bold font-serif">Espace Secrétaires</h1>
+                    <h1 className="font-bold font-serif">Espace {user?.bureauLabel || "Secrétaire"}</h1>
                     <div className="w-10" /> {/* Spacer */}
                 </div>
 

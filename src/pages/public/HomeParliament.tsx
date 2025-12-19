@@ -21,31 +21,36 @@ const HomeParliament = () => {
     const [mounted, setMounted] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+    // Open inter-institution links in new tab to preserve context
+    const openInNewTab = (path: string) => {
+        window.open(path, '_blank', 'noopener,noreferrer');
+    };
+
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    // Institutions (Navigation Hub)
+    // Institutions (Navigation Hub) - Couleurs officielles
     const institutions = [
         {
             icon: Building2,
             title: t('landing.institutions.an.title'),
             description: t('landing.institutions.an.desc'),
-            color: "emerald",
+            color: "an",
             path: "/an",
-            bgClass: "bg-emerald-100 dark:bg-emerald-900/30",
-            textClass: "text-emerald-600",
-            buttonClass: "bg-emerald-600 hover:bg-emerald-700"
+            bgClass: "bg-[#3A87FD]/10 dark:bg-[#3A87FD]/20",
+            textClass: "text-[#3A87FD]",
+            buttonClass: "bg-[#3A87FD] hover:bg-[#2A77ED]"
         },
         {
             icon: Landmark,
             title: t('landing.institutions.senate.title'),
             description: t('landing.institutions.senate.desc'),
-            color: "amber",
+            color: "senat",
             path: "/senat",
-            bgClass: "bg-amber-100 dark:bg-amber-900/30",
-            textClass: "text-amber-600",
-            buttonClass: "bg-amber-600 hover:bg-amber-700"
+            bgClass: "bg-[#D19C00]/10 dark:bg-[#D19C00]/20",
+            textClass: "text-[#D19C00]",
+            buttonClass: "bg-[#D19C00] hover:bg-[#B18B00]"
         }
     ];
 
@@ -107,13 +112,13 @@ const HomeParliament = () => {
                                 <h1 className="text-base sm:text-xl font-serif font-bold text-foreground">{t('landing.header.title')}</h1>
                             </div>
                         </div>
-                        
+
                         {/* Desktop Navigation */}
                         <nav className="hidden lg:flex items-center gap-4">
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => navigate("/an")}
+                                onClick={() => openInNewTab("/an")}
                                 className="text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950"
                             >
                                 <Building2 className="h-4 w-4 mr-1" />
@@ -122,7 +127,7 @@ const HomeParliament = () => {
                             <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => navigate("/senat")}
+                                onClick={() => openInNewTab("/senat")}
                                 className="text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950"
                             >
                                 <Landmark className="h-4 w-4 mr-1" />
@@ -139,7 +144,7 @@ const HomeParliament = () => {
                                 {t('landing.header.demo')}
                             </Button>
                         </nav>
-                        
+
                         <div className="flex items-center gap-2">
                             {/* Language Selector - Compact on mobile */}
                             <select
@@ -199,7 +204,15 @@ const HomeParliament = () => {
                                                 key={item.path}
                                                 variant="ghost"
                                                 className="w-full justify-start"
-                                                onClick={() => { navigate(item.path); setMobileMenuOpen(false); }}
+                                                onClick={() => {
+                                                    // Open AN/Sénat in new tab, others navigate normally
+                                                    if (item.path === '/an' || item.path === '/senat') {
+                                                        openInNewTab(item.path);
+                                                    } else {
+                                                        navigate(item.path);
+                                                    }
+                                                    setMobileMenuOpen(false);
+                                                }}
                                             >
                                                 {item.icon && <item.icon className="h-4 w-4 mr-2" />}
                                                 {item.label}
@@ -295,7 +308,7 @@ const HomeParliament = () => {
                                     key={index}
                                     className="overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border-0 animate-fade-in"
                                     style={{ animationDelay: `${index * 0.1}s` }}
-                                    onClick={() => navigate(inst.path)}
+                                    onClick={() => openInNewTab(inst.path)}
                                 >
                                     {/* Colored Header */}
                                     <div className={`${inst.buttonClass} p-4 sm:p-6 text-white`}>
@@ -409,8 +422,8 @@ const HomeParliament = () => {
                         <div>
                             <h4 className="font-semibold mb-4 text-slate-200">{t('landing.footer.chambers')}</h4>
                             <ul className="space-y-2 text-sm text-slate-400">
-                                <li><a href="/an" className="hover:text-slate-200 transition-colors flex items-center gap-2"><Building2 className="h-4 w-4" /> {t('landing.institutions.an.title')}</a></li>
-                                <li><a href="/senat" className="hover:text-slate-200 transition-colors flex items-center gap-2"><Landmark className="h-4 w-4" /> {t('landing.institutions.senate.title')}</a></li>
+                                <li><a href="/an" target="_blank" rel="noopener noreferrer" className="hover:text-slate-200 transition-colors flex items-center gap-2"><Building2 className="h-4 w-4" /> {t('landing.institutions.an.title')}</a></li>
+                                <li><a href="/senat" target="_blank" rel="noopener noreferrer" className="hover:text-slate-200 transition-colors flex items-center gap-2"><Landmark className="h-4 w-4" /> {t('landing.institutions.senate.title')}</a></li>
                             </ul>
                         </div>
                         <div>

@@ -8,6 +8,13 @@ interface User {
     name: string;
     phoneNumber: string;
     roles: UserRole[];
+    // Bureau rank display label (e.g., "2ème Vice-Président", "1er Questeur")
+    bureauLabel?: string;
+    // For AN deputies
+    circonscription?: string;
+    // For Senators
+    province?: string;
+    origine?: 'partis' | 'société_civile' | 'fds';
 }
 
 interface UserContextType {

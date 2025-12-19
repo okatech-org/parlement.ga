@@ -87,7 +87,7 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Landmark className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+              <Landmark className="h-6 w-6 sm:h-8 sm:w-8 text-[#3A87FD]" />
               <div>
                 <h1 className="text-base sm:text-xl font-serif font-bold text-foreground">{t('institutions.ASSEMBLY.name')}</h1>
               </div>
@@ -268,7 +268,7 @@ const Index = () => {
         <div className="absolute inset-0 bg-gradient-hero opacity-10"></div>
         <div className="container mx-auto px-4 py-12 sm:py-20 relative">
           <div className="max-w-4xl mx-auto text-center">
-            <Badge className="mb-4 bg-primary/10 text-primary border-primary/20" variant="outline">
+            <Badge className="mb-4 bg-[#3A87FD]/10 text-[#3A87FD] border-[#3A87FD]/20" variant="outline">
               {t('home.badge')}
             </Badge>
             <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif font-bold mb-4 sm:mb-6 animate-fade-in">
@@ -298,7 +298,7 @@ const Index = () => {
                 className="p-4 sm:p-6 text-center bg-card shadow-card-custom border-border/50 hover:shadow-elegant transition-all duration-300 animate-fade-in"
                 style={{ animationDelay: `${0.3 + index * 0.1}s` }}
               >
-                <div className="text-2xl sm:text-3xl font-serif font-bold text-primary mb-1 sm:mb-2">{stat.value}</div>
+                <div className="text-2xl sm:text-3xl font-serif font-bold text-[#3A87FD] mb-1 sm:mb-2">{stat.value}</div>
                 <div className="text-xs sm:text-sm text-muted-foreground">{stat.label}</div>
               </Card>
             ))}
@@ -409,11 +409,11 @@ const Index = () => {
       </section>
 
       {/* Security Banner */}
-      <section className="py-10 sm:py-16 bg-primary/5 border-y border-primary/10">
+      <section className="py-10 sm:py-16 bg-[#3A87FD]/5 border-y border-[#3A87FD]/10">
         <div className="container mx-auto px-4">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8">
             <div className="flex items-center gap-3">
-              <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+              <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-[#3A87FD]" />
               <div>
                 <div className="font-semibold text-sm sm:text-base">{t('home.security.maxSecurity')}</div>
                 <div className="text-xs sm:text-sm text-muted-foreground">{t('home.security.encryption')}</div>
@@ -443,7 +443,7 @@ const Index = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Landmark className="h-6 w-6 text-primary" />
+                <Landmark className="h-6 w-6 text-[#3A87FD]" />
                 <span className="font-serif font-bold">{t('institutions.ASSEMBLY.name')}</span>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -453,9 +453,9 @@ const Index = () => {
             <div>
               <h4 className="font-semibold mb-4">{t('common.quickLinks')}</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="/legislation" className="hover:text-primary transition-colors">{t('home.features.legislation.title')}</a></li>
-                <li><a href="/vote" className="hover:text-primary transition-colors">{t('hub.roles.deputy.title')}</a></li>
-                <li><a href="/territoire" className="hover:text-primary transition-colors">{t('home.features.territory.title')}</a></li>
+                <li><a href="/legislation" className="hover:text-[#3A87FD] transition-colors">{t('home.features.legislation.title')}</a></li>
+                <li><a href="/vote" className="hover:text-[#3A87FD] transition-colors">{t('hub.roles.deputy.title')}</a></li>
+                <li><a href="/territoire" className="hover:text-[#3A87FD] transition-colors">{t('home.features.territory.title')}</a></li>
               </ul>
             </div>
             <div>

@@ -398,7 +398,7 @@ flowchart TD
             <section id="navette-section" className="py-10 sm:py-16 bg-emerald-50 dark:bg-emerald-950/30">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-8 sm:mb-12">
-                        <Badge className="mb-3 sm:mb-4 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+                        <Badge className="mb-3 sm:mb-4 bg-[#3A87FD]/10 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
                             <ArrowLeftRight className="h-3 w-3 mr-1" />
                             {t('assembly.process.shuttle.badge')}
                         </Badge>
@@ -426,7 +426,7 @@ flowchart TD
                     <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mt-8">
                         <Card className="bg-white dark:bg-gray-800">
                             <CardHeader>
-                                <CardTitle className="flex items-center gap-2 text-emerald-600">
+                                <CardTitle className="flex items-center gap-2 text-[#3A87FD]">
                                     <CheckCircle className="h-5 w-5" />
                                     {t('assembly.process.shuttle.identical')}
                                 </CardTitle>
@@ -455,7 +455,7 @@ flowchart TD
             </section>
 
             {/* CTA */}
-            <section className="py-16 bg-emerald-600 text-white">
+            <section className="py-16 bg-[#3A87FD] text-white">
                 <div className="container mx-auto px-4 text-center">
                     <h2 className="text-2xl font-bold mb-4">{t('assembly.process.cta.title')}</h2>
                     <p className="opacity-90 mb-8">

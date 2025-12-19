@@ -1,6 +1,6 @@
 // Role types for authentication
 
-export type UserRole = 
+export type UserRole =
   | 'citizen'
   | 'admin'
   | 'super_admin'
@@ -10,6 +10,7 @@ export type UserRole =
   | 'chef_service'
   | 'agent'
   | 'president'
+  | 'president_congress'
   | 'vice_president'
   | 'questeur'
   | 'secretary'
@@ -43,6 +44,7 @@ export const ROLE_CONFIGS: Record<UserRole, RoleConfig> = {
   chef_service: { name: 'chef_service', displayName: 'Chef de Service', permissions: ['read', 'write'] },
   agent: { name: 'agent', displayName: 'Agent', permissions: ['read', 'write'] },
   president: { name: 'president', displayName: 'Président', permissions: ['read', 'write', 'manage', 'approve'] },
+  president_congress: { name: 'president_congress', displayName: 'Président du Congrès', permissions: ['read', 'write', 'manage', 'approve', 'convoke_congress'] },
   vice_president: { name: 'vice_president', displayName: 'Vice-Président', permissions: ['read', 'write', 'manage'] },
   questeur: { name: 'questeur', displayName: 'Questeur', permissions: ['read', 'write', 'manage'] },
   secretary: { name: 'secretary', displayName: 'Secrétaire', permissions: ['read', 'write'] },

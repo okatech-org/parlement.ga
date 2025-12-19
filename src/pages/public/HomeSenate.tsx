@@ -80,7 +80,7 @@ const HomeSenate = () => {
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <Landmark className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+                            <Landmark className="h-6 w-6 sm:h-8 sm:w-8 text-[#D19C00]" />
                             <div>
                                 <h1 className="text-lg sm:text-xl font-serif font-bold text-foreground">Sénat</h1>
                             </div>
@@ -222,7 +222,7 @@ const HomeSenate = () => {
                 <div className="absolute inset-0 bg-gradient-hero opacity-10"></div>
                 <div className="container mx-auto px-4 py-12 sm:py-20 relative">
                     <div className="max-w-4xl mx-auto text-center">
-                        <Badge className="mb-4 bg-primary/10 text-primary border-primary/20" variant="outline">
+                        <Badge className="mb-4 bg-[#D19C00]/10 text-[#D19C00] border-[#D19C00]/20" variant="outline">
                             <Crown className="h-3 w-3 mr-1" />
                             Chambre haute du Parlement
                         </Badge>
@@ -254,7 +254,7 @@ const HomeSenate = () => {
                                 className="p-4 sm:p-6 text-center bg-card shadow-card-custom border-border/50 hover:shadow-elegant transition-all duration-300 animate-fade-in"
                                 style={{ animationDelay: `${0.3 + index * 0.1}s` }}
                             >
-                                <div className="text-2xl sm:text-3xl font-serif font-bold text-primary mb-1 sm:mb-2">{stat.value}</div>
+                                <div className="text-2xl sm:text-3xl font-serif font-bold text-[#D19C00] mb-1 sm:mb-2">{stat.value}</div>
                                 <div className="text-xs sm:text-sm text-muted-foreground">{stat.label}</div>
                             </Card>
                         ))}
@@ -365,10 +365,10 @@ const HomeSenate = () => {
             </section>
 
             {/* Protocole Législatif du Sénat */}
-            <section className="py-20 bg-gradient-to-br from-primary/5 to-primary/10">
+            <section className="py-20 bg-gradient-to-br from-[#D19C00]/5 to-[#D19C00]/10">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <Badge className="mb-4 bg-primary/10 text-primary border-primary/20" variant="outline">
+                        <Badge className="mb-4 bg-[#D19C00]/10 text-[#D19C00] border-[#D19C00]/20" variant="outline">
                             <ArrowLeftRight className="h-3 w-3 mr-1" />
                             Navette Parlementaire
                         </Badge>
@@ -380,10 +380,10 @@ const HomeSenate = () => {
 
                     {/* Fonctionnalités clés */}
                     <div className="grid md:grid-cols-3 gap-6 mb-16 max-w-5xl mx-auto">
-                        <Card className="border-t-4 border-t-primary">
+                        <Card className="border-t-4 border-t-[#D19C00]">
                             <CardHeader>
-                                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-2">
-                                    <ArrowLeftRight className="h-6 w-6 text-primary" />
+                                <div className="w-12 h-12 rounded-lg bg-[#D19C00]/10 flex items-center justify-center mb-2">
+                                    <ArrowLeftRight className="h-6 w-6 text-[#D19C00]" />
                                 </div>
                                 <CardTitle className="text-lg">Navette Parlementaire</CardTitle>
                             </CardHeader>
@@ -427,7 +427,7 @@ const HomeSenate = () => {
                     <Card className="max-w-4xl mx-auto">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                <Clock className="h-5 w-5 text-primary" />
+                                <Clock className="h-5 w-5 text-[#D19C00]" />
                                 Processus d'examen d'un texte
                             </CardTitle>
                             <CardDescription>De la réception à la transmission</CardDescription>
@@ -444,14 +444,14 @@ const HomeSenate = () => {
                                     const Icon = item.icon;
                                     return (
                                         <div key={item.step} className="relative text-center">
-                                            <div className="w-12 h-12 mx-auto rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold mb-2">
+                                            <div className="w-12 h-12 mx-auto rounded-full bg-[#D19C00] flex items-center justify-center text-[#D19C00]-foreground font-bold mb-2">
                                                 {item.step}
                                             </div>
                                             <Icon className="h-5 w-5 mx-auto text-muted-foreground mb-1" />
                                             <h4 className="font-medium text-sm">{item.title}</h4>
                                             <Badge variant="outline" className="text-xs mt-1">{item.duration}</Badge>
                                             {index < 4 && (
-                                                <div className="hidden md:block absolute top-6 left-[60%] w-[80%] h-0.5 bg-primary/20" />
+                                                <div className="hidden md:block absolute top-6 left-[60%] w-[80%] h-0.5 bg-[#D19C00]/20" />
                                             )}
                                         </div>
                                     );
@@ -476,7 +476,7 @@ const HomeSenate = () => {
                 <div className="container mx-auto px-4">
                     <div className="flex items-center justify-center gap-8 flex-wrap">
                         <div className="flex items-center gap-3">
-                            <Shield className="h-8 w-8 text-primary" />
+                            <Shield className="h-8 w-8 text-[#D19C00]" />
                             <div>
                                 <div className="font-semibold">Sécurité maximale</div>
                                 <div className="text-sm text-muted-foreground">Chiffrement bout-en-bout</div>
@@ -506,7 +506,7 @@ const HomeSenate = () => {
                     <div className="grid md:grid-cols-3 gap-8">
                         <div>
                             <div className="flex items-center gap-2 mb-4">
-                                <Landmark className="h-6 w-6 text-primary" />
+                                <Landmark className="h-6 w-6 text-[#D19C00]" />
                                 <span className="font-serif font-bold">Sénat</span>
                             </div>
                             <p className="text-sm text-muted-foreground">
@@ -516,9 +516,9 @@ const HomeSenate = () => {
                         <div>
                             <h4 className="font-semibold mb-4">Liens rapides</h4>
                             <ul className="space-y-2 text-sm text-muted-foreground">
-                                <li><a href="/senat/senateurs" className="hover:text-primary transition-colors">Nos Sénateurs</a></li>
-                                <li><a href="/senat/travaux" className="hover:text-primary transition-colors">Travaux législatifs</a></li>
-                                <li><a href="/senat/collectivites" className="hover:text-primary transition-colors">Collectivités</a></li>
+                                <li><a href="/senat/senateurs" className="hover:text-[#D19C00] transition-colors">Nos Sénateurs</a></li>
+                                <li><a href="/senat/travaux" className="hover:text-[#D19C00] transition-colors">Travaux législatifs</a></li>
+                                <li><a href="/senat/collectivites" className="hover:text-[#D19C00] transition-colors">Collectivités</a></li>
                             </ul>
                         </div>
                         <div>

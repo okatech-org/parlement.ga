@@ -86,6 +86,7 @@ import { AssemblyLayout, SenateLayout, ParliamentLayout } from "@/layouts/instit
 // Institution Pages (Dashboard internes)
 import AssemblyHome from "@/pages/assembly/AssemblyHome";
 import AssemblyProcessPage from "@/pages/assembly/AssemblyProcessPage";
+import AssemblyDemo from "@/pages/assembly/AssemblyDemo";
 import SenateHome from "@/pages/senate/SenateHome";
 import ParliamentHome from "@/pages/parliament/ParliamentHome";
 import CMPWorkspace from "@/pages/parliament/CMPWorkspace";
@@ -128,6 +129,8 @@ import SystemAdminLogin from "@/pages/admin/SystemAdminLogin";
 import SystemAdminDashboard from "@/pages/admin/SystemAdminDashboard";
 import InstitutionAdminDashboard from "@/pages/admin/InstitutionAdminDashboard";
 import CongressPresidentDashboard from "@/pages/parliament/president/CongressPresidentDashboard";
+import CitizenDashboard from "@/pages/citizen/CitizenDashboard";
+import LayoutCitizen from "@/layouts/LayoutCitizen";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -171,7 +174,7 @@ const App = () => (
                 <Route path="/an/legislation" element={<Legislation />} />
                 <Route path="/an/territoire" element={<Territoire />} />
                 <Route path="/an/vote" element={<Vote />} />
-                <Route path="/an/demo" element={<ProtocolDemoPage />} />
+                <Route path="/an/demo" element={<AssemblyDemo />} />
                 <Route path="/an/processus" element={<AssemblyProcessPage />} />
                 <Route path="/an/login" element={<Login />} />
 
@@ -266,6 +269,16 @@ const App = () => (
                 </Route>
 
                 {/* ========================================= */}
+                {/* ESPACE CITOYEN UNIVERSEL                 */}
+                {/* Même espace accessible depuis toutes les institutions */}
+                {/* ========================================= */}
+                <Route path="/espace/citoyen" element={<ProtectedRoute><LayoutCitizen><CitizenDashboard /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/espace/citoyen/*" element={<ProtectedRoute><LayoutCitizen><CitizenDashboard /></LayoutCitizen></ProtectedRoute>} />
+                {/* Alias pour accès depuis AN */}
+                <Route path="/an/espace/citoyen" element={<ProtectedRoute><LayoutCitizen><CitizenDashboard /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/an/espace/citoyen/*" element={<ProtectedRoute><LayoutCitizen><CitizenDashboard /></LayoutCitizen></ProtectedRoute>} />
+
+                {/* ========================================= */}
                 {/* SÉNAT - /senat/*                         */}
                 {/* Représentation des collectivités locales */}
                 {/* ========================================= */}
@@ -297,6 +310,10 @@ const App = () => (
                 <Route path="/senat/travaux" element={<HomeSenate />} />
                 <Route path="/senat/collectivites" element={<HomeSenate />} />
                 <Route path="/senat/provinces" element={<HomeSenate />} />
+
+                {/* Alias Espace Citoyen depuis Sénat */}
+                <Route path="/senat/espace/citoyen" element={<ProtectedRoute><LayoutCitizen><CitizenDashboard /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/senat/espace/citoyen/*" element={<ProtectedRoute><LayoutCitizen><CitizenDashboard /></LayoutCitizen></ProtectedRoute>} />
 
                 {/* ========================================= */}
                 {/* CONGRÈS / PARLEMENT - Espace Souverain   */}

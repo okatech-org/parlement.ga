@@ -2,26 +2,44 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
     LayoutDashboard,
+    FileText,
     Settings,
     LogOut,
     Menu,
     X,
     Moon,
     Sun,
-    Wallet,
-    Package,
+    Calendar,
+    Bell,
+    Users,
+    Heart,
+    TrendingUp,
     Building2,
-    Mail,
-    FileText
+    Landmark,
+    Scale
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
-import RoleSwitcher from "@/components/RoleSwitcher";
 import { useUser } from "@/contexts/UserContext";
+import { Separator } from "@/components/ui/separator";
 
-const LayoutQuesteur = ({ children }: { children: React.ReactNode }) => {
+interface LayoutCitizenProps {
+    children: React.ReactNode;
+}
+
+/**
+ * Layout Citoyen Universel
+ * Un seul espace citoyen avec accès à toutes les institutions (AN, Sénat, Parlement)
+ * 
+ * Palette officielle:
+ * - AN: #3A87FD (bleu)
+ * - Sénat: #D19C00 (or)
+ * - Parlement: #77BA41 (vert)
+ * - Citoyen: #04CDB9 (cyan)
+ */
+const LayoutCitizen = ({ children }: LayoutCitizenProps) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { theme, setTheme } = useTheme();
@@ -29,49 +47,32 @@ const LayoutQuesteur = ({ children }: { children: React.ReactNode }) => {
     const { user } = useUser();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+    const basePath = "/espace/citoyen";
+
+    // Menu principal - accès à toutes les fonctionnalités citoyen
     const menuItems = [
-        {
-            icon: LayoutDashboard,
-            label: "Tableau de bord",
-            path: "/questeurs",
-            allowedRoles: ['questeur', 'questeur_budget', 'questeur_resources', 'questeur_services']
-        },
-        {
-            icon: Wallet,
-            label: "Gestion Budgétaire",
-            path: "/questeurs/budget",
-            allowedRoles: ['questeur', 'questeur_budget']
-        },
-        {
-            icon: Package,
-            label: "Ressources Matérielles",
-            path: "/questeurs/ressources",
-            allowedRoles: ['questeur', 'questeur_resources']
-        },
-        {
-            icon: Building2,
-            label: "Services Administratifs",
-            path: "/questeurs/services",
-            allowedRoles: ['questeur', 'questeur_services']
-        },
-        {
-            icon: Mail,
-            label: "iBoîte",
-            path: "/questeurs/mail",
-            allowedRoles: ['questeur', 'questeur_budget', 'questeur_resources', 'questeur_services']
-        },
-        {
-            icon: FileText,
-            label: "Documents",
-            path: "/questeurs/documents",
-            allowedRoles: ['questeur', 'questeur_budget', 'questeur_resources', 'questeur_services']
-        },
+        { icon: LayoutDashboard, label: "Tableau de bord", path: basePath },
+        { icon: TrendingUp, label: "Suivre les travaux", path: `${basePath}/suivi` },
+        { icon: Calendar, label: "Agenda public", path: `${basePath}/agenda` },
+        { icon: Users, label: "Mes élus", path: `${basePath}/elus` },
+        { icon: Heart, label: "Pétitions", path: `${basePath}/petitions` },
+        { icon: Bell, label: "Notifications", path: `${basePath}/notifications` },
     ];
 
-    // Filter items based on user role
-    const filteredItems = menuItems.filter(item =>
-        user?.roles.some(role => item.allowedRoles.includes(role as any))
-    );
+    // Raccourcis vers les 3 institutions avec couleurs officielles
+    const institutionLinks = [
+        { icon: Building2, label: "Assemblée Nationale", path: "/an", colorClass: "text-[#3A87FD]" },
+        { icon: Landmark, label: "Sénat", path: "/senat", colorClass: "text-[#D19C00]" },
+        { icon: Scale, label: "Parlement / Congrès", path: "/parlement", colorClass: "text-[#77BA41]" },
+    ];
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('user_data');
+        sessionStorage.removeItem('current_role');
+        sessionStorage.removeItem('is_demo');
+        sessionStorage.removeItem('auth_origin');
+        navigate("/parlement");
+    };
 
     return (
         <div className="min-h-screen bg-background flex" dir={dir}>
@@ -85,38 +86,60 @@ const LayoutQuesteur = ({ children }: { children: React.ReactNode }) => {
                 )}
             >
                 <div className="h-full flex flex-col">
-                    {/* Profile Section */}
+                    {/* Profile Section - Couleur Citoyen #04CDB9 */}
                     <div className="p-6 border-b border-border/50">
-                        <div className="flex items-center gap-4 mb-6">
-                            <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-600 font-bold text-xl">
-                                Q
+                        <div className="flex items-center gap-4 mb-2">
+                            <div className="w-12 h-12 rounded-full bg-[#04CDB9]/20 flex items-center justify-center text-[#04CDB9] font-bold text-xl">
+                                C
                             </div>
                             <div>
-                                <h3 className="font-bold text-sm">{user?.name || "Questeur"}</h3>
-                                <p className="text-xs text-muted-foreground">{user?.bureauLabel || "Questeur"}</p>
+                                <h3 className="font-bold text-sm">{user?.name || "Citoyen"}</h3>
+                                <p className="text-xs text-muted-foreground">Espace Citoyen</p>
                             </div>
                         </div>
-                        <RoleSwitcher />
                     </div>
 
                     {/* Navigation */}
                     <div className="flex-1 overflow-y-auto py-6 px-4 space-y-6">
+                        {/* Menu Principal */}
                         <div>
                             <h4 className="text-xs font-semibold text-muted-foreground mb-3 px-2 uppercase tracking-wider">
-                                Espace Administration
+                                Menu Principal
                             </h4>
                             <div className="space-y-1">
-                                {filteredItems.map((item, index) => (
+                                {menuItems.map((item, index) => (
                                     <Button
                                         key={index}
                                         variant={location.pathname === item.path ? "secondary" : "ghost"}
                                         className={cn(
                                             "w-full justify-start gap-3",
-                                            location.pathname === item.path && "bg-amber-500/10 text-amber-600 hover:bg-amber-500/15"
+                                            location.pathname === item.path && "bg-[#04CDB9]/10 text-[#04CDB9] hover:bg-[#04CDB9]/15"
                                         )}
                                         onClick={() => navigate(item.path)}
                                     >
                                         <item.icon className="w-4 h-4" />
+                                        {item.label}
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <Separator />
+
+                        {/* Accès aux Institutions */}
+                        <div>
+                            <h4 className="text-xs font-semibold text-muted-foreground mb-3 px-2 uppercase tracking-wider">
+                                Portails Institutionnels
+                            </h4>
+                            <div className="space-y-1">
+                                {institutionLinks.map((item, index) => (
+                                    <Button
+                                        key={index}
+                                        variant="ghost"
+                                        className="w-full justify-start gap-3"
+                                        onClick={() => navigate(item.path)}
+                                    >
+                                        <item.icon className={cn("w-4 h-4", item.colorClass)} />
                                         {item.label}
                                     </Button>
                                 ))}
@@ -137,7 +160,7 @@ const LayoutQuesteur = ({ children }: { children: React.ReactNode }) => {
                         <Button
                             variant="ghost"
                             className="w-full justify-start gap-3"
-                            onClick={() => navigate("/questeurs/settings")}
+                            onClick={() => navigate(`${basePath}/settings`)}
                         >
                             <Settings className="w-4 h-4" />
                             {t('common.settings')}
@@ -145,11 +168,7 @@ const LayoutQuesteur = ({ children }: { children: React.ReactNode }) => {
                         <Button
                             variant="ghost"
                             className="w-full justify-start gap-3 text-red-500 hover:text-red-600 hover:bg-red-500/10"
-                            onClick={() => {
-                                sessionStorage.removeItem('user_data');
-                                sessionStorage.removeItem('current_role');
-                                navigate("/auth");
-                            }}
+                            onClick={handleLogout}
                         >
                             <LogOut className="w-4 h-4" />
                             {t('common.logout')}
@@ -173,7 +192,7 @@ const LayoutQuesteur = ({ children }: { children: React.ReactNode }) => {
                     <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
                         {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                     </Button>
-                    <h1 className="font-bold">Espace {user?.bureauLabel || "Questeur"}</h1>
+                    <h1 className="font-bold">Espace Citoyen</h1>
                     <div className="w-10" /> {/* Spacer */}
                 </div>
 
@@ -185,4 +204,4 @@ const LayoutQuesteur = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
-export default LayoutQuesteur;
+export default LayoutCitizen;

@@ -23,7 +23,7 @@ const Statistiques = () => {
     return (
         <div className="min-h-screen bg-background transition-colors duration-300" dir={dir}>
             {/* Header */}
-            <div className="bg-gradient-to-r from-emerald-600/10 to-teal-600/10 border-b border-border/50 py-12 px-4">
+            <div className="bg-gradient-to-r from-[#3A87FD]/10 to-[#2A77ED]/10 border-b border-border/50 py-12 px-4">
                 <div className="max-w-7xl mx-auto relative">
                     <Button
                         variant="ghost"
@@ -49,8 +49,8 @@ const Statistiques = () => {
                     </div>
 
                     <div className="flex items-center gap-3 mb-4">
-                        <div className="p-3 rounded-xl bg-emerald-600/10 neu-inset">
-                            <PieChart className="w-8 h-8 text-emerald-600" />
+                        <div className="p-3 rounded-xl bg-[#3A87FD]/10 neu-inset">
+                            <PieChart className="w-8 h-8 text-[#3A87FD]" />
                         </div>
                         <h1 className="text-4xl font-bold">{t('stats.title')}</h1>
                     </div>
@@ -65,8 +65,8 @@ const Statistiques = () => {
                 <div className="grid md:grid-cols-4 gap-6 mb-12">
                     <Card className="p-6 hover:shadow-elegant transition-all">
                         <div className="flex justify-between items-start mb-4">
-                            <div className="p-2 bg-primary/10 rounded-lg">
-                                <FileText className="w-6 h-6 text-primary" />
+                            <div className="p-2 bg-[#3A87FD]/10 rounded-lg">
+                                <FileText className="w-6 h-6 text-[#3A87FD]" />
                             </div>
                             <span className="flex items-center text-green-600 text-sm font-medium">
                                 +12% <ArrowUp className="w-3 h-3 ml-1" />

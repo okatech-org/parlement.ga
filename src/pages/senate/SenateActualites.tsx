@@ -45,7 +45,7 @@ const SenateActualites = () => {
             date: "5 Déc 2025",
             category: "collectivities",
             categoryLabel: t('senate.news.categories.collectivities'),
-            categoryColor: "bg-amber-600",
+            categoryColor: "bg-[#D19C00]",
             image: newsLegislation,
             featured: true
         },
@@ -124,7 +124,7 @@ const SenateActualites = () => {
             <section className="bg-gradient-to-b from-amber-50 to-background dark:from-amber-950/20 dark:to-background py-12">
                 <div className="container mx-auto px-4">
                     <div className="max-w-4xl mx-auto text-center">
-                        <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200" variant="outline">
+                        <Badge className="mb-4 bg-[#D19C00]/10 text-amber-700 border-[#D19C00]/20" variant="outline">
                             <Crown className="h-3 w-3 mr-1" />
                             {t('senate.news.hero.badge')}
                         </Badge>
@@ -156,8 +156,8 @@ const SenateActualites = () => {
                                 key={cat.key}
                                 variant={selectedCategory === cat.key ? "default" : "outline"}
                                 className={`cursor-pointer whitespace-nowrap px-4 py-2 text-sm transition-colors ${selectedCategory === cat.key
-                                    ? "bg-amber-600 hover:bg-amber-700"
-                                    : "hover:bg-amber-100 hover:text-amber-700"
+                                    ? "bg-[#D19C00] hover:bg-amber-700"
+                                    : "hover:bg-[#D19C00]/10 hover:text-amber-700"
                                     }`}
                                 onClick={() => setSelectedCategory(cat.key)}
                             >
@@ -182,7 +182,7 @@ const SenateActualites = () => {
                             />
                             <div className="absolute bottom-0 left-0 p-8 z-20 max-w-3xl">
                                 <div className="flex items-center gap-3 mb-4">
-                                    <Badge className="bg-amber-600 text-white border-none">
+                                    <Badge className="bg-[#D19C00] text-white border-none">
                                         <Landmark className="w-3 h-3 mr-1" />
                                         {t('senate.news.featured.badge')}
                                     </Badge>
@@ -234,14 +234,14 @@ const SenateActualites = () => {
                                 </span>
                             </div>
                             <div className="p-5 flex-1 flex flex-col">
-                                <h3 className="text-lg font-bold mb-2 group-hover:text-amber-600 transition-colors line-clamp-2">
+                                <h3 className="text-lg font-bold mb-2 group-hover:text-[#D19C00] transition-colors line-clamp-2">
                                     {news.title}
                                 </h3>
                                 <p className="text-sm text-muted-foreground mb-4 line-clamp-3 flex-1 leading-relaxed">
                                     {news.excerpt}
                                 </p>
                                 <div className="pt-3 border-t border-border/50 flex justify-end mt-auto">
-                                    <Button variant="ghost" size="sm" className="text-amber-600 group-hover:translate-x-1 transition-transform p-0 hover:bg-transparent">
+                                    <Button variant="ghost" size="sm" className="text-[#D19C00] group-hover:translate-x-1 transition-transform p-0 hover:bg-transparent">
                                         {t('senate.news.article.readMore')} <ArrowRight className="w-4 h-4 ml-1" />
                                     </Button>
                                 </div>
@@ -252,8 +252,8 @@ const SenateActualites = () => {
 
                 {filteredNews.length === 0 && (
                     <div className="text-center py-20">
-                        <div className="inline-flex p-4 rounded-full bg-amber-100 dark:bg-amber-900/30 mb-4">
-                            <Search className="w-8 h-8 text-amber-600" />
+                        <div className="inline-flex p-4 rounded-full bg-[#D19C00]/10 dark:bg-amber-900/30 mb-4">
+                            <Search className="w-8 h-8 text-[#D19C00]" />
                         </div>
                         <h3 className="text-xl font-bold mb-2">{t('senate.news.search.noResults')}</h3>
                         <p className="text-muted-foreground mb-6">
@@ -265,7 +265,7 @@ const SenateActualites = () => {
                                 setSearchQuery("");
                                 setSelectedCategory("all");
                             }}
-                            className="border-amber-600 text-amber-600 hover:bg-amber-50"
+                            className="border-[#D19C00] text-[#D19C00] hover:bg-[#D19C00]/5"
                         >
                             {t('senate.news.search.resetFilters')}
                         </Button>
@@ -278,7 +278,7 @@ const SenateActualites = () => {
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         <div className="flex items-center gap-2">
-                            <Landmark className="h-5 w-5 text-amber-500" />
+                            <Landmark className="h-5 w-5 text-[#D19C00]" />
                             <span className="font-serif font-semibold">{t('senate.news.footer.title')}</span>
                         </div>
                         <div className="flex items-center gap-4">

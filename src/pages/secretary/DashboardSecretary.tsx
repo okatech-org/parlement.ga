@@ -1,10 +1,15 @@
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useUser } from "@/contexts/UserContext";
 import { FileText, Calendar, Mail, CheckCircle, Clock, AlertCircle, TrendingUp } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 
 const DashboardSecretary = () => {
     const { t } = useLanguage();
+    const { user } = useUser();
+
+    // Use bureauLabel for display (e.g., "1er Secrétaire", "2ème Secrétaire")
+    const secretaryLabel = user?.bureauLabel || "Secrétaire";
 
     const metrics = [
         {
@@ -53,7 +58,7 @@ const DashboardSecretary = () => {
                     S
                 </div>
                 <div>
-                    <h1 className="text-4xl font-serif font-bold mb-2">Espace Secrétaires</h1>
+                    <h1 className="text-4xl font-serif font-bold mb-2">Espace {secretaryLabel}</h1>
                     <p className="text-muted-foreground text-lg">Bienvenue dans votre espace de gestion administrative.</p>
                 </div>
             </div>

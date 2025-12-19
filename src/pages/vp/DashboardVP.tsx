@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useUser } from "@/contexts/UserContext";
 import { Briefcase, Crown, Calendar, TrendingUp, CheckCircle, AlertTriangle } from "lucide-react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardStatsCard } from "@/components/dashboard/DashboardStatsCard";
@@ -7,7 +8,11 @@ import { AnimatedDashboardCard } from "@/components/animations/DashboardAnimatio
 import InteractiveDonutChart from "@/components/charts/InteractiveDonutChart";
 
 const DashboardVP = () => {
-    const { t } = useLanguage(); // Kept for consistency if needed later
+    const { t } = useLanguage();
+    const { user } = useUser();
+
+    // Dynamically read the VP rank from user session
+    const vpLabel = user?.bureauLabel || "Vice-Président";
 
     const metrics = [
         { label: "Dossiers Délégués", subLabel: "En traitement", value: "5", icon: Briefcase, color: "text-indigo-600" },
@@ -28,7 +33,7 @@ const DashboardVP = () => {
             {/* Header */}
             <AnimatedDashboardCard delay={0}>
                 <DashboardHeader
-                    title="Espace 1er Vice-Président"
+                    title={`Espace ${vpLabel}`}
                     subtitle="Supervision des délégations et continuité de la Présidence."
                     avatarInitial="VP"
                 />

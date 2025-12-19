@@ -64,7 +64,9 @@ const DashboardQuesteur = () => {
         { name: 'Juin', value: 48 },
     ];
 
-    const title = isBudget ? "Espace Budget" : isResources ? "Espace Ressources" : isServices ? "Espace Services" : "Espace Questeur";
+    // Use bureauLabel for display if available (e.g., "1er Questeur", "2ème Questeur")
+    const questeurLabel = user?.bureauLabel || "Questeur";
+    const title = isBudget ? "Espace Budget" : isResources ? "Espace Ressources" : isServices ? "Espace Services" : `Espace ${questeurLabel}`;
     const subtitle = isBudget ? "Pilotage et contrôle de l'exécution budgétaire." : isResources ? "Gestion du patrimoine et de la logistique." : isServices ? "Coordination des services administratifs." : "Vue d'ensemble de l'administration parlementaire.";
 
     return (

@@ -11,6 +11,7 @@ import {
   MessageSquare,
   Settings,
   Bell,
+  Landmark,
 } from "lucide-react";
 import { AdminSpaceLayout } from "@/components/layout/AdminSpaceLayout";
 import { PresidentSenateDashboardSection } from "./components/PresidentSenateDashboardSection";
@@ -20,12 +21,19 @@ import { PresidentSenateAgendaSection } from "./components/PresidentSenateAgenda
 import { PresidentSenateStatsSection } from "./components/PresidentSenateStatsSection";
 import { PresidentSenateMessagerieSection } from "./components/PresidentSenateMessagerieSection";
 import { PresidentSenateParametresSection } from "./components/PresidentSenateParametresSection";
+import { useNavigate } from "react-router-dom";
 
 const PresidentSenateSpace = () => {
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("dashboard");
 
+  // Check if user also has president_congress role (dual role)
+  const userData = JSON.parse(sessionStorage.getItem('user_data') || '{}');
+  const userRoles = userData.roles || [];
+  const hasCongressRole = userRoles.includes('president_congress');
+
   const userContext = {
-    name: "Hon. Paulette Missambo",
+    name: userData.name || "Hon. Paulette Missambo",
     role: "Président du Sénat",
     avatar: undefined,
   };
@@ -39,11 +47,29 @@ const PresidentSenateSpace = () => {
     { id: "messagerie", label: "Messagerie", icon: MessageSquare, badge: "3" },
   ];
 
+  // Add Congress link if user has dual role
+  if (hasCongressRole) {
+    navItems.push({
+      id: "congres_space",
+      label: "Espace Congrès",
+      icon: Landmark,
+    });
+  }
+
   const quickAccessItems = [
     { id: "navette", label: "Navette", icon: ArrowLeftRight },
     { id: "cmp", label: "CMP", icon: Gavel },
     { id: "agenda", label: "Agenda", icon: Calendar },
   ];
+
+  const handleSectionChange = (section: string) => {
+    // Handle Congress space navigation
+    if (section === "congres_space") {
+      navigate("/congres/espace/president");
+      return;
+    }
+    setActiveSection(section);
+  };
 
   const renderContent = () => {
     switch (activeSection) {
@@ -72,7 +98,7 @@ const PresidentSenateSpace = () => {
       userContext={userContext}
       navItems={navItems}
       activeSection={activeSection}
-      setActiveSection={setActiveSection}
+      setActiveSection={handleSectionChange}
       quickAccessItems={quickAccessItems}
     >
       {renderContent()}
@@ -81,3 +107,4 @@ const PresidentSenateSpace = () => {
 };
 
 export default PresidentSenateSpace;
+

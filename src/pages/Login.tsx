@@ -84,14 +84,14 @@ export default function Login() {
     const getEnvironmentConfig = () => {
         // If Citizen tab is active, use Unified Republic Styling
         if (userType === 'citizen') {
-            return { name: "République Gabonaise", color: "text-primary", bg: "from-primary", icon: Shield };
+            return { name: "République Gabonaise", color: "text-[#04CDB9]", bg: "from-[#04CDB9]", icon: Shield };
         }
 
         const path = location.pathname;
-        if (path.includes('/an')) return { name: "Assemblée Nationale", color: "text-emerald-600", bg: "from-emerald-900", icon: Building2 };
-        if (path.includes('/senat')) return { name: "Sénat", color: "text-amber-600", bg: "from-amber-900", icon: Landmark };
-        if (path.includes('/congres') || path.includes('/parlement')) return { name: "Parlement", color: "text-blue-600", bg: "from-blue-900", icon: Scale };
-        return { name: "République Gabonaise", color: "text-primary", bg: "from-primary", icon: Shield };
+        if (path.includes('/an')) return { name: "Assemblée Nationale", color: "text-[#3A87FD]", bg: "from-[#3A87FD]", icon: Building2 };
+        if (path.includes('/senat')) return { name: "Sénat", color: "text-[#D19C00]", bg: "from-[#D19C00]", icon: Landmark };
+        if (path.includes('/congres') || path.includes('/parlement')) return { name: "Parlement", color: "text-[#77BA41]", bg: "from-[#77BA41]", icon: Scale };
+        return { name: "République Gabonaise", color: "text-[#04CDB9]", bg: "from-[#04CDB9]", icon: Shield };
     };
 
     const envConfig = getEnvironmentConfig();

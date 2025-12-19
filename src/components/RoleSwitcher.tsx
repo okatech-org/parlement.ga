@@ -20,9 +20,20 @@ const RoleSwitcher = () => {
     if (!user || professionalRoles.length <= 1) return null;
 
     const getRoleLabel = (role: UserRole) => {
+        // For Bureau roles, use the dynamic bureauLabel from user session if available
+        if (role === 'vp' && user?.bureauLabel?.includes('Vice-Président')) {
+            return user.bureauLabel;
+        }
+        if ((role === 'questeur' || role === 'questeur_budget' || role === 'questeur_resources' || role === 'questeur_services') && user?.bureauLabel?.includes('Questeur')) {
+            return user.bureauLabel;
+        }
+        if (role === 'secretary' && user?.bureauLabel?.includes('Secrétaire')) {
+            return user.bureauLabel;
+        }
+
         switch (role) {
             case 'president': return "Président";
-            case 'vp': return "1er Vice-Président";
+            case 'vp': return "Vice-Président";
             case 'deputy': return "Député";
             case 'substitute': return "Suppléant";
             case 'questeur': return "Questeur";

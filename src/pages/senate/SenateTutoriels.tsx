@@ -243,7 +243,7 @@ const SenateTutoriels = () => {
         const advanced = t('senate.tutorials.levels.advanced');
 
         if (level === beginner) return "bg-green-100 text-green-700 border-green-200";
-        if (level === intermediate) return "bg-amber-100 text-amber-700 border-amber-200";
+        if (level === intermediate) return "bg-[#D19C00]/10 text-amber-700 border-[#D19C00]/20";
         if (level === advanced) return "bg-red-100 text-red-700 border-red-200";
         return "bg-gray-100 text-gray-700";
     };
@@ -267,7 +267,7 @@ const SenateTutoriels = () => {
             <section className="bg-gradient-to-b from-amber-50 to-background dark:from-amber-950/20 dark:to-background py-12">
                 <div className="container mx-auto px-4">
                     <div className="max-w-4xl mx-auto text-center">
-                        <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200" variant="outline">
+                        <Badge className="mb-4 bg-[#D19C00]/10 text-amber-700 border-[#D19C00]/20" variant="outline">
                             <BookOpen className="h-3 w-3 mr-1" />
                             {totalTutorials} {t('senate.tutorials.hero.badge')}
                         </Badge>
@@ -316,7 +316,7 @@ const SenateTutoriels = () => {
                     {/* Quick Stats */}
                     <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto mt-8">
                         <Card className="text-center p-4 bg-white/80 dark:bg-card">
-                            <Video className="h-6 w-6 mx-auto text-amber-500 mb-2" />
+                            <Video className="h-6 w-6 mx-auto text-[#D19C00] mb-2" />
                             <div className="text-2xl font-bold">{totalTutorials}</div>
                             <div className="text-xs text-muted-foreground">{t('senate.tutorials.stats.tutorials')}</div>
                         </Card>
@@ -338,7 +338,7 @@ const SenateTutoriels = () => {
             {featuredTutorials.length > 0 && (
                 <section className="py-12 container mx-auto px-4">
                     <h3 className="text-2xl font-serif font-bold mb-6 flex items-center gap-2">
-                        <Star className="h-6 w-6 text-amber-500" />
+                        <Star className="h-6 w-6 text-[#D19C00]" />
                         {t('senate.tutorials.sections.recommended')}
                     </h3>
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -355,7 +355,7 @@ const SenateTutoriels = () => {
                                             <Icon className={`h-16 w-16 text-${tutorial.color}-500/30`} />
                                         </div>
                                         <div className="relative z-10 w-16 h-16 rounded-full bg-white dark:bg-card shadow-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                                            <PlayCircle className="h-8 w-8 text-amber-600" />
+                                            <PlayCircle className="h-8 w-8 text-[#D19C00]" />
                                         </div>
                                         <div className="absolute top-3 left-3">
                                             <Badge className={getLevelColor(tutorial.level)}>{tutorial.level}</Badge>
@@ -368,7 +368,7 @@ const SenateTutoriels = () => {
                                         </div>
                                     </div>
                                     <CardHeader>
-                                        <CardTitle className="text-lg group-hover:text-amber-600 transition-colors">
+                                        <CardTitle className="text-lg group-hover:text-[#D19C00] transition-colors">
                                             {tutorial.title}
                                         </CardTitle>
                                         <CardDescription className="line-clamp-2">
@@ -398,7 +398,7 @@ const SenateTutoriels = () => {
             <section className="py-12 bg-muted/30">
                 <div className="container mx-auto px-4">
                     <h3 className="text-2xl font-serif font-bold mb-6 flex items-center gap-2">
-                        <BookOpen className="h-6 w-6 text-amber-500" />
+                        <BookOpen className="h-6 w-6 text-[#D19C00]" />
                         {t('senate.tutorials.sections.all')} ({filteredTutorials.length})
                     </h3>
 
@@ -431,7 +431,7 @@ const SenateTutoriels = () => {
                                                                 {tutorial.level}
                                                             </Badge>
                                                         </div>
-                                                        <CardTitle className="text-base group-hover:text-amber-600 transition-colors line-clamp-2">
+                                                        <CardTitle className="text-base group-hover:text-[#D19C00] transition-colors line-clamp-2">
                                                             {tutorial.title}
                                                         </CardTitle>
                                                     </CardHeader>
@@ -464,7 +464,7 @@ const SenateTutoriels = () => {
             <section className="py-16">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200" variant="outline">
+                        <Badge className="mb-4 bg-[#D19C00]/10 text-amber-700 border-[#D19C00]/20" variant="outline">
                             <GraduationCap className="h-3 w-3 mr-1" />
                             {t('senate.tutorials.learningPath.badge')}
                         </Badge>
@@ -529,7 +529,7 @@ const SenateTutoriels = () => {
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         <div className="flex items-center gap-2">
-                            <Landmark className="h-5 w-5 text-amber-500" />
+                            <Landmark className="h-5 w-5 text-[#D19C00]" />
                             <span className="font-serif font-semibold">{t('senate.tutorials.footer.title')}</span>
                         </div>
                         <div className="flex items-center gap-4">

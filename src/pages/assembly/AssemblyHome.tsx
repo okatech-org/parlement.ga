@@ -75,7 +75,7 @@ const AssemblyHome: React.FC = () => {
     return (
         <div className="space-y-8">
             {/* Hero Banner */}
-            <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-600 via-green-600 to-teal-700 p-8 md:p-12 text-white">
+            <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-[#3A87FD] via-[#3A87FD] to-teal-700 p-8 md:p-12 text-white">
                 <div className="absolute inset-0 bg-[url('/images/assembly-pattern.svg')] opacity-10"></div>
                 <div className="relative z-10">
                     <Badge className="bg-white/20 text-white border-white/30 mb-4">
@@ -91,7 +91,7 @@ const AssemblyHome: React.FC = () => {
                     <div className="flex flex-wrap gap-4">
                         <Button
                             size="lg"
-                            className="bg-white text-emerald-700 hover:bg-white/90"
+                            className="bg-white text-[#3A87FD] hover:bg-white/90"
                             onClick={() => navigate('/an/hemicycle')}
                         >
                             <Building2 className="mr-2 h-5 w-5" />
@@ -112,50 +112,50 @@ const AssemblyHome: React.FC = () => {
 
             {/* Quick Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <Card className="border-emerald-200 dark:border-emerald-800">
+                <Card className="border-[#3A87FD]/20 dark:border-emerald-800">
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-muted-foreground">Députés</p>
-                                <p className="text-3xl font-bold text-emerald-600">{stats.deputies}</p>
+                                <p className="text-3xl font-bold text-[#3A87FD]">{stats.deputies}</p>
                             </div>
-                            <Users className="h-10 w-10 text-emerald-500/30" />
+                            <Users className="h-10 w-10 text-[#3A87FD]/30" />
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card className="border-emerald-200 dark:border-emerald-800">
+                <Card className="border-[#3A87FD]/20 dark:border-emerald-800">
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-muted-foreground">Sessions actives</p>
-                                <p className="text-3xl font-bold text-emerald-600">{stats.activeSessions}</p>
+                                <p className="text-3xl font-bold text-[#3A87FD]">{stats.activeSessions}</p>
                             </div>
-                            <Calendar className="h-10 w-10 text-emerald-500/30" />
+                            <Calendar className="h-10 w-10 text-[#3A87FD]/30" />
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card className="border-emerald-200 dark:border-emerald-800">
+                <Card className="border-[#3A87FD]/20 dark:border-emerald-800">
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-muted-foreground">Textes en cours</p>
-                                <p className="text-3xl font-bold text-emerald-600">{stats.pendingLaws}</p>
+                                <p className="text-3xl font-bold text-[#3A87FD]">{stats.pendingLaws}</p>
                             </div>
-                            <FileText className="h-10 w-10 text-emerald-500/30" />
+                            <FileText className="h-10 w-10 text-[#3A87FD]/30" />
                         </div>
                     </CardContent>
                 </Card>
 
-                <Card className="border-emerald-200 dark:border-emerald-800">
+                <Card className="border-[#3A87FD]/20 dark:border-emerald-800">
                     <CardContent className="pt-6">
                         <div className="flex items-center justify-between">
                             <div>
                                 <p className="text-sm text-muted-foreground">Votes aujourd'hui</p>
-                                <p className="text-3xl font-bold text-emerald-600">{stats.votesToday}</p>
+                                <p className="text-3xl font-bold text-[#3A87FD]">{stats.votesToday}</p>
                             </div>
-                            <Vote className="h-10 w-10 text-emerald-500/30" />
+                            <Vote className="h-10 w-10 text-[#3A87FD]/30" />
                         </div>
                     </CardContent>
                 </Card>
@@ -169,7 +169,7 @@ const AssemblyHome: React.FC = () => {
                         <div className="flex items-center justify-between">
                             <div>
                                 <CardTitle className="flex items-center gap-2">
-                                    <Gavel className="h-5 w-5 text-emerald-600" />
+                                    <Gavel className="h-5 w-5 text-[#3A87FD]" />
                                     Textes Législatifs en Cours
                                 </CardTitle>
                                 <CardDescription>Suivi de la navette parlementaire</CardDescription>
@@ -183,17 +183,17 @@ const AssemblyHome: React.FC = () => {
                         {recentTexts.map((text) => (
                             <div
                                 key={text.id}
-                                className="p-4 rounded-lg border border-border hover:border-emerald-300 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/20 transition-all cursor-pointer"
+                                className="p-4 rounded-lg border border-border hover:border-[#3A87FD]/30 hover:bg-[#3A87FD]/5/50 dark:hover:bg-emerald-950/20 transition-all cursor-pointer"
                                 onClick={() => navigate(`/an/textes/${text.id}`)}
                             >
                                 <div className="flex items-start justify-between mb-2">
                                     <div>
-                                        <Badge variant="outline" className="text-emerald-600 border-emerald-300 mb-2">
+                                        <Badge variant="outline" className="text-[#3A87FD] border-[#3A87FD]/30 mb-2">
                                             {text.reference}
                                         </Badge>
                                         <h4 className="font-medium">{text.title}</h4>
                                     </div>
-                                    <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
+                                    <Badge className="bg-[#3A87FD]/10 text-[#3A87FD] dark:bg-emerald-900 dark:text-[#3A87FD]/30">
                                         {text.status}
                                     </Badge>
                                 </div>
@@ -210,7 +210,7 @@ const AssemblyHome: React.FC = () => {
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
-                            <Clock className="h-5 w-5 text-emerald-600" />
+                            <Clock className="h-5 w-5 text-[#3A87FD]" />
                             Prochaines Séances
                         </CardTitle>
                         <CardDescription>Agenda parlementaire</CardDescription>
@@ -219,9 +219,9 @@ const AssemblyHome: React.FC = () => {
                         {upcomingSessions.map((session) => (
                             <div
                                 key={session.id}
-                                className="p-4 rounded-lg bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800"
+                                className="p-4 rounded-lg bg-[#3A87FD]/5 dark:bg-emerald-950/30 border border-[#3A87FD]/20 dark:border-emerald-800"
                             >
-                                <Badge className="mb-2 bg-emerald-600">{session.type}</Badge>
+                                <Badge className="mb-2 bg-[#3A87FD]">{session.type}</Badge>
                                 <h4 className="font-medium mb-2">{session.title}</h4>
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                     <Calendar className="h-4 w-4" />
@@ -233,7 +233,7 @@ const AssemblyHome: React.FC = () => {
                             </div>
                         ))}
 
-                        <Button variant="outline" className="w-full border-emerald-300 text-emerald-600" onClick={() => navigate('/an/agenda')}>
+                        <Button variant="outline" className="w-full border-[#3A87FD]/30 text-[#3A87FD]" onClick={() => navigate('/an/agenda')}>
                             Voir l'agenda complet
                             <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
@@ -244,11 +244,11 @@ const AssemblyHome: React.FC = () => {
             {/* Quick Access Cards */}
             <div className="grid md:grid-cols-3 gap-4">
                 <Card
-                    className="cursor-pointer hover:shadow-lg transition-all border-l-4 border-l-emerald-500"
+                    className="cursor-pointer hover:shadow-lg transition-all border-l-4 border-l-[#3A87FD]"
                     onClick={() => navigate('/an/deputes')}
                 >
                     <CardContent className="pt-6">
-                        <Users className="h-8 w-8 text-emerald-600 mb-3" />
+                        <Users className="h-8 w-8 text-[#3A87FD] mb-3" />
                         <h3 className="font-semibold mb-1">Vos Députés</h3>
                         <p className="text-sm text-muted-foreground">
                             Consultez la liste des 120 députés et leurs travaux
@@ -257,11 +257,11 @@ const AssemblyHome: React.FC = () => {
                 </Card>
 
                 <Card
-                    className="cursor-pointer hover:shadow-lg transition-all border-l-4 border-l-emerald-500"
+                    className="cursor-pointer hover:shadow-lg transition-all border-l-4 border-l-[#3A87FD]"
                     onClick={() => navigate('/an/commissions')}
                 >
                     <CardContent className="pt-6">
-                        <Building2 className="h-8 w-8 text-emerald-600 mb-3" />
+                        <Building2 className="h-8 w-8 text-[#3A87FD] mb-3" />
                         <h3 className="font-semibold mb-1">Commissions</h3>
                         <p className="text-sm text-muted-foreground">
                             Accédez aux travaux des commissions permanentes
@@ -270,11 +270,11 @@ const AssemblyHome: React.FC = () => {
                 </Card>
 
                 <Card
-                    className="cursor-pointer hover:shadow-lg transition-all border-l-4 border-l-emerald-500"
+                    className="cursor-pointer hover:shadow-lg transition-all border-l-4 border-l-[#3A87FD]"
                     onClick={() => navigate('/an/votes')}
                 >
                     <CardContent className="pt-6">
-                        <TrendingUp className="h-8 w-8 text-emerald-600 mb-3" />
+                        <TrendingUp className="h-8 w-8 text-[#3A87FD] mb-3" />
                         <h3 className="font-semibold mb-1">Résultats des Votes</h3>
                         <p className="text-sm text-muted-foreground">
                             Consultez l'historique des votes et scrutins

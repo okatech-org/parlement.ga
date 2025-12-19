@@ -118,10 +118,10 @@ const Actualites = () => {
                             className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                         <div className="absolute bottom-0 left-0 p-4 sm:p-8 z-20 max-w-3xl">
-                            <Badge className="mb-3 sm:mb-4 bg-primary text-primary-foreground hover:bg-primary/90 border-none">
+                            <Badge className="mb-3 sm:mb-4 bg-[#3A87FD] text-[#3A87FD]-foreground hover:bg-[#3A87FD]/90 border-none">
                                 {t('news.featured')}
                             </Badge>
-                            <h2 className="text-xl sm:text-3xl md:text-4xl font-bold text-white mb-2 sm:mb-4 leading-tight group-hover:text-primary-foreground/90 transition-colors">
+                            <h2 className="text-xl sm:text-3xl md:text-4xl font-bold text-white mb-2 sm:mb-4 leading-tight group-hover:text-[#3A87FD]-foreground/90 transition-colors">
                                 {t('news.featuredTitle')}
                             </h2>
                             <p className="text-gray-200 text-sm sm:text-lg mb-4 sm:mb-6 line-clamp-2">
@@ -150,7 +150,7 @@ const Actualites = () => {
                             <Badge
                                 key={cat}
                                 variant={selectedCategory === cat ? "default" : "outline"}
-                                className="cursor-pointer whitespace-nowrap px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-primary/10 hover:text-primary transition-colors flex-shrink-0"
+                                className="cursor-pointer whitespace-nowrap px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-[#3A87FD]/10 hover:text-[#3A87FD] transition-colors flex-shrink-0"
                                 onClick={() => setSelectedCategory(cat)}
                             >
                                 {cat}
@@ -183,7 +183,7 @@ const Actualites = () => {
                                 </span>
                             </div>
                             <div className="p-6 flex-1 flex flex-col">
-                                <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2">
+                                <h3 className="text-xl font-bold mb-3 group-hover:text-[#3A87FD] transition-colors line-clamp-2">
                                     {news.title}
                                 </h3>
 
@@ -192,7 +192,7 @@ const Actualites = () => {
                                 </p>
 
                                 <div className="pt-4 border-t border-border/50 flex justify-end mt-auto">
-                                    <Button variant="ghost" size="sm" className="text-primary group-hover:translate-x-1 transition-transform p-0 hover:bg-transparent">
+                                    <Button variant="ghost" size="sm" className="text-[#3A87FD] group-hover:translate-x-1 transition-transform p-0 hover:bg-transparent">
                                         {t('common.readArticle')} <ArrowRight className="w-4 h-4 ml-1" />
                                     </Button>
                                 </div>

@@ -35,6 +35,11 @@ const LayoutPresident = ({ children }: { children: React.ReactNode }) => {
     const { user } = useUser();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
+    // Check if user also has president_congress role (dual role)
+    const userData = JSON.parse(sessionStorage.getItem('user_data') || '{}');
+    const userRoles = userData.roles || [];
+    const hasCongressRole = userRoles.includes('president_congress');
+
     const menuItems = [
         { icon: LayoutDashboard, label: t('president.sidebar.dashboard'), path: "/president" },
         { icon: Users, label: t('president.sidebar.bureau'), path: "/president/bureau" },
@@ -47,6 +52,8 @@ const LayoutPresident = ({ children }: { children: React.ReactNode }) => {
         { icon: Landmark, label: t('president.sidebar.plenary'), path: "/president/plenary" },
         { icon: Calendar, label: t('president.sidebar.agenda'), path: "/president/agenda" },
         { icon: FileText, label: t('president.sidebar.documents'), path: "/president/documents" },
+        // Congress link for dual role
+        ...(hasCongressRole ? [{ icon: Landmark, label: "Espace Congrès", path: "/congres/espace/president" }] : []),
     ];
 
     return (

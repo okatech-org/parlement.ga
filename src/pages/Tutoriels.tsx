@@ -80,7 +80,7 @@ const Tutoriels = () => {
                                         <div className="flex-1 flex flex-col justify-between">
                                             <div>
                                                 <div className="flex justify-between items-start mb-2">
-                                                    <h3 className="font-bold group-hover:text-primary transition-colors line-clamp-1">
+                                                    <h3 className="font-bold group-hover:text-[#3A87FD] transition-colors line-clamp-1">
                                                         {tutorial.title}
                                                     </h3>
                                                     <Badge variant="secondary" className="text-xs">
@@ -107,14 +107,14 @@ const Tutoriels = () => {
                         <div className="bg-card rounded-xl sm:rounded-2xl p-6 sm:p-8 border border-border/50 mt-6 sm:mt-8">
                             <h3 className="text-xl font-bold mb-4">{t('tutorials.recommended.title')}</h3>
                             <div className="grid md:grid-cols-2 gap-4">
-                                <div className="p-4 rounded-xl bg-background border border-border/50 hover:border-primary/50 transition-colors cursor-pointer">
-                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-3">
-                                        <BookOpen className="w-5 h-5 text-primary" />
+                                <div className="p-4 rounded-xl bg-background border border-border/50 hover:border-[#3A87FD]/50 transition-colors cursor-pointer">
+                                    <div className="w-10 h-10 rounded-full bg-[#3A87FD]/10 flex items-center justify-center mb-3">
+                                        <BookOpen className="w-5 h-5 text-[#3A87FD]" />
                                     </div>
                                     <h4 className="font-bold mb-1">{t('tutorials.recommended.constitution')}</h4>
                                     <p className="text-sm text-muted-foreground">{t('tutorials.recommended.constitutionDesc')}</p>
                                 </div>
-                                <div className="p-4 rounded-xl bg-background border border-border/50 hover:border-primary/50 transition-colors cursor-pointer">
+                                <div className="p-4 rounded-xl bg-background border border-border/50 hover:border-[#3A87FD]/50 transition-colors cursor-pointer">
                                     <div className="w-10 h-10 rounded-full bg-secondary/10 flex items-center justify-center mb-3">
                                         <CheckCircle className="w-5 h-5 text-secondary" />
                                     </div>

@@ -153,7 +153,7 @@ const SenateSensibilisation = () => {
             <section className="bg-gradient-to-b from-amber-50 to-background dark:from-amber-950/20 dark:to-background py-16">
                 <div className="container mx-auto px-4">
                     <div className="max-w-4xl mx-auto text-center">
-                        <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200" variant="outline">
+                        <Badge className="mb-4 bg-[#D19C00]/10 text-amber-700 border-[#D19C00]/20" variant="outline">
                             <Lightbulb className="h-3 w-3 mr-1" />
                             {t('senate.sensibilisation.hero.badge')}
                         </Badge>
@@ -164,7 +164,7 @@ const SenateSensibilisation = () => {
                             {t('senate.sensibilisation.hero.description')}
                         </p>
                         <div className="flex gap-4 justify-center">
-                            <Button size="lg" className="bg-amber-600 hover:bg-amber-700">
+                            <Button size="lg" className="bg-[#D19C00] hover:bg-amber-700">
                                 <Target className="mr-2 h-5 w-5" />
                                 {t('senate.sensibilisation.hero.btnMissions')}
                             </Button>
@@ -181,8 +181,8 @@ const SenateSensibilisation = () => {
             <section className="py-12 bg-muted/30">
                 <div className="container mx-auto px-4">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-                        <Card className="text-center p-6 bg-amber-50 dark:bg-amber-900/20 border-amber-200">
-                            <div className="text-4xl font-bold text-amber-600 mb-2">{senatorsCount}</div>
+                        <Card className="text-center p-6 bg-[#D19C00]/5 dark:bg-amber-900/20 border-[#D19C00]/20">
+                            <div className="text-4xl font-bold text-[#D19C00] mb-2">{senatorsCount}</div>
                             <div className="text-sm text-muted-foreground">{t('senate.sensibilisation.stats.senators')}</div>
                         </Card>
                         <Card className="text-center p-6 bg-blue-50 dark:bg-blue-900/20 border-blue-200">
@@ -235,7 +235,7 @@ const SenateSensibilisation = () => {
             <section className="py-16 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200" variant="outline">
+                        <Badge className="mb-4 bg-[#D19C00]/10 text-amber-700 border-[#D19C00]/20" variant="outline">
                             <ArrowLeftRight className="h-3 w-3 mr-1" />
                             {t('senate.sensibilisation.process.badge')}
                         </Badge>
@@ -251,17 +251,17 @@ const SenateSensibilisation = () => {
                                 return (
                                     <div key={step.step} className="relative">
                                         <Card className="text-center p-4 h-full">
-                                            <div className="w-10 h-10 mx-auto rounded-full bg-amber-600 text-white flex items-center justify-center font-bold mb-3">
+                                            <div className="w-10 h-10 mx-auto rounded-full bg-[#D19C00] text-white flex items-center justify-center font-bold mb-3">
                                                 {step.step}
                                             </div>
-                                            <Icon className="h-6 w-6 mx-auto text-amber-600 mb-2" />
+                                            <Icon className="h-6 w-6 mx-auto text-[#D19C00] mb-2" />
                                             <h4 className="font-semibold text-sm mb-2">{step.title}</h4>
                                             <p className="text-xs text-muted-foreground mb-2">{step.description}</p>
                                             <Badge variant="outline" className="text-xs">{step.duration}</Badge>
                                         </Card>
                                         {index < legislativeProcess.length - 1 && (
                                             <div className="hidden md:block absolute top-1/3 -right-2 z-10">
-                                                <ChevronRight className="h-4 w-4 text-amber-600" />
+                                                <ChevronRight className="h-4 w-4 text-[#D19C00]" />
                                             </div>
                                         )}
                                     </div>
@@ -328,7 +328,7 @@ const SenateSensibilisation = () => {
                                 <CardHeader className="pb-2">
                                     <div className="flex items-center justify-between">
                                         <CardTitle className="text-base font-medium flex items-center gap-2">
-                                            <Info className="h-4 w-4 text-amber-500" />
+                                            <Info className="h-4 w-4 text-[#D19C00]" />
                                             {faq.question}
                                         </CardTitle>
                                         <ChevronRight className={`h-5 w-5 text-muted-foreground transition-transform ${expandedFaq === index ? 'rotate-90' : ''}`} />
@@ -372,7 +372,7 @@ const SenateSensibilisation = () => {
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                         <div className="flex items-center gap-2">
-                            <Landmark className="h-5 w-5 text-amber-500" />
+                            <Landmark className="h-5 w-5 text-[#D19C00]" />
                             <span className="font-serif font-semibold">{t('senate.sensibilisation.footer.title')}</span>
                         </div>
                         <div className="flex items-center gap-4">

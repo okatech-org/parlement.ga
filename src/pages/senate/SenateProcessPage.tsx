@@ -42,7 +42,7 @@ const SenateProcessPage = () => {
             title: t('senate.process.phases.phase2.title'),
             duration: t('senate.process.phases.phase2.duration'),
             icon: Users,
-            color: "bg-amber-500",
+            color: "bg-[#D19C00]",
             description: t('senate.process.phases.phase2.description'),
             details: t('senate.process.phases.phase2.details') as unknown as string[]
         },
@@ -397,7 +397,7 @@ flowchart TD
             <section id="cmp-section" className="py-16 bg-muted/30">
                 <div className="container mx-auto px-4">
                     <div className="text-center mb-12">
-                        <Badge className="mb-4 bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+                        <Badge className="mb-4 bg-[#D19C00]/10 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
                             <Scale className="h-3 w-3 mr-1" />
                             {t('senate.process.cmp.badge')}
                         </Badge>
@@ -412,7 +412,7 @@ flowchart TD
                             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
                                 {cmpProcess.map((item, index) => (
                                     <div key={item.step} className="text-center relative">
-                                        <div className="w-12 h-12 mx-auto rounded-full bg-amber-500 flex items-center justify-center text-white font-bold mb-2">
+                                        <div className="w-12 h-12 mx-auto rounded-full bg-[#D19C00] flex items-center justify-center text-white font-bold mb-2">
                                             {item.step}
                                         </div>
                                         <h4 className="font-medium text-sm mb-1">{item.title}</h4>

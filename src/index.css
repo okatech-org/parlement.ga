@@ -63,6 +63,23 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: var(--accent-foreground);
     --sidebar-border: var(--border);
     --sidebar-ring: var(--ring);
+
+    /* === COULEURS INSTITUTIONNELLES OFFICIELLES === */
+    /* Assemblée Nationale - Bleu #3A87FD */
+    --color-an: 217 98% 60%;
+    --color-an-hex: #3A87FD;
+    
+    /* Sénat - Or #D19C00 */
+    --color-senat: 45 100% 41%;
+    --color-senat-hex: #D19C00;
+    
+    /* Parlement - Vert #77BA41 */
+    --color-parlement: 93 50% 49%;
+    --color-parlement-hex: #77BA41;
+    
+    /* Citoyen - Cyan #04CDB9 */
+    --color-citoyen: 173 96% 41%;
+    --color-citoyen-hex: #04CDB9;
   }
 
   .dark {
