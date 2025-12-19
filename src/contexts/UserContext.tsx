@@ -154,11 +154,45 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const logout = () => {
+        const isDemo = sessionStorage.getItem('is_demo') === 'true';
+        let redirectPath = '/';
+
+        // Contextual Redirection
+        if (isDemo) {
+            // Return to specific Demo page
+            if (currentRole === 'admin_an' || user?.roles.includes('deputy')) {
+                redirectPath = '/an/demo';
+            } else if (currentRole === 'admin_senat' || user?.province) {
+                redirectPath = '/senat/demo';
+            } else if (currentRole === 'admin_parlement') {
+                redirectPath = '/parlement/demo';
+            } else {
+                // Default fallback for demo
+                redirectPath = '/an/demo';
+            }
+        } else {
+            // Return to specific Home page (Environment based)
+            // Can be refined by checking current URL or user role
+            const path = window.location.pathname;
+            if (path.includes('/senat')) {
+                redirectPath = '/senat';
+            } else if (path.includes('/parlement')) {
+                redirectPath = '/parlement';
+            } else if (path.includes('/an')) {
+                redirectPath = '/an';
+            } else if (path.includes('/citizen')) {
+                // Try to determine Citizen context from stored data if possible, else default
+                redirectPath = '/';
+            }
+        }
+
         setUser(null);
         setCurrentRole(null);
         sessionStorage.removeItem('user_data');
         sessionStorage.removeItem('current_role');
-        navigate('/login');
+        sessionStorage.removeItem('is_demo'); // Clear demo flag
+
+        navigate(redirectPath);
     };
 
     const switchRole = (role: UserRole) => {

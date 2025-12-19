@@ -52,7 +52,6 @@ export const AdminSpaceLayout = ({
     // Clear Session
     sessionStorage.removeItem('user_data');
     sessionStorage.removeItem('current_role');
-    sessionStorage.removeItem('is_demo');
     sessionStorage.removeItem('auth_origin');
 
     toast({

@@ -4,7 +4,7 @@ import { translations, Language, TranslationKey } from '../translations';
 interface LanguageContextType {
     language: Language;
     setLanguage: (lang: Language) => void;
-    t: (key: TranslationKey) => string;
+    t: <T = string>(key: TranslationKey) => T;
     dir: 'ltr' | 'rtl';
 }
 
@@ -22,7 +22,7 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
         document.documentElement.lang = language;
     }, [language]);
 
-    const t = (key: TranslationKey): string => {
+    const t = <T = string>(key: TranslationKey): T => {
         const keys = key.split('.');
         let value: any = translations[language];
 
@@ -36,14 +36,14 @@ export const LanguageProvider = ({ children }: { children: ReactNode }) => {
                     if (fallback && typeof fallback === 'object' && fk in fallback) {
                         fallback = fallback[fk];
                     } else {
-                        return key;
+                        return key as unknown as T;
                     }
                 }
-                return fallback || key;
+                return (fallback || key) as unknown as T;
             }
         }
 
-        return typeof value === 'string' ? value : key;
+        return value as T;
     };
 
     return (

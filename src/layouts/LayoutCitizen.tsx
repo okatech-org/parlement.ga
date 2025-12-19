@@ -69,7 +69,6 @@ const LayoutCitizen = ({ children }: LayoutCitizenProps) => {
     const handleLogout = () => {
         sessionStorage.removeItem('user_data');
         sessionStorage.removeItem('current_role');
-        sessionStorage.removeItem('is_demo');
         sessionStorage.removeItem('auth_origin');
         navigate("/parlement");
     };

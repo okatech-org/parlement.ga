@@ -22,7 +22,7 @@ interface AnimatedPhaseCardProps {
 
 const AnimatedPhaseCard = ({ step, index, isLast, variant = 'default' }: AnimatedPhaseCardProps) => {
     const Icon = step.icon;
-    
+
     const checkColor = variant === 'assembly' ? 'text-emerald-500' : 'text-green-500';
     const textColor = variant === 'assembly' ? 'text-gray-600 dark:text-gray-400' : 'text-muted-foreground';
     const detailTextColor = variant === 'assembly' ? 'text-gray-700 dark:text-gray-300' : '';
@@ -34,8 +34,8 @@ const AnimatedPhaseCard = ({ step, index, isLast, variant = 'default' }: Animate
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-50px" }}
-            transition={{ 
-                duration: 0.5, 
+            transition={{
+                duration: 0.5,
                 delay: index * 0.1,
                 type: 'spring',
                 stiffness: 100
@@ -43,7 +43,7 @@ const AnimatedPhaseCard = ({ step, index, isLast, variant = 'default' }: Animate
         >
             <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
                 <div className="flex flex-col md:flex-row">
-                    <motion.div 
+                    <motion.div
                         className={`${step.color} p-6 md:w-64 flex flex-col justify-center items-center text-white`}
                         initial={{ scale: 0.8, opacity: 0 }}
                         whileInView={{ scale: 1, opacity: 1 }}
@@ -67,9 +67,9 @@ const AnimatedPhaseCard = ({ step, index, isLast, variant = 'default' }: Animate
                     <div className="p-6 flex-1">
                         <p className={`${textColor} mb-4`}>{step.description}</p>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            {step.details.map((detail, idx) => (
-                                <motion.div 
-                                    key={idx} 
+                            {(Array.isArray(step.details) ? step.details : []).map((detail, idx) => (
+                                <motion.div
+                                    key={idx}
                                     className="flex items-center gap-2 text-sm"
                                     initial={{ opacity: 0, x: -10 }}
                                     whileInView={{ opacity: 1, x: 0 }}
@@ -84,7 +84,7 @@ const AnimatedPhaseCard = ({ step, index, isLast, variant = 'default' }: Animate
                     </div>
                 </div>
                 {!isLast && (
-                    <motion.div 
+                    <motion.div
                         className={`flex justify-center py-2 ${arrowBg}`}
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
