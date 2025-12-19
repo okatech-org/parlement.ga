@@ -3,9 +3,11 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Loader2, AlertCircle, Mail, Phone, RefreshCw, Sparkles } from "lucide-react";
+import { Loader2, Mail, Phone, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { ParliamentarianPhotoUpload } from "@/components/admin/ParliamentarianPhotoUpload";
+import { useBureauPhotos } from "@/hooks/useBureauPhotos";
 
 // Types
 interface BureauMember {
@@ -61,6 +63,18 @@ const Bureau = () => {
     const [members, setMembers] = useState<BureauMember[]>(BUREAU_MEMBERS);
     const [loading, setLoading] = useState(false);
     const [generatingPortrait, setGeneratingPortrait] = useState<string | null>(null);
+    const { photos, updatePhoto, getPhotoUrl } = useBureauPhotos();
+
+    // Get photo URL - prioritize storage bucket, fallback to generated/default
+    const getMemberPhoto = (member: BureauMember): string | undefined => {
+        const storagePhoto = getPhotoUrl(member.id);
+        if (storagePhoto) return storagePhoto;
+        return member.image;
+    };
+
+    const handlePhotoUploaded = (memberId: string, url: string) => {
+        updatePhoto(memberId, url);
+    };
 
     const handleContact = (member: BureauMember, type: 'email' | 'phone') => {
         toast.success(`Contact ${type === 'email' ? 'Email' : 'Téléphonique'} initié avec ${member.name}`);
@@ -137,9 +151,9 @@ const Bureau = () => {
                 <Card key={member.id} className="p-6 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
                     <div className="flex flex-col md:flex-row items-center gap-6">
                         <div className="relative">
-                            {member.image ? (
+                            {getMemberPhoto(member) ? (
                                 <img 
-                                    src={member.image} 
+                                    src={getMemberPhoto(member)} 
                                     alt={member.name}
                                     className="w-32 h-32 rounded-full object-cover border-4 border-primary/20"
                                 />
@@ -148,19 +162,27 @@ const Bureau = () => {
                                     {member.name.charAt(0)}
                                 </div>
                             )}
-                            <Button
-                                size="icon"
-                                variant="ghost"
-                                className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-background shadow-md"
-                                onClick={() => generatePortrait(member)}
-                                disabled={generatingPortrait === member.id}
-                            >
-                                {generatingPortrait === member.id ? (
-                                    <Loader2 className="w-4 h-4 animate-spin" />
-                                ) : (
-                                    <Sparkles className="w-4 h-4" />
-                                )}
-                            </Button>
+                            <div className="absolute -bottom-2 -right-2 flex gap-1">
+                                <ParliamentarianPhotoUpload
+                                    memberId={member.id}
+                                    memberName={member.name}
+                                    currentPhotoUrl={getMemberPhoto(member)}
+                                    onPhotoUploaded={(url) => handlePhotoUploaded(member.id, url)}
+                                />
+                                <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-6 w-6 rounded-full bg-background/80 shadow-sm"
+                                    onClick={() => generatePortrait(member)}
+                                    disabled={generatingPortrait === member.id}
+                                >
+                                    {generatingPortrait === member.id ? (
+                                        <Loader2 className="w-3 h-3 animate-spin" />
+                                    ) : (
+                                        <Sparkles className="w-3 h-3" />
+                                    )}
+                                </Button>
+                            </div>
                         </div>
                         <div className="text-center md:text-left flex-1">
                             <Badge className={getRoleBadgeColor(member.role)}>{member.role}</Badge>
@@ -187,9 +209,9 @@ const Bureau = () => {
                         <Card key={member.id} className="p-4 hover:shadow-lg transition-all duration-300 border-border/50 group">
                             <div className="flex items-center gap-4">
                                 <div className="relative">
-                                    {member.image ? (
+                                    {getMemberPhoto(member) ? (
                                         <img 
-                                            src={member.image} 
+                                            src={getMemberPhoto(member)} 
                                             alt={member.name}
                                             className="w-16 h-16 rounded-full object-cover"
                                         />
@@ -198,19 +220,27 @@ const Bureau = () => {
                                             {member.name.charAt(0)}
                                         </div>
                                     )}
-                                    <Button
-                                        size="icon"
-                                        variant="ghost"
-                                        className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-background shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                                        onClick={() => generatePortrait(member)}
-                                        disabled={generatingPortrait === member.id}
-                                    >
-                                        {generatingPortrait === member.id ? (
-                                            <Loader2 className="w-3 h-3 animate-spin" />
-                                        ) : (
-                                            <Sparkles className="w-3 h-3" />
-                                        )}
-                                    </Button>
+                                    <div className="absolute -bottom-1 -right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <ParliamentarianPhotoUpload
+                                            memberId={member.id}
+                                            memberName={member.name}
+                                            currentPhotoUrl={getMemberPhoto(member)}
+                                            onPhotoUploaded={(url) => handlePhotoUploaded(member.id, url)}
+                                        />
+                                        <Button
+                                            size="icon"
+                                            variant="ghost"
+                                            className="h-6 w-6 rounded-full bg-background shadow-sm"
+                                            onClick={() => generatePortrait(member)}
+                                            disabled={generatingPortrait === member.id}
+                                        >
+                                            {generatingPortrait === member.id ? (
+                                                <Loader2 className="w-3 h-3 animate-spin" />
+                                            ) : (
+                                                <Sparkles className="w-3 h-3" />
+                                            )}
+                                        </Button>
+                                    </div>
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <Badge variant="outline" className={getRoleBadgeColor(member.role) + " text-xs"}>
@@ -233,9 +263,9 @@ const Bureau = () => {
                         <Card key={member.id} className="p-4 hover:shadow-lg transition-all duration-300 border-border/50 group">
                             <div className="flex items-center gap-4">
                                 <div className="relative">
-                                    {member.image ? (
+                                    {getMemberPhoto(member) ? (
                                         <img 
-                                            src={member.image} 
+                                            src={getMemberPhoto(member)} 
                                             alt={member.name}
                                             className="w-16 h-16 rounded-full object-cover"
                                         />
@@ -244,19 +274,27 @@ const Bureau = () => {
                                             {member.name.charAt(0)}
                                         </div>
                                     )}
-                                    <Button
-                                        size="icon"
-                                        variant="ghost"
-                                        className="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-background shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                                        onClick={() => generatePortrait(member)}
-                                        disabled={generatingPortrait === member.id}
-                                    >
-                                        {generatingPortrait === member.id ? (
-                                            <Loader2 className="w-3 h-3 animate-spin" />
-                                        ) : (
-                                            <Sparkles className="w-3 h-3" />
-                                        )}
-                                    </Button>
+                                    <div className="absolute -bottom-1 -right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <ParliamentarianPhotoUpload
+                                            memberId={member.id}
+                                            memberName={member.name}
+                                            currentPhotoUrl={getMemberPhoto(member)}
+                                            onPhotoUploaded={(url) => handlePhotoUploaded(member.id, url)}
+                                        />
+                                        <Button
+                                            size="icon"
+                                            variant="ghost"
+                                            className="h-6 w-6 rounded-full bg-background shadow-sm"
+                                            onClick={() => generatePortrait(member)}
+                                            disabled={generatingPortrait === member.id}
+                                        >
+                                            {generatingPortrait === member.id ? (
+                                                <Loader2 className="w-3 h-3 animate-spin" />
+                                            ) : (
+                                                <Sparkles className="w-3 h-3" />
+                                            )}
+                                        </Button>
+                                    </div>
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <Badge variant="outline" className={getRoleBadgeColor(member.role) + " text-xs"}>
@@ -279,9 +317,9 @@ const Bureau = () => {
                         <Card key={member.id} className="p-4 hover:shadow-lg transition-all duration-300 border-border/50 group">
                             <div className="flex items-center gap-4">
                                 <div className="relative">
-                                    {member.image ? (
+                                    {getMemberPhoto(member) ? (
                                         <img 
-                                            src={member.image} 
+                                            src={getMemberPhoto(member)} 
                                             alt={member.name}
                                             className="w-14 h-14 rounded-full object-cover"
                                         />
@@ -290,19 +328,27 @@ const Bureau = () => {
                                             {member.name.charAt(0)}
                                         </div>
                                     )}
-                                    <Button
-                                        size="icon"
-                                        variant="ghost"
-                                        className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-background shadow-sm opacity-0 group-hover:opacity-100 transition-opacity"
-                                        onClick={() => generatePortrait(member)}
-                                        disabled={generatingPortrait === member.id}
-                                    >
-                                        {generatingPortrait === member.id ? (
-                                            <Loader2 className="w-3 h-3 animate-spin" />
-                                        ) : (
-                                            <Sparkles className="w-3 h-3" />
-                                        )}
-                                    </Button>
+                                    <div className="absolute -bottom-1 -right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <ParliamentarianPhotoUpload
+                                            memberId={member.id}
+                                            memberName={member.name}
+                                            currentPhotoUrl={getMemberPhoto(member)}
+                                            onPhotoUploaded={(url) => handlePhotoUploaded(member.id, url)}
+                                        />
+                                        <Button
+                                            size="icon"
+                                            variant="ghost"
+                                            className="h-5 w-5 rounded-full bg-background shadow-sm"
+                                            onClick={() => generatePortrait(member)}
+                                            disabled={generatingPortrait === member.id}
+                                        >
+                                            {generatingPortrait === member.id ? (
+                                                <Loader2 className="w-3 h-3 animate-spin" />
+                                            ) : (
+                                                <Sparkles className="w-3 h-3" />
+                                            )}
+                                        </Button>
+                                    </div>
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <Badge variant="outline" className="text-xs">
