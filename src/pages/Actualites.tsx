@@ -33,7 +33,7 @@ const Actualites = () => {
         t('news.categories.democracy')
     ];
 
-    const [selectedCategory, setSelectedCategory] = useState(t('news.categories.all'));
+    const [selectedCategory, setSelectedCategory] = useState<string>(t('news.categories.all'));
 
     const NEWS_DATA = [
         {

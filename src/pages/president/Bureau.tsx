@@ -25,12 +25,25 @@ const fetchBureauMembers = async (): Promise<BureauMember[]> => {
                 reject(new Error("Erreur lors du chargement des membres."));
             } else {
                 resolve([
-                    { id: "1", role: "Président", name: "Michel Régis Onanga Ndiaye", party: "PDG", email: "president@assemblee.ga", phone: "+241 01 01 01 01" },
-                    { id: "2", role: "1er Vice-Président", name: "François Ndong Obiang", party: "RPM", email: "vp1@assemblee.ga", phone: "+241 02 02 02 02" },
-                    { id: "3", role: "2ème Vice-Président", name: "Albertine Maganga Moussavou", party: "PDG", email: "vp2@assemblee.ga", phone: "+241 03 03 03 03" },
-                    { id: "4", role: "1er Questeur", name: "Jean-Pierre Doukaga Kassa", party: "LD", email: "questeur1@assemblee.ga", phone: "+241 04 04 04 04" },
-                    { id: "5", role: "2ème Questeur", name: "Sosthène Nguema Nguema", party: "PDG", email: "questeur2@assemblee.ga", phone: "+241 05 05 05 05" },
-                    { id: "6", role: "1er Secrétaire", name: "Angélique Ngoma", party: "PDG", email: "sec1@assemblee.ga", phone: "+241 06 06 06 06" },
+                    // Présidence
+                    { id: "1", role: "Président", name: "Michel Régis ONANGA MAMADOU NDIAYE", party: "UDB", email: "president@assemblee.ga", phone: "+241 01 01 01 01" },
+                    // Vice-Présidents
+                    { id: "2", role: "1er Vice-Président", name: "Eloi NZONDO", party: "UDB", email: "vp1@assemblee.ga", phone: "+241 02 02 02 02" },
+                    { id: "3", role: "2ème Vice-Président", name: "Jeannot KALIMA", party: "PDG", email: "vp2@assemblee.ga", phone: "+241 03 03 03 03" },
+                    { id: "4", role: "3ème Vice-Président", name: "Marie Paulette Parfaite AMOUYEME OLLAME ép DIVASSA", party: "UDB", email: "vp3@assemblee.ga", phone: "+241 04 04 04 04" },
+                    { id: "5", role: "4ème Vice-Président", name: "Roland MATSIENDI", party: "UDB", email: "vp4@assemblee.ga", phone: "+241 05 05 05 05" },
+                    { id: "6", role: "5ème Vice-Président", name: "Adèle Sylène BINDANG ONDZIGUI ép MINTOGO", party: "UDB", email: "vp5@assemblee.ga", phone: "+241 06 06 06 06" },
+                    { id: "7", role: "6ème Vice-Président", name: "Huguette TSONO", party: "UDB", email: "vp6@assemblee.ga", phone: "+241 07 07 07 07" },
+                    // Questeurs
+                    { id: "8", role: "1er Questeur", name: "Mesmin Boris NGABIKOUMOU WADA", party: "UDB", email: "questeur1@assemblee.ga", phone: "+241 08 08 08 08" },
+                    { id: "9", role: "2ème Questeur", name: "Nadine Murielle OGOULA", party: "UDB", email: "questeur2@assemblee.ga", phone: "+241 09 09 09 09" },
+                    // Secrétaires
+                    { id: "10", role: "1er Secrétaire", name: "Alban Stéphane OSSINGA ONANGA", party: "UDB", email: "sec1@assemblee.ga", phone: "+241 10 10 10 10" },
+                    { id: "11", role: "2ème Secrétaire", name: "Faustin BILIE BI ESSONE", party: "Force Patriotique", email: "sec2@assemblee.ga", phone: "+241 11 11 11 11" },
+                    { id: "12", role: "3ème Secrétaire", name: "Christiane NZIENGUI", party: "UDB", email: "sec3@assemblee.ga", phone: "+241 12 12 12 12" },
+                    { id: "13", role: "4ème Secrétaire", name: "Eva Léopold Aimé", party: "Force Patriotique", email: "sec4@assemblee.ga", phone: "+241 13 13 13 13" },
+                    { id: "14", role: "5ème Secrétaire", name: "Alexandre Gilbert AWASSI", party: "UDB", email: "sec5@assemblee.ga", phone: "+241 14 14 14 14" },
+                    { id: "15", role: "6ème Secrétaire", name: "Ismaëla MPIRA ép OURA", party: "UDB", email: "sec6@assemblee.ga", phone: "+241 15 15 15 15" },
                 ]);
             }
         }, 1000);
