@@ -226,6 +226,7 @@ export default function Login() {
         const path = location.pathname;
         if (path.includes('/an')) return '/an';
         if (path.includes('/senat')) return '/senat';
+        if (path.includes('/parlement')) return '/parlement';
         return '/';
     };
 
