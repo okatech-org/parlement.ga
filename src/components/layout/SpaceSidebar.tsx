@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useTheme } from "next-themes";
 import { useState } from "react";
+import RoleSwitcher from "@/components/RoleSwitcher";
 import {
   Collapsible,
   CollapsibleContent,
@@ -71,6 +72,9 @@ export const SpaceSidebar = ({
             </p>
           </div>
         </div>
+        <div className="mt-2">
+          <RoleSwitcher />
+        </div>
       </div>
 
       {/* Main Role Dropdown */}
@@ -117,8 +121,8 @@ export const SpaceSidebar = ({
                     <CollapsibleTrigger asChild>
                       <button
                         className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm ${isActive
-                            ? "bg-sidebar-accent text-sidebar-foreground"
-                            : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                          ? "bg-sidebar-accent text-sidebar-foreground"
+                          : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
                           }`}
                       >
                         <Icon className="h-4 w-4" />
@@ -134,8 +138,8 @@ export const SpaceSidebar = ({
                           <button
                             key={child.id}
                             className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm ${isChildActive
-                                ? "bg-sidebar-accent text-sidebar-foreground"
-                                : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                              ? "bg-sidebar-accent text-sidebar-foreground"
+                              : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
                               }`}
                             onClick={() => setActiveSection(child.id)}
                           >
@@ -153,8 +157,8 @@ export const SpaceSidebar = ({
                 <button
                   key={item.id}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm ${isActive
-                      ? "bg-sidebar-accent text-sidebar-foreground"
-                      : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
+                    ? "bg-sidebar-accent text-sidebar-foreground"
+                    : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground"
                     }`}
                   onClick={() => setActiveSection(item.id)}
                 >

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export type UserRole = 'president' | 'vp' | 'deputy' | 'substitute' | 'citizen' | 'questeur' | 'secretary' | 'questeur_budget' | 'questeur_resources' | 'questeur_services' | 'system_admin' | 'admin_an' | 'admin_senat' | 'admin_parlement';
+export type UserRole = 'president' | 'vp' | 'deputy' | 'senator' | 'substitute' | 'citizen' | 'questeur' | 'secretary' | 'questeur_budget' | 'questeur_resources' | 'questeur_services' | 'system_admin' | 'admin_an' | 'admin_senat' | 'admin_parlement';
 
 interface User {
     id: string;
@@ -54,6 +54,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                 break;
             case 'deputy':
                 navigate('/vote'); // Deputy Dashboard
+                break;
+            case 'senator':
+                navigate('/senat/espace/senateur'); // Senator Dashboard
                 break;
             case 'substitute':
                 navigate('/suppleant');

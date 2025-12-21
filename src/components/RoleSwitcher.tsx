@@ -35,6 +35,7 @@ const RoleSwitcher = () => {
             case 'president': return "Président";
             case 'vp': return "Vice-Président";
             case 'deputy': return "Député";
+            case 'senator': return "Sénateur";
             case 'substitute': return "Suppléant";
             case 'questeur': return "Questeur";
             case 'questeur_budget': return "Questeur (Budget)";
@@ -51,6 +52,7 @@ const RoleSwitcher = () => {
             case 'president': return Crown;
             case 'vp': return Briefcase;
             case 'deputy': return Shield;
+            case 'senator': return Shield;
             case 'substitute': return Users;
             case 'questeur': return Briefcase;
             case 'questeur_budget': return Briefcase;
