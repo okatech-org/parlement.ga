@@ -131,6 +131,11 @@ import SystemAdminDashboard from "@/pages/admin/SystemAdminDashboard";
 import InstitutionAdminDashboard from "@/pages/admin/InstitutionAdminDashboard";
 import CongressPresidentDashboard from "@/pages/parliament/president/CongressPresidentDashboard";
 import CitizenDashboard from "@/pages/citizen/CitizenDashboard";
+import CitizenLegislation from "@/pages/citizen/CitizenLegislation";
+import CitizenAgenda from "@/pages/citizen/CitizenAgenda";
+import CitizenOfficials from "@/pages/citizen/CitizenOfficials";
+import CitizenPetitions from "@/pages/citizen/CitizenPetitions";
+import CitizenNotifications from "@/pages/citizen/CitizenNotifications";
 import LayoutCitizen from "@/layouts/LayoutCitizen";
 
 const App = () => (
@@ -282,11 +287,22 @@ const App = () => (
                 <Route path="/espace/citoyen" element={<ProtectedRoute><LayoutCitizen><CitizenDashboard /></LayoutCitizen></ProtectedRoute>} />
                 <Route path="/espace/citoyen/mail" element={<ProtectedRoute><LayoutCitizen><IBoitePage /></LayoutCitizen></ProtectedRoute>} />
                 <Route path="/espace/citoyen/documents" element={<ProtectedRoute><LayoutCitizen><SharedDocumentsPage /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/espace/citoyen/suivi" element={<ProtectedRoute><LayoutCitizen><CitizenLegislation /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/espace/citoyen/agenda" element={<ProtectedRoute><LayoutCitizen><CitizenAgenda /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/espace/citoyen/elus" element={<ProtectedRoute><LayoutCitizen><CitizenOfficials /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/espace/citoyen/petitions" element={<ProtectedRoute><LayoutCitizen><CitizenPetitions /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/espace/citoyen/notifications" element={<ProtectedRoute><LayoutCitizen><CitizenNotifications /></LayoutCitizen></ProtectedRoute>} />
                 <Route path="/espace/citoyen/*" element={<ProtectedRoute><LayoutCitizen><CitizenDashboard /></LayoutCitizen></ProtectedRoute>} />
+
                 {/* Alias pour accès depuis AN */}
                 <Route path="/an/espace/citoyen" element={<ProtectedRoute><LayoutCitizen><CitizenDashboard /></LayoutCitizen></ProtectedRoute>} />
                 <Route path="/an/espace/citoyen/mail" element={<ProtectedRoute><LayoutCitizen><IBoitePage /></LayoutCitizen></ProtectedRoute>} />
                 <Route path="/an/espace/citoyen/documents" element={<ProtectedRoute><LayoutCitizen><SharedDocumentsPage /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/an/espace/citoyen/suivi" element={<ProtectedRoute><LayoutCitizen><CitizenLegislation /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/an/espace/citoyen/agenda" element={<ProtectedRoute><LayoutCitizen><CitizenAgenda /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/an/espace/citoyen/elus" element={<ProtectedRoute><LayoutCitizen><CitizenOfficials /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/an/espace/citoyen/petitions" element={<ProtectedRoute><LayoutCitizen><CitizenPetitions /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/an/espace/citoyen/notifications" element={<ProtectedRoute><LayoutCitizen><CitizenNotifications /></LayoutCitizen></ProtectedRoute>} />
                 <Route path="/an/espace/citoyen/*" element={<ProtectedRoute><LayoutCitizen><CitizenDashboard /></LayoutCitizen></ProtectedRoute>} />
 
                 {/* ========================================= */}
