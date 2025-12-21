@@ -46,7 +46,7 @@ const LayoutCitizen = ({ children }: LayoutCitizenProps) => {
     const location = useLocation();
     const { theme, setTheme } = useTheme();
     const { t, dir } = useLanguage();
-    const { user } = useUser();
+    const { user, logout } = useUser();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     const basePath = "/espace/citoyen";
@@ -70,12 +70,7 @@ const LayoutCitizen = ({ children }: LayoutCitizenProps) => {
         { icon: Scale, label: "Parlement / Congrès", path: "/parlement", colorClass: "text-[#77BA41]" },
     ];
 
-    const handleLogout = () => {
-        sessionStorage.removeItem('user_data');
-        sessionStorage.removeItem('current_role');
-        sessionStorage.removeItem('auth_origin');
-        navigate("/parlement");
-    };
+
 
     return (
         <div className="min-h-screen bg-background flex" dir={dir}>
@@ -171,7 +166,7 @@ const LayoutCitizen = ({ children }: LayoutCitizenProps) => {
                         <Button
                             variant="ghost"
                             className="w-full justify-start gap-3 text-red-500 hover:text-red-600 hover:bg-red-500/10"
-                            onClick={handleLogout}
+                            onClick={() => logout()}
                         >
                             <LogOut className="w-4 h-4" />
                             {t('common.logout')}

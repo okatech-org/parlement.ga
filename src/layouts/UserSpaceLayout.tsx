@@ -27,8 +27,9 @@ const UserSpaceLayout = () => {
 
     const handleLogout = async () => {
         try {
+            // Navigate to home FIRST to escape ProtectedRoute
+            navigate("/");
             await supabase.auth.signOut();
-            navigate("/auth");
             toast.success("Déconnexion réussie", {
                 description: "À bientôt !",
             });

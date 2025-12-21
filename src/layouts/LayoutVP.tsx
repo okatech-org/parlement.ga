@@ -27,7 +27,7 @@ const LayoutVP = ({ children }: { children: React.ReactNode }) => {
     const location = useLocation();
     const { theme, setTheme } = useTheme();
     const { t, dir } = useLanguage();
-    const { user } = useUser();
+    const { user, logout } = useUser();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     const menuItems = [
@@ -112,11 +112,7 @@ const LayoutVP = ({ children }: { children: React.ReactNode }) => {
                         <Button
                             variant="ghost"
                             className="w-full justify-start gap-3 text-red-500 hover:text-red-600 hover:bg-red-500/10"
-                            onClick={() => {
-                                sessionStorage.removeItem('user_data');
-                                sessionStorage.removeItem('current_role');
-                                navigate("/auth");
-                            }}
+                            onClick={() => logout()}
                         >
                             <LogOut className="w-4 h-4" />
                             {t('common.logout')}
