@@ -47,10 +47,18 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const navigateToRole = (role: UserRole) => {
         switch (role) {
             case 'president':
-                navigate('/president');
+                if (user?.roles.includes('senator')) {
+                    navigate('/senat/espace/president');
+                } else {
+                    navigate('/president');
+                }
                 break;
             case 'vp':
-                navigate('/vp');
+                if (user?.roles.includes('senator')) {
+                    navigate('/senat/espace/vp');
+                } else {
+                    navigate('/vp');
+                }
                 break;
             case 'deputy':
                 navigate('/vote'); // Deputy Dashboard
@@ -65,10 +73,19 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             case 'questeur_budget':
             case 'questeur_resources':
             case 'questeur_services':
-                navigate('/questeurs');
+                if (user?.roles.includes('senator')) {
+                    navigate('/senat/espace/questeur');
+                } else {
+                    navigate('/questeurs');
+                }
                 break;
             case 'secretary':
-                navigate('/secretaires');
+                if (user?.roles.includes('senator')) {
+                    // Fallback to basic Senate space if specific Secretary space doesn't exist yet
+                    navigate('/senat/espace');
+                } else {
+                    navigate('/secretaires');
+                }
                 break;
             case 'citizen':
                 navigate('/citizen');
