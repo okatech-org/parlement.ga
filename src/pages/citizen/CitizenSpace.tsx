@@ -36,7 +36,7 @@ const CitizenSpace = () => {
     { id: "profil", label: "Mon Profil", icon: User },
     { id: "mail", label: "iBoîte", icon: Mail },
     { id: "documents", label: "iDocuments", icon: FolderOpen },
-    { id: "agenda", label: "Agenda", icon: Calendar },
+    { id: "agenda", label: "iAgenda", icon: Calendar },
   ];
 
   const quickAccessItems = [
