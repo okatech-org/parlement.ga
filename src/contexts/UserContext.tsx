@@ -189,88 +189,93 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const login = (phoneNumber: string, accountType: string) => {
+        // Normalize phone number
+        const normalizedPhone = phoneNumber.trim();
+
+        console.log('[Login] Phone:', normalizedPhone, 'AccountType:', accountType);
+
         // Mock User Data based on phone number
         let mockUser: User = {
             id: '1',
             name: 'Utilisateur',
-            phoneNumber,
+            phoneNumber: normalizedPhone,
             roles: ['citizen']
         };
 
         // Mock Logic for Roles
-        if (phoneNumber === "01010101") {
+        if (normalizedPhone === "01010101") {
             // President: Has President, Deputy, and Citizen roles
             mockUser = { ...mockUser, name: 'Michel Régis Onanga Ndiaye', roles: ['president', 'deputy', 'citizen'] };
-        } else if (phoneNumber === "02020202") {
+        } else if (normalizedPhone === "02020202") {
             // VP: Has VP, Deputy, and Citizen roles
             mockUser = { ...mockUser, name: 'François Ndong Obiang', roles: ['vp', 'deputy', 'citizen'] };
-        } else if (phoneNumber === "03030303") {
+        } else if (normalizedPhone === "03030303") {
             // Substitute: Has Substitute and Citizen roles
             mockUser = { ...mockUser, name: 'M. Suppléant', roles: ['substitute', 'citizen'] };
-        } else if (phoneNumber === "04040401") {
+        } else if (normalizedPhone === "04040401") {
             // Questeur Budget
             mockUser = { ...mockUser, name: 'Questeur Budget', roles: ['questeur_budget', 'citizen'] };
-        } else if (phoneNumber === "04040402") {
+        } else if (normalizedPhone === "04040402") {
             // Questeur Ressources
             mockUser = { ...mockUser, name: 'Questeur Ressources', roles: ['questeur_resources', 'citizen'] };
-        } else if (phoneNumber === "04040403") {
+        } else if (normalizedPhone === "04040403") {
             // Questeur Services
             mockUser = { ...mockUser, name: 'Questeur Services', roles: ['questeur_services', 'citizen'] };
-        } else if (phoneNumber === "04040404") {
+        } else if (normalizedPhone === "04040404") {
             // Questeur General (Admin) - Access to all
             mockUser = { ...mockUser, name: 'M. Questeur Général', roles: ['questeur', 'citizen'] };
-        } else if (phoneNumber === "05050505") {
+        } else if (normalizedPhone === "05050505") {
             // Secretary: Admin role
             mockUser = { ...mockUser, name: 'M. Secrétaire', roles: ['secretary', 'citizen'] };
-        } else if (phoneNumber === "01010102" || phoneNumber === "11111111") {
+        } else if (normalizedPhone === "01010102" || phoneNumber === "11111111") {
             // Senate President: Has President, Senator, and Citizen roles
             mockUser = { ...mockUser, name: 'Huguette Yvonne NYANA EKOUME Ep. AWORI', roles: ['president_senate', 'senator', 'citizen'], bureauLabel: 'Présidente du Sénat', province: 'Ogooué-Ivindo' };
-        } else if (phoneNumber === "12121211") {
+        } else if (normalizedPhone === "12121211") {
             // 1er VP Sénat
             mockUser = { ...mockUser, name: 'MABIALA Serge Maurice', roles: ['vp_senate', 'senator', 'citizen'], bureauLabel: '1er Vice-Président', province: 'Ngounié' };
-        } else if (phoneNumber === "12121212") {
+        } else if (normalizedPhone === "12121212") {
             // 2ème VP Sénat
             mockUser = { ...mockUser, name: 'BIYOGHE MBA Paul', roles: ['vp_senate', 'senator', 'citizen'], bureauLabel: '2ème Vice-Président', province: 'Estuaire' };
-        } else if (phoneNumber === "12121213") {
+        } else if (normalizedPhone === "12121213") {
             // 3ème VP Sénat
             mockUser = { ...mockUser, name: 'FOUEFOUE Élodie Diane Ep. SANDJOH', roles: ['vp_senate', 'senator', 'citizen'], bureauLabel: '3ème Vice-Présidente', province: 'Haut-Ogooué' };
-        } else if (phoneNumber === "12121214") {
+        } else if (normalizedPhone === "12121214") {
             // 4ème VP Sénat
             mockUser = { ...mockUser, name: 'REVANGUE Madeleine Sidonie', roles: ['vp_senate', 'senator', 'citizen'], bureauLabel: '4ème Vice-Présidente', province: 'Moyen-Ogooué' };
-        } else if (phoneNumber === "12121215") {
+        } else if (normalizedPhone === "12121215") {
             // 5ème VP Sénat
             mockUser = { ...mockUser, name: 'ONA ESSANGUI Marc', roles: ['vp_senate', 'senator', 'citizen'], bureauLabel: '5ème Vice-Président', province: 'Woleu-Ntem' };
-        } else if (phoneNumber === "14141411") {
+        } else if (normalizedPhone === "14141411") {
             // 1er Questeur Sénat
             mockUser = { ...mockUser, name: 'OWONO NGUEMA Jean Christophe', roles: ['questeur_senate', 'senator', 'citizen'], bureauLabel: '1er Questeur', province: 'Woleu-Ntem' };
-        } else if (phoneNumber === "14141412") {
+        } else if (normalizedPhone === "14141412") {
             // 2ème Questeur Sénat
             mockUser = { ...mockUser, name: 'MAGHOUMBOU Liliane Anette Ep. NDJAMI', roles: ['questeur_senate', 'senator', 'citizen'], bureauLabel: '2ème Questeur', province: 'Nyanga' };
-        } else if (phoneNumber === "15151511") {
+        } else if (normalizedPhone === "15151511") {
             // 1er Secrétaire Sénat
             mockUser = { ...mockUser, name: 'NGOUBOU Etienne Dieudonné', roles: ['secretary_senate', 'senator', 'citizen'], bureauLabel: '1er Secrétaire', province: 'Nyanga' };
-        } else if (phoneNumber === "15151512") {
+        } else if (normalizedPhone === "15151512") {
             // 2ème Secrétaire Sénat
             mockUser = { ...mockUser, name: 'MPAGA Georges', roles: ['secretary_senate', 'senator', 'citizen'], bureauLabel: '2ème Secrétaire', province: 'Ogooué-Maritime' };
-        } else if (phoneNumber === "15151513") {
+        } else if (normalizedPhone === "15151513") {
             // 3ème Secrétaire Sénat
             mockUser = { ...mockUser, name: 'Secrétaire 3', roles: ['secretary_senate', 'senator', 'citizen'], bureauLabel: '3ème Secrétaire', province: 'Estuaire' };
-        } else if (phoneNumber === "15151514") {
+        } else if (normalizedPhone === "15151514") {
             // 4ème Secrétaire Sénat
             mockUser = { ...mockUser, name: 'Secrétaire 4', roles: ['secretary_senate', 'senator', 'citizen'], bureauLabel: '4ème Secrétaire', province: 'Haut-Ogooué' };
-        } else if (phoneNumber === "15151515") {
+        } else if (normalizedPhone === "15151515") {
             // 5ème Secrétaire Sénat
             mockUser = { ...mockUser, name: 'Secrétaire 5', roles: ['secretary_senate', 'senator', 'citizen'], bureauLabel: '5ème Secrétaire', province: 'Woleu-Ntem' };
-        } else if (phoneNumber === "admin00") {
+        } else if (normalizedPhone === "admin00") {
             // System Admin / Super Admin
             mockUser = { ...mockUser, name: 'Administrateur Système', roles: ['system_admin'] };
-        } else if (phoneNumber === "admin01") {
+        } else if (normalizedPhone === "admin01") {
             // Admin AN
             mockUser = { ...mockUser, name: 'Administrateur AN', roles: ['admin_an'] };
-        } else if (phoneNumber === "admin02") {
+        } else if (normalizedPhone === "admin02") {
             // Admin Sénat
             mockUser = { ...mockUser, name: 'Administrateur Sénat', roles: ['admin_senat'] };
-        } else if (phoneNumber === "admin03") {
+        } else if (normalizedPhone === "admin03") {
             // Admin Parlement
             mockUser = { ...mockUser, name: 'Administrateur Parlement', roles: ['admin_parlement'] };
         } else if (accountType === 'parlement') {
