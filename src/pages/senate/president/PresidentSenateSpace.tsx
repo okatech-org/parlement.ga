@@ -50,7 +50,7 @@ const PresidentSenateSpace = () => {
     { id: "agenda", label: "Ordre du Jour", icon: Calendar },
     { id: "stats", label: "Statistiques", icon: BarChart3 },
     { id: "messagerie", label: "iBoîte", icon: MessageSquare, badge: "3" },
-    { id: "documents", label: "Mes Documents", icon: FolderOpen },
+    { id: "documents", label: "iDocuments", icon: FolderOpen },
     { id: "correspondance", label: "iCorrespondance", icon: Mail },
   ];
 

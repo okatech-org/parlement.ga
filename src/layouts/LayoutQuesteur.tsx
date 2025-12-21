@@ -64,7 +64,7 @@ const LayoutQuesteur = ({ children }: { children: React.ReactNode }) => {
         },
         {
             icon: FolderOpen,
-            label: "Mes Documents",
+            label: "iDocuments",
             path: "/questeurs/documents",
             allowedRoles: ['questeur', 'questeur_budget', 'questeur_resources', 'questeur_services']
         },

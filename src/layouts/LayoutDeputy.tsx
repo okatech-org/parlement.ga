@@ -37,7 +37,7 @@ const LayoutDeputy = ({ children }: { children: React.ReactNode }) => {
         { icon: Gavel, label: "Outils Législatifs", path: "/vote/tools" },
         { icon: Briefcase, label: "Gestion du Mandat", path: "/vote/mandate" },
         { icon: Mail, label: "iBoîte", path: "/vote/mail" },
-        { icon: FolderOpen, label: "Mes Documents", path: "/vote/documents" },
+        { icon: FolderOpen, label: "iDocuments", path: "/vote/documents" },
         { icon: Calendar, label: "iAgenda", path: "/vote/agenda" },
         { icon: FileText, label: "iCorrespondance", path: "/vote/correspondance" },
     ];

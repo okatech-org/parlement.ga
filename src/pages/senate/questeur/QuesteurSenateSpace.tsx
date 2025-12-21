@@ -42,7 +42,7 @@ const QuesteurSenateSpace = () => {
     { id: "services", label: "Services Admin", icon: Building },
     { id: "agenda", label: "Agenda", icon: Calendar },
     { id: "messagerie", label: "iBoîte", icon: MessageSquare },
-    { id: "documents", label: "Mes Documents", icon: FolderOpen },
+    { id: "documents", label: "iDocuments", icon: FolderOpen },
     { id: "correspondance", label: "iCorrespondance", icon: Mail },
   ];
 

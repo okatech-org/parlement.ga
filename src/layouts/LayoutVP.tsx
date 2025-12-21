@@ -35,7 +35,7 @@ const LayoutVP = ({ children }: { children: React.ReactNode }) => {
         { icon: Briefcase, label: "Gestion des Délégations", path: "/vp/delegations" },
         { icon: Crown, label: "Mode Intérim", path: "/vp/interim" },
         { icon: Mail, label: "iBoîte", path: "/vp/mail" },
-        { icon: FolderOpen, label: "Mes Documents", path: "/vp/documents" },
+        { icon: FolderOpen, label: "iDocuments", path: "/vp/documents" },
         { icon: Calendar, label: "iAgenda", path: "/vp/agenda" },
         { icon: FileText, label: "iCorrespondance", path: "/vp/correspondance" },
     ];

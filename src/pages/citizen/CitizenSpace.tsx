@@ -35,7 +35,7 @@ const CitizenSpace = () => {
     { id: "direct", label: "Direct TV", icon: Tv },
     { id: "profil", label: "Mon Profil", icon: User },
     { id: "mail", label: "iBoîte", icon: Mail },
-    { id: "documents", label: "Mes Documents", icon: FolderOpen },
+    { id: "documents", label: "iDocuments", icon: FolderOpen },
     { id: "agenda", label: "Agenda", icon: Calendar },
   ];
 

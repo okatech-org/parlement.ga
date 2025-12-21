@@ -33,7 +33,7 @@ const LayoutSecretary = ({ children }: { children: React.ReactNode }) => {
     const menuItems = [
         { icon: LayoutDashboard, label: t('dashboard.title') || "Tableau de bord", path: "/secretaires" },
         { icon: Mail, label: "iBoîte", path: "/secretaires/mail" },
-        { icon: FolderOpen, label: "Mes Documents", path: "/secretaires/documents" },
+        { icon: FolderOpen, label: "iDocuments", path: "/secretaires/documents" },
         { icon: Calendar, label: "iAgenda", path: "/secretaires/agenda" },
         { icon: FileText, label: "iCorrespondance", path: "/secretaires/correspondance" },
     ];

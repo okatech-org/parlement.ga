@@ -35,7 +35,7 @@ const LayoutSubstitute = ({ children }: { children: React.ReactNode }) => {
         { icon: Eye, label: "Suivi Législatif", path: "/suppleant/tracking" },
         { icon: BookOpen, label: "Formation & Ressources", path: "/suppleant/training" },
         { icon: Mail, label: "iBoîte", path: "/suppleant/mail" },
-        { icon: FolderOpen, label: "Mes Documents", path: "/suppleant/documents" },
+        { icon: FolderOpen, label: "iDocuments", path: "/suppleant/documents" },
         { icon: Calendar, label: "iAgenda", path: "/suppleant/agenda" },
         { icon: FileText, label: "iCorrespondance", path: "/suppleant/correspondance" },
     ];

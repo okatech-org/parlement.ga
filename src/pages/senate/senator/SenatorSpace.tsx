@@ -44,7 +44,7 @@ const SenatorSpace = () => {
     { id: "agenda", label: "Agenda", icon: Calendar },
     { id: "commissions", label: "Commissions", icon: Users },
     { id: "messagerie", label: "iBoîte", icon: MessageSquare, badge: "5" },
-    { id: "documents", label: "Mes Documents", icon: FolderOpen },
+    { id: "documents", label: "iDocuments", icon: FolderOpen },
     { id: "correspondance", label: "iCorrespondance", icon: Mail },
   ];
 

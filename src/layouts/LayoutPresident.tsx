@@ -50,7 +50,7 @@ const LayoutPresident = ({ children }: { children: React.ReactNode }) => {
 
     const categories = [
         { icon: Mail, label: "iBoîte", path: "/president/mail" },
-        { icon: FolderOpen, label: "Mes Documents", path: "/president/documents" },
+        { icon: FolderOpen, label: "iDocuments", path: "/president/documents" },
         { icon: Calendar, label: "iAgenda", path: "/president/agenda" },
         { icon: FileText, label: "iCorrespondance", path: "/president/correspondance" },
         { icon: Landmark, label: t('president.sidebar.plenary'), path: "/president/plenary" },

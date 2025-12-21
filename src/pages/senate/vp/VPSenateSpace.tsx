@@ -40,7 +40,7 @@ const VPSenateSpace = () => {
     { id: "delegations", label: "Délégations", icon: Shield },
     { id: "agenda", label: "Agenda", icon: Calendar },
     { id: "messagerie", label: "iBoîte", icon: MessageSquare },
-    { id: "documents", label: "Mes Documents", icon: FolderOpen },
+    { id: "documents", label: "iDocuments", icon: FolderOpen },
     { id: "correspondance", label: "iCorrespondance", icon: Mail },
   ];
 
