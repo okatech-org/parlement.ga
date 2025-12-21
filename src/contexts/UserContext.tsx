@@ -192,19 +192,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             }
         }
 
-        // Navigate FIRST to escape ProtectedRoute context
-        navigate(redirectPath);
+        // Clear storage immediately
+        sessionStorage.removeItem('user_data');
+        sessionStorage.removeItem('current_role');
+        sessionStorage.removeItem('is_demo');
 
-        // Then clear state
-        // Using a small timeout to ensure navigation has started/processed by Router if needed, 
-        // though typically sequential execution is fine. But to be safe against batching:
-        setTimeout(() => {
-            setUser(null);
-            setCurrentRole(null);
-            sessionStorage.removeItem('user_data');
-            sessionStorage.removeItem('current_role');
-            sessionStorage.removeItem('is_demo'); // Clear demo flag
-        }, 0);
+        // Force HARD redirection to bypass ProtectedRoute race conditions
+        window.location.href = redirectPath;
     };
 
     const switchRole = (role: UserRole) => {
