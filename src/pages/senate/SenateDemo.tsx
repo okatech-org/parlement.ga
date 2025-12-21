@@ -58,11 +58,11 @@ const SenateDemo = () => {
             { phone: '14141412', name: 'MAGHOUMBOU Liliane Anette Ep. NDJAMI', label: '2ème Questeur', province: 'Nyanga', circonscription: 'Tchibanga', path: '/senat/espace/questeur', parti: 'U.D.B' },
         ],
         secretaires: [
-            { phone: '15151511', name: 'NGOUBOU Etienne Dieudonné', label: '1er Secrétaire', province: 'Nyanga', circonscription: 'Basse-Banio / Mayumba', path: '/senat/espace', parti: 'U.D.B' },
-            { phone: '15151512', name: 'MPAGA Georges', label: '2ème Secrétaire', province: 'Ogooué-Maritime', circonscription: 'Etimboué / Omboué', path: '/senat/espace', parti: 'U.D.B' },
-            { phone: '15151513', name: 'Secrétaire 3', label: '3ème Secrétaire', province: 'Non identifié', circonscription: 'Non identifié', path: '/senat/espace', parti: 'U.D.B' },
-            { phone: '15151514', name: 'Secrétaire 4', label: '4ème Secrétaire', province: 'Non identifié', circonscription: 'Non identifié', path: '/senat/espace', parti: 'U.D.B' },
-            { phone: '15151515', name: 'Secrétaire 5', label: '5ème Secrétaire', province: 'Non identifié', circonscription: 'Non identifié', path: '/senat/espace', parti: 'U.D.B' },
+            { phone: '15151511', name: 'NGOUBOU Etienne Dieudonné', label: '1er Secrétaire', province: 'Nyanga', circonscription: 'Basse-Banio / Mayumba', path: '/senat/espace/secretary', parti: 'U.D.B' },
+            { phone: '15151512', name: 'MPAGA Georges', label: '2ème Secrétaire', province: 'Ogooué-Maritime', circonscription: 'Etimboué / Omboué', path: '/senat/espace/secretary', parti: 'U.D.B' },
+            { phone: '15151513', name: 'Secrétaire 3', label: '3ème Secrétaire', province: 'Non identifié', circonscription: 'Non identifié', path: '/senat/espace/secretary', parti: 'U.D.B' },
+            { phone: '15151514', name: 'Secrétaire 4', label: '4ème Secrétaire', province: 'Non identifié', circonscription: 'Non identifié', path: '/senat/espace/secretary', parti: 'U.D.B' },
+            { phone: '15151515', name: 'Secrétaire 5', label: '5ème Secrétaire', province: 'Non identifié', circonscription: 'Non identifié', path: '/senat/espace/secretary', parti: 'U.D.B' },
         ],
     };
 
