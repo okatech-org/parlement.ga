@@ -12,7 +12,8 @@ import {
     Calendar,
     Briefcase,
     Crown,
-    Mail
+    Mail,
+    FolderOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
@@ -33,9 +34,10 @@ const LayoutVP = ({ children }: { children: React.ReactNode }) => {
         { icon: LayoutDashboard, label: "Tableau de bord", path: "/vp" },
         { icon: Briefcase, label: "Gestion des Délégations", path: "/vp/delegations" },
         { icon: Crown, label: "Mode Intérim", path: "/vp/interim" },
-        { icon: Calendar, label: "Agenda Institutionnel", path: "/vp/agenda" },
         { icon: Mail, label: "iBoîte", path: "/vp/mail" },
-        { icon: FileText, label: "Documents", path: "/vp/documents" },
+        { icon: FolderOpen, label: "Mes Documents", path: "/vp/documents" },
+        { icon: Calendar, label: "iAgenda", path: "/vp/agenda" },
+        { icon: FileText, label: "iCorrespondance", path: "/vp/correspondance" },
     ];
 
     return (

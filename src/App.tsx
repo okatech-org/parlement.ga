@@ -369,36 +369,40 @@ const App = () => (
                 <Route path="/president/conference" element={<ProtectedRoute><LayoutPresident><Conference /></LayoutPresident></ProtectedRoute>} />
                 <Route path="/president/commissions" element={<ProtectedRoute><LayoutPresident><Commissions /></LayoutPresident></ProtectedRoute>} />
                 <Route path="/president/plenary" element={<ProtectedRoute><LayoutPresident><Plenary /></LayoutPresident></ProtectedRoute>} />
-                <Route path="/president/agenda" element={<ProtectedRoute><LayoutPresident><Agenda /></LayoutPresident></ProtectedRoute>} />
-                <Route path="/president/documents" element={<ProtectedRoute><LayoutPresident><Documents /></LayoutPresident></ProtectedRoute>} />
-                <Route path="/president/mail" element={<ProtectedRoute><LayoutPresident><Mailbox /></LayoutPresident></ProtectedRoute>} />
+                <Route path="/president/agenda" element={<ProtectedRoute><LayoutPresident><SharedAgendaPage /></LayoutPresident></ProtectedRoute>} />
+                <Route path="/president/documents" element={<ProtectedRoute><LayoutPresident><SharedDocumentsPage /></LayoutPresident></ProtectedRoute>} />
+                <Route path="/president/mail" element={<ProtectedRoute><LayoutPresident><IBoitePage /></LayoutPresident></ProtectedRoute>} />
+                <Route path="/president/correspondance" element={<ProtectedRoute><LayoutPresident><ICorrespondancePage /></LayoutPresident></ProtectedRoute>} />
                 <Route path="/president/settings" element={<ProtectedRoute><LayoutPresident><PresidentSettings /></LayoutPresident></ProtectedRoute>} />
 
                 {/* Deputy Space Legacy */}
                 <Route path="/vote" element={<ProtectedRoute><LayoutDeputy><DashboardDeputy /></LayoutDeputy></ProtectedRoute>} />
                 <Route path="/vote/tools" element={<ProtectedRoute><LayoutDeputy><LegislativeTools /></LayoutDeputy></ProtectedRoute>} />
-                <Route path="/vote/agenda" element={<ProtectedRoute><LayoutDeputy><ParliamentaryAgenda /></LayoutDeputy></ProtectedRoute>} />
+                <Route path="/vote/agenda" element={<ProtectedRoute><LayoutDeputy><SharedAgendaPage /></LayoutDeputy></ProtectedRoute>} />
                 <Route path="/vote/mandate" element={<ProtectedRoute><LayoutDeputy><MandateManagement /></LayoutDeputy></ProtectedRoute>} />
-                <Route path="/vote/mail" element={<ProtectedRoute><LayoutDeputy><Mailbox /></LayoutDeputy></ProtectedRoute>} />
+                <Route path="/vote/mail" element={<ProtectedRoute><LayoutDeputy><IBoitePage /></LayoutDeputy></ProtectedRoute>} />
                 <Route path="/vote/documents" element={<ProtectedRoute><LayoutDeputy><SharedDocumentsPage /></LayoutDeputy></ProtectedRoute>} />
+                <Route path="/vote/correspondance" element={<ProtectedRoute><LayoutDeputy><ICorrespondancePage /></LayoutDeputy></ProtectedRoute>} />
                 <Route path="/vote/settings" element={<ProtectedRoute><LayoutDeputy><PresidentSettings /></LayoutDeputy></ProtectedRoute>} />
 
                 {/* Substitute Legacy */}
                 <Route path="/suppleant" element={<ProtectedRoute><LayoutSubstitute><DashboardSubstitute /></LayoutSubstitute></ProtectedRoute>} />
                 <Route path="/suppleant/tracking" element={<ProtectedRoute><LayoutSubstitute><LegislativeTracking /></LayoutSubstitute></ProtectedRoute>} />
                 <Route path="/suppleant/training" element={<ProtectedRoute><LayoutSubstitute><TrainingResources /></LayoutSubstitute></ProtectedRoute>} />
-                <Route path="/suppleant/agenda" element={<ProtectedRoute><LayoutSubstitute><TitularAgenda /></LayoutSubstitute></ProtectedRoute>} />
-                <Route path="/suppleant/mail" element={<ProtectedRoute><LayoutSubstitute><Mailbox /></LayoutSubstitute></ProtectedRoute>} />
+                <Route path="/suppleant/agenda" element={<ProtectedRoute><LayoutSubstitute><SharedAgendaPage /></LayoutSubstitute></ProtectedRoute>} />
+                <Route path="/suppleant/mail" element={<ProtectedRoute><LayoutSubstitute><IBoitePage /></LayoutSubstitute></ProtectedRoute>} />
                 <Route path="/suppleant/documents" element={<ProtectedRoute><LayoutSubstitute><SharedDocumentsPage /></LayoutSubstitute></ProtectedRoute>} />
+                <Route path="/suppleant/correspondance" element={<ProtectedRoute><LayoutSubstitute><ICorrespondancePage /></LayoutSubstitute></ProtectedRoute>} />
                 <Route path="/suppleant/settings" element={<ProtectedRoute><LayoutSubstitute><PresidentSettings /></LayoutSubstitute></ProtectedRoute>} />
 
                 {/* VP Legacy */}
                 <Route path="/vp" element={<ProtectedRoute><LayoutVP><DashboardVP /></LayoutVP></ProtectedRoute>} />
                 <Route path="/vp/delegations" element={<ProtectedRoute><LayoutVP><DelegationManagement /></LayoutVP></ProtectedRoute>} />
                 <Route path="/vp/interim" element={<ProtectedRoute><LayoutVP><InterimMode /></LayoutVP></ProtectedRoute>} />
-                <Route path="/vp/agenda" element={<ProtectedRoute><LayoutVP><VPAgenda /></LayoutVP></ProtectedRoute>} />
-                <Route path="/vp/mail" element={<ProtectedRoute><LayoutVP><Mailbox /></LayoutVP></ProtectedRoute>} />
+                <Route path="/vp/agenda" element={<ProtectedRoute><LayoutVP><SharedAgendaPage /></LayoutVP></ProtectedRoute>} />
+                <Route path="/vp/mail" element={<ProtectedRoute><LayoutVP><IBoitePage /></LayoutVP></ProtectedRoute>} />
                 <Route path="/vp/documents" element={<ProtectedRoute><LayoutVP><SharedDocumentsPage /></LayoutVP></ProtectedRoute>} />
+                <Route path="/vp/correspondance" element={<ProtectedRoute><LayoutVP><ICorrespondancePage /></LayoutVP></ProtectedRoute>} />
                 <Route path="/vp/settings" element={<ProtectedRoute><LayoutVP><PresidentSettings /></LayoutVP></ProtectedRoute>} />
 
                 {/* Questeurs Legacy */}
@@ -406,15 +410,19 @@ const App = () => (
                 <Route path="/questeurs/budget" element={<ProtectedRoute><LayoutQuesteur><BudgetManagement /></LayoutQuesteur></ProtectedRoute>} />
                 <Route path="/questeurs/ressources" element={<ProtectedRoute><LayoutQuesteur><MaterialResources /></LayoutQuesteur></ProtectedRoute>} />
                 <Route path="/questeurs/services" element={<ProtectedRoute><LayoutQuesteur><AdministrativeServices /></LayoutQuesteur></ProtectedRoute>} />
-                <Route path="/questeurs/mail" element={<ProtectedRoute><LayoutQuesteur><Mailbox /></LayoutQuesteur></ProtectedRoute>} />
+                <Route path="/questeurs/mail" element={<ProtectedRoute><LayoutQuesteur><IBoitePage /></LayoutQuesteur></ProtectedRoute>} />
                 <Route path="/questeurs/documents" element={<ProtectedRoute><LayoutQuesteur><SharedDocumentsPage /></LayoutQuesteur></ProtectedRoute>} />
+                <Route path="/questeurs/agenda" element={<ProtectedRoute><LayoutQuesteur><SharedAgendaPage /></LayoutQuesteur></ProtectedRoute>} />
+                <Route path="/questeurs/correspondance" element={<ProtectedRoute><LayoutQuesteur><ICorrespondancePage /></LayoutQuesteur></ProtectedRoute>} />
                 <Route path="/questeurs/settings" element={<ProtectedRoute><LayoutQuesteur><PresidentSettings /></LayoutQuesteur></ProtectedRoute>} />
 
                 {/* Secretaires Legacy */}
                 <Route path="/secretaires" element={<ProtectedRoute><LayoutSecretary><DashboardSecretary /></LayoutSecretary></ProtectedRoute>} />
                 <Route path="/secretaires/agenda" element={<ProtectedRoute><LayoutSecretary><SecretaryAgenda /></LayoutSecretary></ProtectedRoute>} />
                 <Route path="/secretaires/documents" element={<ProtectedRoute><LayoutSecretary><SecretaryDocuments /></LayoutSecretary></ProtectedRoute>} />
-                <Route path="/secretaires/mail" element={<ProtectedRoute><LayoutSecretary><Mailbox /></LayoutSecretary></ProtectedRoute>} />
+                <Route path="/secretaires/mail" element={<ProtectedRoute><LayoutSecretary><IBoitePage /></LayoutSecretary></ProtectedRoute>} />
+                <Route path="/secretaires/agenda" element={<ProtectedRoute><LayoutSecretary><SharedAgendaPage /></LayoutSecretary></ProtectedRoute>} />
+                <Route path="/secretaires/correspondance" element={<ProtectedRoute><LayoutSecretary><ICorrespondancePage /></LayoutSecretary></ProtectedRoute>} />
                 <Route path="/secretaires/settings" element={<ProtectedRoute><LayoutSecretary><PresidentSettings /></LayoutSecretary></ProtectedRoute>} />
 
                 {/* User Space Legacy */}

@@ -18,7 +18,8 @@ import {
     ChevronDown,
     ChevronRight,
     Calendar,
-    Gavel
+    Gavel,
+    FolderOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
@@ -49,9 +50,10 @@ const LayoutPresident = ({ children }: { children: React.ReactNode }) => {
 
     const categories = [
         { icon: Mail, label: "iBoîte", path: "/president/mail" },
+        { icon: FolderOpen, label: "Mes Documents", path: "/president/documents" },
+        { icon: Calendar, label: "iAgenda", path: "/president/agenda" },
+        { icon: FileText, label: "iCorrespondance", path: "/president/correspondance" },
         { icon: Landmark, label: t('president.sidebar.plenary'), path: "/president/plenary" },
-        { icon: Calendar, label: t('president.sidebar.agenda'), path: "/president/agenda" },
-        { icon: FileText, label: t('president.sidebar.documents'), path: "/president/documents" },
         // Congress link for dual role
         ...(hasCongressRole ? [{ icon: Landmark, label: "Espace Congrès", path: "/congres/espace/president" }] : []),
     ];

@@ -12,7 +12,8 @@ import {
     Sun,
     Calendar,
     ChevronRight,
-    ChevronDown
+    ChevronDown,
+    FolderOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
@@ -31,13 +32,13 @@ const LayoutSecretary = ({ children }: { children: React.ReactNode }) => {
 
     const menuItems = [
         { icon: LayoutDashboard, label: t('dashboard.title') || "Tableau de bord", path: "/secretaires" },
-        { icon: Calendar, label: t('common.agenda') || "Agenda", path: "/secretaires/agenda" },
-        { icon: FileText, label: t('common.documents') || "Documents", path: "/secretaires/documents" },
+        { icon: Mail, label: "iBoîte", path: "/secretaires/mail" },
+        { icon: FolderOpen, label: "Mes Documents", path: "/secretaires/documents" },
+        { icon: Calendar, label: "iAgenda", path: "/secretaires/agenda" },
+        { icon: FileText, label: "iCorrespondance", path: "/secretaires/correspondance" },
     ];
 
-    const categories = [
-        { icon: Mail, label: "iBoîte", path: "/secretaires/mail" },
-    ];
+    const categories: any[] = [];
 
     return (
         <div className="min-h-screen bg-background flex" dir={dir}>

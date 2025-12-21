@@ -12,7 +12,9 @@ import {
     Package,
     Building2,
     Mail,
-    FileText
+    FileText,
+    FolderOpen,
+    Calendar
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
@@ -61,9 +63,21 @@ const LayoutQuesteur = ({ children }: { children: React.ReactNode }) => {
             allowedRoles: ['questeur', 'questeur_budget', 'questeur_resources', 'questeur_services']
         },
         {
-            icon: FileText,
-            label: "Documents",
+            icon: FolderOpen,
+            label: "Mes Documents",
             path: "/questeurs/documents",
+            allowedRoles: ['questeur', 'questeur_budget', 'questeur_resources', 'questeur_services']
+        },
+        {
+            icon: Calendar,
+            label: "iAgenda",
+            path: "/questeurs/agenda",
+            allowedRoles: ['questeur', 'questeur_budget', 'questeur_resources', 'questeur_services']
+        },
+        {
+            icon: FileText,
+            label: "iCorrespondance",
+            path: "/questeurs/correspondance",
             allowedRoles: ['questeur', 'questeur_budget', 'questeur_resources', 'questeur_services']
         },
     ];

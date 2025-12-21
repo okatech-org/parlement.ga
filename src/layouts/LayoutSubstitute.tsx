@@ -12,7 +12,8 @@ import {
     Calendar,
     BookOpen,
     Eye,
-    Mail
+    Mail,
+    FolderOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
@@ -33,9 +34,10 @@ const LayoutSubstitute = ({ children }: { children: React.ReactNode }) => {
         { icon: LayoutDashboard, label: "Tableau de bord", path: "/suppleant" },
         { icon: Eye, label: "Suivi Législatif", path: "/suppleant/tracking" },
         { icon: BookOpen, label: "Formation & Ressources", path: "/suppleant/training" },
-        { icon: Calendar, label: "Agenda du Titulaire", path: "/suppleant/agenda" },
         { icon: Mail, label: "iBoîte", path: "/suppleant/mail" },
-        { icon: FileText, label: "Documents", path: "/suppleant/documents" },
+        { icon: FolderOpen, label: "Mes Documents", path: "/suppleant/documents" },
+        { icon: Calendar, label: "iAgenda", path: "/suppleant/agenda" },
+        { icon: FileText, label: "iCorrespondance", path: "/suppleant/correspondance" },
     ];
 
     return (

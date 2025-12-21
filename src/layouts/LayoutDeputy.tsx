@@ -14,7 +14,8 @@ import {
     Gavel,
     ChevronRight,
     ChevronDown,
-    Mail
+    Mail,
+    FolderOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
@@ -34,10 +35,11 @@ const LayoutDeputy = ({ children }: { children: React.ReactNode }) => {
     const menuItems = [
         { icon: LayoutDashboard, label: "Tableau de bord", path: "/vote" },
         { icon: Gavel, label: "Outils Législatifs", path: "/vote/tools" },
-        { icon: Calendar, label: "Agenda Parlementaire", path: "/vote/agenda" },
         { icon: Briefcase, label: "Gestion du Mandat", path: "/vote/mandate" },
         { icon: Mail, label: "iBoîte", path: "/vote/mail" },
-        { icon: FileText, label: "Documents", path: "/vote/documents" },
+        { icon: FolderOpen, label: "Mes Documents", path: "/vote/documents" },
+        { icon: Calendar, label: "iAgenda", path: "/vote/agenda" },
+        { icon: FileText, label: "iCorrespondance", path: "/vote/correspondance" },
     ];
 
     return (
