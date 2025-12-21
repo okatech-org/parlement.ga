@@ -171,17 +171,23 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                 redirectPath = '/an/demo';
             }
         } else {
-            // Return to specific Home page (Environment based)
-            // Can be refined by checking current URL or user role
+            // Updated Logic per User Request
             const path = window.location.pathname;
-            if (path.includes('/senat')) {
-                redirectPath = '/senat';
-            } else if (path.includes('/parlement')) {
+
+            // 1. Citizen -> Parlement Home
+            if (currentRole === 'citizen' || path.includes('/espace/citoyen') || path.includes('/citizen')) {
                 redirectPath = '/parlement';
-            } else if (path.includes('/an')) {
+            }
+            // 2. Senate Context -> Senate Home (Senators, Senate Admin)
+            else if (path.includes('/senat') || currentRole === 'admin_senat' || user?.province) {
+                redirectPath = '/senat';
+            }
+            // 3. AN Context -> AN Home (Deputies, Questeurs, etc.)
+            else if (path.includes('/an') || ['deputy', 'substitute', 'questeur', 'secretary', 'questeur_budget', 'questeur_resources', 'questeur_services', 'admin_an'].includes(currentRole || '')) {
                 redirectPath = '/an';
-            } else if (path.includes('/citizen')) {
-                // Try to determine Citizen context from stored data if possible, else default
+            }
+            // 4. Fallback
+            else {
                 redirectPath = '/';
             }
         }
