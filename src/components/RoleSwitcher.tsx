@@ -24,6 +24,9 @@ const RoleSwitcher = () => {
         if (role === 'vp' && user?.bureauLabel?.includes('Vice-Président')) {
             return user.bureauLabel;
         }
+        if (role === 'president_senate' && user?.bureauLabel) {
+            return user.bureauLabel;
+        }
         if ((role === 'questeur' || role === 'questeur_budget' || role === 'questeur_resources' || role === 'questeur_services') && user?.bureauLabel?.includes('Questeur')) {
             return user.bureauLabel;
         }
@@ -32,7 +35,8 @@ const RoleSwitcher = () => {
         }
 
         switch (role) {
-            case 'president': return "Président";
+            case 'president': return "Président AN";
+            case 'president_senate': return "Président Sénat";
             case 'vp': return "Vice-Président";
             case 'deputy': return "Député";
             case 'senator': return "Sénateur";
@@ -50,6 +54,7 @@ const RoleSwitcher = () => {
     const getRoleIcon = (role: UserRole) => {
         switch (role) {
             case 'president': return Crown;
+            case 'president_senate': return Crown;
             case 'vp': return Briefcase;
             case 'deputy': return Shield;
             case 'senator': return Shield;

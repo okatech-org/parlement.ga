@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export type UserRole = 'president' | 'vp' | 'deputy' | 'senator' | 'substitute' | 'citizen' | 'questeur' | 'secretary' | 'questeur_budget' | 'questeur_resources' | 'questeur_services' | 'system_admin' | 'admin_an' | 'admin_senat' | 'admin_parlement';
+export type UserRole = 'president' | 'president_senate' | 'vp' | 'deputy' | 'senator' | 'substitute' | 'citizen' | 'questeur' | 'secretary' | 'questeur_budget' | 'questeur_resources' | 'questeur_services' | 'system_admin' | 'admin_an' | 'admin_senat' | 'admin_parlement';
 
 interface User {
     id: string;
@@ -57,6 +57,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                 } else {
                     navigate('/president');
                 }
+                break;
+            case 'president_senate':
+                navigate('/senat/espace/president');
                 break;
             case 'vp':
                 if (userRoles.includes('senator')) {
@@ -146,9 +149,24 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         } else if (phoneNumber === "05050505") {
             // Secretary: Admin role
             mockUser = { ...mockUser, name: 'M. Secrétaire', roles: ['secretary', 'citizen'] };
-        } else if (phoneNumber === "01010102") {
+        } else if (phoneNumber === "01010102" || phoneNumber === "11111111") {
             // Senate President: Has President, Senator, and Citizen roles
-            mockUser = { ...mockUser, name: 'Huguette Yvonne NYANA EKOUME Ep. AWORI', roles: ['president', 'senator', 'citizen'], bureauLabel: 'Présidente du Sénat', province: 'Ogooué-Ivindo' };
+            mockUser = { ...mockUser, name: 'Huguette Yvonne NYANA EKOUME Ep. AWORI', roles: ['president_senate', 'senator', 'citizen'], bureauLabel: 'Présidente du Sénat', province: 'Ogooué-Ivindo' };
+        } else if (phoneNumber === "12121211") {
+            // 1er VP Sénat
+            mockUser = { ...mockUser, name: 'MABIALA Serge Maurice', roles: ['vp', 'senator', 'citizen'], bureauLabel: '1er Vice-Président', province: 'Ngounié' };
+        } else if (phoneNumber === "12121212") {
+            // 2ème VP Sénat
+            mockUser = { ...mockUser, name: 'BIYOGHE MBA Paul', roles: ['vp', 'senator', 'citizen'], bureauLabel: '2ème Vice-Président', province: 'Estuaire' };
+        } else if (phoneNumber === "14141411") {
+            // 1er Questeur Sénat
+            mockUser = { ...mockUser, name: 'OWONO NGUEMA Jean Christophe', roles: ['questeur', 'senator', 'citizen'], bureauLabel: '1er Questeur', province: 'Woleu-Ntem' };
+        } else if (phoneNumber === "14141412") {
+            // 2ème Questeur Sénat
+            mockUser = { ...mockUser, name: 'MAGHOUMBOU Liliane Anette Ep. NDJAMI', roles: ['questeur', 'senator', 'citizen'], bureauLabel: '2ème Questeur', province: 'Nyanga' };
+        } else if (phoneNumber === "15151511") {
+            // 1er Secrétaire Sénat
+            mockUser = { ...mockUser, name: 'NGOUBOU Etienne Dieudonné', roles: ['secretary', 'senator', 'citizen'], bureauLabel: '1er Secrétaire', province: 'Nyanga' };
         } else if (phoneNumber === "admin00") {
             // System Admin / Super Admin
             mockUser = { ...mockUser, name: 'Administrateur Système', roles: ['system_admin'] };
