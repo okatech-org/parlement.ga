@@ -14,6 +14,7 @@ import {
   Mail,
 } from "lucide-react";
 import { AdminSpaceLayout } from "@/components/layout/AdminSpaceLayout";
+import { useUser } from "@/contexts/UserContext";
 import { SenatorDashboardSection } from "./components/SenatorDashboardSection";
 import { SenatorNavetteSection } from "./components/SenatorNavetteSection";
 import { SenatorTerritoireSection } from "./components/SenatorTerritoireSection";
@@ -29,10 +30,11 @@ import { SenatorParametresSection } from "./components/SenatorParametresSection"
 
 const SenatorSpace = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
+  const { user } = useUser();
 
   const userContext = {
-    name: "Hon. Marie Ndong",
-    role: "Sénateur - Woleu-Ntem",
+    name: user?.name || "Sénateur",
+    role: user?.province ? `Sénateur de ${user.province}` : "Sénateur",
     avatar: undefined,
   };
 

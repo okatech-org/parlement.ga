@@ -44,6 +44,55 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, []);
 
+    /**
+     * Role Priority System:
+     * 1. Parliament Bureau (highest) - CMP Member, Congress President, Secretary Session
+     * 2. AN/Senate Bureau - President, VP, Questeur, Secretary
+     * 3. Elected Officials (lowest) - Deputy, Senator
+     * 4. Citizen (public)
+     */
+    const ROLE_PRIORITY: UserRole[] = [
+        // Parliament Bureau (highest priority)
+        'cmp_member',
+        'president_congress',
+        'secretary_session',
+        'deputy_congress',
+        'senator_congress',
+        // AN Bureau
+        'president',
+        'vp',
+        'questeur',
+        'questeur_budget',
+        'questeur_resources',
+        'questeur_services',
+        'secretary',
+        // Senate Bureau
+        'president_senate',
+        'vp_senate',
+        'questeur_senate',
+        'secretary_senate',
+        // Admin roles
+        'system_admin',
+        'admin_parlement',
+        'admin_an',
+        'admin_senat',
+        // Elected Officials
+        'deputy',
+        'senator',
+        'substitute',
+        // Public
+        'citizen',
+    ];
+
+    const getHighestPriorityRole = (roles: UserRole[]): UserRole => {
+        for (const priorityRole of ROLE_PRIORITY) {
+            if (roles.includes(priorityRole)) {
+                return priorityRole;
+            }
+        }
+        return roles[0] || 'citizen';
+    };
+
     const navigateToRole = (role: UserRole) => {
         // Always read latest data from storage for navigation decisions to avoid state race conditions
         const storedUser = sessionStorage.getItem('user_data');
@@ -102,7 +151,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                 }
                 break;
             case 'secretary_senate':
-                navigate('/senat/espace');
+                navigate('/senat/espace/secretary');
                 break;
             case 'citizen':
                 navigate('/citizen');
@@ -200,6 +249,18 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         } else if (phoneNumber === "15151511") {
             // 1er Secrétaire Sénat
             mockUser = { ...mockUser, name: 'NGOUBOU Etienne Dieudonné', roles: ['secretary_senate', 'senator', 'citizen'], bureauLabel: '1er Secrétaire', province: 'Nyanga' };
+        } else if (phoneNumber === "15151512") {
+            // 2ème Secrétaire Sénat
+            mockUser = { ...mockUser, name: 'MPAGA Georges', roles: ['secretary_senate', 'senator', 'citizen'], bureauLabel: '2ème Secrétaire', province: 'Ogooué-Maritime' };
+        } else if (phoneNumber === "15151513") {
+            // 3ème Secrétaire Sénat
+            mockUser = { ...mockUser, name: 'Secrétaire 3', roles: ['secretary_senate', 'senator', 'citizen'], bureauLabel: '3ème Secrétaire', province: 'Estuaire' };
+        } else if (phoneNumber === "15151514") {
+            // 4ème Secrétaire Sénat
+            mockUser = { ...mockUser, name: 'Secrétaire 4', roles: ['secretary_senate', 'senator', 'citizen'], bureauLabel: '4ème Secrétaire', province: 'Haut-Ogooué' };
+        } else if (phoneNumber === "15151515") {
+            // 5ème Secrétaire Sénat
+            mockUser = { ...mockUser, name: 'Secrétaire 5', roles: ['secretary_senate', 'senator', 'citizen'], bureauLabel: '5ème Secrétaire', province: 'Woleu-Ntem' };
         } else if (phoneNumber === "admin00") {
             // System Admin / Super Admin
             mockUser = { ...mockUser, name: 'Administrateur Système', roles: ['system_admin'] };
@@ -220,16 +281,11 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(mockUser);
         sessionStorage.setItem('user_data', JSON.stringify(mockUser));
 
-        // Redirection Logic
-        if (mockUser.roles.length > 1) {
-            navigate('/portail');
-        } else {
-            // Direct navigation to avoid race condition with state
-            const role = mockUser.roles[0];
-            setCurrentRole(role);
-            sessionStorage.setItem('current_role', role);
-            navigateToRole(role);
-        }
+        // Role Priority Navigation: Always navigate to the highest priority role's space
+        const highestPriorityRole = getHighestPriorityRole(mockUser.roles);
+        setCurrentRole(highestPriorityRole);
+        sessionStorage.setItem('current_role', highestPriorityRole);
+        navigateToRole(highestPriorityRole);
     };
 
     const logout = () => {

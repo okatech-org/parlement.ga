@@ -2,6 +2,7 @@ import { FileText, MapPin, MessageSquare, Calendar, ArrowLeftRight, AlertTriangl
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/contexts/UserContext";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardStatsCard } from "@/components/dashboard/DashboardStatsCard";
 import { AttendanceRateCard } from "@/components/dashboard/DashboardCharts";
@@ -9,6 +10,8 @@ import { AnimatedDashboardCard, AnimatedProgressBar } from "@/components/animati
 import InteractiveDonutChart from "@/components/charts/InteractiveDonutChart";
 
 export const SenatorDashboardSection = () => {
+  const { user } = useUser();
+
   const stats = [
     { icon: FileText, value: "8", label: "Textes à Examiner", subLabel: "En navette" },
     { icon: AlertTriangle, value: "12", label: "Doléances Locales", subLabel: "À traiter" },
@@ -50,7 +53,7 @@ export const SenatorDashboardSection = () => {
     <div className="space-y-8">
       <AnimatedDashboardCard delay={0}>
         <DashboardHeader
-          title="Sénateur de l'Estuaire"
+          title={user?.province ? `Sénateur de ${user.province}` : "Sénateur"}
           subtitle="République Gabonaise - Représentation Territoriale"
           avatarInitial="S"
         />

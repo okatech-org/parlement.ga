@@ -109,6 +109,7 @@ import SenatorSpace from "@/pages/senate/senator/SenatorSpace";
 import PresidentSenateSpace from "@/pages/senate/president/PresidentSenateSpace";
 import VPSenateSpace from "@/pages/senate/vp/VPSenateSpace";
 import QuesteurSenateSpace from "@/pages/senate/questeur/QuesteurSenateSpace";
+import SecretarySenateSpace from "@/pages/senate/secretary/SecretarySenateSpace";
 import SenateDemo from "@/pages/senate/SenateDemo";
 import GrievanceManagement from "@/pages/senate/GrievanceManagement";
 import FieldVisitsPage from "@/pages/senate/FieldVisitsPage";
@@ -331,6 +332,9 @@ const App = () => (
 
                 {/* Espace Questeur du Sénat */}
                 <Route path="/senat/espace/questeur" element={<QuesteurSenateSpace />} />
+
+                {/* Espace Secrétaire du Sénat */}
+                <Route path="/senat/espace/secretary" element={<SecretarySenateSpace />} />
 
                 {/* Autres pages Sénat */}
                 <Route path="/senat/senateurs" element={<HomeSenate />} />

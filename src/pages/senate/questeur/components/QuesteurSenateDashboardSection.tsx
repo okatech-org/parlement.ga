@@ -2,12 +2,15 @@ import { Wallet, Package, Banknote, Building, TrendingUp, FileText } from "lucid
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/contexts/UserContext";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardStatsCard } from "@/components/dashboard/DashboardStatsCard";
 import { AnimatedDashboardCard, AnimatedProgressBar } from "@/components/animations/DashboardAnimations";
 import InteractiveDonutChart from "@/components/charts/InteractiveDonutChart";
 
 export const QuesteurSenateDashboardSection = () => {
+  const { user } = useUser();
+
   const stats = [
     { icon: Wallet, value: "12.5 Mds", label: "Budget Annuel", subLabel: "FCFA alloué" },
     { icon: TrendingUp, value: "78%", label: "Exécution Budget", subLabel: "Consommé" },
@@ -38,7 +41,7 @@ export const QuesteurSenateDashboardSection = () => {
     <div className="space-y-8">
       <AnimatedDashboardCard delay={0}>
         <DashboardHeader
-          title="Questeur du Sénat"
+          title={user?.bureauLabel ? `${user.bureauLabel} du Sénat` : "Questeur du Sénat"}
           subtitle="République Gabonaise - Gestion Financière et Matérielle"
           avatarInitial="Q"
         />
