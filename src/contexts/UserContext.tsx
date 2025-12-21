@@ -266,6 +266,33 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         } else if (normalizedPhone === "15151515") {
             // 5ème Secrétaire Sénat
             mockUser = { ...mockUser, name: 'Secrétaire 5', roles: ['secretary_senate', 'senator', 'citizen'], bureauLabel: '5ème Secrétaire', province: 'Woleu-Ntem' };
+
+            // ==================== CONGRÈS / CMP ====================
+        } else if (normalizedPhone === "20202001") {
+            // Président du Congrès (Président de l'AN - convoque et préside les sessions conjointes)
+            mockUser = { ...mockUser, name: 'Michel Régis Onanga Ndiaye', roles: ['president_congress', 'president', 'deputy', 'citizen'], bureauLabel: 'Président du Congrès' };
+        } else if (normalizedPhone === "20202002") {
+            // Secrétaire de Séance du Congrès (1er Secrétaire AN désigné)
+            mockUser = { ...mockUser, name: 'MOUNDOUNGA Bernadette', roles: ['secretary_session', 'secretary', 'deputy', 'citizen'], bureauLabel: 'Secrétaire de Séance', circonscription: 'Libreville-Nord' };
+        } else if (normalizedPhone === "20202003") {
+            // Député participant au Congrès (pour révision constitutionnelle)
+            mockUser = { ...mockUser, name: 'NDONG ESSONO Pierre', roles: ['deputy_congress', 'deputy', 'citizen'], bureauLabel: 'Député (Congrès)', circonscription: 'Ntoum' };
+        } else if (normalizedPhone === "20202004") {
+            // Sénateur participant au Congrès (pour révision constitutionnelle)
+            mockUser = { ...mockUser, name: 'ONDO MOUCHITA Laurent', roles: ['senator_congress', 'senator', 'citizen'], bureauLabel: 'Sénateur (Congrès)', province: 'Estuaire' };
+        } else if (normalizedPhone === "20202005") {
+            // Membre CMP - Commissaire AN
+            mockUser = { ...mockUser, name: 'BIYOGHE MEBA Joséphine', roles: ['cmp_member', 'deputy', 'citizen'], bureauLabel: 'Commissaire CMP (AN)', circonscription: 'Libreville-Sud' };
+        } else if (normalizedPhone === "20202006") {
+            // Membre CMP - Commissaire Sénat
+            mockUser = { ...mockUser, name: 'NZAMBA NZAMBA Robert', roles: ['cmp_member', 'senator', 'citizen'], bureauLabel: 'Commissaire CMP (Sénat)', province: 'Ogooué-Maritime' };
+        } else if (normalizedPhone === "20202007") {
+            // Coprésident CMP - Député
+            mockUser = { ...mockUser, name: 'MEBIAME François', roles: ['cmp_member', 'deputy', 'citizen'], bureauLabel: 'Coprésident CMP (AN)', circonscription: 'Owendo' };
+        } else if (normalizedPhone === "20202008") {
+            // Coprésident CMP - Sénateur
+            mockUser = { ...mockUser, name: 'KOMBILA MOUSSAVOU Alain', roles: ['cmp_member', 'senator', 'citizen'], bureauLabel: 'Coprésident CMP (Sénat)', province: 'Nyanga' };
+
         } else if (normalizedPhone === "admin00") {
             // System Admin / Super Admin
             mockUser = { ...mockUser, name: 'Administrateur Système', roles: ['system_admin'] };

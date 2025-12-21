@@ -25,8 +25,8 @@ const ParliamentDemo = () => {
             accounts: [
                 {
                     label: t('congress.demo.cards.accounts.presidentCongress'),
-                    phone: '09090901',
-                    path: '/congres/espace/president',
+                    phone: '20202001',
+                    path: '/parlement/espace/president',
                     icon: Crown,
                     color: 'text-[#D19C00]',
                     role: t('congress.demo.cards.roles.president'),
@@ -38,8 +38,8 @@ const ParliamentDemo = () => {
                 },
                 {
                     label: t('congress.demo.cards.accounts.sessionSecretary'),
-                    phone: '09090902',
-                    path: '/parlement/espace',
+                    phone: '20202002',
+                    path: '/parlement/congres',
                     icon: FileText,
                     color: 'text-[#3A87FD]',
                     role: t('congress.demo.cards.roles.secretary'),
@@ -58,8 +58,8 @@ const ParliamentDemo = () => {
             accounts: [
                 {
                     label: t('congress.demo.cards.accounts.deputyCongress'),
-                    phone: '09090903',
-                    path: '/an/espace/deputes',
+                    phone: '20202003',
+                    path: '/parlement/congres',
                     icon: Users,
                     color: 'text-[#3A87FD]',
                     role: t('congress.demo.cards.roles.deputy'),
@@ -71,8 +71,8 @@ const ParliamentDemo = () => {
                 },
                 {
                     label: t('congress.demo.cards.accounts.senatorCongress'),
-                    phone: '09090904',
-                    path: '/senat/espace',
+                    phone: '20202004',
+                    path: '/parlement/congres',
                     icon: Users,
                     color: 'text-[#D19C00]',
                     role: t('congress.demo.cards.roles.senator'),
@@ -90,15 +90,54 @@ const ParliamentDemo = () => {
             color: "text-purple-500",
             accounts: [
                 {
-                    label: t('congress.demo.cards.accounts.cmpMember'),
-                    phone: '09090905',
+                    label: "Commissaire CMP (AN)",
+                    phone: '20202005',
                     path: '/parlement/cmp',
                     icon: ArrowLeftRight,
-                    color: 'text-purple-500',
+                    color: 'text-[#3A87FD]',
                     role: t('congress.demo.cards.roles.commissioner'),
                     features: [
                         t('congress.demo.cards.featuresList.textsNegotiation'),
                         t('congress.demo.cards.featuresList.cmpAmendments'),
+                        t('congress.demo.cards.featuresList.compromiseVote')
+                    ]
+                },
+                {
+                    label: "Commissaire CMP (Sénat)",
+                    phone: '20202006',
+                    path: '/parlement/cmp',
+                    icon: ArrowLeftRight,
+                    color: 'text-[#D19C00]',
+                    role: t('congress.demo.cards.roles.commissioner'),
+                    features: [
+                        t('congress.demo.cards.featuresList.textsNegotiation'),
+                        t('congress.demo.cards.featuresList.cmpAmendments'),
+                        t('congress.demo.cards.featuresList.compromiseVote')
+                    ]
+                },
+                {
+                    label: "Coprésident CMP (AN)",
+                    phone: '20202007',
+                    path: '/parlement/cmp',
+                    icon: Crown,
+                    color: 'text-purple-600',
+                    role: "Coprésident",
+                    features: [
+                        "Présidence alternée CMP",
+                        t('congress.demo.cards.featuresList.textsNegotiation'),
+                        t('congress.demo.cards.featuresList.compromiseVote')
+                    ]
+                },
+                {
+                    label: "Coprésident CMP (Sénat)",
+                    phone: '20202008',
+                    path: '/parlement/cmp',
+                    icon: Crown,
+                    color: 'text-purple-600',
+                    role: "Coprésident",
+                    features: [
+                        "Présidence alternée CMP",
+                        t('congress.demo.cards.featuresList.textsNegotiation'),
                         t('congress.demo.cards.featuresList.compromiseVote')
                     ]
                 }
@@ -113,11 +152,14 @@ const ParliamentDemo = () => {
         }
 
         const mockUsers: Record<string, { name: string; roles: string[] }> = {
-            '09090901': { name: 'Président du Congrès', roles: ['president_congress', 'citizen'] },
-            '09090902': { name: 'Secrétaire Général', roles: ['secretary_congress', 'citizen'] },
-            '09090903': { name: 'Député Membre', roles: ['deputy', 'congress_member', 'citizen'] },
-            '09090904': { name: 'Sénateur Membre', roles: ['senator', 'congress_member', 'citizen'] },
-            '09090905': { name: 'Commissaire CMP', roles: ['cmp_member', 'congress_member', 'citizen'] },
+            '20202001': { name: 'Michel Régis Onanga Ndiaye', roles: ['president_congress', 'president', 'deputy', 'citizen'] },
+            '20202002': { name: 'MOUNDOUNGA Bernadette', roles: ['secretary_session', 'secretary', 'deputy', 'citizen'] },
+            '20202003': { name: 'NDONG ESSONO Pierre', roles: ['deputy_congress', 'deputy', 'citizen'] },
+            '20202004': { name: 'ONDO MOUCHITA Laurent', roles: ['senator_congress', 'senator', 'citizen'] },
+            '20202005': { name: 'BIYOGHE MEBA Joséphine', roles: ['cmp_member', 'deputy', 'citizen'] },
+            '20202006': { name: 'NZAMBA NZAMBA Robert', roles: ['cmp_member', 'senator', 'citizen'] },
+            '20202007': { name: 'MEBIAME François', roles: ['cmp_member', 'deputy', 'citizen'] },
+            '20202008': { name: 'KOMBILA MOUSSAVOU Alain', roles: ['cmp_member', 'senator', 'citizen'] },
         };
 
         const userData = mockUsers[phone] || { name: 'Membre du Congrès', roles: ['congress_member', 'citizen'] };
