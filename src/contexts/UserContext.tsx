@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export type UserRole = 'president' | 'president_senate' | 'vp' | 'vp_senate' | 'deputy' | 'senator' | 'substitute' | 'citizen' | 'questeur' | 'questeur_senate' | 'secretary' | 'secretary_senate' | 'questeur_budget' | 'questeur_resources' | 'questeur_services' | 'system_admin' | 'admin_an' | 'admin_senat' | 'admin_parlement';
+export type UserRole = 'president' | 'president_senate' | 'president_congress' | 'vp' | 'vp_senate' | 'deputy' | 'deputy_congress' | 'senator' | 'senator_congress' | 'substitute' | 'citizen' | 'questeur' | 'questeur_senate' | 'secretary' | 'secretary_senate' | 'secretary_session' | 'cmp_member' | 'questeur_budget' | 'questeur_resources' | 'questeur_services' | 'system_admin' | 'admin_an' | 'admin_senat' | 'admin_parlement';
 
 interface User {
     id: string;
@@ -118,6 +118,21 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                 break;
             case 'admin_parlement':
                 navigate('/parlement/admin');
+                break;
+            case 'president_congress':
+                navigate('/parlement/espace/president');
+                break;
+            case 'deputy_congress':
+                navigate('/parlement/congres');
+                break;
+            case 'senator_congress':
+                navigate('/parlement/congres');
+                break;
+            case 'secretary_session':
+                navigate('/parlement/congres');
+                break;
+            case 'cmp_member':
+                navigate('/parlement/cmp');
                 break;
             default:
                 navigate('/');
