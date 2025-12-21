@@ -367,6 +367,7 @@ const App = () => (
 
                 {/* Espace Président du Congrès */}
                 <Route path="/congres/espace/president" element={<ProtectedRoute><CongressPresidentDashboard /></ProtectedRoute>} />
+                <Route path="/parlement/espace/president" element={<ProtectedRoute><CongressPresidentDashboard /></ProtectedRoute>} />
 
                 {/* CMP - War Room */}
                 <Route path="/parlement/cmp" element={<ParliamentSpace />} />
@@ -381,6 +382,10 @@ const App = () => (
                 {/* Sessions et historique */}
                 <Route path="/parlement/sessions" element={<ParliamentSpace />} />
                 <Route path="/congres/sessions" element={<ParliamentSpace />} />
+
+                {/* Espace Membres du Congrès (Députés/Sénateurs) */}
+                <Route path="/parlement/congres" element={<ProtectedRoute><CongressDashboard /></ProtectedRoute>} />
+                <Route path="/congres/espace/membres" element={<ProtectedRoute><CongressDashboard /></ProtectedRoute>} />
 
                 {/* ========================================= */}
                 {/* ROUTES LEGACY (rétrocompatibilité)       */}
