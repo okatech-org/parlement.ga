@@ -21,16 +21,16 @@ const RoleSwitcher = () => {
 
     const getRoleLabel = (role: UserRole) => {
         // For Bureau roles, use the dynamic bureauLabel from user session if available
-        if (role === 'vp' && user?.bureauLabel?.includes('Vice-Président')) {
+        if ((role === 'vp' || role === 'vp_senate') && user?.bureauLabel?.includes('Vice-Président')) {
             return user.bureauLabel;
         }
         if (role === 'president_senate' && user?.bureauLabel) {
             return user.bureauLabel;
         }
-        if ((role === 'questeur' || role === 'questeur_budget' || role === 'questeur_resources' || role === 'questeur_services') && user?.bureauLabel?.includes('Questeur')) {
+        if ((role === 'questeur' || role === 'questeur_senate' || role === 'questeur_budget' || role === 'questeur_resources' || role === 'questeur_services') && user?.bureauLabel?.includes('Questeur')) {
             return user.bureauLabel;
         }
-        if (role === 'secretary' && user?.bureauLabel?.includes('Secrétaire')) {
+        if ((role === 'secretary' || role === 'secretary_senate') && user?.bureauLabel?.includes('Secrétaire')) {
             return user.bureauLabel;
         }
 
@@ -38,14 +38,17 @@ const RoleSwitcher = () => {
             case 'president': return "Président AN";
             case 'president_senate': return "Président Sénat";
             case 'vp': return "Vice-Président";
+            case 'vp_senate': return "Vice-Président Sénat";
             case 'deputy': return "Député";
             case 'senator': return "Sénateur";
             case 'substitute': return "Suppléant";
             case 'questeur': return "Questeur";
+            case 'questeur_senate': return "Questeur Sénat";
             case 'questeur_budget': return "Questeur (Budget)";
             case 'questeur_resources': return "Questeur (Ressources)";
             case 'questeur_services': return "Questeur (Services)";
             case 'secretary': return "Secrétaire";
+            case 'secretary_senate': return "Secrétaire Sénat";
             case 'citizen': return "Citoyen";
             default: return role;
         }
@@ -56,14 +59,17 @@ const RoleSwitcher = () => {
             case 'president': return Crown;
             case 'president_senate': return Crown;
             case 'vp': return Briefcase;
+            case 'vp_senate': return Briefcase;
             case 'deputy': return Shield;
             case 'senator': return Shield;
             case 'substitute': return Users;
             case 'questeur': return Briefcase;
+            case 'questeur_senate': return Briefcase;
             case 'questeur_budget': return Briefcase;
             case 'questeur_resources': return Briefcase;
             case 'questeur_services': return Briefcase;
             case 'secretary': return FileText;
+            case 'secretary_senate': return FileText;
             case 'citizen': return UserCircle;
             default: return UserCircle;
         }

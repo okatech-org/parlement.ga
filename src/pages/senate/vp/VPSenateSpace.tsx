@@ -13,6 +13,7 @@ import {
   Mail,
 } from "lucide-react";
 import { AdminSpaceLayout } from "@/components/layout/AdminSpaceLayout";
+import { useUser } from "@/contexts/UserContext";
 import { VPSenateDashboardSection } from "./components/VPSenateDashboardSection";
 import { VPSenateSuppleanceSection } from "./components/VPSenateSuppleanceSection";
 import { VPSenateCommissionsSection } from "./components/VPSenateCommissionsSection";
@@ -27,9 +28,15 @@ import { VPSenateParametresSection } from "./components/VPSenateParametresSectio
 const VPSenateSpace = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
 
+  const { user } = useUser();
+  const defaultUser = {
+    name: "Huguette Yvonne NYANA EKOUME Ep. AWORI",
+    role: "Présidente du Sénat",
+  };
+
   const userContext = {
-    name: "Hon. Pierre Nzoghe",
-    role: "1er Vice-Président du Sénat",
+    name: user?.name || defaultUser.name,
+    role: user?.bureauLabel || "Vice-Président du Sénat", // Use dynamic label or fallback
     avatar: undefined,
   };
 

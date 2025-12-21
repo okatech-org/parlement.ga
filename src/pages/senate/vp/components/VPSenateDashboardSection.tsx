@@ -2,6 +2,7 @@ import { Crown, Users, Calendar, Building2, TrendingUp, Shield, Gavel, FileSigna
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/contexts/UserContext";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardStatsCard } from "@/components/dashboard/DashboardStatsCard";
 import { AttendanceRateCard } from "@/components/dashboard/DashboardCharts";
@@ -29,11 +30,13 @@ export const VPSenateDashboardSection = () => {
     { name: "Réforme Fiscale", progress: 30, color: "#f59e0b" },
   ];
 
+  const { user } = useUser();
+
   return (
     <div className="space-y-8">
       <AnimatedDashboardCard delay={0}>
         <DashboardHeader
-          title="1er Vice-Président du Sénat"
+          title={user?.bureauLabel ? `${user.bureauLabel} du Sénat` : "Vice-Président du Sénat"}
           subtitle="République Gabonaise - Union, Travail, Justice"
           avatarInitial="VP"
         />
