@@ -3,7 +3,6 @@ import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SpaceSidebar, NavItemType } from "./SpaceSidebar";
 import { MobileBottomNav } from "./MobileBottomNav";
-import { IAstedButton } from "../iasted/IAstedButton";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
@@ -35,7 +34,6 @@ export const AdminSpaceLayout = ({
   onLogout,
 }: AdminSpaceLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [iastedOpen, setIastedOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
@@ -158,28 +156,13 @@ export const AdminSpaceLayout = ({
           </div>
         </main>
 
-        {/* Desktop iAsted Button (Floating) */}
-        <div className="hidden md:block fixed bottom-8 right-8 z-30">
-          <IAstedButton
-            isOpen={iastedOpen}
-            onToggle={() => setIastedOpen(!iastedOpen)}
-          />
-        </div>
-
         {/* Mobile Bottom Navigation */}
         <div className="md:hidden">
           <MobileBottomNav
-            items={quickAccessItems || navItems.slice(0, 3)}
+            items={quickAccessItems || navItems.slice(0, 4)}
             activeSection={activeSection}
             setActiveSection={setActiveSection}
             onMenuClick={toggleSidebar}
-            iastedButton={
-              <IAstedButton
-                isOpen={iastedOpen}
-                onToggle={() => setIastedOpen(!iastedOpen)}
-                variant="mobile"
-              />
-            }
           />
         </div>
       </div>

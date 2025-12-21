@@ -19,7 +19,7 @@ import { PresidentSenateNavetteSection } from "./components/PresidentSenateNavet
 import { PresidentSenateCMPSection } from "./components/PresidentSenateCMPSection";
 import { PresidentSenateAgendaSection } from "./components/PresidentSenateAgendaSection";
 import { PresidentSenateStatsSection } from "./components/PresidentSenateStatsSection";
-import { PresidentSenateMessagerieSection } from "./components/PresidentSenateMessagerieSection";
+import IBoitePage from "@/pages/shared/IBoitePage";
 import { PresidentSenateParametresSection } from "./components/PresidentSenateParametresSection";
 import { useNavigate } from "react-router-dom";
 
@@ -84,7 +84,7 @@ const PresidentSenateSpace = () => {
       case "stats":
         return <PresidentSenateStatsSection />;
       case "messagerie":
-        return <PresidentSenateMessagerieSection />;
+        return <IBoitePage />;
       case "parametres":
         return <PresidentSenateParametresSection />;
       default:

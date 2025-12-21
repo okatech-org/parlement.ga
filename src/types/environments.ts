@@ -16,7 +16,7 @@ export interface EnvironmentConfig {
 }
 
 // IBoite types
-export type ConversationType = 'internal' | 'external' | 'group' | 'broadcast';
+export type ConversationType = 'internal' | 'external' | 'group' | 'broadcast' | 'PRIVATE' | 'GROUP';
 
 export interface IBoiteParticipant {
   id: string;
@@ -106,3 +106,35 @@ export interface IBoiteService {
   searchServices(query: string): Promise<IBoiteServiceSearchResult[]>;
   getContacts(): Promise<IBoiteContact[]>;
 }
+
+// Recipient types for iBoite search
+export type RecipientType = 'USER' | 'ORGANIZATION' | 'SERVICE' | 'EXTERNAL';
+
+export interface GlobalRecipient {
+  recipientType: RecipientType;
+  recipientId: string;
+  displayName: string;
+  subtitle?: string;
+  email?: string;
+  avatarUrl?: string;
+  organizationId?: string;
+  organizationName?: string;
+}
+
+export interface OrganizationRecipient {
+  id: string;
+  name: string;
+  city?: string;
+  departement?: string;
+  contactEmail?: string;
+  logoUrl?: string;
+}
+
+export interface ServiceRecipient {
+  id: string;
+  name: string;
+  category?: string;
+  organizationId?: string;
+  organizationName?: string;
+}
+

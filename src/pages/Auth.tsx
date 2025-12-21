@@ -31,13 +31,13 @@ export default function Auth() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [activeTab, setActiveTab] = useState('login');
-  
-  
+
+
   // Login form state
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [loginErrors, setLoginErrors] = useState<{ email?: string; password?: string }>({});
-  
+
   // Signup form state
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
@@ -56,7 +56,7 @@ export default function Auth() {
       '00000000': { name: 'Honorable Député', roles: ['deputy', 'citizen'] },
       '99999999': { name: 'Citoyen', roles: ['citizen'] },
     };
-    
+
     const userData = mockUsers[phone] || { name: 'Utilisateur Démo', roles: ['citizen'] };
     const user = {
       id: phone,
@@ -64,10 +64,10 @@ export default function Auth() {
       phoneNumber: phone,
       roles: userData.roles,
     };
-    
+
     sessionStorage.setItem('user_data', JSON.stringify(user));
     sessionStorage.setItem('current_role', userData.roles[0]);
-    
+
     toast.success('Connexion démo réussie !');
     navigate(redirectPath);
     // Force reload to update UserContext
@@ -107,7 +107,7 @@ export default function Auth() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginErrors({});
-    
+
     const result = loginSchema.safeParse({ email: loginEmail, password: loginPassword });
     if (!result.success) {
       const errors: { email?: string; password?: string } = {};
@@ -148,14 +148,14 @@ export default function Auth() {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setSignupErrors({});
-    
-    const result = signupSchema.safeParse({ 
-      email: signupEmail, 
+
+    const result = signupSchema.safeParse({
+      email: signupEmail,
       password: signupPassword,
       firstName,
-      lastName 
+      lastName
     });
-    
+
     if (!result.success) {
       const errors: { email?: string; password?: string; firstName?: string; lastName?: string } = {};
       result.error.errors.forEach((err) => {
@@ -171,7 +171,7 @@ export default function Auth() {
     setIsLoading(true);
     try {
       const redirectUrl = `${window.location.origin}/`;
-      
+
       const { error } = await supabase.auth.signUp({
         email: signupEmail,
         password: signupPassword,
@@ -406,11 +406,11 @@ export default function Auth() {
                   <span className="bg-card px-2 text-muted-foreground">ou</span>
                 </div>
               </div>
-              
+
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={() => navigate('/iasted/protocol-demo')}
+                onClick={() => navigate('/parlement/demo')}
               >
                 Accéder aux espaces démo
               </Button>

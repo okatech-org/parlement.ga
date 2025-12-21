@@ -19,9 +19,10 @@ import { SenatorTerritoireSection } from "./components/SenatorTerritoireSection"
 import { SenatorDoleancesSection } from "./components/SenatorDoleancesSection";
 import { SenatorAgendaSection } from "./components/SenatorAgendaSection";
 import { SenatorCommissionsSection } from "./components/SenatorCommissionsSection";
-import { SenatorMessagerieSection } from "./components/SenatorMessagerieSection";
+import IBoitePage from "@/pages/shared/IBoitePage";
 import { SenatorDocumentsSection } from "./components/SenatorDocumentsSection";
 import { SenatorParametresSection } from "./components/SenatorParametresSection";
+
 
 const SenatorSpace = () => {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -64,7 +65,7 @@ const SenatorSpace = () => {
       case "commissions":
         return <SenatorCommissionsSection />;
       case "messagerie":
-        return <SenatorMessagerieSection />;
+        return <IBoitePage />;
       case "documents":
         return <SenatorDocumentsSection />;
       case "parametres":

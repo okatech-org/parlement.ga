@@ -55,16 +55,17 @@ import BudgetManagement from "./pages/questeur/BudgetManagement";
 import MaterialResources from "./pages/questeur/MaterialResources";
 import AdministrativeServices from "./pages/questeur/AdministrativeServices";
 import Mailbox from "./pages/shared/Mailbox";
-import SharedDocuments from "./pages/shared/Documents";
+import IBoitePage from "./pages/shared/IBoitePage";
+import SharedDocumentsPage from "./pages/shared/SharedDocumentsPage";
+import SharedAgendaPage from "./pages/shared/SharedAgendaPage";
+import ICorrespondancePage from "./pages/shared/ICorrespondancePage";
 import UserSpacesHub from "./pages/UserSpacesHub";
 import Actualites from "./pages/Actualites";
 import Sensibilisation from "./pages/Sensibilisation";
 import Tutoriels from "./pages/Tutoriels";
 import Statistiques from "./pages/Statistiques";
 import Login from "./pages/Login";
-import IAstedAnalytics from "./pages/iasted/IAstedAnalytics";
-import IAstedAdminFeedback from "./pages/iasted/IAstedAdminFeedback";
-import ProtocolDemoPage from "./pages/iasted/ProtocolDemoPage";
+
 
 // Secretary Space Imports
 import LayoutSecretary from "./layouts/LayoutSecretary";
@@ -77,7 +78,7 @@ const queryClient = new QueryClient();
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { UserProvider } from "@/contexts/UserContext";
 import { InstitutionProvider } from "@/contexts/InstitutionContext";
-import IAstedFloatingButton from "@/components/iasted/IAstedFloatingButton";
+
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 // Institution Layouts
@@ -203,7 +204,8 @@ const App = () => (
                 <Route path="/an/espace/president/plenary" element={<ProtectedRoute><LayoutPresident><Plenary /></LayoutPresident></ProtectedRoute>} />
                 <Route path="/an/espace/president/agenda" element={<ProtectedRoute><LayoutPresident><Agenda /></LayoutPresident></ProtectedRoute>} />
                 <Route path="/an/espace/president/documents" element={<ProtectedRoute><LayoutPresident><Documents /></LayoutPresident></ProtectedRoute>} />
-                <Route path="/an/espace/president/mail" element={<ProtectedRoute><LayoutPresident><Mailbox /></LayoutPresident></ProtectedRoute>} />
+                <Route path="/an/espace/president/mail" element={<ProtectedRoute><LayoutPresident><IBoitePage /></LayoutPresident></ProtectedRoute>} />
+                <Route path="/an/espace/president/correspondance" element={<ProtectedRoute><LayoutPresident><ICorrespondancePage /></LayoutPresident></ProtectedRoute>} />
                 <Route path="/an/espace/president/settings" element={<ProtectedRoute><LayoutPresident><PresidentSettings /></LayoutPresident></ProtectedRoute>} />
 
                 {/* ========================================= */}
@@ -213,8 +215,9 @@ const App = () => (
                 <Route path="/an/espace/deputes/tools" element={<ProtectedRoute><LayoutDeputy><LegislativeTools /></LayoutDeputy></ProtectedRoute>} />
                 <Route path="/an/espace/deputes/agenda" element={<ProtectedRoute><LayoutDeputy><ParliamentaryAgenda /></LayoutDeputy></ProtectedRoute>} />
                 <Route path="/an/espace/deputes/mandate" element={<ProtectedRoute><LayoutDeputy><MandateManagement /></LayoutDeputy></ProtectedRoute>} />
-                <Route path="/an/espace/deputes/mail" element={<ProtectedRoute><LayoutDeputy><Mailbox /></LayoutDeputy></ProtectedRoute>} />
-                <Route path="/an/espace/deputes/documents" element={<ProtectedRoute><LayoutDeputy><SharedDocuments /></LayoutDeputy></ProtectedRoute>} />
+                <Route path="/an/espace/deputes/mail" element={<ProtectedRoute><LayoutDeputy><IBoitePage /></LayoutDeputy></ProtectedRoute>} />
+                <Route path="/an/espace/deputes/documents" element={<ProtectedRoute><LayoutDeputy><SharedDocumentsPage /></LayoutDeputy></ProtectedRoute>} />
+                <Route path="/an/espace/deputes/correspondance" element={<ProtectedRoute><LayoutDeputy><ICorrespondancePage /></LayoutDeputy></ProtectedRoute>} />
                 <Route path="/an/espace/deputes/settings" element={<ProtectedRoute><LayoutDeputy><PresidentSettings /></LayoutDeputy></ProtectedRoute>} />
 
                 {/* ========================================= */}
@@ -224,8 +227,9 @@ const App = () => (
                 <Route path="/an/espace/vp/delegations" element={<ProtectedRoute><LayoutVP><DelegationManagement /></LayoutVP></ProtectedRoute>} />
                 <Route path="/an/espace/vp/interim" element={<ProtectedRoute><LayoutVP><InterimMode /></LayoutVP></ProtectedRoute>} />
                 <Route path="/an/espace/vp/agenda" element={<ProtectedRoute><LayoutVP><VPAgenda /></LayoutVP></ProtectedRoute>} />
-                <Route path="/an/espace/vp/mail" element={<ProtectedRoute><LayoutVP><Mailbox /></LayoutVP></ProtectedRoute>} />
-                <Route path="/an/espace/vp/documents" element={<ProtectedRoute><LayoutVP><SharedDocuments /></LayoutVP></ProtectedRoute>} />
+                <Route path="/an/espace/vp/mail" element={<ProtectedRoute><LayoutVP><IBoitePage /></LayoutVP></ProtectedRoute>} />
+                <Route path="/an/espace/vp/documents" element={<ProtectedRoute><LayoutVP><SharedDocumentsPage /></LayoutVP></ProtectedRoute>} />
+                <Route path="/an/espace/vp/correspondance" element={<ProtectedRoute><LayoutVP><ICorrespondancePage /></LayoutVP></ProtectedRoute>} />
                 <Route path="/an/espace/vp/settings" element={<ProtectedRoute><LayoutVP><PresidentSettings /></LayoutVP></ProtectedRoute>} />
 
                 {/* ========================================= */}
@@ -235,8 +239,9 @@ const App = () => (
                 <Route path="/an/espace/questeurs/budget" element={<ProtectedRoute><LayoutQuesteur><BudgetManagement /></LayoutQuesteur></ProtectedRoute>} />
                 <Route path="/an/espace/questeurs/ressources" element={<ProtectedRoute><LayoutQuesteur><MaterialResources /></LayoutQuesteur></ProtectedRoute>} />
                 <Route path="/an/espace/questeurs/services" element={<ProtectedRoute><LayoutQuesteur><AdministrativeServices /></LayoutQuesteur></ProtectedRoute>} />
-                <Route path="/an/espace/questeurs/mail" element={<ProtectedRoute><LayoutQuesteur><Mailbox /></LayoutQuesteur></ProtectedRoute>} />
-                <Route path="/an/espace/questeurs/documents" element={<ProtectedRoute><LayoutQuesteur><SharedDocuments /></LayoutQuesteur></ProtectedRoute>} />
+                <Route path="/an/espace/questeurs/mail" element={<ProtectedRoute><LayoutQuesteur><IBoitePage /></LayoutQuesteur></ProtectedRoute>} />
+                <Route path="/an/espace/questeurs/documents" element={<ProtectedRoute><LayoutQuesteur><SharedDocumentsPage /></LayoutQuesteur></ProtectedRoute>} />
+                <Route path="/an/espace/questeurs/correspondance" element={<ProtectedRoute><LayoutQuesteur><ICorrespondancePage /></LayoutQuesteur></ProtectedRoute>} />
                 <Route path="/an/espace/questeurs/settings" element={<ProtectedRoute><LayoutQuesteur><PresidentSettings /></LayoutQuesteur></ProtectedRoute>} />
 
                 {/* ========================================= */}
@@ -245,7 +250,8 @@ const App = () => (
                 <Route path="/an/espace/secretaires" element={<ProtectedRoute><LayoutSecretary><DashboardSecretary /></LayoutSecretary></ProtectedRoute>} />
                 <Route path="/an/espace/secretaires/agenda" element={<ProtectedRoute><LayoutSecretary><SecretaryAgenda /></LayoutSecretary></ProtectedRoute>} />
                 <Route path="/an/espace/secretaires/documents" element={<ProtectedRoute><LayoutSecretary><SecretaryDocuments /></LayoutSecretary></ProtectedRoute>} />
-                <Route path="/an/espace/secretaires/mail" element={<ProtectedRoute><LayoutSecretary><Mailbox /></LayoutSecretary></ProtectedRoute>} />
+                <Route path="/an/espace/secretaires/mail" element={<ProtectedRoute><LayoutSecretary><IBoitePage /></LayoutSecretary></ProtectedRoute>} />
+                <Route path="/an/espace/secretaires/correspondance" element={<ProtectedRoute><LayoutSecretary><ICorrespondancePage /></LayoutSecretary></ProtectedRoute>} />
                 <Route path="/an/espace/secretaires/settings" element={<ProtectedRoute><LayoutSecretary><PresidentSettings /></LayoutSecretary></ProtectedRoute>} />
 
                 {/* ========================================= */}
@@ -256,7 +262,8 @@ const App = () => (
                 <Route path="/an/espace/suppleants/training" element={<ProtectedRoute><LayoutSubstitute><TrainingResources /></LayoutSubstitute></ProtectedRoute>} />
                 <Route path="/an/espace/suppleants/agenda" element={<ProtectedRoute><LayoutSubstitute><TitularAgenda /></LayoutSubstitute></ProtectedRoute>} />
                 <Route path="/an/espace/suppleants/mail" element={<ProtectedRoute><LayoutSubstitute><Mailbox /></LayoutSubstitute></ProtectedRoute>} />
-                <Route path="/an/espace/suppleants/documents" element={<ProtectedRoute><LayoutSubstitute><SharedDocuments /></LayoutSubstitute></ProtectedRoute>} />
+                <Route path="/an/espace/suppleants/documents" element={<ProtectedRoute><LayoutSubstitute><SharedDocumentsPage /></LayoutSubstitute></ProtectedRoute>} />
+                <Route path="/an/espace/suppleants/correspondance" element={<ProtectedRoute><LayoutSubstitute><ICorrespondancePage /></LayoutSubstitute></ProtectedRoute>} />
                 <Route path="/an/espace/suppleants/settings" element={<ProtectedRoute><LayoutSubstitute><PresidentSettings /></LayoutSubstitute></ProtectedRoute>} />
 
                 {/* ========================================= */}
@@ -373,7 +380,7 @@ const App = () => (
                 <Route path="/vote/agenda" element={<ProtectedRoute><LayoutDeputy><ParliamentaryAgenda /></LayoutDeputy></ProtectedRoute>} />
                 <Route path="/vote/mandate" element={<ProtectedRoute><LayoutDeputy><MandateManagement /></LayoutDeputy></ProtectedRoute>} />
                 <Route path="/vote/mail" element={<ProtectedRoute><LayoutDeputy><Mailbox /></LayoutDeputy></ProtectedRoute>} />
-                <Route path="/vote/documents" element={<ProtectedRoute><LayoutDeputy><SharedDocuments /></LayoutDeputy></ProtectedRoute>} />
+                <Route path="/vote/documents" element={<ProtectedRoute><LayoutDeputy><SharedDocumentsPage /></LayoutDeputy></ProtectedRoute>} />
                 <Route path="/vote/settings" element={<ProtectedRoute><LayoutDeputy><PresidentSettings /></LayoutDeputy></ProtectedRoute>} />
 
                 {/* Substitute Legacy */}
@@ -382,7 +389,7 @@ const App = () => (
                 <Route path="/suppleant/training" element={<ProtectedRoute><LayoutSubstitute><TrainingResources /></LayoutSubstitute></ProtectedRoute>} />
                 <Route path="/suppleant/agenda" element={<ProtectedRoute><LayoutSubstitute><TitularAgenda /></LayoutSubstitute></ProtectedRoute>} />
                 <Route path="/suppleant/mail" element={<ProtectedRoute><LayoutSubstitute><Mailbox /></LayoutSubstitute></ProtectedRoute>} />
-                <Route path="/suppleant/documents" element={<ProtectedRoute><LayoutSubstitute><SharedDocuments /></LayoutSubstitute></ProtectedRoute>} />
+                <Route path="/suppleant/documents" element={<ProtectedRoute><LayoutSubstitute><SharedDocumentsPage /></LayoutSubstitute></ProtectedRoute>} />
                 <Route path="/suppleant/settings" element={<ProtectedRoute><LayoutSubstitute><PresidentSettings /></LayoutSubstitute></ProtectedRoute>} />
 
                 {/* VP Legacy */}
@@ -391,7 +398,7 @@ const App = () => (
                 <Route path="/vp/interim" element={<ProtectedRoute><LayoutVP><InterimMode /></LayoutVP></ProtectedRoute>} />
                 <Route path="/vp/agenda" element={<ProtectedRoute><LayoutVP><VPAgenda /></LayoutVP></ProtectedRoute>} />
                 <Route path="/vp/mail" element={<ProtectedRoute><LayoutVP><Mailbox /></LayoutVP></ProtectedRoute>} />
-                <Route path="/vp/documents" element={<ProtectedRoute><LayoutVP><SharedDocuments /></LayoutVP></ProtectedRoute>} />
+                <Route path="/vp/documents" element={<ProtectedRoute><LayoutVP><SharedDocumentsPage /></LayoutVP></ProtectedRoute>} />
                 <Route path="/vp/settings" element={<ProtectedRoute><LayoutVP><PresidentSettings /></LayoutVP></ProtectedRoute>} />
 
                 {/* Questeurs Legacy */}
@@ -400,7 +407,7 @@ const App = () => (
                 <Route path="/questeurs/ressources" element={<ProtectedRoute><LayoutQuesteur><MaterialResources /></LayoutQuesteur></ProtectedRoute>} />
                 <Route path="/questeurs/services" element={<ProtectedRoute><LayoutQuesteur><AdministrativeServices /></LayoutQuesteur></ProtectedRoute>} />
                 <Route path="/questeurs/mail" element={<ProtectedRoute><LayoutQuesteur><Mailbox /></LayoutQuesteur></ProtectedRoute>} />
-                <Route path="/questeurs/documents" element={<ProtectedRoute><LayoutQuesteur><SharedDocuments /></LayoutQuesteur></ProtectedRoute>} />
+                <Route path="/questeurs/documents" element={<ProtectedRoute><LayoutQuesteur><SharedDocumentsPage /></LayoutQuesteur></ProtectedRoute>} />
                 <Route path="/questeurs/settings" element={<ProtectedRoute><LayoutQuesteur><PresidentSettings /></LayoutQuesteur></ProtectedRoute>} />
 
                 {/* Secretaires Legacy */}
@@ -428,9 +435,7 @@ const App = () => (
                 <Route path="/statistiques" element={<Statistiques />} />
                 <Route path="/legislation" element={<Legislation />} />
                 <Route path="/territoire" element={<Territoire />} />
-                <Route path="/iasted/analytics" element={<ProtectedRoute><IAstedAnalytics /></ProtectedRoute>} />
-                <Route path="/iasted/admin-feedback" element={<ProtectedRoute><IAstedAdminFeedback /></ProtectedRoute>} />
-                <Route path="/iasted/protocol-demo" element={<ProtocolDemoPage />} />
+
 
                 {/* Login & Auth */}
                 <Route path="/parlement/login" element={<Login />} />
@@ -452,8 +457,7 @@ const App = () => (
                 <Route path="*" element={<NotFound />} />
               </Routes>
 
-              {/* Bouton flottant iAsted disponible sur toutes les pages */}
-              <IAstedFloatingButton />
+
             </InstitutionProvider>
           </UserProvider>
         </BrowserRouter>

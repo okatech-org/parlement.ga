@@ -399,7 +399,7 @@ const SecurityLogsSection = () => {
                             <div className="p-3 border rounded-md">
                                 <h4 className="flex items-center gap-2 font-medium text-sm mb-2">
                                     <Activity className="h-4 w-4" />
-                                    Analyse Automatisée iAsted
+                                    Analyse Automatisée
                                 </h4>
                                 <p className="text-xs text-muted-foreground">
                                     L'analyse heuristique indique une probabilité de 85% d'une tentative d'intrusion par force brute. L'adresse IP source a été temporairement bloquée par le pare-feu périmétrique.

@@ -16,7 +16,7 @@ import { QuesteurSenateBudgetSection } from "./components/QuesteurSenateBudgetSe
 import { QuesteurSenateMaterielSection } from "./components/QuesteurSenateMaterielSection";
 import { QuesteurSenateIndemnitesSection } from "./components/QuesteurSenateIndemnitesSection";
 import { QuesteurSenateServicesSection } from "./components/QuesteurSenateServicesSection";
-import { QuesteurSenateMessagerieSection } from "./components/QuesteurSenateMessagerieSection";
+import IBoitePage from "@/pages/shared/IBoitePage";
 import { QuesteurSenateParametresSection } from "./components/QuesteurSenateParametresSection";
 
 const QuesteurSenateSpace = () => {
@@ -56,7 +56,7 @@ const QuesteurSenateSpace = () => {
       case "services":
         return <QuesteurSenateServicesSection />;
       case "messagerie":
-        return <QuesteurSenateMessagerieSection />;
+        return <IBoitePage />;
       case "parametres":
         return <QuesteurSenateParametresSection />;
       default:

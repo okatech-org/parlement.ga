@@ -14,7 +14,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Mailbox from "@/pages/shared/Mailbox";
-import Documents from "@/pages/shared/Documents";
+import SharedDocumentsPage from "@/pages/shared/SharedDocumentsPage";
+import IBoitePage from "@/pages/shared/IBoitePage";
 
 const CitizenSpace = () => {
   const [activeSection, setActiveSection] = useState("accueil");
@@ -185,10 +186,10 @@ const CitizenSpace = () => {
         );
 
       case "mail":
-        return <Mailbox />;
+        return <IBoitePage />;
 
       case "documents":
-        return <Documents />;
+        return <SharedDocumentsPage />;
 
       default:
         return null;

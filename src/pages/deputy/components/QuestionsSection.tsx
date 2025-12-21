@@ -8,8 +8,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Mic2, FileText, Send, Clock, CheckCircle, Plus, Loader2 } from "lucide-react";
-import { LegislativeSkills, SkillActivationSignal } from "@/Cortex/Skills";
-import { iAstedSoul } from "@/Consciousness";
 import { toast } from "sonner";
 
 const MINISTRIES = [
@@ -42,36 +40,12 @@ export const QuestionsSection = () => {
 
     setIsSubmitting(true);
 
-    // Créer le signal d'activation
-    const signal: SkillActivationSignal = {
-      skillName: 'PrepareGovernmentQuestion',
-      activatedBy: 'click',
-      soulState: iAstedSoul.getState(),
-      timestamp: new Date(),
-      priority: 'normal'
-    };
-
-    // Activer iAsted si nécessaire
-    if (!iAstedSoul.getState().isAwake) {
-      iAstedSoul.awaken();
-    }
-
     try {
-      const result = await LegislativeSkills.prepareGovernmentQuestion(signal, {
-        type: questionType,
-        ministry: formData.ministry,
-        subject: formData.subject,
-        questionText: formData.questionText,
-        authorId: 'current-user'
-      });
-
-      if (result.success) {
-        toast.success(result.vocalFeedback);
-        setDialogOpen(false);
-        setFormData({ ministry: '', subject: '', questionText: '' });
-      } else {
-        toast.error(result.error || "Erreur lors de la soumission");
-      }
+      // Simulate submission
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      toast.success("Question soumise avec succès");
+      setDialogOpen(false);
+      setFormData({ ministry: '', subject: '', questionText: '' });
     } catch (error) {
       toast.error("Une erreur est survenue");
     } finally {

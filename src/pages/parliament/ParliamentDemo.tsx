@@ -9,7 +9,6 @@ import { Separator } from '@/components/ui/separator';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from 'next-themes';
 import { toast } from 'sonner';
-import { ProtocolDemoSection } from '@/components/iasted/ProtocolDemoSection';
 import { useLanguage } from '@/contexts/LanguageContext';
 import InstitutionSubHeader from '@/components/layout/InstitutionSubHeader';
 
@@ -236,15 +235,7 @@ const ParliamentDemo = () => {
                 </Card>
             </div>
 
-            {/* Protocol Demo Section */}
-            <section className="container mx-auto px-4 pb-12">
-                <div className="mb-8 text-center">
-                    <Badge variant="outline" className="mb-2">{t('congress.demo.protocol.badge')}</Badge>
-                    <h2 className="text-2xl font-bold font-serif mb-2">{t('congress.demo.protocol.title')}</h2>
-                    <p className="text-muted-foreground">{t('congress.demo.protocol.desc')}</p>
-                </div>
-                <ProtocolDemoSection />
-            </section>
+
 
             {/* Footer */}
             <footer className="bg-card border-t border-border py-8">

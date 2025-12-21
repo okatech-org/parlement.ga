@@ -16,7 +16,7 @@ import { VPSenateSuppleanceSection } from "./components/VPSenateSuppleanceSectio
 import { VPSenateCommissionsSection } from "./components/VPSenateCommissionsSection";
 import { VPSenateDelegationsSection } from "./components/VPSenateDelegationsSection";
 import { VPSenateAgendaSection } from "./components/VPSenateAgendaSection";
-import { VPSenateMessagerieSection } from "./components/VPSenateMessagerieSection";
+import IBoitePage from "@/pages/shared/IBoitePage";
 import { VPSenateParametresSection } from "./components/VPSenateParametresSection";
 
 const VPSenateSpace = () => {
@@ -56,7 +56,7 @@ const VPSenateSpace = () => {
       case "agenda":
         return <VPSenateAgendaSection />;
       case "messagerie":
-        return <VPSenateMessagerieSection />;
+        return <IBoitePage />;
       case "parametres":
         return <VPSenateParametresSection />;
       default:
