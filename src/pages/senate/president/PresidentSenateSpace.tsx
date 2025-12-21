@@ -87,7 +87,7 @@ const PresidentSenateSpace = () => {
       case "cmp":
         return <PresidentSenateCMPSection />;
       case "agenda":
-        return <SharedAgendaPage />;
+        return <PresidentSenateAgendaSection />;
       case "stats":
         return <PresidentSenateStatsSection />;
       case "messagerie":
