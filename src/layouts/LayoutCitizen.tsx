@@ -16,7 +16,9 @@ import {
     TrendingUp,
     Building2,
     Landmark,
-    Scale
+    Scale,
+    Mail,
+    FolderOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
@@ -57,6 +59,8 @@ const LayoutCitizen = ({ children }: LayoutCitizenProps) => {
         { icon: Users, label: "Mes élus", path: `${basePath}/elus` },
         { icon: Heart, label: "Pétitions", path: `${basePath}/petitions` },
         { icon: Bell, label: "Notifications", path: `${basePath}/notifications` },
+        { icon: Mail, label: "iBoîte", path: `${basePath}/mail` },
+        { icon: FolderOpen, label: "iDocuments", path: `${basePath}/documents` },
     ];
 
     // Raccourcis vers les 3 institutions avec couleurs officielles

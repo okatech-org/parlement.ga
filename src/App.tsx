@@ -280,9 +280,13 @@ const App = () => (
                 {/* Même espace accessible depuis toutes les institutions */}
                 {/* ========================================= */}
                 <Route path="/espace/citoyen" element={<ProtectedRoute><LayoutCitizen><CitizenDashboard /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/espace/citoyen/mail" element={<ProtectedRoute><LayoutCitizen><IBoitePage /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/espace/citoyen/documents" element={<ProtectedRoute><LayoutCitizen><SharedDocumentsPage /></LayoutCitizen></ProtectedRoute>} />
                 <Route path="/espace/citoyen/*" element={<ProtectedRoute><LayoutCitizen><CitizenDashboard /></LayoutCitizen></ProtectedRoute>} />
                 {/* Alias pour accès depuis AN */}
                 <Route path="/an/espace/citoyen" element={<ProtectedRoute><LayoutCitizen><CitizenDashboard /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/an/espace/citoyen/mail" element={<ProtectedRoute><LayoutCitizen><IBoitePage /></LayoutCitizen></ProtectedRoute>} />
+                <Route path="/an/espace/citoyen/documents" element={<ProtectedRoute><LayoutCitizen><SharedDocumentsPage /></LayoutCitizen></ProtectedRoute>} />
                 <Route path="/an/espace/citoyen/*" element={<ProtectedRoute><LayoutCitizen><CitizenDashboard /></LayoutCitizen></ProtectedRoute>} />
 
                 {/* ========================================= */}
