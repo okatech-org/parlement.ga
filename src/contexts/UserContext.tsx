@@ -141,6 +141,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         } else if (phoneNumber === "05050505") {
             // Secretary: Admin role
             mockUser = { ...mockUser, name: 'M. Secrétaire', roles: ['secretary', 'citizen'] };
+        } else if (phoneNumber === "01010102") {
+            // Senate President: Has President, Senator, and Citizen roles
+            mockUser = { ...mockUser, name: 'Paulette Missambo', roles: ['president', 'senator', 'citizen'], bureauLabel: 'Président du Sénat' };
         } else if (phoneNumber === "admin00") {
             // System Admin / Super Admin
             mockUser = { ...mockUser, name: 'Administrateur Système', roles: ['system_admin'] };
@@ -222,11 +225,16 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     const switchRole = (role: UserRole) => {
-        if (user && user.roles.includes(role)) {
-            setCurrentRole(role);
-            sessionStorage.setItem('current_role', role);
-            navigateToRole(role);
+        // Strict check: User must possess the role
+        if (!user || !user.roles.includes(role)) {
+            console.error(`Attempted to switch to unauthorized role: ${role}`);
+            return;
         }
+
+        console.log(`Switching to role: ${role}`);
+        setCurrentRole(role);
+        sessionStorage.setItem('current_role', role);
+        navigateToRole(role);
     };
 
     return (
