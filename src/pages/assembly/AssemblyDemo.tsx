@@ -312,10 +312,7 @@ const AssemblyDemo = () => {
                             <UserPlus className="w-4 h-4" />
                             <span className="hidden sm:inline">Citoyen</span>
                         </TabsTrigger>
-                        <TabsTrigger value="public" className="gap-2">
-                            <Landmark className="w-4 h-4" />
-                            <span className="hidden sm:inline">Public</span>
-                        </TabsTrigger>
+
                     </TabsList>
 
                     {/* Bureau Tab */}
@@ -574,51 +571,7 @@ const AssemblyDemo = () => {
                         </Card>
                     </TabsContent>
 
-                    {/* Public Tab */}
-                    <TabsContent value="public" className="space-y-4">
-                        <Card className="border-[#3A87FD]/20">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-2">
-                                    <Landmark className="w-5 h-5 text-[#3A87FD]" />
-                                    Accès Public
-                                </CardTitle>
-                                <CardDescription>
-                                    Explorez le portail public de l'Assemblée Nationale
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent className="space-y-4">
-                                <Button
-                                    className="w-full"
-                                    size="lg"
-                                    onClick={() => navigate('/an')}
-                                >
-                                    <Landmark className="w-5 h-5 mr-2" />
-                                    Accéder au Portail Public AN
-                                </Button>
 
-                                <Separator />
-
-                                <div className="grid sm:grid-cols-2 gap-3">
-                                    <Button variant="outline" onClick={() => navigate('/an/actualites')}>
-                                        <FileText className="w-4 h-4 mr-2" />
-                                        Actualités
-                                    </Button>
-                                    <Button variant="outline" onClick={() => navigate('/an/processus')}>
-                                        <Scale className="w-4 h-4 mr-2" />
-                                        Processus Législatif
-                                    </Button>
-                                    <Button variant="outline" onClick={() => navigate('/an/tutoriels')}>
-                                        <Monitor className="w-4 h-4 mr-2" />
-                                        Tutoriels
-                                    </Button>
-                                    <Button variant="outline" onClick={() => navigate('/an/sensibilisation')}>
-                                        <Users className="w-4 h-4 mr-2" />
-                                        Sensibilisation
-                                    </Button>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
                 </Tabs>
             </div>
         </div>
