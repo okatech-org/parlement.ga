@@ -45,16 +45,21 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     const navigateToRole = (role: UserRole) => {
+        // Always read latest data from storage for navigation decisions to avoid state race conditions
+        const storedUser = sessionStorage.getItem('user_data');
+        const currentUser = storedUser ? JSON.parse(storedUser) : user;
+        const userRoles = currentUser?.roles || [];
+
         switch (role) {
             case 'president':
-                if (user?.roles.includes('senator')) {
+                if (userRoles.includes('senator')) {
                     navigate('/senat/espace/president');
                 } else {
                     navigate('/president');
                 }
                 break;
             case 'vp':
-                if (user?.roles.includes('senator')) {
+                if (userRoles.includes('senator')) {
                     navigate('/senat/espace/vp');
                 } else {
                     navigate('/vp');
@@ -73,14 +78,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             case 'questeur_budget':
             case 'questeur_resources':
             case 'questeur_services':
-                if (user?.roles.includes('senator')) {
+                if (userRoles.includes('senator')) {
                     navigate('/senat/espace/questeur');
                 } else {
                     navigate('/questeurs');
                 }
                 break;
             case 'secretary':
-                if (user?.roles.includes('senator')) {
+                if (userRoles.includes('senator')) {
                     // Fallback to basic Senate space if specific Secretary space doesn't exist yet
                     navigate('/senat/espace');
                 } else {
@@ -143,7 +148,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             mockUser = { ...mockUser, name: 'M. Secrétaire', roles: ['secretary', 'citizen'] };
         } else if (phoneNumber === "01010102") {
             // Senate President: Has President, Senator, and Citizen roles
-            mockUser = { ...mockUser, name: 'Paulette Missambo', roles: ['president', 'senator', 'citizen'], bureauLabel: 'Président du Sénat' };
+            mockUser = { ...mockUser, name: 'Huguette Yvonne NYANA EKOUME Ep. AWORI', roles: ['president', 'senator', 'citizen'], bureauLabel: 'Présidente du Sénat', province: 'Ogooué-Ivindo' };
         } else if (phoneNumber === "admin00") {
             // System Admin / Super Admin
             mockUser = { ...mockUser, name: 'Administrateur Système', roles: ['system_admin'] };

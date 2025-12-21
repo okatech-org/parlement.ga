@@ -18,7 +18,7 @@ export const PresidentSenateParametresSection = () => {
             <CardTitle className="flex items-center gap-2"><User className="h-5 w-5" />Informations</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2"><Label>Nom</Label><Input defaultValue="Paulette Missambo" disabled /></div>
+            <div className="space-y-2"><Label>Nom</Label><Input defaultValue="Huguette Yvonne NYANA EKOUME Ep. AWORI" disabled /></div>
             <div className="space-y-2"><Label>Fonction</Label><Input defaultValue="Président du Sénat" disabled /></div>
           </CardContent>
         </Card>

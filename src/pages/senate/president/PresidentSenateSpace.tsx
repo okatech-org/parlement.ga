@@ -38,7 +38,7 @@ const PresidentSenateSpace = () => {
   const hasCongressRole = userRoles.includes('president_congress');
 
   const userContext = {
-    name: userData.name || "Hon. Paulette Missambo",
+    name: userData.name || "Huguette Yvonne NYANA EKOUME Ep. AWORI",
     role: "Président du Sénat",
     avatar: undefined,
   };

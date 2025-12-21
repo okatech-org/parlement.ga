@@ -433,7 +433,7 @@ export const SENATORS: Senator[] = [
     { id: 65, name: "Fidèle Angoné Obame", province: "Estuaire", department: "Libreville", constituency: "Libreville 8e", party: "UDB", partyId: "udb", status: "active", gender: "M", substitute: "Caroline Essongue", substituteGender: "F", roles: ["senator"] },
     { id: 66, name: "Marie-Louise Moundounga", province: "Ngounié", department: "Louetsi-Bibaka", constituency: "Malinga", party: "UDB", partyId: "udb", status: "active", gender: "F", substitute: "André Moukagni", substituteGender: "M", roles: ["senator"] },
     { id: 67, name: "Clément Mouamba", province: "Nyanga", department: "Mougoutsi", constituency: "Mougoutsi", party: "UDB", partyId: "udb", status: "active", gender: "M", substitute: "Thérèse Boulingui", substituteGender: "F", roles: ["senator"] },
-    { id: 68, name: "Paulette Missambo", province: "Woleu-Ntem", department: "Woleu", constituency: "Oyem Centre", party: "UN", partyId: "un", status: "active", gender: "F", substitute: "Jean Essone", substituteGender: "M", roles: ["senator"], notes: "Leader historique de l'opposition - Union Nationale" },
+    { id: 68, name: "Huguette Yvonne NYANA EKOUME Ep. AWORI", province: "Ogooué-Ivindo", department: "Ivindo", constituency: "Makokou", party: "U.D.B", partyId: "udb", status: "active", gender: "F", substitute: "Suppléant A", substituteGender: "M", roles: ["senator"], notes: "Présidente du Sénat" },
 ];
 
 // ============================================
