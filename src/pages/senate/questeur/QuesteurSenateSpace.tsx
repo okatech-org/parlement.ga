@@ -9,6 +9,9 @@ import {
   MessageSquare,
   Settings,
   Users,
+  Calendar,
+  FolderOpen,
+  Mail,
 } from "lucide-react";
 import { AdminSpaceLayout } from "@/components/layout/AdminSpaceLayout";
 import { QuesteurSenateDashboardSection } from "./components/QuesteurSenateDashboardSection";
@@ -17,6 +20,9 @@ import { QuesteurSenateMaterielSection } from "./components/QuesteurSenateMateri
 import { QuesteurSenateIndemnitesSection } from "./components/QuesteurSenateIndemnitesSection";
 import { QuesteurSenateServicesSection } from "./components/QuesteurSenateServicesSection";
 import IBoitePage from "@/pages/shared/IBoitePage";
+import SharedDocumentsPage from "@/pages/shared/SharedDocumentsPage";
+import SharedAgendaPage from "@/pages/shared/SharedAgendaPage";
+import ICorrespondancePage from "@/pages/shared/ICorrespondancePage";
 import { QuesteurSenateParametresSection } from "./components/QuesteurSenateParametresSection";
 
 const QuesteurSenateSpace = () => {
@@ -34,7 +40,10 @@ const QuesteurSenateSpace = () => {
     { id: "materiel", label: "Gestion Matériel", icon: Package },
     { id: "indemnites", label: "Indemnités", icon: Banknote },
     { id: "services", label: "Services Admin", icon: Building },
-    { id: "messagerie", label: "Messagerie", icon: MessageSquare },
+    { id: "agenda", label: "Agenda", icon: Calendar },
+    { id: "messagerie", label: "iBoîte", icon: MessageSquare },
+    { id: "documents", label: "Mes Documents", icon: FolderOpen },
+    { id: "correspondance", label: "iCorrespondance", icon: Mail },
   ];
 
   const quickAccessItems = [
@@ -55,8 +64,14 @@ const QuesteurSenateSpace = () => {
         return <QuesteurSenateIndemnitesSection />;
       case "services":
         return <QuesteurSenateServicesSection />;
+      case "agenda":
+        return <SharedAgendaPage />;
       case "messagerie":
         return <IBoitePage />;
+      case "documents":
+        return <SharedDocumentsPage />;
+      case "correspondance":
+        return <ICorrespondancePage />;
       case "parametres":
         return <QuesteurSenateParametresSection />;
       default:

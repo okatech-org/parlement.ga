@@ -6,7 +6,8 @@ import {
   Tv,
   User,
   Mail,
-  FolderOpen
+  FolderOpen,
+  Calendar
 } from "lucide-react";
 import { AdminSpaceLayout } from "@/components/layout/AdminSpaceLayout";
 import { Card } from "@/components/ui/card";
@@ -15,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Mailbox from "@/pages/shared/Mailbox";
 import SharedDocumentsPage from "@/pages/shared/SharedDocumentsPage";
+import SharedAgendaPage from "@/pages/shared/SharedAgendaPage";
 import IBoitePage from "@/pages/shared/IBoitePage";
 
 const CitizenSpace = () => {
@@ -34,6 +36,7 @@ const CitizenSpace = () => {
     { id: "profil", label: "Mon Profil", icon: User },
     { id: "mail", label: "iBoîte", icon: Mail },
     { id: "documents", label: "Mes Documents", icon: FolderOpen },
+    { id: "agenda", label: "Agenda", icon: Calendar },
   ];
 
   const quickAccessItems = [
@@ -190,6 +193,9 @@ const CitizenSpace = () => {
 
       case "documents":
         return <SharedDocumentsPage />;
+
+      case "agenda":
+        return <SharedAgendaPage />;
 
       default:
         return null;

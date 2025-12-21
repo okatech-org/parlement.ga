@@ -12,6 +12,8 @@ import {
   Settings,
   Bell,
   Landmark,
+  FolderOpen,
+  Mail,
 } from "lucide-react";
 import { AdminSpaceLayout } from "@/components/layout/AdminSpaceLayout";
 import { PresidentSenateDashboardSection } from "./components/PresidentSenateDashboardSection";
@@ -20,6 +22,9 @@ import { PresidentSenateCMPSection } from "./components/PresidentSenateCMPSectio
 import { PresidentSenateAgendaSection } from "./components/PresidentSenateAgendaSection";
 import { PresidentSenateStatsSection } from "./components/PresidentSenateStatsSection";
 import IBoitePage from "@/pages/shared/IBoitePage";
+import SharedDocumentsPage from "@/pages/shared/SharedDocumentsPage";
+import SharedAgendaPage from "@/pages/shared/SharedAgendaPage";
+import ICorrespondancePage from "@/pages/shared/ICorrespondancePage";
 import { PresidentSenateParametresSection } from "./components/PresidentSenateParametresSection";
 import { useNavigate } from "react-router-dom";
 
@@ -44,7 +49,9 @@ const PresidentSenateSpace = () => {
     { id: "cmp", label: "Convocation CMP", icon: Gavel },
     { id: "agenda", label: "Ordre du Jour", icon: Calendar },
     { id: "stats", label: "Statistiques", icon: BarChart3 },
-    { id: "messagerie", label: "Messagerie", icon: MessageSquare, badge: "3" },
+    { id: "messagerie", label: "iBoîte", icon: MessageSquare, badge: "3" },
+    { id: "documents", label: "Mes Documents", icon: FolderOpen },
+    { id: "correspondance", label: "iCorrespondance", icon: Mail },
   ];
 
   // Add Congress link if user has dual role
@@ -80,11 +87,15 @@ const PresidentSenateSpace = () => {
       case "cmp":
         return <PresidentSenateCMPSection />;
       case "agenda":
-        return <PresidentSenateAgendaSection />;
+        return <SharedAgendaPage />;
       case "stats":
         return <PresidentSenateStatsSection />;
       case "messagerie":
         return <IBoitePage />;
+      case "documents":
+        return <SharedDocumentsPage />;
+      case "correspondance":
+        return <ICorrespondancePage />;
       case "parametres":
         return <PresidentSenateParametresSection />;
       default:

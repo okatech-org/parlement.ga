@@ -11,6 +11,7 @@ import {
   AlertTriangle,
   Users,
   Scale,
+  Mail,
 } from "lucide-react";
 import { AdminSpaceLayout } from "@/components/layout/AdminSpaceLayout";
 import { SenatorDashboardSection } from "./components/SenatorDashboardSection";
@@ -20,7 +21,9 @@ import { SenatorDoleancesSection } from "./components/SenatorDoleancesSection";
 import { SenatorAgendaSection } from "./components/SenatorAgendaSection";
 import { SenatorCommissionsSection } from "./components/SenatorCommissionsSection";
 import IBoitePage from "@/pages/shared/IBoitePage";
-import { SenatorDocumentsSection } from "./components/SenatorDocumentsSection";
+import SharedDocumentsPage from "@/pages/shared/SharedDocumentsPage";
+import SharedAgendaPage from "@/pages/shared/SharedAgendaPage";
+import ICorrespondancePage from "@/pages/shared/ICorrespondancePage";
 import { SenatorParametresSection } from "./components/SenatorParametresSection";
 
 
@@ -40,8 +43,9 @@ const SenatorSpace = () => {
     { id: "doleances", label: "Doléances", icon: AlertTriangle, badge: "12" },
     { id: "agenda", label: "Agenda", icon: Calendar },
     { id: "commissions", label: "Commissions", icon: Users },
-    { id: "messagerie", label: "Messagerie", icon: MessageSquare, badge: "5" },
-    { id: "documents", label: "Documents", icon: FolderOpen },
+    { id: "messagerie", label: "iBoîte", icon: MessageSquare, badge: "5" },
+    { id: "documents", label: "Mes Documents", icon: FolderOpen },
+    { id: "correspondance", label: "iCorrespondance", icon: Mail },
   ];
 
   const quickAccessItems = [
@@ -61,13 +65,15 @@ const SenatorSpace = () => {
       case "doleances":
         return <SenatorDoleancesSection />;
       case "agenda":
-        return <SenatorAgendaSection />;
+        return <SharedAgendaPage />;
       case "commissions":
         return <SenatorCommissionsSection />;
       case "messagerie":
         return <IBoitePage />;
       case "documents":
-        return <SenatorDocumentsSection />;
+        return <SharedDocumentsPage />;
+      case "correspondance":
+        return <ICorrespondancePage />;
       case "parametres":
         return <SenatorParametresSection />;
       default:
