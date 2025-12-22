@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
+import heroParliament from "@/assets/hero-parliament.jpg";
 /**
  * Page d'accueil du Parlement (Hub central)
  * Design basé sur Index.tsx avec thème Bleu/Gris solennel
@@ -246,10 +246,17 @@ const HomeParliament = () => {
                 </div>
             </header>
 
-            {/* Hero Section */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-slate-800 via-gray-800 to-slate-900">
-                <div className="absolute inset-0 opacity-10 bg-[url('/images/parliament-pattern.svg')] bg-repeat"></div>
-                <div className="container mx-auto px-4 py-12 sm:py-20 relative">
+            {/* Hero Section with Image */}
+            <section className="relative overflow-hidden">
+                <div className="absolute inset-0">
+                    <img 
+                        src={heroParliament} 
+                        alt="Parlement du Gabon - Vue aérienne"
+                        className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-800/60 to-slate-900/80"></div>
+                </div>
+                <div className="container mx-auto px-4 py-16 sm:py-24 relative">
                     <div className="max-w-4xl mx-auto text-center">
                         <Badge className="mb-4 bg-white/20 text-white border-white/30" variant="outline">
                             <Shield className="h-3 w-3 mr-1" />

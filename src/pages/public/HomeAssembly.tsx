@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import UnifiedNavbar from '@/components/navigation/UnifiedNavbar';
 import { useLanguage } from '@/contexts/LanguageContext';
+import heroAssembly from '@/assets/hero-assembly.jpg';
 
 /**
  * Page d'accueil publique de l'Assemblée Nationale
@@ -122,10 +123,12 @@ const HomeAssembly: React.FC = () => {
                         {/* Hero Image */}
                         <div className="relative hidden lg:block">
                             <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl shadow-emerald-500/20">
-                                <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/90 to-green-700/90 flex items-center justify-center">
-                                    <Building2 className="h-32 w-32 text-white/30" />
-                                </div>
-                                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60">
+                                <img 
+                                    src={heroAssembly} 
+                                    alt="Palais Léon Mba - Assemblée Nationale du Gabon" 
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
                                     <p className="text-white font-semibold">Palais Léon Mba</p>
                                     <p className="text-white/80 text-sm">{t('assembly.home.badge')}</p>
                                 </div>
