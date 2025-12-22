@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useTheme } from "next-themes";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import heroSenate from "@/assets/hero-senate.jpg";
 
 /**
  * Page d'accueil du Sénat
@@ -217,29 +218,38 @@ const HomeSenate = () => {
                 </div>
             </header>
 
-            {/* Hero Section - Mêmes couleurs que AN */}
+            {/* Hero Section with Image */}
             <section className="relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-hero opacity-10"></div>
-                <div className="container mx-auto px-4 py-12 sm:py-20 relative">
+                {/* Background Image */}
+                <div className="absolute inset-0">
+                    <img 
+                        src={heroSenate} 
+                        alt="Hémicycle du Sénat gabonais"
+                        className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-background"></div>
+                </div>
+                
+                <div className="container mx-auto px-4 py-16 sm:py-28 relative">
                     <div className="max-w-4xl mx-auto text-center">
-                        <Badge className="mb-4 bg-[#D19C00]/10 text-[#D19C00] border-[#D19C00]/20" variant="outline">
+                        <Badge className="mb-4 bg-[#D19C00]/20 text-[#D19C00] border-[#D19C00]/30 backdrop-blur-sm" variant="outline">
                             <Crown className="h-3 w-3 mr-1" />
                             Chambre haute du Parlement
                         </Badge>
-                        <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif font-bold mb-4 sm:mb-6 animate-fade-in">
+                        <h1 className="text-3xl sm:text-5xl md:text-6xl font-serif font-bold mb-4 sm:mb-6 animate-fade-in text-white drop-shadow-lg">
                             La voix des territoires
                         </h1>
-                        <p className="text-base sm:text-xl text-muted-foreground mb-6 sm:mb-8 max-w-2xl mx-auto animate-fade-in px-4" style={{ animationDelay: "0.1s" }}>
+                        <p className="text-base sm:text-xl text-white/90 mb-6 sm:mb-8 max-w-2xl mx-auto animate-fade-in px-4 drop-shadow" style={{ animationDelay: "0.1s" }}>
                             Le Sénat représente les collectivités territoriales de la République.
                             Nos 102 sénateurs œuvrent pour l'équilibre institutionnel.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-fade-in px-4" style={{ animationDelay: "0.2s" }}>
-                            <Button size="lg" className="shadow-elegant w-full sm:w-auto" onClick={() => navigate("/senat/travaux")}>
+                            <Button size="lg" className="shadow-elegant w-full sm:w-auto bg-[#D19C00] hover:bg-[#B8890A]" onClick={() => navigate("/senat/travaux")}>
                                 <FileText className="mr-2 h-5 w-5" />
                                 Travaux en cours
                                 <ChevronRight className="ml-2 h-5 w-5" />
                             </Button>
-                            <Button size="lg" variant="outline" className="w-full sm:w-auto" onClick={() => navigate("/senat/senateurs")}>
+                            <Button size="lg" variant="outline" className="w-full sm:w-auto border-white/50 text-white hover:bg-white/20" onClick={() => navigate("/senat/senateurs")}>
                                 <Users className="mr-2 h-5 w-5" />
                                 Nos Sénateurs
                             </Button>
@@ -251,7 +261,7 @@ const HomeSenate = () => {
                         {stats.map((stat, index) => (
                             <Card
                                 key={index}
-                                className="p-4 sm:p-6 text-center bg-card shadow-card-custom border-border/50 hover:shadow-elegant transition-all duration-300 animate-fade-in"
+                                className="p-4 sm:p-6 text-center bg-card/90 backdrop-blur-sm shadow-card-custom border-border/50 hover:shadow-elegant transition-all duration-300 animate-fade-in"
                                 style={{ animationDelay: `${0.3 + index * 0.1}s` }}
                             >
                                 <div className="text-2xl sm:text-3xl font-serif font-bold text-[#D19C00] mb-1 sm:mb-2">{stat.value}</div>
