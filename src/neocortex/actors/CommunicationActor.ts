@@ -8,7 +8,6 @@
 
 import { BioActor } from '../BioActor';
 import { NeuralSignal } from '../synapse';
-import { IBoiteServiceType } from '@/services/iboite-service';
 import { iBoiteService } from '@/services/iboite-service';
 
 // État interne de l'acteur
@@ -19,7 +18,7 @@ interface CommunicationState {
 }
 
 export class CommunicationActor extends BioActor<CommunicationState> {
-    private service: IBoiteServiceType;
+    private service: typeof iBoiteService;
 
     constructor() {
         super('Cortex:Communication', {
