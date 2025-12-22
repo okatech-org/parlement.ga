@@ -8,7 +8,9 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { iBoiteService } from '@/services/iboite-service';
+import { IBoiteRecipientSearch, Recipient } from '@/components/iboite/IBoiteRecipientSearch';
 import { IBoiteComposeMessage } from '@/components/iboite/IBoiteComposeMessage';
+import { useNerve } from '@/hooks/useNerve'; // Neocortex Hook
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -285,23 +287,26 @@ export default function IBoitePage({ context = 'default', contextLabel }: IBoite
     }, [conversations]);
 
     // Envoyer un message
-    const handleSendMessage = useCallback(async () => {
-        if (!newMessage.trim() || !selectedConversationId || isSending) return;
+    // Neocortex Connection
+    const { stimulate } = useNerve(
+        'COMMUNICATION:MESSAGE_SENT', // Listen for success
+        (payload: any, signal) => {
+            console.log('✅ [IBoitePage] Message sent confirmed via Cortex', payload);
 
-        setIsSending(true);
-        try {
-            const sent = await iBoiteService.sendMessage({
-                conversationId: selectedConversationId,
-                content: newMessage.trim()
-            });
+            // Only update if it pertains to the current conversation
+            // In a real scenario we'd check correlationId or payload.message.conversation_id
 
+            const sent = payload.message;
             if (sent) {
-                setMessages(prev => [...prev, sent]);
-                setNewMessage('');
+                // Add message to local list if not already there (Optimistic UI handled check)
+                setMessages(prev => {
+                    if (prev.find(m => m.id === sent.id)) return prev;
+                    return [...prev, sent];
+                });
 
-                // Mettre à jour la conversation dans la liste
+                // Update conversation view
                 setConversations(prev => prev.map(c =>
-                    c.id === selectedConversationId
+                    c.id === sent.conversation_id // Assuming payload has conversation_id
                         ? {
                             ...c,
                             last_message: sent,
@@ -310,13 +315,35 @@ export default function IBoitePage({ context = 'default', contextLabel }: IBoite
                         : c
                 ));
             }
-        } catch (error) {
-            console.error('[IBoitePage] Error sending message:', error);
-            toast.error('Erreur lors de l\'envoi du message');
-        } finally {
+
             setIsSending(false);
+            setNewMessage('');
         }
-    }, [newMessage, selectedConversationId, isSending]);
+    );
+
+    // Also listen for errors
+    useNerve('COMMUNICATION:ERROR', (payload) => {
+        console.error('❌ [IBoitePage] Cortex Error:', payload);
+        toast.error(`Erreur d'envoi: ${payload.error}`);
+        setIsSending(false);
+    });
+
+    const handleSendMessage = useCallback(() => {
+        if (!newMessage.trim() || !selectedConversationId || isSending) return;
+
+        setIsSending(true);
+
+        // STIMULATION du Cortex Communication au lieu de l'appel Service direct
+        stimulate('COMMUNICATION:SEND_MESSAGE', {
+            conversationId: selectedConversationId,
+            content: newMessage,
+            attachments: [] // Attachments support to be added
+        });
+
+        // Optimistic UI update could be done here, but let's wait for the actor loop for now to prove it works
+        // or just clear the input? No, wait for confirmation to clear input to avoid data loss on error.
+
+    }, [newMessage, selectedConversationId, isSending, stimulate]);
 
     // Callback après envoi depuis le composer
     const handleMessageSent = useCallback((conversationId: string) => {

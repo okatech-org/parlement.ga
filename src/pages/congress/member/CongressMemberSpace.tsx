@@ -19,6 +19,7 @@ import SharedDocumentsPage from "@/pages/shared/SharedDocumentsPage";
 import SharedAgendaPage from "@/pages/shared/SharedAgendaPage";
 import ICorrespondancePage from "@/pages/shared/ICorrespondancePage";
 import { CongressMemberDashboardSection } from "./components/CongressMemberDashboardSection";
+import DepotTexte from "@/pages/parliament/DepotTexte";
 
 /**
  * Espace Membre du Congrès (Député ou Sénateur participant au Congrès)
@@ -47,7 +48,9 @@ const CongressMemberSpace = () => {
         { id: "questions", label: "Questions", icon: HelpCircle },
         { id: "agenda", label: "Agenda Sessions", icon: Calendar },
         { id: "messagerie", label: "iBoîte", icon: MessageSquare },
+
         { id: "documents", label: "iDocuments", icon: FolderOpen },
+        { id: "depot", label: "Dépôt (Beta)", icon: FileText },
         { id: "correspondance", label: "iCorrespondance", icon: Mail },
     ];
 
@@ -75,6 +78,8 @@ const CongressMemberSpace = () => {
                 return <IBoitePage context="congress" contextLabel="Congrès" />;
             case "documents":
                 return <SharedDocumentsPage context="congress" contextLabel="Congrès" />;
+            case "depot":
+                return <DepotTexte />;
             case "correspondance":
                 return <ICorrespondancePage />; // TODO: Implement context in ICorrespondancePage if needed
             default:

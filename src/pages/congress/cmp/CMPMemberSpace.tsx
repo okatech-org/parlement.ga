@@ -18,6 +18,9 @@ import SharedDocumentsPage from "@/pages/shared/SharedDocumentsPage";
 import SharedAgendaPage from "@/pages/shared/SharedAgendaPage";
 import ICorrespondancePage from "@/pages/shared/ICorrespondancePage";
 import { CMPMemberDashboardSection } from "./components/CMPMemberDashboardSection";
+import { CMPNegotiationSection } from "./components/CMPNegotiationSection";
+import { CMPAmendmentsSection } from "./components/CMPAmendmentsSection";
+import { CMPVoteSection } from "./components/CMPVoteSection";
 
 /**
  * Espace Membre CMP (Commission Mixte Paritaire)
@@ -64,11 +67,11 @@ const CMPMemberSpace = () => {
             case "dashboard":
                 return <CMPMemberDashboardSection chamberLabel={chamberLabel} chamberColor={chamberColor} isCoPresident={isCoPresident} />;
             case "negociation":
-                return <CMPMemberDashboardSection chamberLabel={chamberLabel} chamberColor={chamberColor} isCoPresident={isCoPresident} />;
+                return <CMPNegotiationSection />;
             case "amendements":
-                return <CMPMemberDashboardSection chamberLabel={chamberLabel} chamberColor={chamberColor} isCoPresident={isCoPresident} />;
+                return <CMPAmendmentsSection />;
             case "votes":
-                return <CMPMemberDashboardSection chamberLabel={chamberLabel} chamberColor={chamberColor} isCoPresident={isCoPresident} />;
+                return <CMPVoteSection />;
             case "presidence":
                 return <CMPMemberDashboardSection chamberLabel={chamberLabel} chamberColor={chamberColor} isCoPresident={isCoPresident} />;
             case "agenda":

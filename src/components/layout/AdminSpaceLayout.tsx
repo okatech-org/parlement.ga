@@ -5,6 +5,7 @@ import { SpaceSidebar, NavItemType } from "./SpaceSidebar";
 import { MobileBottomNav } from "./MobileBottomNav";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useUser } from "@/contexts/UserContext";
 
 interface AdminSpaceLayoutProps {
   children: ReactNode;
@@ -37,52 +38,15 @@ export const AdminSpaceLayout = ({
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  const { logout } = useUser();
 
   const handleLogout = () => {
     if (onLogout) {
       onLogout();
       return;
     }
-
-    const isDemo = sessionStorage.getItem('is_demo') === 'true';
-    const origin = sessionStorage.getItem('auth_origin');
-
-    // Clear Session
-    sessionStorage.removeItem('user_data');
-    sessionStorage.removeItem('current_role');
-    sessionStorage.removeItem('auth_origin');
-
-    toast({
-      title: "Déconnexion",
-      description: "Vous avez été déconnecté avec succès",
-    });
-
-    if (origin) {
-      if (isDemo) {
-        if (origin === '/an') navigate('/an/demo');
-        else if (origin === '/senat') navigate('/senat/demo');
-        else navigate('/congres/demo');
-      } else {
-        navigate(origin);
-      }
-      return;
-    }
-
-    if (isDemo) {
-      if (location.pathname.includes('/senat')) {
-        navigate('/senat/demo');
-      } else {
-        navigate('/congres/demo');
-      }
-    } else {
-      if (location.pathname.includes('/senat')) {
-        navigate('/senat');
-      } else if (location.pathname.includes('/an')) {
-        navigate('/an');
-      } else {
-        navigate('/parlement');
-      }
-    }
+    // Delegate to Neocortex
+    logout();
   };
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);

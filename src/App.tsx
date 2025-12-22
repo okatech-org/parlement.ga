@@ -125,6 +125,7 @@ import ParliamentDemo from "@/pages/parliament/ParliamentDemo";
 import CongressVote from "@/pages/parliament/CongressVote";
 import NationalArchives from "@/pages/public/NationalArchives";
 import ProcessComparison from "@/pages/parliament/ProcessComparison";
+import DepotTexte from './pages/parliament/DepotTexte';
 import CitizenPage from "@/pages/public/CitizenPage";
 import SessionSecretarySpace from "@/pages/congress/secretary/SessionSecretarySpace";
 import CongressMemberSpace from "@/pages/congress/member/CongressMemberSpace";
@@ -394,6 +395,9 @@ const App = () => (
                 {/* Espace Secrétaire de Séance */}
                 <Route path="/parlement/espace/secretaire" element={<ProtectedRoute><SessionSecretarySpace /></ProtectedRoute>} />
                 <Route path="/congres/espace/secretaire" element={<ProtectedRoute><SessionSecretarySpace /></ProtectedRoute>} />
+
+                {/* Neocortex: Dépôt de Texte (Beta) */}
+                <Route path="/parlement/depot" element={<ProtectedRoute><CongressMemberSpace><DepotTexte /></CongressMemberSpace></ProtectedRoute>} />
 
                 {/* ========================================= */}
                 {/* ROUTES LEGACY (rétrocompatibilité)       */}

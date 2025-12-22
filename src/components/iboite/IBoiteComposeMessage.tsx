@@ -31,6 +31,7 @@ import {
     DialogFooter
 } from '@/components/ui/dialog';
 import { IBoiteRecipientSearch, Recipient } from './IBoiteRecipientSearch';
+import { SmartDirectorySearch } from '@/components/shared/SmartDirectorySearch';
 import { iBoiteService } from '@/services/iboite-service';
 import { useUser } from '@/contexts/UserContext';
 import type { IBoiteAttachment } from '@/types/environments';
@@ -234,16 +235,53 @@ export function IBoiteComposeMessage({
                 <div className="flex-1 overflow-y-auto space-y-4 py-4">
                     {/* Destinataire(s) */}
                     {!replyToConversationId && (
-                        <div className="space-y-2">
+                        <div className="space-y-3">
                             <Label>Destinataire(s)</Label>
-                            <IBoiteRecipientSearch
-                                onSelect={setRecipients}
-                                selectedRecipients={recipients}
-                                multiple
-                                placeholder="Rechercher un utilisateur..."
-                                showExternalInput={isStaff}
-                            />
+
+                            {/* Liste des destinataires sélectionnés */}
+                            <div className="flex flex-wrap gap-2 min-h-[32px] p-2 border rounded-md bg-background">
+                                {recipients.length === 0 && (
+                                    <span className="text-sm text-muted-foreground italic px-1">Aucun destinataire sélectionné</span>
+                                )}
+                                {recipients.map((r) => (
+                                    <Badge key={r.id} variant="secondary" className="gap-1 pl-2">
+                                        {r.displayName}
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-3 w-3 p-0 hover:bg-transparent"
+                                            onClick={() => setRecipients(prev => prev.filter(p => p.id !== r.id))}
+                                        >
+                                            <X className="h-3 w-3" />
+                                        </Button>
+                                    </Badge>
+                                ))}
+                            </div>
+
+                            {/* Smart Directory Search */}
+                            <div className="border rounded-md overflow-hidden">
+                                <SmartDirectorySearch
+                                    className="h-[300px] border-none"
+                                    onSelect={(contact) => {
+                                        // Adaptater DirectoryContact -> Recipient
+                                        const newRecipient: Recipient = {
+                                            id: contact.id,
+                                            type: 'USER',
+                                            displayName: contact.name,
+                                            email: contact.email,
+                                            avatarUrl: contact.avatar
+                                        };
+
+                                        // Avoid duplicates
+                                        setRecipients(prev => {
+                                            if (prev.some(p => p.id === newRecipient.id)) return prev;
+                                            return [...prev, newRecipient];
+                                        });
+                                    }}
+                                />
+                            </div>
                         </div>
+
                     )}
 
                     {/* Objet */}

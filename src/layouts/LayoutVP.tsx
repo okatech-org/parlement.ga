@@ -112,7 +112,10 @@ const LayoutVP = ({ children }: { children: React.ReactNode }) => {
                         <Button
                             variant="ghost"
                             className="w-full justify-start gap-3 text-red-500 hover:text-red-600 hover:bg-red-500/10"
-                            onClick={() => logout()}
+                            onClick={() => {
+                                console.log('🖱️ [LayoutVP] Logout clicked');
+                                logout();
+                            }}
                         >
                             <LogOut className="w-4 h-4" />
                             {t('common.logout')}

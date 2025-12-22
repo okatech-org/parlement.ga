@@ -202,10 +202,6 @@ const ParliamentDemo = () => {
                     <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6">
                         {t('congress.demo.hero.desc')}
                     </p>
-                    <Button variant="outline" onClick={() => navigate("/parlement/espace")}>
-                        <Monitor className="mr-2 h-4 w-4" />
-                        {t('congress.demo.hero.accessBtn')}
-                    </Button>
                 </div>
             </section>
 
