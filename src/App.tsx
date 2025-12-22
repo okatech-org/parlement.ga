@@ -128,6 +128,7 @@ import ProcessComparison from "@/pages/parliament/ProcessComparison";
 import CitizenPage from "@/pages/public/CitizenPage";
 import SessionSecretarySpace from "@/pages/congress/secretary/SessionSecretarySpace";
 import CongressMemberSpace from "@/pages/congress/member/CongressMemberSpace";
+import CMPMemberSpace from "@/pages/congress/cmp/CMPMemberSpace";
 import LegislativeQuiz from "@/pages/public/LegislativeQuiz";
 import SystemAdminLogin from "@/pages/admin/SystemAdminLogin";
 import SystemAdminDashboard from "@/pages/admin/SystemAdminDashboard";
@@ -371,8 +372,9 @@ const App = () => (
                 <Route path="/congres/espace/president" element={<ProtectedRoute><CongressPresidentDashboard /></ProtectedRoute>} />
                 <Route path="/parlement/espace/president" element={<ProtectedRoute><CongressPresidentDashboard /></ProtectedRoute>} />
 
-                {/* CMP - War Room */}
-                <Route path="/parlement/cmp" element={<ParliamentSpace />} />
+                {/* CMP - Espace Membres */}
+                <Route path="/parlement/cmp" element={<ProtectedRoute><CMPMemberSpace /></ProtectedRoute>} />
+                <Route path="/congres/cmp" element={<ProtectedRoute><CMPMemberSpace /></ProtectedRoute>} />
                 <Route path="/parlement/cmp/:cmpId" element={<CMPWorkspace />} />
                 <Route path="/congres/cmp/:cmpId" element={<CMPWorkspace />} />
 
