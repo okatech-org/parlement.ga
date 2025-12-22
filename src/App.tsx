@@ -126,6 +126,8 @@ import CongressVote from "@/pages/parliament/CongressVote";
 import NationalArchives from "@/pages/public/NationalArchives";
 import ProcessComparison from "@/pages/parliament/ProcessComparison";
 import CitizenPage from "@/pages/public/CitizenPage";
+import SessionSecretarySpace from "@/pages/congress/secretary/SessionSecretarySpace";
+import CongressMemberSpace from "@/pages/congress/member/CongressMemberSpace";
 import LegislativeQuiz from "@/pages/public/LegislativeQuiz";
 import SystemAdminLogin from "@/pages/admin/SystemAdminLogin";
 import SystemAdminDashboard from "@/pages/admin/SystemAdminDashboard";
@@ -384,8 +386,12 @@ const App = () => (
                 <Route path="/congres/sessions" element={<ParliamentSpace />} />
 
                 {/* Espace Membres du Congrès (Députés/Sénateurs) */}
-                <Route path="/parlement/congres" element={<ProtectedRoute><CongressDashboard /></ProtectedRoute>} />
-                <Route path="/congres/espace/membres" element={<ProtectedRoute><CongressDashboard /></ProtectedRoute>} />
+                <Route path="/parlement/congres" element={<ProtectedRoute><CongressMemberSpace /></ProtectedRoute>} />
+                <Route path="/congres/espace/membres" element={<ProtectedRoute><CongressMemberSpace /></ProtectedRoute>} />
+
+                {/* Espace Secrétaire de Séance */}
+                <Route path="/parlement/espace/secretaire" element={<ProtectedRoute><SessionSecretarySpace /></ProtectedRoute>} />
+                <Route path="/congres/espace/secretaire" element={<ProtectedRoute><SessionSecretarySpace /></ProtectedRoute>} />
 
                 {/* ========================================= */}
                 {/* ROUTES LEGACY (rétrocompatibilité)       */}

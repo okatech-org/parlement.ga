@@ -39,7 +39,7 @@ const ParliamentDemo = () => {
                 {
                     label: t('congress.demo.cards.accounts.sessionSecretary'),
                     phone: '20202002',
-                    path: '/parlement/congres',
+                    path: '/parlement/espace/secretaire',
                     icon: FileText,
                     color: 'text-[#3A87FD]',
                     role: t('congress.demo.cards.roles.secretary'),

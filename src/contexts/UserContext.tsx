@@ -178,7 +178,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                 navigate('/parlement/congres');
                 break;
             case 'secretary_session':
-                navigate('/parlement/congres');
+                navigate('/parlement/espace/secretaire');
                 break;
             case 'cmp_member':
                 navigate('/parlement/cmp');
