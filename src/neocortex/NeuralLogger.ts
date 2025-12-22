@@ -42,7 +42,7 @@ export class NeuralLogger {
     }
 
     private logSignal(signal: NeuralSignal) {
-        const isError = signal.type.includes('ERROR') || signal.priority === 'CRITICAL';
+        const isError = signal.type.includes('ERROR') || signal.priority === 'REFLEX';
         const style = isError ? STYLES.ERROR : STYLES.SIGNAL;
         const icon = this.getIconForType(signal.type);
 

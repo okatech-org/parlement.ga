@@ -397,7 +397,7 @@ const App = () => (
                 <Route path="/congres/espace/secretaire" element={<ProtectedRoute><SessionSecretarySpace /></ProtectedRoute>} />
 
                 {/* Neocortex: Dépôt de Texte (Beta) */}
-                <Route path="/parlement/depot" element={<ProtectedRoute><CongressMemberSpace><DepotTexte /></CongressMemberSpace></ProtectedRoute>} />
+                <Route path="/parlement/depot" element={<ProtectedRoute><DepotTexte /></ProtectedRoute>} />
 
                 {/* ========================================= */}
                 {/* ROUTES LEGACY (rétrocompatibilité)       */}
