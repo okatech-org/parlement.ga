@@ -72,11 +72,11 @@ const CMPMemberSpace = () => {
             case "presidence":
                 return <CMPMemberDashboardSection chamberLabel={chamberLabel} chamberColor={chamberColor} isCoPresident={isCoPresident} />;
             case "agenda":
-                return <SharedAgendaPage />;
+                return <SharedAgendaPage context="cmp" contextLabel="Commission Mixte Paritaire" />;
             case "messagerie":
-                return <IBoitePage />;
+                return <IBoitePage context="cmp" contextLabel="CMP" />;
             case "documents":
-                return <SharedDocumentsPage />;
+                return <SharedDocumentsPage context="cmp" contextLabel="CMP" />;
             case "correspondance":
                 return <ICorrespondancePage />;
             default:

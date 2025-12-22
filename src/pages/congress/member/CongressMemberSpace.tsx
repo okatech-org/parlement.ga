@@ -68,15 +68,15 @@ const CongressMemberSpace = () => {
             case "votes":
                 return <CongressMemberDashboardSection chamberLabel={chamberLabel} chamberColor={chamberColor} />;
             case "questions":
-                return <CongressMemberDashboardSection chamberLabel={chamberLabel} chamberColor={chamberColor} />;
+                return <IBoitePage context="an" contextLabel="AN (Questions)" />;
             case "agenda":
-                return <SharedAgendaPage />;
+                return <SharedAgendaPage context="congress" contextLabel="Congrès" />;
             case "messagerie":
-                return <IBoitePage />;
+                return <IBoitePage context="congress" contextLabel="Congrès" />;
             case "documents":
-                return <SharedDocumentsPage />;
+                return <SharedDocumentsPage context="congress" contextLabel="Congrès" />;
             case "correspondance":
-                return <ICorrespondancePage />;
+                return <ICorrespondancePage />; // TODO: Implement context in ICorrespondancePage if needed
             default:
                 return null;
         }

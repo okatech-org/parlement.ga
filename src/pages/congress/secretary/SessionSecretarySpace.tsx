@@ -64,11 +64,11 @@ const SessionSecretarySpace = () => {
             case "votes":
                 return <SessionSecretaryDashboardSection />;
             case "agenda":
-                return <SharedAgendaPage />;
+                return <SharedAgendaPage context="congress" contextLabel="Bureau Congrès" />;
             case "messagerie":
-                return <IBoitePage />;
+                return <IBoitePage context="bureau" contextLabel="Bureau" />;
             case "documents":
-                return <SharedDocumentsPage />;
+                return <SharedDocumentsPage context="congress" contextLabel="Congrès" />;
             case "correspondance":
                 return <ICorrespondancePage />;
             default:

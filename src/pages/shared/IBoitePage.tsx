@@ -176,7 +176,14 @@ function MessageBubble({ message, isOwnMessage }: MessageBubbleProps) {
 // PAGE PRINCIPALE
 // ============================================================
 
-export default function IBoitePage() {
+export type IBoiteContext = 'default' | 'congress' | 'cmp' | 'bureau' | 'an' | 'senat';
+
+interface IBoitePageProps {
+    context?: IBoiteContext;
+    contextLabel?: string;
+}
+
+export default function IBoitePage({ context = 'default', contextLabel }: IBoitePageProps) {
     const navigate = useNavigate();
 
     // États
@@ -346,6 +353,11 @@ export default function IBoitePage() {
                             <div className="flex items-center gap-2">
                                 <Mail className="h-5 w-5 text-primary" />
                                 <h1 className="font-bold text-lg">iBoîte</h1>
+                                {context !== 'default' && (
+                                    <Badge variant="outline" className="text-[10px] bg-primary/5 text-primary border-primary/20">
+                                        {contextLabel || context.toUpperCase()}
+                                    </Badge>
+                                )}
                                 {unreadCount > 0 && (
                                     <Badge variant="default" className="h-5 text-xs">
                                         {unreadCount}

@@ -58,6 +58,13 @@ type DocumentType =
 
 type DocumentStatus = 'brouillon' | 'en_examen' | 'adopte' | 'rejete' | 'archive';
 
+export type DocumentContext = 'default' | 'congress' | 'cmp' | 'bureau' | 'an' | 'senat';
+
+interface SharedDocumentsPageProps {
+    context?: DocumentContext;
+    contextLabel?: string;
+}
+
 interface ParliamentaryDocument {
     id: string;
     title: string;
@@ -69,17 +76,20 @@ interface ParliamentaryDocument {
     commission?: string;
     size?: string;
     description?: string;
+    context?: DocumentContext[];
 }
 
 // Mock data - À remplacer par appel Supabase
 const MOCK_DOCUMENTS: ParliamentaryDocument[] = [
-    { id: '1', title: "Projet de Loi de Finances 2026", type: 'projet_loi', date: '2025-12-15', reference: 'PL-2025-045', status: 'en_examen', author: 'Gouvernement', commission: 'Finances' },
-    { id: '2', title: "Rapport sur la réforme de l'éducation", type: 'rapport', date: '2025-12-10', reference: 'RAP-2025-089', status: 'adopte', commission: 'Affaires Sociales', size: '2.4 MB' },
-    { id: '3', title: "PV Séance Plénière du 05/12/2025", type: 'pv_seance', date: '2025-12-06', reference: 'PV-2025-048', status: 'archive', size: '1.1 MB' },
-    { id: '4', title: "Proposition de loi sur le numérique", type: 'proposition', date: '2025-12-01', reference: 'PPL-2025-012', status: 'en_examen', author: 'Groupe Majoritaire' },
-    { id: '5', title: "Amendement au projet de budget", type: 'amendement', date: '2025-11-28', reference: 'AMD-2025-234', status: 'rejete', author: 'Opposition' },
-    { id: '6', title: "Question orale - Politique énergétique", type: 'question', date: '2025-11-25', reference: 'QO-2025-156', status: 'archive' },
-    { id: '7', title: "Décret portant organisation du Parlement", type: 'decret', date: '2025-11-20', reference: 'DEC-2025-008', status: 'adopte' },
+    { id: '1', title: "Projet de Loi de Finances 2026", type: 'projet_loi', date: '2025-12-15', reference: 'PL-2025-045', status: 'en_examen', author: 'Gouvernement', commission: 'Finances', context: ['an', 'senat', 'congress', 'cmp'] },
+    { id: '2', title: "Rapport sur la réforme de l'éducation", type: 'rapport', date: '2025-12-10', reference: 'RAP-2025-089', status: 'adopte', commission: 'Affaires Sociales', size: '2.4 MB', context: ['an'] },
+    { id: '3', title: "PV Séance Plénière du 05/12/2025", type: 'pv_seance', date: '2025-12-06', reference: 'PV-2025-048', status: 'archive', size: '1.1 MB', context: ['an', 'senat', 'congress'] },
+    { id: '4', title: "Proposition de loi sur le numérique", type: 'proposition', date: '2025-12-01', reference: 'PPL-2025-012', status: 'en_examen', author: 'Groupe Majoritaire', context: ['an', 'senat'] },
+    { id: '5', title: "Amendement au projet de budget", type: 'amendement', date: '2025-11-28', reference: 'AMD-2025-234', status: 'rejete', author: 'Opposition', context: ['an', 'cmp'] },
+    { id: '6', title: "Question orale - Politique énergétique", type: 'question', date: '2025-11-25', reference: 'QO-2025-156', status: 'archive', context: ['an'] },
+    { id: '7', title: "Décret portant organisation du Parlement", type: 'decret', date: '2025-11-20', reference: 'DEC-2025-008', status: 'adopte', context: ['default'] },
+    { id: 'cmp1', title: "Texte de compromis - PJL Finances", type: 'projet_loi', date: '2025-12-22', reference: 'CMP-2025-001', status: 'en_examen', commission: 'CMP', context: ['cmp'] },
+    { id: 'cong1', title: "Projet de révision constitutionnelle", type: 'projet_loi', date: '2025-12-23', reference: 'CONST-2025-001', status: 'en_examen', context: ['congress'] },
 ];
 
 const typeConfig: Record<DocumentType, { label: string; icon: typeof FileText; color: string }> = {
@@ -101,7 +111,7 @@ const statusConfig: Record<DocumentStatus, { label: string; color: string }> = {
     'archive': { label: 'Archivé', color: 'bg-blue-500/10 text-blue-500' }
 };
 
-export default function SharedDocumentsPage() {
+export default function SharedDocumentsPage({ context = 'default', contextLabel }: SharedDocumentsPageProps) {
     const [documents, setDocuments] = useState<ParliamentaryDocument[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
@@ -134,9 +144,13 @@ export default function SharedDocumentsPage() {
                 doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 doc.reference.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesType = !selectedType || doc.type === selectedType;
-            return matchesSearch && matchesType;
+
+            // Filtre par contexte
+            const matchesContext = !doc.context || doc.context.includes(context);
+
+            return matchesSearch && matchesType && matchesContext;
         });
-    }, [documents, searchQuery, selectedType]);
+    }, [documents, searchQuery, selectedType, context]);
 
     // Statistiques
     const stats = useMemo(() => ({

@@ -47,6 +47,13 @@ import { fr } from 'date-fns/locale';
 // Types d'événements parlementaires
 type EventType = 'seance_pleniere' | 'commission' | 'audience' | 'ceremonie' | 'reunion' | 'visite';
 
+export type AgendaContext = 'default' | 'congress' | 'cmp' | 'bureau' | 'an' | 'senat';
+
+interface SharedAgendaPageProps {
+    context?: AgendaContext;
+    contextLabel?: string;
+}
+
 interface ParliamentaryEvent {
     id: string;
     title: string;
@@ -57,25 +64,29 @@ interface ParliamentaryEvent {
     attendees?: string[];
     description?: string;
     isVideo?: boolean;
+    context?: AgendaContext[]; // Contexte spécifique (si undefined = visible partout)
 }
 
 // Mock data par date
 const MOCK_EVENTS: Record<string, ParliamentaryEvent[]> = {
     '2025-12-21': [
-        { id: '1', title: 'Séance Plénière - Vote Budget 2026', time: '10:00', endTime: '13:00', location: 'Hémicycle', type: 'seance_pleniere', attendees: ['Députés', 'Ministres'] },
-        { id: '2', title: 'Commission des Finances', time: '15:00', location: 'Salle 102', type: 'commission', attendees: ['Membres commission'] },
+        { id: '1', title: 'Séance Plénière - Vote Budget 2026', time: '10:00', endTime: '13:00', location: 'Hémicycle', type: 'seance_pleniere', attendees: ['Députés', 'Ministres'], context: ['an', 'senat', 'congress'] },
+        { id: '2', title: 'Commission des Finances', time: '15:00', location: 'Salle 102', type: 'commission', attendees: ['Membres commission'], context: ['an'] },
+        { id: 'cmp1', title: 'Négociation CMP - Loi Finances', time: '14:00', location: 'Salle des Commissions', type: 'reunion', context: ['cmp'] },
     ],
     '2025-12-22': [
-        { id: '3', title: 'Audience - Délégation Syndicale', time: '09:30', location: 'Bureau Présidence', type: 'audience' },
-        { id: '4', title: 'Réunion Bureau AN', time: '14:00', location: 'Salle du Bureau', type: 'reunion', attendees: ['Questeurs', 'VP'] },
+        { id: '3', title: 'Audience - Délégation Syndicale', time: '09:30', location: 'Bureau Présidence', type: 'audience', context: ['default'] },
+        { id: '4', title: 'Réunion Bureau AN', time: '14:00', location: 'Salle du Bureau', type: 'reunion', attendees: ['Questeurs', 'VP'], context: ['bureau', 'an'] },
         { id: '5', title: 'Vidéoconférence CEDEAO', time: '16:00', location: 'Visio', type: 'reunion', isVideo: true },
+        { id: 'cmp2', title: 'Vote Compromis CMP', time: '10:00', location: 'Salle CMP', type: 'commission', context: ['cmp'] },
     ],
     '2025-12-23': [
-        { id: '6', title: 'Commission des Lois', time: '10:00', location: 'Salle 201', type: 'commission' },
-        { id: '7', title: 'Cérémonie de clôture session', time: '17:00', location: 'Hémicycle', type: 'ceremonie', attendees: ['Tous parlementaires'] },
+        { id: '6', title: 'Commission des Lois', time: '10:00', location: 'Salle 201', type: 'commission', context: ['an'] },
+        { id: '7', title: 'Cérémonie de clôture session', time: '17:00', location: 'Hémicycle', type: 'ceremonie', attendees: ['Tous parlementaires'], context: ['an', 'senat', 'congress'] },
+        { id: 'cong1', title: 'Congrès - Révision Constitutionnelle', time: '09:00', location: 'Palais Congrès', type: 'seance_pleniere', context: ['congress'] },
     ],
     '2025-12-24': [
-        { id: '8', title: 'Visite terrain - Projet infrastructures', time: '08:00', location: 'Région Nord', type: 'visite' },
+        { id: '8', title: 'Visite terrain - Projet infrastructures', time: '08:00', location: 'Région Nord', type: 'visite', context: ['default', 'an'] },
     ]
 };
 
@@ -88,21 +99,34 @@ const typeConfig: Record<EventType, { label: string; icon: typeof CalendarIcon; 
     'visite': { label: 'Visite terrain', icon: MapPin, color: 'bg-amber-500/10 text-amber-500 border-amber-500/20' }
 };
 
-export default function SharedAgendaPage() {
+export default function SharedAgendaPage({ context = 'default', contextLabel }: SharedAgendaPageProps) {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
     const [isNewEventOpen, setIsNewEventOpen] = useState(false);
 
+    // Filtrer les événements selon le contexte
+    const filterEvents = (events: ParliamentaryEvent[]) => {
+        return events.filter(event => {
+            if (!event.context) return true; // Visible partout par défaut si pas de contexte spécifié
+            return event.context.includes(context);
+        });
+    };
+
     // Obtenir les événements du jour sélectionné
     const dateKey = selectedDate?.toISOString().split('T')[0] || '';
-    const dayEvents = MOCK_EVENTS[dateKey] || [];
+    const rawDayEvents = MOCK_EVENTS[dateKey] || [];
+    const dayEvents = filterEvents(rawDayEvents);
 
     // Dates avec événements (pour marquer le calendrier)
-    const eventDates = Object.keys(MOCK_EVENTS);
+    // On ne marque que les dates qui ont des événements visibles dans ce contexte
+    const eventDates = Object.entries(MOCK_EVENTS)
+        .filter(([_, events]) => filterEvents(events).length > 0)
+        .map(([date]) => date);
 
-    // Statistiques
+    // Statistiques filtrées
     const stats = useMemo(() => {
         const today = new Date().toISOString().split('T')[0];
-        const todayEvents = MOCK_EVENTS[today] || [];
+        const rawTodayEvents = MOCK_EVENTS[today] || [];
+        const todayEvents = filterEvents(rawTodayEvents);
 
         const weekEvents = Object.entries(MOCK_EVENTS)
             .filter(([date]) => {
@@ -111,14 +135,17 @@ export default function SharedAgendaPage() {
                 const weekLater = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
                 return d >= now && d <= weekLater;
             })
-            .reduce((acc, [_, events]) => acc + events.length, 0);
+            .reduce((acc, [_, events]) => acc + filterEvents(events).length, 0);
+
+        const allEvents = Object.values(MOCK_EVENTS).flat();
+        const filteredAll = filterEvents(allEvents);
 
         return {
             today: todayEvents.length,
             week: weekEvents,
-            commissions: Object.values(MOCK_EVENTS).flat().filter(e => e.type === 'commission').length
+            commissions: filteredAll.filter(e => e.type === 'commission').length
         };
-    }, []);
+    }, [context]);
 
     return (
         <div className="space-y-6 p-6 animate-fade-in">
