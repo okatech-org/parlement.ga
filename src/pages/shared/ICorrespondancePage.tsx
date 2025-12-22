@@ -6,10 +6,14 @@
  * - Envoi interne via iBoîte (collaborateurs)
  * - Envoi externe via email (correspondanceService)
  * 
+ * NEOCORTEX: Cette page utilise le pattern Actor via useCorrespondanceActor
+ * pour les opérations d'écriture (création, envoi, archivage, suppression).
+ * Les lectures restent directes vers Supabase pour simplicité.
+ * 
  * Réservé au personnel parlementaire (AN + Sénat)
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,10 +22,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
-import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { iBoiteService } from '@/services/iboite-service';
-import { correspondanceService } from '@/services/correspondance-service';
+import { useCorrespondanceActor } from '@/hooks/useCorrespondanceActor';
 import { IBoiteRecipientSearch, Recipient } from '@/components/iboite/IBoiteRecipientSearch';
 import {
     FolderOpen, FileText, ArrowLeft, Search, Plus,
@@ -127,7 +129,6 @@ export default function ICorrespondancePage() {
     const [selectedFolder, setSelectedFolder] = useState<ICorrespondanceFolder | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filter, setFilter] = useState<FilterType>('all');
-    const [isLoading, setIsLoading] = useState(false);
     const [isInitialLoading, setIsInitialLoading] = useState(true);
 
     // Modal states
@@ -151,6 +152,55 @@ export default function ICorrespondancePage() {
     const [externalEmail, setExternalEmail] = useState('');
     const [externalName, setExternalName] = useState('');
     const [externalOrg, setExternalOrg] = useState('');
+
+    // ============================================================
+    // NEOCORTEX ACTOR INTEGRATION
+    // ============================================================
+
+    const handleFolderCreated = useCallback((folder: any) => {
+        setFolders(prev => [folder, ...prev]);
+        setNewFolderData({ name: '', recipientOrg: '', recipientName: '', recipientEmail: '', comment: '', isUrgent: false });
+        setNewFolderDocs([]);
+        setIsNewFolderOpen(false);
+    }, []);
+
+    const handleSent = useCallback((result: any) => {
+        setFolders(prev => prev.map(f => 
+            f.id === result.folderId 
+                ? { ...f, status: 'SENT' as const, sent_at: new Date().toISOString() } 
+                : f
+        ));
+        setIsSendDialogOpen(false);
+        setSelectedFolder(null);
+    }, []);
+
+    const handleArchived = useCallback((result: any) => {
+        setFolders(prev => prev.map(f => 
+            f.id === result.folderId 
+                ? { ...f, status: 'ARCHIVED' as const } 
+                : f
+        ));
+        setSelectedFolder(null);
+    }, []);
+
+    const handleDeleted = useCallback((result: any) => {
+        setFolders(prev => prev.filter(f => f.id !== result.folderId));
+        setSelectedFolder(null);
+    }, []);
+
+    const { 
+        isOperating, 
+        createFolder: emitCreateFolder, 
+        sendInternal: emitSendInternal, 
+        sendExternal: emitSendExternal,
+        archiveFolder: emitArchiveFolder,
+        deleteFolder: emitDeleteFolder 
+    } = useCorrespondanceActor({
+        onFolderCreated: handleFolderCreated,
+        onSent: handleSent,
+        onArchived: handleArchived,
+        onDeleted: handleDeleted,
+    });
 
     // ============================================================
     // SUPABASE OPERATIONS
@@ -203,101 +253,10 @@ export default function ICorrespondancePage() {
         }
     };
 
-    const createFolder = async (): Promise<ICorrespondanceFolder | null> => {
-        try {
-            const { data: session } = await supabase.auth.getSession();
-            if (!session?.session?.user?.id) throw new Error('Non authentifié');
+    // NOTE: Les opérations d'écriture (create, update, delete) sont maintenant
+    // gérées par CorrespondanceActor via le hook useCorrespondanceActor.
+    // Seule loadFolders reste ici pour les lectures initiales.
 
-            const userId = session.session.user.id;
-
-            const { data: folder, error } = await (supabase.from as any)('icorrespondance_folders')
-                .insert({
-                    user_id: userId,
-                    name: newFolderData.name,
-                    recipient_name: newFolderData.recipientName || null,
-                    recipient_organization: newFolderData.recipientOrg,
-                    recipient_email: newFolderData.recipientEmail || null,
-                    comment: newFolderData.comment || null,
-                    is_urgent: newFolderData.isUrgent,
-                    is_read: true,
-                    status: 'DRAFT',
-                })
-                .select()
-                .single();
-
-            if (error) throw error;
-
-            // Insert documents
-            for (const doc of newFolderDocs) {
-                let filePath: string | null = null;
-                if (doc.file) {
-                    filePath = await uploadDocumentToStorage(doc.file, folder.id);
-                }
-
-                await (supabase.from as any)('icorrespondance_documents').insert({
-                    folder_id: folder.id,
-                    name: doc.name,
-                    file_type: doc.file_type,
-                    file_size: doc.file_size,
-                    file_path: filePath,
-                    is_generated: doc.is_generated || false,
-                });
-            }
-
-            return { ...folder, documents: newFolderDocs };
-        } catch (err) {
-            console.error('❌ [iCorrespondance] Create error:', err);
-            throw err;
-        }
-    };
-
-    const uploadDocumentToStorage = async (file: File, folderId: string): Promise<string | null> => {
-        try {
-            const filePath = `${folderId}/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-            const { error } = await supabase.storage
-                .from(ICORRESPONDANCE_BUCKET)
-                .upload(filePath, file, { cacheControl: '3600', upsert: false });
-
-            if (error) {
-                console.error('Upload error:', error);
-                return null;
-            }
-            return filePath;
-        } catch (err) {
-            console.error('Upload error:', err);
-            return null;
-        }
-    };
-
-    const updateFolderStatus = async (folderId: string, status: string, extra?: Record<string, any>) => {
-        try {
-            const { error } = await (supabase.from as any)('icorrespondance_folders')
-                .update({ status, ...extra, updated_at: new Date().toISOString() })
-                .eq('id', folderId);
-
-            if (error) throw error;
-            setFolders(prev => prev.map(f => f.id === folderId ? { ...f, status: status as any, ...extra } : f));
-        } catch (err) {
-            console.error('❌ Update status error:', err);
-            throw err;
-        }
-    };
-
-    const deleteFolder = async (folderId: string) => {
-        try {
-            const { error } = await (supabase.from as any)('icorrespondance_folders')
-                .delete()
-                .eq('id', folderId);
-            if (error) throw error;
-            setFolders(prev => prev.filter(f => f.id !== folderId));
-        } catch (err) {
-            console.error('❌ Delete error:', err);
-            throw err;
-        }
-    };
-
-    // ============================================================
-    // HANDLERS
     // ============================================================
 
     useEffect(() => {
@@ -327,26 +286,26 @@ export default function ICorrespondancePage() {
         urgent: folders.filter(f => f.is_urgent && f.status !== 'ARCHIVED').length,
     }), [folders]);
 
-    const handleCreateFolder = async () => {
+    const handleCreateFolder = () => {
         if (!newFolderData.name.trim() || !newFolderData.recipientOrg.trim()) {
-            toast.error('Veuillez remplir le nom et le destinataire');
-            return;
+            return; // Validation will show in UI
         }
 
-        setIsLoading(true);
-        try {
-            const newFolder = await createFolder();
-            if (newFolder) setFolders(prev => [newFolder, ...prev]);
-
-            setNewFolderData({ name: '', recipientOrg: '', recipientName: '', recipientEmail: '', comment: '', isUrgent: false });
-            setNewFolderDocs([]);
-            setIsNewFolderOpen(false);
-            toast.success('Dossier créé avec succès');
-        } catch (err: any) {
-            toast.error(err.message || 'Erreur lors de la création');
-        } finally {
-            setIsLoading(false);
-        }
+        // Émettre le signal via Neocortex
+        emitCreateFolder({
+            name: newFolderData.name,
+            recipientOrg: newFolderData.recipientOrg,
+            recipientName: newFolderData.recipientName,
+            recipientEmail: newFolderData.recipientEmail,
+            comment: newFolderData.comment,
+            isUrgent: newFolderData.isUrgent,
+            documents: newFolderDocs.map(doc => ({
+                name: doc.name,
+                file_type: doc.file_type,
+                file_size: doc.file_size,
+                file: doc.file,
+            })),
+        });
     };
 
     const handleSelectFolder = async (folder: ICorrespondanceFolder) => {
@@ -369,83 +328,41 @@ export default function ICorrespondancePage() {
         setIsSendDialogOpen(true);
     };
 
-    const handleSendCorrespondance = async () => {
+    const handleSendCorrespondance = () => {
         if (!selectedFolder) return;
 
-        setIsLoading(true);
-        try {
-            if (sendMode === 'internal' && sendRecipients.length > 0) {
-                const conversation = await iBoiteService.createConversation({
-                    type: 'PRIVATE',
-                    subject: selectedFolder.name,
-                    participantIds: sendRecipients.map(r => r.id),
-                    initialMessage: selectedFolder.comment || `Dossier: ${selectedFolder.name}`,
-                });
-
-                if (conversation) {
-                    await updateFolderStatus(selectedFolder.id, 'SENT', {
-                        is_internal: true,
-                        iboite_conversation_id: conversation.id,
-                        sent_at: new Date().toISOString(),
-                    });
-                    toast.success(`Envoyé via iBoîte à ${sendRecipients.map(r => r.displayName).join(', ')}`);
-                }
-            } else if (sendMode === 'external' && externalEmail) {
-                await correspondanceService.sendCorrespondance({
-                    recipientEmail: externalEmail,
-                    recipientName: externalName,
-                    recipientOrg: externalOrg,
-                    subject: selectedFolder.name,
-                    body: selectedFolder.comment || '',
-                    isUrgent: selectedFolder.is_urgent,
-                });
-
-                await updateFolderStatus(selectedFolder.id, 'SENT', {
-                    is_internal: false,
-                    recipient_email: externalEmail,
-                    sent_at: new Date().toISOString(),
-                });
-                toast.success(`Envoyé par email à ${externalEmail}`);
-            } else {
-                toast.error('Sélectionnez un mode et un destinataire');
-                return;
-            }
-
-            setIsSendDialogOpen(false);
-            setSelectedFolder(null);
-        } catch (err: any) {
-            toast.error(err.message || 'Erreur lors de l\'envoi');
-        } finally {
-            setIsLoading(false);
+        if (sendMode === 'internal' && sendRecipients.length > 0) {
+            // Émettre signal d'envoi interne via Neocortex
+            emitSendInternal({
+                folderId: selectedFolder.id,
+                folderName: selectedFolder.name,
+                comment: selectedFolder.comment,
+                recipientIds: sendRecipients.map(r => r.id),
+                recipientNames: sendRecipients.map(r => r.displayName),
+            });
+        } else if (sendMode === 'external' && externalEmail) {
+            // Émettre signal d'envoi externe via Neocortex
+            emitSendExternal({
+                folderId: selectedFolder.id,
+                folderName: selectedFolder.name,
+                recipientEmail: externalEmail,
+                recipientName: externalName,
+                recipientOrg: externalOrg,
+                body: selectedFolder.comment || '',
+                isUrgent: selectedFolder.is_urgent,
+            });
         }
     };
 
-    const handleArchiveFolder = async (folder: ICorrespondanceFolder) => {
-        setIsLoading(true);
-        try {
-            await updateFolderStatus(folder.id, 'ARCHIVED');
-            toast.success(`${folder.name} archivé`);
-            setSelectedFolder(null);
-        } catch {
-            toast.error('Erreur lors de l\'archivage');
-        } finally {
-            setIsLoading(false);
-        }
+    const handleArchiveFolder = (folder: ICorrespondanceFolder) => {
+        // Émettre signal d'archivage via Neocortex
+        emitArchiveFolder(folder.id, folder.name);
     };
 
-    const handleDeleteFolder = async (folder: ICorrespondanceFolder) => {
+    const handleDeleteFolder = (folder: ICorrespondanceFolder) => {
         if (!confirm(`Supprimer "${folder.name}" ?`)) return;
-
-        setIsLoading(true);
-        try {
-            await deleteFolder(folder.id);
-            toast.success(`${folder.name} supprimé`);
-            setSelectedFolder(null);
-        } catch {
-            toast.error('Erreur lors de la suppression');
-        } finally {
-            setIsLoading(false);
-        }
+        // Émettre signal de suppression via Neocortex
+        emitDeleteFolder(folder.id, folder.name);
     };
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -850,8 +767,8 @@ export default function ICorrespondancePage() {
                     </div>
                     <DialogFooter>
                         <Button variant="outline" onClick={() => setIsNewFolderOpen(false)}>Annuler</Button>
-                        <Button onClick={handleCreateFolder} disabled={isLoading}>
-                            {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
+                        <Button onClick={handleCreateFolder} disabled={isOperating || !newFolderData.name.trim() || !newFolderData.recipientOrg.trim()}>
+                            {isOperating ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Plus className="h-4 w-4 mr-2" />}
                             Créer
                         </Button>
                     </DialogFooter>
@@ -952,9 +869,9 @@ export default function ICorrespondancePage() {
                         <Button variant="outline" onClick={() => setIsSendDialogOpen(false)}>Annuler</Button>
                         <Button
                             onClick={handleSendCorrespondance}
-                            disabled={isLoading || !sendMode || (sendMode === 'internal' && sendRecipients.length === 0) || (sendMode === 'external' && !externalEmail)}
+                            disabled={isOperating || !sendMode || (sendMode === 'internal' && sendRecipients.length === 0) || (sendMode === 'external' && !externalEmail)}
                         >
-                            {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Send className="h-4 w-4 mr-2" />}
+                            {isOperating ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Send className="h-4 w-4 mr-2" />}
                             Envoyer
                         </Button>
                     </DialogFooter>
