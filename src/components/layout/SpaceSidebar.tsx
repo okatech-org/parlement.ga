@@ -58,16 +58,18 @@ export const SpaceSidebar = ({
     <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground">
       {/* User Profile Card */}
       <div className="p-4">
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-sidebar-accent/50">
-          <Avatar className="h-10 w-10 border border-sidebar-border">
+        <div className="flex items-center gap-4 p-4 rounded-xl bg-sidebar-accent/50">
+          <Avatar className="h-12 w-12 border-2 border-sidebar-border shrink-0">
             <AvatarImage src={userContext.avatar} />
-            <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground text-sm font-medium">
+            <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground text-lg font-bold">
               {userContext.name.charAt(0)}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold truncate">{userContext.name}</p>
-            <p className="text-xs text-sidebar-foreground/60 truncate">
+            <p className="text-base font-serif font-bold leading-tight text-white">
+              {userContext.name}
+            </p>
+            <p className="text-sm text-sidebar-foreground/70 mt-0.5">
               {userContext.role}
             </p>
           </div>
