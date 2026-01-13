@@ -30,7 +30,7 @@ const Vote = () => {
     pour: 65,
     contre: 30,
     abstention: 25,
-    total: 120
+    total: 145
   };
 
   const handleAuthenticate = () => {
@@ -53,7 +53,7 @@ const Vote = () => {
     }
 
     setSelectedVote(voteType);
-    
+
     // Simulation d'enregistrement du vote
     setTimeout(() => {
       setHasVoted(true);

@@ -50,7 +50,7 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
 
     // Résultats en temps réel (simulés)
     const [results, setResults] = useState({
-        totalEligible: 245, // 143 députés + 102 sénateurs
+        totalEligible: 247, // 145 députés + 102 sénateurs
         totalPresent: 198,
         votesFor: 142,
         votesAgainst: 31,
@@ -78,7 +78,7 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
     const generateSeats = () => {
         const seats = [];
         // Députés (premier bloc)
-        for (let i = 0; i < 143; i++) {
+        for (let i = 0; i < 145; i++) {
             const status = i < results.deputiesFor ? "for"
                 : i < results.deputiesFor + results.deputiesAgainst ? "against"
                     : i < results.deputiesPresent ? "abstain"
@@ -366,7 +366,7 @@ const CongressVote = ({ sessionId }: CongressVoteProps) => {
                                 <div className="space-y-2">
                                     <div className="flex justify-between text-sm">
                                         <span className="text-primary">{t('congress.common.an')}</span>
-                                        <span>{results.deputiesPresent}/{143} {t('congress.vote.stats.present')}</span>
+                                        <span>{results.deputiesPresent}/{145} {t('congress.vote.stats.present')}</span>
                                     </div>
                                     <div className="flex gap-2 text-xs">
                                         <Badge className="bg-green-600">{results.deputiesFor} {t('congress.common.for')}</Badge>

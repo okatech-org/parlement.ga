@@ -29,7 +29,7 @@ const HomeAssembly: React.FC = () => {
     ];
 
     const quickStats = [
-        { label: t('assembly.home.stats.deputies'), value: 143, icon: Users },
+        { label: t('assembly.home.stats.deputies'), value: 145, icon: Users },
         { label: t('assembly.home.stats.texts'), value: 23, icon: FileText },
         { label: t('assembly.home.stats.sessions'), value: 47, icon: Calendar },
     ];
@@ -123,9 +123,9 @@ const HomeAssembly: React.FC = () => {
                         {/* Hero Image */}
                         <div className="relative hidden lg:block">
                             <div className="aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl shadow-emerald-500/20">
-                                <img 
-                                    src={heroAssembly} 
-                                    alt="Palais Léon Mba - Assemblée Nationale du Gabon" 
+                                <img
+                                    src={heroAssembly}
+                                    alt="Palais Léon Mba - Assemblée Nationale du Gabon"
                                     className="w-full h-full object-cover"
                                 />
                                 <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">

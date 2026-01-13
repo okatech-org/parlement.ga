@@ -82,9 +82,9 @@ const questions: QuizQuestion[] = [
     {
         id: 6,
         question: "Combien de députés siègent à l'Assemblée Nationale du Gabon ?",
-        options: ["100 députés", "120 députés", "143 députés", "200 députés"],
+        options: ["100 députés", "120 députés", "145 députés", "200 députés"],
         correctIndex: 2,
-        explanation: "L'Assemblée Nationale compte 143 députés élus au suffrage universel direct.",
+        explanation: "L'Assemblée Nationale compte 145 députés élus au suffrage universel direct.",
         difficulty: "medium",
     },
     {

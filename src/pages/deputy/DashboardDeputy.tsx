@@ -32,7 +32,7 @@ const DashboardDeputy = () => {
         pour: 65,
         contre: 30,
         abstention: 25,
-        total: 120
+        total: 145
     };
 
     const handleAuthenticate = () => {

@@ -75,7 +75,7 @@ const Index = () => {
 
   const stats = [
     { value: "14e", label: t('home.stats.legislature') },
-    { value: "120", label: t('home.stats.deputies') },
+    { value: "145", label: t('home.stats.deputies') },
     { value: "150+", label: t('home.stats.lawsVoted') },
     { value: "100%", label: t('home.stats.digital') }
   ];

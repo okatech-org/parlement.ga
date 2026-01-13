@@ -48,7 +48,7 @@ const AdminSpace = () => {
             </div>
             <div className="grid gap-4 md:grid-cols-3">
               <Card className="p-6 neu-raised">
-                <h3 className="text-2xl font-bold mb-1">120</h3>
+                <h3 className="text-2xl font-bold mb-1">145</h3>
                 <p className="text-sm text-muted-foreground">Députés Actifs</p>
               </Card>
               <Card className="p-6 neu-raised">
@@ -95,7 +95,7 @@ const AdminSpace = () => {
               <Users className="h-8 w-8 text-primary mb-3" />
               <h3 className="font-semibold mb-2">Utilisateurs</h3>
               <p className="text-sm text-muted-foreground">
-                120 députés, 15 administrateurs
+                145 députés, 15 administrateurs
               </p>
             </Card>
           </div>

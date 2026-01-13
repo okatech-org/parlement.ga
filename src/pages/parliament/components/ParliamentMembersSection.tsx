@@ -36,7 +36,7 @@ export const ParliamentMembersSection = () => {
 
       <Tabs defaultValue="deputies">
         <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
-          <TabsTrigger value="deputies">Députés (143)</TabsTrigger>
+          <TabsTrigger value="deputies">Députés (145)</TabsTrigger>
           <TabsTrigger value="senators">Sénateurs (102)</TabsTrigger>
         </TabsList>
 

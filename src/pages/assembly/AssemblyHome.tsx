@@ -25,7 +25,7 @@ const AssemblyHome: React.FC = () => {
 
     // Données simulées pour la démo
     const stats = {
-        deputies: 120,
+        deputies: 145,
         activeSessions: 3,
         pendingLaws: 12,
         votesToday: 5,
@@ -251,7 +251,7 @@ const AssemblyHome: React.FC = () => {
                         <Users className="h-8 w-8 text-[#3A87FD] mb-3" />
                         <h3 className="font-semibold mb-1">Vos Députés</h3>
                         <p className="text-sm text-muted-foreground">
-                            Consultez la liste des 120 députés et leurs travaux
+                            Consultez la liste des 145 députés et leurs travaux
                         </p>
                     </CardContent>
                 </Card>

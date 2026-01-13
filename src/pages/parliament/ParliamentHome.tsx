@@ -26,7 +26,7 @@ const ParliamentHome: React.FC = () => {
 
     // Données simulées pour la démo
     const stats = {
-        totalMembers: 222, // 120 députés + 102 sénateurs
+        totalMembers: 247, // 145 députés + 102 sénateurs
         cmpActive: 2,
         jointSessions: 5,
         archivedLaws: 1250,
@@ -119,7 +119,7 @@ const ParliamentHome: React.FC = () => {
                             <div>
                                 <p className="text-sm text-muted-foreground">{t('congress.home.stats.members')}</p>
                                 <p className="text-3xl font-bold text-slate-700 dark:text-slate-300">{stats.totalMembers}</p>
-                                <p className="text-xs text-muted-foreground">120 + 102</p>
+                                <p className="text-xs text-muted-foreground">145 + 102</p>
                             </div>
                             <Users className="h-10 w-10 text-slate-500/30" />
                         </div>
