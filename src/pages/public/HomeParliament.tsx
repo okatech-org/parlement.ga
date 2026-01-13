@@ -86,7 +86,7 @@ const HomeParliament = () => {
     ];
 
     const stats = [
-        { value: "245", label: t('landing.stats.members') },
+        { value: "215", label: t('landing.stats.members') },
         { value: "2", label: t('landing.stats.chambers') },
         { value: "150+", label: t('landing.stats.laws') },
         { value: "100%", label: t('landing.stats.digital') }
