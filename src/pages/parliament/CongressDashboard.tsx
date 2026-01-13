@@ -38,7 +38,7 @@ const CongressDashboard = () => {
         location: "Palais du Parlement - Hémicycle Unifié",
         majorityRequired: "Trois-Cinquièmes (60%)",
         quorumReached: false,
-        deputiesExpected: 143,
+        deputiesExpected: 145,
         senatorsExpected: 102,
         deputiesPresent: 0,
         senatorsPresent: 0,

@@ -21,7 +21,7 @@ const PortalRepublic: React.FC = () => {
             icon: Building2,
             subtitle: 'Chambre basse du Parlement',
             location: 'Palais Léon Mba, Libreville',
-            deputies: 143,
+            deputies: 145,
             gradient: 'from-emerald-500 to-green-600',
             hoverGradient: 'hover:from-emerald-600 hover:to-green-700',
             shadowColor: 'shadow-emerald-500/30',

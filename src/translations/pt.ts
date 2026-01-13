@@ -385,7 +385,7 @@ export const pt = {
                 subtitle: "República Gabonesa - União, Trabalho, Justiça",
                 stats: {
                     members: "Parlamentares",
-                    subMembers: "143 Deputados + 67 Senadores",
+                    subMembers: "145 Deputados + 67 Senadores",
                     laws: "Leis Adotadas",
                     subLaws: "Esta legislatura",
                     revisions: "Revisões Const.",
@@ -477,7 +477,7 @@ export const pt = {
             },
             hemicycle: {
                 title: "Hemiciclo Unificado",
-                desc: "143 Deputados + 102 Senadores"
+                desc: "145 Deputados + 102 Senadores"
             },
             panel: {
                 titleVoted: "Voto registrado",

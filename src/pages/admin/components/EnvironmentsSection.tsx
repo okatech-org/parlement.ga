@@ -22,7 +22,7 @@ const EnvironmentsSection = () => {
             color: "emerald",
             status: "online",
             stats: {
-                members: 143,
+                members: 145,
                 activeSessions: 12,
                 pendingBills: 45,
                 votesToday: 3,

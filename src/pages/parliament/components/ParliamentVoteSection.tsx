@@ -66,7 +66,7 @@ export const ParliamentVoteSection = () => {
             <div className="space-y-2">
               <div className="flex items-center justify-between p-2 bg-primary/10 rounded">
                 <span className="text-sm font-medium">Députés</span>
-                <Badge variant="secondary">{currentVote.deputiesPresent} / 143</Badge>
+                <Badge variant="secondary">{currentVote.deputiesPresent} / 145</Badge>
               </div>
               <div className="flex items-center justify-between p-2 bg-primary/10 rounded">
                 <span className="text-sm font-medium">Sénateurs</span>

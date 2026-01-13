@@ -13,7 +13,7 @@ const DashboardView = () => {
         {
             label: t('president.metrics.deputies'),
             subLabel: t('president.metrics.groups'),
-            value: "143",
+            value: "145",
             icon: Users,
             color: "text-foreground"
         },
@@ -113,7 +113,7 @@ const DashboardView = () => {
                                 size={220}
                                 thickness={40}
                                 centerLabel="Députés"
-                                centerValue="143"
+                                centerValue="145"
                             />
                         </CardContent>
                     </Card>

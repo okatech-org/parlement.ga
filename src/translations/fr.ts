@@ -358,7 +358,7 @@ export const fr = {
             badge: "Chambre basse du Parlement",
             title: "Assemblée Nationale",
             subtitle: "du Gabon",
-            description: "Bienvenue sur le portail officiel de l'Assemblée Nationale. Suivez les travaux législatifs, les débats en plénière et l'activité de vos 143 députés.",
+            description: "Bienvenue sur le portail officiel de l'Assemblée Nationale. Suivez les travaux législatifs, les débats en plénière et l'activité de vos 145 députés.",
             buttons: {
                 works: "Travaux en cours",
                 deputies: "Nos Députés",
@@ -442,7 +442,7 @@ export const fr = {
             heroDesc: "Du dépôt d'un projet de loi à sa transmission au Sénat, découvrez le parcours complet d'un texte à l'Assemblée Nationale.",
             heroBadge: "Guide Complet",
             stats: {
-                deputies: "143 députés",
+                deputies: "145 députés",
                 commissions: "6 commissions",
                 days: "~30 jours"
             },
@@ -692,7 +692,7 @@ export const fr = {
                 subtitle: "République Gabonaise - Union, Travail, Justice",
                 stats: {
                     members: "Parlementaires",
-                    subMembers: "143 Députés + 67 Sénateurs",
+                    subMembers: "145 Députés + 67 Sénateurs",
                     laws: "Lois Adoptées",
                     subLaws: "Cette législature",
                     revisions: "Révisions Const.",
@@ -771,7 +771,7 @@ export const fr = {
             },
             hemicycle: {
                 title: "Hémicycle Unifié",
-                desc: "143 Députés + 102 Sénateurs"
+                desc: "145 Députés + 102 Sénateurs"
             },
             panel: {
                 titleVoted: "Vote enregistré",

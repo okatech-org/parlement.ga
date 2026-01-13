@@ -42,7 +42,7 @@ const ProcessComparison = () => {
   ];
 
   const stats = [
-    { value: "143", label: t('congress.common.deputies'), icon: Building, color: "text-[#3A87FD]" },
+    { value: "145", label: t('congress.common.deputies'), icon: Building, color: "text-[#3A87FD]" },
     { value: "102", label: t('congress.common.senators'), icon: Users, color: "text-[#D19C00]" },
     { value: "245", label: "Parlementaires", icon: Scale, color: "text-white" },
     { value: "2", label: "Chambres", icon: Gavel, color: "text-[#77BA41]" },
@@ -180,8 +180,8 @@ const ProcessComparison = () => {
       {/* Hero Section with Image */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <img 
-            src={heroParliament} 
+          <img
+            src={heroParliament}
             alt="Processus Législatif Gabonais"
             className="w-full h-full object-cover"
           />
@@ -338,7 +338,7 @@ const ProcessComparison = () => {
                   <Users className="h-5 w-5 text-[#3A87FD] mt-0.5" />
                   <div>
                     <h4 className="font-semibold text-sm">{t('congress.processComparison.links.composition')}</h4>
-                    <p className="text-sm text-muted-foreground">143 {t('congress.common.deputies')} ({t('congress.processComparison.links.directSuffrage')})</p>
+                    <p className="text-sm text-muted-foreground">145 {t('congress.common.deputies')} ({t('congress.processComparison.links.directSuffrage')})</p>
                   </div>
                 </div>
                 <Separator />
@@ -357,8 +357,8 @@ const ProcessComparison = () => {
                     <p className="text-sm text-muted-foreground">{t('congress.processComparison.links.anLastWord')}</p>
                   </div>
                 </div>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full text-[#3A87FD] hover:text-[#3A87FD] border-[#3A87FD]/30 hover:bg-[#3A87FD]/10"
                   onClick={() => openInNewTab("/an")}
                 >
@@ -398,8 +398,8 @@ const ProcessComparison = () => {
                     <p className="text-sm text-muted-foreground">{t('congress.processComparison.links.snLocalAuthorities')}</p>
                   </div>
                 </div>
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full text-[#D19C00] hover:text-[#D19C00] border-[#D19C00]/30 hover:bg-[#D19C00]/10"
                   onClick={() => openInNewTab("/senat")}
                 >

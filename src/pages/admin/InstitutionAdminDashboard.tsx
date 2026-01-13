@@ -29,7 +29,7 @@ const InstitutionAdminDashboard = ({ type }: InstitutionAdminDashboardProps) => 
             color: "text-emerald-600",
             bg: "bg-emerald-50",
             membersLabel: "Députés",
-            stats: { members: 143, sessions: 12, docs: 450 }
+            stats: { members: 145, sessions: 12, docs: 450 }
         },
         Senat: {
             title: "Administration Sénat",

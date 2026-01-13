@@ -27,7 +27,7 @@ export const ParliamentDashboardSection = () => {
   ];
 
   const institutionData = [
-    { label: t('congress.common.an'), value: 143, color: "#22c55e" },
+    { label: t('congress.common.an'), value: 145, color: "#22c55e" },
     { label: t('congress.common.senate'), value: 67, color: "#3b82f6" },
   ];
 

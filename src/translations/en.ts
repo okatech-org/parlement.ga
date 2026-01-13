@@ -385,7 +385,7 @@ export const en = {
                 subtitle: "Gabonese Republic - Union, Work, Justice",
                 stats: {
                     members: "Parliamentarians",
-                    subMembers: "143 Deputies + 67 Senators",
+                    subMembers: "145 Deputies + 67 Senators",
                     laws: "Adopted Laws",
                     subLaws: "This legislature",
                     revisions: "Const. Revisions",
@@ -477,7 +477,7 @@ export const en = {
             },
             hemicycle: {
                 title: "Unified Hemicycle",
-                desc: "143 Deputies + 102 Senators"
+                desc: "145 Deputies + 102 Senators"
             },
             panel: {
                 titleVoted: "Vote recorded",

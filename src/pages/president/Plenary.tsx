@@ -37,7 +37,7 @@ const fetchPlenarySessions = async (): Promise<PlenarySession[]> => {
                         time: "09:00",
                         status: "Scheduled",
                         attendance: 0,
-                        totalDeputies: 143
+                        totalDeputies: 145
                     },
                     {
                         id: "2",
@@ -46,7 +46,7 @@ const fetchPlenarySessions = async (): Promise<PlenarySession[]> => {
                         time: "14:00",
                         status: "Completed",
                         attendance: 138,
-                        totalDeputies: 143,
+                        totalDeputies: 145,
                         votingResults: { for: 120, against: 12, abstain: 6 }
                     },
                     {
@@ -56,7 +56,7 @@ const fetchPlenarySessions = async (): Promise<PlenarySession[]> => {
                         time: "10:00",
                         status: "In Progress",
                         attendance: 135,
-                        totalDeputies: 143
+                        totalDeputies: 145
                     },
                 ]);
             }

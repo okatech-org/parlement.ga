@@ -88,7 +88,7 @@ export const CongressSessionsSection = () => {
             type: "revision_constitutionnelle",
             status: "convoquee",
             quorum: 75,
-            attendees: { deputies: 143, senators: 67 },
+            attendees: { deputies: 145, senators: 67 },
         },
         {
             id: "S-2025-001",
@@ -110,7 +110,7 @@ export const CongressSessionsSection = () => {
             type: "sermon",
             status: "terminee",
             quorum: 100,
-            attendees: { deputies: 143, senators: 102 },
+            attendees: { deputies: 145, senators: 102 },
         },
     ]);
 
