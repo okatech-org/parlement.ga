@@ -165,9 +165,9 @@ export default function ICorrespondancePage() {
     }, []);
 
     const handleSent = useCallback((result: any) => {
-        setFolders(prev => prev.map(f => 
-            f.id === result.folderId 
-                ? { ...f, status: 'SENT' as const, sent_at: new Date().toISOString() } 
+        setFolders(prev => prev.map(f =>
+            f.id === result.folderId
+                ? { ...f, status: 'SENT' as const, sent_at: new Date().toISOString() }
                 : f
         ));
         setIsSendDialogOpen(false);
@@ -175,9 +175,9 @@ export default function ICorrespondancePage() {
     }, []);
 
     const handleArchived = useCallback((result: any) => {
-        setFolders(prev => prev.map(f => 
-            f.id === result.folderId 
-                ? { ...f, status: 'ARCHIVED' as const } 
+        setFolders(prev => prev.map(f =>
+            f.id === result.folderId
+                ? { ...f, status: 'ARCHIVED' as const }
                 : f
         ));
         setSelectedFolder(null);
@@ -188,13 +188,13 @@ export default function ICorrespondancePage() {
         setSelectedFolder(null);
     }, []);
 
-    const { 
-        isOperating, 
-        createFolder: emitCreateFolder, 
-        sendInternal: emitSendInternal, 
+    const {
+        isOperating,
+        createFolder: emitCreateFolder,
+        sendInternal: emitSendInternal,
         sendExternal: emitSendExternal,
         archiveFolder: emitArchiveFolder,
-        deleteFolder: emitDeleteFolder 
+        deleteFolder: emitDeleteFolder
     } = useCorrespondanceActor({
         onFolderCreated: handleFolderCreated,
         onSent: handleSent,
@@ -211,8 +211,32 @@ export default function ICorrespondancePage() {
         try {
             const { data: session } = await supabase.auth.getSession();
             if (!session?.session?.user?.id) {
-                console.log('📂 [iCorrespondance] No session');
-                setFolders([]);
+                console.log('📂 [iCorrespondance] No session - Loading DEMO data');
+                // Import dynamique des données mock
+                const { MOCK_CORRESPONDANCE_FOLDERS } = await import('@/data/correspondanceData');
+                const mockFolders: ICorrespondanceFolder[] = MOCK_CORRESPONDANCE_FOLDERS.map(f => ({
+                    id: f.id,
+                    name: f.name,
+                    reference_number: f.reference_number,
+                    recipient_organization: f.recipient_organization,
+                    recipient_name: f.recipient_name,
+                    recipient_email: f.recipient_email,
+                    status: f.status,
+                    is_urgent: f.is_urgent,
+                    is_read: f.is_read,
+                    is_internal: f.is_internal,
+                    comment: f.comment,
+                    created_at: f.created_at,
+                    sent_at: f.sent_at,
+                    documents: f.documents.map(d => ({
+                        id: d.id,
+                        name: d.name,
+                        file_type: d.file_type,
+                        file_size: d.file_size,
+                    })),
+                }));
+                setFolders(mockFolders);
+                console.log('✅ [iCorrespondance] Loaded', mockFolders.length, 'DEMO folders');
                 return;
             }
 
@@ -222,7 +246,9 @@ export default function ICorrespondancePage() {
 
             if (error) {
                 console.error('❌ [iCorrespondance] Load error:', error);
-                setFolders([]);
+                // Fallback vers données DEMO
+                const { MOCK_CORRESPONDANCE_FOLDERS } = await import('@/data/correspondanceData');
+                setFolders(MOCK_CORRESPONDANCE_FOLDERS as any);
                 return;
             }
 
@@ -247,7 +273,13 @@ export default function ICorrespondancePage() {
             console.log('✅ [iCorrespondance] Loaded', foldersWithDocs.length, 'folders');
         } catch (err) {
             console.error('❌ [iCorrespondance] Error:', err);
-            setFolders([]);
+            // Fallback vers données DEMO en cas d'erreur
+            try {
+                const { MOCK_CORRESPONDANCE_FOLDERS } = await import('@/data/correspondanceData');
+                setFolders(MOCK_CORRESPONDANCE_FOLDERS as any);
+            } catch {
+                setFolders([]);
+            }
         } finally {
             setIsInitialLoading(false);
         }

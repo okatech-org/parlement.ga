@@ -20,13 +20,18 @@ import {
     Filter,
     Plus,
     FolderOpen,
+    FolderClosed,
     Gavel,
     BookOpen,
     FileQuestion,
     FileCheck,
     Loader2,
     Upload,
-    AlertCircle
+    AlertCircle,
+    ArrowLeft,
+    HelpCircle,
+    FileEdit,
+    FileSignature
 } from "lucide-react";
 import {
     Dialog,
@@ -54,9 +59,10 @@ type DocumentType =
     | 'amendement'      // Amendement
     | 'question'        // Question au gouvernement
     | 'decret'          // Décret
+    | 'arrete'          // Arrêté
     | 'circulaire';     // Circulaire
 
-type DocumentStatus = 'brouillon' | 'en_examen' | 'adopte' | 'rejete' | 'archive';
+type DocumentStatus = 'brouillon' | 'en_examen' | 'adopte' | 'rejete' | 'archive' | 'publie';
 
 export type DocumentContext = 'default' | 'congress' | 'cmp' | 'bureau' | 'an' | 'senat';
 
@@ -79,18 +85,24 @@ interface ParliamentaryDocument {
     context?: DocumentContext[];
 }
 
-// Mock data - À remplacer par appel Supabase
-const MOCK_DOCUMENTS: ParliamentaryDocument[] = [
-    { id: '1', title: "Projet de Loi de Finances 2026", type: 'projet_loi', date: '2025-12-15', reference: 'PL-2025-045', status: 'en_examen', author: 'Gouvernement', commission: 'Finances', context: ['an', 'senat', 'congress', 'cmp'] },
-    { id: '2', title: "Rapport sur la réforme de l'éducation", type: 'rapport', date: '2025-12-10', reference: 'RAP-2025-089', status: 'adopte', commission: 'Affaires Sociales', size: '2.4 MB', context: ['an'] },
-    { id: '3', title: "PV Séance Plénière du 05/12/2025", type: 'pv_seance', date: '2025-12-06', reference: 'PV-2025-048', status: 'archive', size: '1.1 MB', context: ['an', 'senat', 'congress'] },
-    { id: '4', title: "Proposition de loi sur le numérique", type: 'proposition', date: '2025-12-01', reference: 'PPL-2025-012', status: 'en_examen', author: 'Groupe Majoritaire', context: ['an', 'senat'] },
-    { id: '5', title: "Amendement au projet de budget", type: 'amendement', date: '2025-11-28', reference: 'AMD-2025-234', status: 'rejete', author: 'Opposition', context: ['an', 'cmp'] },
-    { id: '6', title: "Question orale - Politique énergétique", type: 'question', date: '2025-11-25', reference: 'QO-2025-156', status: 'archive', context: ['an'] },
-    { id: '7', title: "Décret portant organisation du Parlement", type: 'decret', date: '2025-11-20', reference: 'DEC-2025-008', status: 'adopte', context: ['default'] },
-    { id: 'cmp1', title: "Texte de compromis - PJL Finances", type: 'projet_loi', date: '2025-12-22', reference: 'CMP-2025-001', status: 'en_examen', commission: 'CMP', context: ['cmp'] },
-    { id: 'cong1', title: "Projet de révision constitutionnelle", type: 'projet_loi', date: '2025-12-23', reference: 'CONST-2025-001', status: 'en_examen', context: ['congress'] },
-];
+import {
+    MOCK_DOCUMENT_FOLDERS,
+    MOCK_PARLIAMENTARY_DOCUMENTS,
+    getDocumentsByFolder,
+    getDocumentStats,
+    type MockDocumentFolder,
+    type MockParliamentaryDocument
+} from '@/data/correspondanceData';
+
+// Icon mapping for folders
+const FOLDER_ICONS: Record<string, React.ElementType> = {
+    Gavel: Gavel,
+    BookOpen: BookOpen,
+    FileCheck: FileCheck,
+    HelpCircle: HelpCircle,
+    FileEdit: FileEdit,
+    FileSignature: FileSignature,
+};
 
 const typeConfig: Record<DocumentType, { label: string; icon: typeof FileText; color: string }> = {
     'projet_loi': { label: 'Projet de loi', icon: Gavel, color: 'bg-blue-500/10 text-blue-500' },
@@ -100,6 +112,7 @@ const typeConfig: Record<DocumentType, { label: string; icon: typeof FileText; c
     'amendement': { label: 'Amendement', icon: FileText, color: 'bg-yellow-500/10 text-yellow-500' },
     'question': { label: 'Question', icon: FileQuestion, color: 'bg-pink-500/10 text-pink-500' },
     'decret': { label: 'Décret', icon: Gavel, color: 'bg-red-500/10 text-red-500' },
+    'arrete': { label: 'Arrêté', icon: FileSignature, color: 'bg-indigo-500/10 text-indigo-500' },
     'circulaire': { label: 'Circulaire', icon: FileText, color: 'bg-gray-500/10 text-gray-500' }
 };
 
@@ -108,11 +121,14 @@ const statusConfig: Record<DocumentStatus, { label: string; color: string }> = {
     'en_examen': { label: 'En examen', color: 'bg-yellow-500/10 text-yellow-500' },
     'adopte': { label: 'Adopté', color: 'bg-green-500/10 text-green-500' },
     'rejete': { label: 'Rejeté', color: 'bg-red-500/10 text-red-500' },
-    'archive': { label: 'Archivé', color: 'bg-blue-500/10 text-blue-500' }
+    'archive': { label: 'Archivé', color: 'bg-blue-500/10 text-blue-500' },
+    'publie': { label: 'Publié', color: 'bg-emerald-500/10 text-emerald-500' }
 };
 
 export default function SharedDocumentsPage({ context = 'default', contextLabel }: SharedDocumentsPageProps) {
-    const [documents, setDocuments] = useState<ParliamentaryDocument[]>([]);
+    const [folders] = useState<MockDocumentFolder[]>(MOCK_DOCUMENT_FOLDERS);
+    const [documents, setDocuments] = useState<MockParliamentaryDocument[]>([]);
+    const [selectedFolder, setSelectedFolder] = useState<MockDocumentFolder | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedType, setSelectedType] = useState<DocumentType | null>(null);
@@ -123,9 +139,8 @@ export default function SharedDocumentsPage({ context = 'default', contextLabel 
         const loadDocuments = async () => {
             setIsLoading(true);
             try {
-                // TODO: Remplacer par appel Supabase
-                await new Promise(resolve => setTimeout(resolve, 800));
-                setDocuments(MOCK_DOCUMENTS);
+                await new Promise(resolve => setTimeout(resolve, 500));
+                setDocuments(MOCK_PARLIAMENTARY_DOCUMENTS);
             } catch (error) {
                 console.error('[SharedDocumentsPage] Error loading documents:', error);
                 toast.error('Erreur lors du chargement des documents');
@@ -137,34 +152,41 @@ export default function SharedDocumentsPage({ context = 'default', contextLabel 
         loadDocuments();
     }, []);
 
+    // Handle folder selection
+    const handleSelectFolder = (folder: MockDocumentFolder) => {
+        setSelectedFolder(folder);
+        setSelectedType(null);
+    };
+
+    const handleBackToFolders = () => {
+        setSelectedFolder(null);
+    };
+
+
     // Filtrer les documents
     const filteredDocs = useMemo(() => {
-        return documents.filter(doc => {
+        const docsToFilter = selectedFolder
+            ? getDocumentsByFolder(selectedFolder.id)
+            : documents;
+
+        return docsToFilter.filter(doc => {
             const matchesSearch =
                 doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 doc.reference.toLowerCase().includes(searchQuery.toLowerCase());
             const matchesType = !selectedType || doc.type === selectedType;
-
-            // Filtre par contexte
-            const matchesContext = !doc.context || doc.context.includes(context);
-
-            return matchesSearch && matchesType && matchesContext;
+            return matchesSearch && matchesType;
         });
-    }, [documents, searchQuery, selectedType, context]);
+    }, [documents, searchQuery, selectedType, selectedFolder]);
 
     // Statistiques
-    const stats = useMemo(() => ({
-        total: documents.length,
-        projets: documents.filter(d => d.type === 'projet_loi' || d.type === 'proposition').length,
-        rapports: documents.filter(d => d.type === 'rapport').length,
-        enExamen: documents.filter(d => d.status === 'en_examen').length
-    }), [documents]);
+    const stats = useMemo(() => getDocumentStats(), [documents]);
 
-    const handleView = (doc: ParliamentaryDocument) => {
+
+    const handleView = (doc: MockParliamentaryDocument) => {
         toast.info(`Ouverture de ${doc.title}`);
     };
 
-    const handleDownload = (doc: ParliamentaryDocument) => {
+    const handleDownload = (doc: MockParliamentaryDocument) => {
         toast.success(`Téléchargement de ${doc.title} lancé`);
     };
 
@@ -316,7 +338,7 @@ export default function SharedDocumentsPage({ context = 'default', contextLabel 
                                                         <span>Réf: {doc.reference}</span>
                                                         <span>{new Date(doc.date).toLocaleDateString('fr-FR')}</span>
                                                         {doc.commission && <span>• {doc.commission}</span>}
-                                                        {doc.size && <span>• {doc.size}</span>}
+                                                        {doc.file_size && <span>• {doc.file_size}</span>}
                                                     </div>
                                                 </div>
                                                 <div className="flex gap-2">
