@@ -138,3 +138,37 @@ export interface ServiceRecipient {
   organizationName?: string;
 }
 
+// Contact directory entry for advanced contact search
+export interface ContactDirectoryEntry {
+  userId: string;
+  profileId: string;
+  displayName: string;
+  firstName: string;
+  lastName: string;
+  phone?: string | null;
+  position?: string | null;
+  servicePhone?: string | null;
+  isPublicContact: boolean;
+  environment?: string;
+  role?: string;
+  organizationId?: string | null;
+  organizationName?: string | null;
+  services?: Array<{ id: string; name: string }>;
+}
+
+// Service member for service-based messaging
+export interface ServiceMember {
+  id: string;
+  serviceId: string;
+  userId: string;
+  memberRole: 'LEADER' | 'MEMBER' | 'BACKUP';
+  canReceiveCorrespondence: boolean;
+  canReceiveCalls: boolean;
+  displayOrder: number;
+  joinedAt: string;
+  user: {
+    displayName: string;
+    phone?: string | null;
+    position?: string | null;
+  };
+}

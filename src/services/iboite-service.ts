@@ -26,6 +26,13 @@ import type {
 
 // Re-export IBoiteService type from environments
 export type { IBoiteService as IBoiteServiceType } from '@/types/environments';
+import type {
+    GlobalRecipient,
+    OrganizationRecipient,
+    ServiceRecipient,
+    ContactDirectoryEntry,
+    ServiceMember
+} from '@/types/environments';
 
 // ============================================================
 // TYPES INTERNES
@@ -135,6 +142,111 @@ class IBoiteServiceClass {
             }));
         } catch (error) {
             console.error('[iBoîte] Search services error:', error);
+            return [];
+        }
+    }
+
+    // ========================================================
+    // RECHERCHE GLOBALE DE DESTINATAIRES
+    // ========================================================
+
+    /**
+     * Recherche globale parmi utilisateurs, organisations et services
+     */
+    async searchGlobalRecipients(params: {
+        query?: string;
+        includeOrganizations?: boolean;
+        includeServices?: boolean;
+        includeUsers?: boolean;
+        limit?: number;
+    }): Promise<GlobalRecipient[]> {
+        try {
+            const { data: session } = await supabase.auth.getSession();
+            const searcherId = session?.session?.user?.id || null;
+
+            const { data, error } = await (supabase.rpc as any)('search_global_recipients', {
+                search_query: params.query || '',
+                searcher_id: searcherId,
+                include_organizations: params.includeOrganizations ?? true,
+                include_services: params.includeServices ?? true,
+                include_users: params.includeUsers ?? true,
+                limit_count: params.limit || 30
+            });
+
+            if (error) {
+                console.error('[iBoîte] Search global recipients error:', error);
+                return [];
+            }
+
+            return (data || []).map((row: any) => ({
+                recipientType: row.recipient_type as GlobalRecipient['recipientType'],
+                recipientId: row.recipient_id,
+                displayName: row.display_name,
+                subtitle: row.subtitle,
+                email: row.email,
+                avatarUrl: row.avatar_url,
+                organizationId: row.organization_id,
+                organizationName: row.organization_name
+            }));
+        } catch (error) {
+            console.error('[iBoîte] Search global recipients error:', error);
+            return [];
+        }
+    }
+
+    /**
+     * Récupère toutes les organisations disponibles
+     */
+    async getAllOrganizations(limit?: number): Promise<OrganizationRecipient[]> {
+        try {
+            const { data, error } = await (supabase.rpc as any)('get_all_organizations', {
+                limit_count: limit || 100
+            });
+
+            if (error) {
+                console.error('[iBoîte] Get all organizations error:', error);
+                return [];
+            }
+
+            return (data || []).map((row: any) => ({
+                id: row.id,
+                name: row.name,
+                city: row.city,
+                departement: row.departement,
+                contactEmail: row.contact_email,
+                logoUrl: row.logo_url
+            }));
+        } catch (error) {
+            console.error('[iBoîte] Get all organizations error:', error);
+            return [];
+        }
+    }
+
+    /**
+     * Récupère tous les services (optionnellement filtrés par organisation)
+     */
+    async getOrganizationServices(organizationId?: string, limit?: number): Promise<ServiceRecipient[]> {
+        try {
+            const { data, error } = await (supabase.rpc as any)('get_organization_services', {
+                org_id: organizationId || null,
+                limit_count: limit || 100
+            });
+
+            if (error) {
+                console.error('[iBoîte] Get organization services error:', error);
+                return [];
+            }
+
+            return (data || []).map((row: any) => ({
+                id: row.id,
+                name: row.name,
+                description: row.description,
+                category: row.category,
+                organizationId: row.organization_id,
+                organizationName: row.organization_name
+            }));
+        } catch (error) {
+            console.error('[iBoîte] Get organization services error:', error);
             return [];
         }
     }
@@ -573,6 +685,162 @@ class IBoiteServiceClass {
         } catch (error) {
             console.error('[iBoîte] Get external correspondence error:', error);
             return [];
+        }
+    }
+
+    /**
+     * Get sent messages (external correspondence with status SENT)
+     */
+    async getSentMessages(limit?: number): Promise<IBoiteExternalCorrespondence[]> {
+        return this.getExternalCorrespondence({
+            direction: 'OUTBOUND',
+            status: 'SENT',
+            limit
+        });
+    }
+
+    /**
+     * Get internal conversations where the user sent the last message
+     */
+    async getSentConversations(limit?: number): Promise<IBoiteConversation[]> {
+        try {
+            const { data: session } = await supabase.auth.getSession();
+            if (!session?.session?.user?.id) return [];
+
+            const userId = session.session.user.id;
+
+            let query = (supabase.from as any)('iboite_conversations')
+                .select(`
+                    *,
+                    participants:iboite_conversation_participants!inner(*)
+                `)
+                .eq('participants.user_id', userId)
+                .eq('last_message_sender_id', userId)
+                .order('last_message_at', { ascending: false, nullsFirst: false });
+
+            if (limit) {
+                query = query.limit(limit);
+            }
+
+            const { data, error } = await query;
+
+            if (error) {
+                console.error('[iBoîte] Get sent conversations error:', error);
+                return [];
+            }
+
+            return this.mapConversations(data || [], userId);
+        } catch (error) {
+            console.error('[iBoîte] Get sent conversations error:', error);
+            return [];
+        }
+    }
+
+    /**
+     * Get draft messages
+     */
+    async getDrafts(limit?: number): Promise<IBoiteExternalCorrespondence[]> {
+        return this.getExternalCorrespondence({
+            status: 'DRAFT',
+            limit
+        });
+    }
+
+    /**
+     * Get official correspondence (both sent and received)
+     */
+    async getOfficialCorrespondence(options?: {
+        direction?: 'INBOUND' | 'OUTBOUND';
+        limit?: number;
+    }): Promise<IBoiteExternalCorrespondence[]> {
+        try {
+            let query = (supabase.from as any)('iboite_external_correspondence')
+                .select('*')
+                .in('status', ['SENT', 'DELIVERED'])
+                .order('created_at', { ascending: false });
+
+            if (options?.direction) {
+                query = query.eq('direction', options.direction);
+            }
+
+            if (options?.limit) {
+                query = query.limit(options.limit);
+            }
+
+            const { data, error } = await query;
+
+            if (error) {
+                console.error('[iBoîte] Get official correspondence error:', error);
+                return [];
+            }
+
+            return (data || []).map((item: any) => this.mapExternalCorrespondence(item));
+        } catch (error) {
+            console.error('[iBoîte] Get official correspondence error:', error);
+            return [];
+        }
+    }
+
+    /**
+     * Delete a draft
+     */
+    async deleteDraft(id: string): Promise<boolean> {
+        try {
+            const { error } = await (supabase.from as any)('iboite_external_correspondence')
+                .delete()
+                .eq('id', id)
+                .eq('status', 'DRAFT');
+
+            return !error;
+        } catch (error) {
+            console.error('[iBoîte] Delete draft error:', error);
+            return false;
+        }
+    }
+
+    /**
+     * Update and send a draft
+     */
+    async sendDraft(id: string, updates?: {
+        subject?: string;
+        body?: string;
+        recipientEmail?: string;
+        recipientName?: string;
+    }): Promise<IBoiteExternalCorrespondence | null> {
+        try {
+            // Get the draft first
+            const { data: draft, error: fetchError } = await (supabase.from as any)('iboite_external_correspondence')
+                .select('*')
+                .eq('id', id)
+                .eq('status', 'DRAFT')
+                .single();
+
+            if (fetchError || !draft) {
+                console.error('[iBoîte] Draft not found:', fetchError);
+                return null;
+            }
+
+            // Send it
+            const result = await this.sendExternalCorrespondence({
+                recipientEmail: updates?.recipientEmail || draft.external_email,
+                recipientName: updates?.recipientName || draft.external_name,
+                recipientOrganization: draft.external_organization,
+                subject: updates?.subject || draft.subject,
+                body: updates?.body || draft.content,
+                organizationId: draft.organization_id
+            });
+
+            // Delete original draft if sent successfully
+            if (result) {
+                await (supabase.from as any)('iboite_external_correspondence')
+                    .delete()
+                    .eq('id', id);
+            }
+
+            return result;
+        } catch (error) {
+            console.error('[iBoîte] Send draft error:', error);
+            return null;
         }
     }
 

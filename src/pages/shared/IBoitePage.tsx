@@ -62,45 +62,150 @@ interface PackageDelivery {
     status: "pending" | "transit" | "delivered" | "available"; estimatedDelivery?: Date;
 }
 
-// Mock Data
-const mockAccounts: Account[] = [
-    {
-        id: "personal", name: "Personnel", type: "personal", icon: Home,
-        address: { label: "Compte Personnel", fullAddress: "Point Relais Parlement.ga", street: "Avenue du Palais Léon Mba", city: "Libreville", postalCode: "BP 1000", qrCode: "PGA-12345" },
-        email: "utilisateur@parlement.ga"
-    },
-    {
-        id: "professional", name: "Courrier Officiel", type: "professional", icon: Building2,
-        address: { label: "Courrier Officiel", fullAddress: "Assemblée Nationale / Sénat", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 5000", qrCode: "PGA-OFFIC-5000" },
-        email: "officiel@parlement.ga"
-    }
-];
-
-const mockLetters: DigitalLetter[] = [
-    { id: "l1", accountId: "personal", folder: "inbox", sender: "Secrétariat Général", senderAddress: "Secrétariat Général\nAssemblée Nationale\nBP 123 Libreville", recipient: "Député", recipientAddress: "Bureau du Député\nBP 1000\nLibreville, GABON", subject: "Convocation - Session Plénière", content: "Monsieur le Député,\n\nVous êtes convoqué à la session plénière extraordinaire qui se tiendra le 15 janvier 2026 à 10h00 dans l'hémicycle.\n\nOrdre du jour :\n- Examen du projet de loi de finances rectificative\n- Questions au gouvernement\n\nVotre présence est obligatoire.\n\nVeuillez agréer, Monsieur le Député, l'expression de notre haute considération.\n\nLe Secrétaire Général", attachments: [], isRead: false, type: "action_required", createdAt: new Date(Date.now() - 7200000), dueDate: new Date(Date.now() + 86400000 * 2) },
-    { id: "l2", accountId: "personal", folder: "inbox", sender: "Commission des Lois", senderAddress: "Commission des Lois\nAssemblée Nationale\nLibreville", recipient: "Député", recipientAddress: "Bureau du Député\nLibreville", subject: "Rapport d'étude - Projet de Loi n°2025-42", content: "Monsieur le Député,\n\nVeuillez trouver ci-joint le rapport d'étude concernant le projet de loi n°2025-42 relatif à la modernisation de l'administration publique.\n\nLa commission se réunira le 20 janvier pour l'examen de ce texte.\n\nCordialement,\nLe Président de la Commission", attachments: [{ name: "Rapport_PL_2025-42.pdf", size: "2.4 MB" }], isRead: true, type: "informational", createdAt: new Date(Date.now() - 172800000) },
-    { id: "l3", accountId: "personal", folder: "sent", sender: "Député", senderAddress: "Bureau du Député\nBP 1000\nLibreville", recipient: "Mairie de Libreville", recipientAddress: "Mairie de Libreville\nService État Civil\nBP 123 Libreville", subject: "Demande d'intervention - Quartier Akébé", content: "Monsieur le Maire,\n\nSuite aux doléances des habitants du quartier Akébé concernant l'état des routes, je sollicite une intervention rapide de vos services.\n\nMerci de votre diligence.\n\nRespectueux hommages.", attachments: [], isRead: true, type: "standard", createdAt: new Date(Date.now() - 432000000) },
-];
-
-const mockPackages: PackageDelivery[] = [
-    { id: "pkg1", accountId: "personal", trackingNumber: "GA2026-78901", sender: "Service Documentation", description: "Documents parlementaires", status: "available" },
-    { id: "pkg2", accountId: "personal", trackingNumber: "GA2026-78902", sender: "Imprimerie Nationale", description: "Recueil des lois 2025", status: "transit", estimatedDelivery: new Date(Date.now() + 86400000 * 2) },
-];
-
 // Context type
-export type IBoiteContext = 'default' | 'congress' | 'cmp' | 'bureau' | 'an' | 'senat' | 'deputy' | 'senator' | 'questeur' | 'citizen';
+export type IBoiteContext = 'default' | 'congress' | 'cmp' | 'bureau' | 'an' | 'senat' | 'deputy' | 'senator' | 'questeur_an' | 'questeur_senat' | 'president_an' | 'president_senat' | 'vp_an' | 'vp_senat' | 'citizen';
+
+// Function to get accounts based on context
+function getAccountsForContext(context: IBoiteContext): Account[] {
+    switch (context) {
+        case 'president_an':
+            return [
+                {
+                    id: "president", name: "Président AN", type: "professional", icon: Building2,
+                    address: { label: "Président de l'Assemblée Nationale", fullAddress: "Palais Léon Mba", street: "Avenue du Palais", city: "Libreville", postalCode: "BP 100", qrCode: "PGA-PRES-AN" },
+                    email: "president@assemblee.ga"
+                },
+                {
+                    id: "bureau", name: "Bureau AN", type: "professional", icon: Users,
+                    address: { label: "Bureau de l'Assemblée Nationale", fullAddress: "Palais Léon Mba", street: "Avenue du Palais", city: "Libreville", postalCode: "BP 100", qrCode: "PGA-BUR-AN" },
+                    email: "bureau@assemblee.ga"
+                }
+            ];
+        case 'deputy':
+        case 'an':
+            return [
+                {
+                    id: "depute", name: "Député", type: "professional", icon: User,
+                    address: { label: "Bureau du Député", fullAddress: "Assemblée Nationale", street: "Avenue du Palais Léon Mba", city: "Libreville", postalCode: "BP 1000", qrCode: "PGA-DEP" },
+                    email: "depute@assemblee.ga"
+                },
+                {
+                    id: "commission", name: "Commission", type: "professional", icon: Users,
+                    address: { label: "Commission Parlementaire", fullAddress: "Assemblée Nationale", street: "Avenue du Palais", city: "Libreville", postalCode: "BP 1000", qrCode: "PGA-COM" },
+                    email: "commission@assemblee.ga"
+                }
+            ];
+        case 'questeur_an':
+            return [
+                {
+                    id: "questeur", name: "Questeur AN", type: "professional", icon: Briefcase,
+                    address: { label: "Questure - Assemblée Nationale", fullAddress: "Palais Léon Mba", street: "Avenue du Palais", city: "Libreville", postalCode: "BP 200", qrCode: "PGA-QUEST-AN" },
+                    email: "questure@assemblee.ga"
+                },
+                {
+                    id: "finances", name: "Finances AN", type: "professional", icon: Building2,
+                    address: { label: "Direction Financière AN", fullAddress: "Assemblée Nationale", street: "Avenue du Palais", city: "Libreville", postalCode: "BP 200", qrCode: "PGA-FIN-AN" },
+                    email: "finances@assemblee.ga"
+                }
+            ];
+        case 'president_senat':
+            return [
+                {
+                    id: "president", name: "Président Sénat", type: "professional", icon: Building2,
+                    address: { label: "Président du Sénat", fullAddress: "Palais Omar Bongo", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 300", qrCode: "PGA-PRES-SEN" },
+                    email: "president@senat.ga"
+                },
+                {
+                    id: "bureau", name: "Bureau Sénat", type: "professional", icon: Users,
+                    address: { label: "Bureau du Sénat", fullAddress: "Palais Omar Bongo", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 300", qrCode: "PGA-BUR-SEN" },
+                    email: "bureau@senat.ga"
+                }
+            ];
+        case 'senator':
+        case 'senat':
+            return [
+                {
+                    id: "senateur", name: "Sénateur", type: "professional", icon: User,
+                    address: { label: "Bureau du Sénateur", fullAddress: "Sénat", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 2000", qrCode: "PGA-SEN" },
+                    email: "senateur@senat.ga"
+                },
+                {
+                    id: "commission", name: "Commission", type: "professional", icon: Users,
+                    address: { label: "Commission Sénatoriale", fullAddress: "Sénat", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 2000", qrCode: "PGA-COM-SEN" },
+                    email: "commission@senat.ga"
+                }
+            ];
+        case 'questeur_senat':
+            return [
+                {
+                    id: "questeur", name: "Questeur Sénat", type: "professional", icon: Briefcase,
+                    address: { label: "Questure - Sénat", fullAddress: "Palais Omar Bongo", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 400", qrCode: "PGA-QUEST-SEN" },
+                    email: "questure@senat.ga"
+                },
+                {
+                    id: "finances", name: "Finances Sénat", type: "professional", icon: Building2,
+                    address: { label: "Direction Financière Sénat", fullAddress: "Sénat", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 400", qrCode: "PGA-FIN-SEN" },
+                    email: "finances@senat.ga"
+                }
+            ];
+        case 'congress':
+        case 'cmp':
+            return [
+                {
+                    id: "congres", name: "Congrès", type: "professional", icon: Building2,
+                    address: { label: "Congrès du Parlement", fullAddress: "Palais du Congrès", street: "Libreville", city: "Libreville", postalCode: "BP 500", qrCode: "PGA-CONG" },
+                    email: "congres@parlement.ga"
+                },
+                {
+                    id: "cmp", name: "CMP", type: "professional", icon: Users,
+                    address: { label: "Commission Mixte Paritaire", fullAddress: "Parlement", street: "Libreville", city: "Libreville", postalCode: "BP 500", qrCode: "PGA-CMP" },
+                    email: "cmp@parlement.ga"
+                }
+            ];
+        case 'citizen':
+            return [
+                {
+                    id: "citoyen", name: "Citoyen", type: "personal", icon: Home,
+                    address: { label: "Espace Citoyen", fullAddress: "Parlement du Gabon", street: "Libreville", city: "Libreville", postalCode: "BP 600", qrCode: "PGA-CIT" },
+                    email: "citoyen@parlement.ga"
+                }
+            ];
+        default:
+            return [
+                {
+                    id: "utilisateur", name: "Utilisateur", type: "personal", icon: Home,
+                    address: { label: "Compte Utilisateur", fullAddress: "Parlement du Gabon", street: "Libreville", city: "Libreville", postalCode: "BP 1000", qrCode: "PGA-USER" },
+                    email: "utilisateur@parlement.ga"
+                }
+            ];
+    }
+}
 
 interface IBoitePageProps {
     context?: IBoiteContext;
     contextLabel?: string;
 }
 
+// Mock Data for letters and packages
+const getMockLetters = (accountId: string): DigitalLetter[] => [
+    { id: "l1", accountId, folder: "inbox", sender: "Secrétariat Général", senderAddress: "Secrétariat Général\nAssemblée Nationale\nBP 123 Libreville", recipient: "Destinataire", recipientAddress: "Bureau Parlementaire\nBP 1000\nLibreville, GABON", subject: "Convocation - Session Plénière", content: "Honorable,\n\nVous êtes convoqué à la session plénière extraordinaire qui se tiendra le 15 janvier 2026 à 10h00 dans l'hémicycle.\n\nOrdre du jour :\n- Examen du projet de loi de finances rectificative\n- Questions au gouvernement\n\nVotre présence est obligatoire.\n\nVeuillez agréer l'expression de notre haute considération.\n\nLe Secrétaire Général", attachments: [], isRead: false, type: "action_required", createdAt: new Date(Date.now() - 7200000), dueDate: new Date(Date.now() + 86400000 * 2) },
+    { id: "l2", accountId, folder: "inbox", sender: "Commission des Lois", senderAddress: "Commission des Lois\nParlement\nLibreville", recipient: "Destinataire", recipientAddress: "Bureau Parlementaire\nLibreville", subject: "Rapport d'étude - Projet de Loi n°2025-42", content: "Honorable,\n\nVeuillez trouver ci-joint le rapport d'étude concernant le projet de loi n°2025-42 relatif à la modernisation de l'administration publique.\n\nLa commission se réunira le 20 janvier pour l'examen de ce texte.\n\nCordialement,\nLe Président de la Commission", attachments: [{ name: "Rapport_PL_2025-42.pdf", size: "2.4 MB" }], isRead: true, type: "informational", createdAt: new Date(Date.now() - 172800000) },
+    { id: "l3", accountId, folder: "sent", sender: "Expéditeur", senderAddress: "Bureau Parlementaire\nBP 1000\nLibreville", recipient: "Mairie de Libreville", recipientAddress: "Mairie de Libreville\nService État Civil\nBP 123 Libreville", subject: "Demande d'intervention - Quartier Akébé", content: "Monsieur le Maire,\n\nSuite aux doléances des habitants du quartier Akébé concernant l'état des routes, je sollicite une intervention rapide de vos services.\n\nMerci de votre diligence.\n\nRespectueux hommages.", attachments: [], isRead: true, type: "standard", createdAt: new Date(Date.now() - 432000000) },
+];
+
+const getMockPackages = (accountId: string): PackageDelivery[] => [
+    { id: "pkg1", accountId, trackingNumber: "GA2026-78901", sender: "Service Documentation", description: "Documents parlementaires", status: "available" },
+    { id: "pkg2", accountId, trackingNumber: "GA2026-78902", sender: "Imprimerie Nationale", description: "Recueil des lois 2025", status: "transit", estimatedDelivery: new Date(Date.now() + 86400000 * 2) },
+];
+
 export default function IBoitePage({ context = 'default', contextLabel }: IBoitePageProps) {
-    const [selectedAccount, setSelectedAccount] = useState<Account>(mockAccounts[0]);
+    // Get accounts based on context
+    const accounts = useMemo(() => getAccountsForContext(context), [context]);
+    const [selectedAccount, setSelectedAccount] = useState<Account>(accounts[0]);
     const [activeSection, setActiveSection] = useState<SectionType>("courriers");
     const [currentFolder, setCurrentFolder] = useState<FolderType>("inbox");
     const [emailFolder, setEmailFolder] = useState<EmailFolderType>("inbox");
-    const [letters, setLetters] = useState(mockLetters);
+    const [letters, setLetters] = useState<DigitalLetter[]>(() => getMockLetters(accounts[0].id));
     const [selectedLetter, setSelectedLetter] = useState<DigitalLetter | null>(null);
     const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
     const [copied, setCopied] = useState(false);
@@ -174,8 +279,9 @@ export default function IBoitePage({ context = 'default', contextLabel }: IBoite
     }, [selectedConversationId]);
 
     // Filtered data
+    const packages = useMemo(() => getMockPackages(selectedAccount.id), [selectedAccount.id]);
     const accountLetters = letters.filter(l => l.accountId === selectedAccount.id);
-    const accountPackages = mockPackages.filter(p => p.accountId === selectedAccount.id);
+    const accountPackages = packages;
     const filteredLetters = accountLetters.filter(l => l.folder === currentFolder);
     const unreadLetters = accountLetters.filter(l => l.folder === "inbox" && !l.isRead).length;
     const availablePackages = accountPackages.filter(p => p.status === "available").length;
@@ -253,7 +359,7 @@ export default function IBoitePage({ context = 'default', contextLabel }: IBoite
                                         exit={{ opacity: 0, y: -10 }}
                                         className="absolute top-full left-0 right-0 mt-2 bg-card rounded-lg shadow-lg border border-border overflow-hidden z-50"
                                     >
-                                        {mockAccounts.map(account => (
+                                        {accounts.map(account => (
                                             <button
                                                 key={account.id}
                                                 onClick={() => { setSelectedAccount(account); setAccountDropdownOpen(false); setSelectedLetter(null); }}
