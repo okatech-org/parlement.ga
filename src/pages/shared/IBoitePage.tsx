@@ -65,103 +65,100 @@ interface PackageDelivery {
 // Context type
 export type IBoiteContext = 'default' | 'congress' | 'cmp' | 'bureau' | 'an' | 'senat' | 'deputy' | 'senator' | 'questeur_an' | 'questeur_senat' | 'president_an' | 'president_senat' | 'vp_an' | 'vp_senat' | 'citizen';
 
+// Base accounts (role as elected member)
+const deputeAccount: Account = {
+    id: "depute", name: "Député", type: "professional", icon: User,
+    address: { label: "Bureau du Député", fullAddress: "Assemblée Nationale", street: "Avenue du Palais Léon Mba", city: "Libreville", postalCode: "BP 1000", qrCode: "PGA-DEP" },
+    email: "depute@assemblee.ga"
+};
+
+const senateurAccount: Account = {
+    id: "senateur", name: "Sénateur", type: "professional", icon: User,
+    address: { label: "Bureau du Sénateur", fullAddress: "Sénat", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 2000", qrCode: "PGA-SEN" },
+    email: "senateur@senat.ga"
+};
+
 // Function to get accounts based on context
+// Logic: Base role (Député/Sénateur) first, then function (Président, Questeur, VP) second
 function getAccountsForContext(context: IBoiteContext): Account[] {
     switch (context) {
+        // AN Functions - Député first, then function
         case 'president_an':
             return [
+                deputeAccount,
                 {
-                    id: "president", name: "Président AN", type: "professional", icon: Building2,
+                    id: "president_an", name: "Président AN", type: "professional", icon: Building2,
                     address: { label: "Président de l'Assemblée Nationale", fullAddress: "Palais Léon Mba", street: "Avenue du Palais", city: "Libreville", postalCode: "BP 100", qrCode: "PGA-PRES-AN" },
                     email: "president@assemblee.ga"
-                },
-                {
-                    id: "bureau", name: "Bureau AN", type: "professional", icon: Users,
-                    address: { label: "Bureau de l'Assemblée Nationale", fullAddress: "Palais Léon Mba", street: "Avenue du Palais", city: "Libreville", postalCode: "BP 100", qrCode: "PGA-BUR-AN" },
-                    email: "bureau@assemblee.ga"
                 }
             ];
-        case 'deputy':
-        case 'an':
+        case 'vp_an':
             return [
+                deputeAccount,
                 {
-                    id: "depute", name: "Député", type: "professional", icon: User,
-                    address: { label: "Bureau du Député", fullAddress: "Assemblée Nationale", street: "Avenue du Palais Léon Mba", city: "Libreville", postalCode: "BP 1000", qrCode: "PGA-DEP" },
-                    email: "depute@assemblee.ga"
-                },
-                {
-                    id: "commission", name: "Commission", type: "professional", icon: Users,
-                    address: { label: "Commission Parlementaire", fullAddress: "Assemblée Nationale", street: "Avenue du Palais", city: "Libreville", postalCode: "BP 1000", qrCode: "PGA-COM" },
-                    email: "commission@assemblee.ga"
+                    id: "vp_an", name: "Vice-Président AN", type: "professional", icon: Building2,
+                    address: { label: "Vice-Président de l'AN", fullAddress: "Palais Léon Mba", street: "Avenue du Palais", city: "Libreville", postalCode: "BP 100", qrCode: "PGA-VP-AN" },
+                    email: "vp@assemblee.ga"
                 }
             ];
         case 'questeur_an':
             return [
+                deputeAccount,
                 {
-                    id: "questeur", name: "Questeur AN", type: "professional", icon: Briefcase,
+                    id: "questeur_an", name: "Questeur AN", type: "professional", icon: Briefcase,
                     address: { label: "Questure - Assemblée Nationale", fullAddress: "Palais Léon Mba", street: "Avenue du Palais", city: "Libreville", postalCode: "BP 200", qrCode: "PGA-QUEST-AN" },
                     email: "questure@assemblee.ga"
-                },
-                {
-                    id: "finances", name: "Finances AN", type: "professional", icon: Building2,
-                    address: { label: "Direction Financière AN", fullAddress: "Assemblée Nationale", street: "Avenue du Palais", city: "Libreville", postalCode: "BP 200", qrCode: "PGA-FIN-AN" },
-                    email: "finances@assemblee.ga"
                 }
             ];
+        case 'deputy':
+        case 'an':
+            return [deputeAccount];
+
+        // Sénat Functions - Sénateur first, then function  
         case 'president_senat':
             return [
+                senateurAccount,
                 {
-                    id: "president", name: "Président Sénat", type: "professional", icon: Building2,
+                    id: "president_senat", name: "Président Sénat", type: "professional", icon: Building2,
                     address: { label: "Président du Sénat", fullAddress: "Palais Omar Bongo", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 300", qrCode: "PGA-PRES-SEN" },
                     email: "president@senat.ga"
-                },
-                {
-                    id: "bureau", name: "Bureau Sénat", type: "professional", icon: Users,
-                    address: { label: "Bureau du Sénat", fullAddress: "Palais Omar Bongo", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 300", qrCode: "PGA-BUR-SEN" },
-                    email: "bureau@senat.ga"
                 }
             ];
-        case 'senator':
-        case 'senat':
+        case 'vp_senat':
             return [
+                senateurAccount,
                 {
-                    id: "senateur", name: "Sénateur", type: "professional", icon: User,
-                    address: { label: "Bureau du Sénateur", fullAddress: "Sénat", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 2000", qrCode: "PGA-SEN" },
-                    email: "senateur@senat.ga"
-                },
-                {
-                    id: "commission", name: "Commission", type: "professional", icon: Users,
-                    address: { label: "Commission Sénatoriale", fullAddress: "Sénat", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 2000", qrCode: "PGA-COM-SEN" },
-                    email: "commission@senat.ga"
+                    id: "vp_senat", name: "Vice-Président Sénat", type: "professional", icon: Building2,
+                    address: { label: "Vice-Président du Sénat", fullAddress: "Palais Omar Bongo", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 300", qrCode: "PGA-VP-SEN" },
+                    email: "vp@senat.ga"
                 }
             ];
         case 'questeur_senat':
             return [
+                senateurAccount,
                 {
-                    id: "questeur", name: "Questeur Sénat", type: "professional", icon: Briefcase,
+                    id: "questeur_senat", name: "Questeur Sénat", type: "professional", icon: Briefcase,
                     address: { label: "Questure - Sénat", fullAddress: "Palais Omar Bongo", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 400", qrCode: "PGA-QUEST-SEN" },
                     email: "questure@senat.ga"
-                },
-                {
-                    id: "finances", name: "Finances Sénat", type: "professional", icon: Building2,
-                    address: { label: "Direction Financière Sénat", fullAddress: "Sénat", street: "Boulevard Triomphal", city: "Libreville", postalCode: "BP 400", qrCode: "PGA-FIN-SEN" },
-                    email: "finances@senat.ga"
                 }
             ];
+        case 'senator':
+        case 'senat':
+            return [senateurAccount];
+
+        // Congress - Both chambers
         case 'congress':
         case 'cmp':
             return [
+                deputeAccount,
+                senateurAccount,
                 {
                     id: "congres", name: "Congrès", type: "professional", icon: Building2,
                     address: { label: "Congrès du Parlement", fullAddress: "Palais du Congrès", street: "Libreville", city: "Libreville", postalCode: "BP 500", qrCode: "PGA-CONG" },
                     email: "congres@parlement.ga"
-                },
-                {
-                    id: "cmp", name: "CMP", type: "professional", icon: Users,
-                    address: { label: "Commission Mixte Paritaire", fullAddress: "Parlement", street: "Libreville", city: "Libreville", postalCode: "BP 500", qrCode: "PGA-CMP" },
-                    email: "cmp@parlement.ga"
                 }
             ];
+
         case 'citizen':
             return [
                 {
